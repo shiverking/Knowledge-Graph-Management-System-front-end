@@ -20,5 +20,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-!/.editorconfig
-!/.babelrc
+.editorconfig
+.babelrc
+.postcssrc.js
