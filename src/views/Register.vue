@@ -59,12 +59,22 @@ export default {
     handleRegister(){
       this.$refs.loginForm.validate().then(()=>{
         this.loading = true;
-
+        if(this.form.passWord!=this.form.newPassword){
+            this.loading=false;
+            this.$notify({
+              message: '两次密码输入不一致',
+              position: 'bottom-right',
+              type:'warning'
+            });
+        }
+        else{
+          console.log(this.form);
+        }
         //模拟异步请求后台接口 登录操作
-        setTimeout(()=>{
-          this.$router.push('/home');
-          this.loading = false;
-        }, 1000)
+        // setTimeout(()=>{
+        //   this.$router.push('/home');
+        //   this.loading = false;
+        // }, 1000)
       }).catch((error=>{
         this.$message({
           message: '输入错误！',
