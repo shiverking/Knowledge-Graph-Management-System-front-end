@@ -43,25 +43,25 @@
                 </template>
                 <el-submenu index="1-1">
                   <template slot="title">武器装备数据</template>
-                  <el-menu-item index="1-1-1"><router-link to="/data/arm/Aircraft" class="routerlink" >飞机</router-link></el-menu-item>
-                  <el-menu-item index="1-1-3"><router-link to="/data/arm/Artillery" class="routerlink">火炮</router-link></el-menu-item>
-                  <el-menu-item index="1-1-4"><router-link to="/data/arm/Bomb" class="routerlink">爆炸物</router-link></el-menu-item>
-                  <el-menu-item index="1-1-5"><router-link to="/data/arm/Vessel" class="routerlink">舰船</router-link></el-menu-item>
+                  <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-1-1">飞机</el-menu-item></router-link>
+                  <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-1-3">火炮</el-menu-item></router-link>
+                  <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-1-4">爆炸物</el-menu-item></router-link>
+                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-5">舰船</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-2">
                   <template slot="title">人员数据</template>
-                  <el-menu-item index="1-2-2"><router-link to="/data/people/person" class="routerlink">人员信息</router-link></el-menu-item>
-                  <el-menu-item index="1-2-3"><router-link to="/data/people/education" class="routerlink">教育信息</router-link></el-menu-item>
-                  <el-menu-item index="1-2-4"><router-link to="/data/people/resume" class="routerlink">履历信息</router-link></el-menu-item>
+                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-2">人员信息</el-menu-item></router-link>
+                  <router-link to="/data/people/education" class="routerlink"><el-menu-item index="1-2-3">教育信息</el-menu-item></router-link>
+                  <router-link to="/data/people/resume" class="routerlink"><el-menu-item index="1-2-4">履历信息</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-3">
                   <template slot="title">计划与任务</template>
-                  <el-menu-item index="1-3-1"><router-link to="/data/plan/plan" class="routerlink">作战计划</router-link></el-menu-item>
-                  <el-menu-item index="1-3-2"><router-link to="/data/plan/task" class="routerlink">作战任务</router-link></el-menu-item>
+                  <router-link to="/data/plan/plan" class="routerlink"><el-menu-item index="1-3-1">作战计划</el-menu-item></router-link>
+                  <router-link to="/data/plan/task" class="routerlink"><el-menu-item index="1-3-2">作战任务</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-4">
                   <template slot="title">数据分析</template>
-                  <el-menu-item index="1-4-1"><router-link to="/data/analysis/column" class="routerlink">数据可视化</router-link></el-menu-item>
+                  <router-link to="/data/analysis/column" class="routerlink"><el-menu-item index="1-4-1">数据可视化</el-menu-item></router-link>
                 </el-submenu>
               </el-submenu>
               <el-menu-item index="2">
@@ -77,8 +77,8 @@
                   <i class="el-icon-share"></i>
                   <span slot="title">图谱管理</span>
                 </template>
-                <el-menu-item index="4-1"><router-link to="/kg/align" class="routerlink">实体对齐</router-link></el-menu-item>
-                <el-menu-item index="4-2"><router-link to="/kg/merge" class="routerlink">图谱融合</router-link></el-menu-item>
+                <router-link to="/kg/align" class="routerlink"><el-menu-item index="4-1">实体对齐</el-menu-item></router-link>
+                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-2">图谱融合</el-menu-item></router-link>
               </el-submenu>
             </el-menu>
           </el-aside>
@@ -95,54 +95,14 @@
       </div>
 </template>
 
-<style>
-.el-header {
-  background-color: #B3C0D1;
-  color: #333;
-  line-height: 60px;
-}
-.el-container{
-  height: 100%;
-}
-.el-aside {
-  color: #333;
-}
-.homeHeader {
-  background-color: #545c64;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 15px;
-  box-sizing: border-box;
-}
-.title{
-  color: aliceblue;
-  font-weight: bold;
-}
-.breadcrumb{
-  margin-bottom: 10px;
-}
-.resize {
-  cursor: col-resize;
-  position: absolute;
-  right: 0;
-  height: 100%;
-  width: 5px;
-}
-.routerlink{
-  color: black;
-  text-decoration: none;
-}
-</style>
 <script>
+// @ is an alias to /src
+import HelloWorld from '@/components/HelloWorld.vue'
+
 export default {
-  methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    }
+  name: 'home',
+  components: {
+    HelloWorld
   }
 }
 </script>
