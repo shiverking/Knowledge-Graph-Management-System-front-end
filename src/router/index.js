@@ -19,6 +19,7 @@ import Analysis from "../views/data_management/analysis/Analysis"
 import KgMerge from "../views/kg_merge/KgMerge"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
+import Register from "../views/Register";
 Vue.use(Router)
 
 export default new Router({
@@ -26,8 +27,14 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Login',
+      name: '登录',
       component: Login,
+      hidden: true
+    },
+    {
+      path: '/register',
+      name: '注册',
+      component: Register,
       hidden: true
     },
     {

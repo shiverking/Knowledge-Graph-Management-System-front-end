@@ -2,7 +2,7 @@
   <div class="login-page">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span class="login-title">🔐知识图谱管理系统</span>
+        <span class="login-title">🔐用户注册</span>
       </div>
       <div class="login-form">
         <el-form :model="form" :rules="loginRules" ref="loginForm">
@@ -16,10 +16,14 @@
               <template slot="prepend"><i style="font-size:20px" class="el-icon-key"></i></template>
             </el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button style="width:100%;" type="primary" @click="handleLogin" :loading="loading">登录</el-button>
+          <el-form-item prop="newPassword">
+            <el-input type="text" v-model="form.newPassword" auto-complete="off" placeholder="请再次输入密码">
+              <template slot="prepend"><i style="font-size:20px" class="el-icon-key"></i></template>
+            </el-input>
           </el-form-item>
-          <el-button plain @click="notify" style="width: 100%">还没有账号？注册</el-button>
+          <el-form-item>
+            <el-button style="width:100%;" type="primary" @click="handleRegister" :loading="loading">注册</el-button>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -35,7 +39,8 @@ export default {
       loading: false,
       form:{
         userName: '',
-        passWord: ''
+        passWord: '',
+        newPassword:'',
       },
       loginRules:{
         userName: [
@@ -43,12 +48,15 @@ export default {
         ],
         passWord: [
           { required: true, message: '请输入密码', trigger: 'blur'}
+        ],
+        newPassword: [
+          { required: true, message: '请再次输入密码', trigger: 'blur'}
         ]
       }
     }
   },
   methods:{
-    handleLogin(){
+    handleRegister(){
       this.$refs.loginForm.validate().then(()=>{
         this.loading = true;
 
@@ -64,10 +72,10 @@ export default {
         });
       }))
     },
-    notify() {
-      this.$notify.info({
-        title: '注册账户',
-        message: '请联系管理员',
+    open2() {
+      this.$notify({
+        title: '自定义位置',
+        message: '右下角弹出的消息',
         position: 'bottom-right'
       });
     },
