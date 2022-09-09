@@ -1,10 +1,9 @@
 <template>
   <div>
-    <h1>实体对齐</h1>
     <el-steps :active="active" finish-status="success"  style="margin: 10px" simple>
       <el-step title="目标预览" ></el-step>
       <el-step title="实体对齐" ></el-step>
-      <el-step title="融合确认" ></el-step>
+      <el-step title="图谱融合" ></el-step>
       <el-step title="质量评估"></el-step>
     </el-steps>
     <div v-if="this.active==0">
@@ -109,7 +108,7 @@
             show-overflow-tooltip>
         </el-table-column>
       </el-table>
-      <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+      <el-dialog title="确认列表" :visible.sync="dialogTableVisible">
         <el-table :data="gridData">
           <el-table-column property="date" label="实体" width="150"></el-table-column>
           <el-table-column property="name" label="属性" width="200"></el-table-column>
@@ -119,15 +118,72 @@
       </el-dialog>
       <el-button style="margin-top: 12px;" @click="dialogTableVisible = true">筛选确认</el-button>
     </div>
-    <div v-if="this.active==2">2</div>
-    <div v-if="this.active==3">3</div>
-    <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+    <div v-if="this.active==2">
+      <el-descriptions title="融合信息确认" border>
+        <el-descriptions-item label="原图谱实体数">1842</el-descriptions-item>
+        <el-descriptions-item label="待融合实体数量">1321</el-descriptions-item>
+        <el-descriptions-item label="原图谱列表"><a>点击查看</a></el-descriptions-item>
+        <el-descriptions-item label="待融合实体列表"><a>点击查看</a></el-descriptions-item>
+        <el-descriptions-item label="备注">
+          <el-tag size="small">学校</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="操作时间">2022-10-01</el-descriptions-item>
+      </el-descriptions>
+      <el-select v-model="value" placeholder="选择融合策略">
+        <el-option
+            v-for="item in strategy"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button style="margin-top: 12px;" >开始融合</el-button>
+<!--      <el-button style="margin-top: 12px;" >查看结果</el-button>-->
+      <el-progress :text-inside="false" :stroke-width="15" :percentage="70" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
+      <el-result icon="success" title="融合成功">
+        <template slot="extra">
+          <el-button type="primary" size="medium">查看结果</el-button>
+        </template>
+      </el-result>
+    </div>
+    <div v-if="this.active==3">
+      <el-button style="margin-top: 12px;" >融合评分计算</el-button>
+      <el-progress :text-inside="false" :stroke-width="15" :percentage="70" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>最终评分 86</span>
+<!--          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+        </div>
+        <div v-for="o in 4" :key="o" class="text item">
+          {{'列表内容 ' + o }}
+        </div>
+      </el-card>
+    </div>
+    <div style="text-align: right;">
+      <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+    </div>
   </div>
 </template>
 <style>
 .neo4jd3 {
   height: 100%;
   overflow: hidden;
+}
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
 }
 </style>
 <!--<style src="../../../static/neo4jd3.css"></style>-->
@@ -160,6 +216,16 @@ export default {
         value: '选项5',
         label: '加权混合'
       }],
+      strategy: [{
+        value: '选项1',
+        label: '保留原图谱实体'
+      }, {
+        value: '选项2',
+        label: '保留新图谱实体'
+      }, {
+        value: '选项3',
+        label: '同时保留'
+      },],
       value: '',
       tableData: [{
         date: '2016-05-03',

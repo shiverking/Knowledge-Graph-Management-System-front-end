@@ -19,6 +19,7 @@
           <el-form-item>
             <el-button style="width:100%;" type="primary" @click="handleLogin" :loading="loading">登录</el-button>
           </el-form-item>
+          <el-button plain @click="open2">右下角</el-button>
         </el-form>
       </div>
     </el-card>
@@ -62,7 +63,14 @@ export default {
           type: 'warning'
         });
       }))
-    }
+    },
+    open2() {
+      this.$notify({
+        title: '自定义位置',
+        message: '右下角弹出的消息',
+        position: 'bottom-right'
+      });
+    },
   }
 }
 </script>

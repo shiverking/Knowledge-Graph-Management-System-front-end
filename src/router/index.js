@@ -16,8 +16,9 @@ import Arm from "../views/data_management/arm/Arm"
 import People from "../views/data_management/people/People"
 import Summary from "../views/data_management/plan/Summary"
 import Analysis from "../views/data_management/analysis/Analysis"
-import entity_align from "../views/kg_merge/entity_align"
-import kgmerge from "../views/kg_merge/kgmerge"
+import KgMerge from "../views/kg_merge/KgMerge"
+import Personal from "../views/Personal";
+import setting from "../views/Setting";
 Vue.use(Router)
 
 export default new Router({
@@ -33,7 +34,21 @@ export default new Router({
       path: '/home',
       name: '主页',
       component: Home,
-      hidden: true
+      hidden: true,
+      children:[
+        {
+          path:'/setting',
+          name:'设置',
+          component:setting,
+          show:true,
+        },
+        {
+          path:'/personal',
+          name:'个人中心',
+          component:Personal,
+          show:true,
+        },
+      ]
     },
     {
       path: '/data',
@@ -133,15 +148,9 @@ export default new Router({
       show: true,
       children:[
         {
-          path: '/kg/align',
-          name: '实体对齐',
-          component: entity_align,
-          show: true,
-        },
-        {
           path: '/kg/merge',
-          name: '图谱融合',
-          component: kgmerge,
+          name: '实体对齐',
+          component: KgMerge,
           show: true,
         },
       ]

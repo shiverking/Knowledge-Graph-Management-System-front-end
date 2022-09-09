@@ -1,9 +1,8 @@
 <template>
     <div class="common-layout" style="height: 100%">
-
         <el-header class="homeHeader">
           <div class="title">知识图谱管理系统</div>
-          <div>
+<!--          <div>-->
 <!--            <el-dropdown class="userInfo" @command="commandHandler">-->
 <!--              <span class="el-dropdown-link">-->
 <!--                {{user.name}}<i><img :src="user.userface" alt=""></i>-->
@@ -27,7 +26,7 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-          </div>
+<!--          </div>-->
         </el-header>
         <el-container style="height: 100%; border: 1px solid #eee">
           <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
@@ -77,32 +76,49 @@
                   <i class="el-icon-share"></i>
                   <span slot="title">图谱管理</span>
                 </template>
-                <router-link to="/kg/align" class="routerlink"><el-menu-item index="4-1">实体对齐</el-menu-item></router-link>
-                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-2">图谱融合</el-menu-item></router-link>
+                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-1">图谱融合</el-menu-item></router-link>
               </el-submenu>
+              <router-link to="/setting" class="routerlink"><el-menu-item index="5">
+                  <i class="el-icon-setting"></i>
+                  <span slot="title">设置</span>
+              </el-menu-item></router-link>
+              <router-link to="/personal" class="routerlink"><el-menu-item index="5">
+                <i class="el-icon-user"></i>
+                <span slot="title">个人中心</span>
+              </el-menu-item></router-link>
             </el-menu>
           </el-aside>
           <el-main>
+            <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/home'"></el-empty>
             <div class="breadcrumb">
               <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/home'" >
                 <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
               </el-breadcrumb>
             </div>
-            <router-view></router-view>
+            <router-view>
+
+            </router-view>
           </el-main>
         </el-container>
       </div>
 </template>
-
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
+<style>
+  .el-header {
+    color: #333;
+    line-height: 60px;
   }
-}
+  .routerlink{
+    text-decoration: none;
+  }
+  .homeHeader{
+    background-color:#303030;
+  }
+  .title{
+    width: 95%;
+    color: #ffffff;
+    display: inline-block;
+  }
+</style>
+<script>
 </script>
