@@ -77,6 +77,14 @@
                   <span slot="title">图谱管理</span>
                 </template>
                 <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-1">图谱融合</el-menu-item></router-link>
+                <el-submenu index="4-2">
+                  <template slot="title">图谱补全</template>
+                  <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">获取三元组</el-menu-item></router-link>
+                  <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutomatedCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/HandleConflicts" class="routerlink"><el-menu-item index="4-2-4">冲突处理</el-menu-item></router-link>
+                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-5">历史补全</el-menu-item></router-link>
+                </el-submenu>
               </el-submenu>
               <router-link to="/setting" class="routerlink"><el-menu-item index="5">
                   <i class="el-icon-setting"></i>

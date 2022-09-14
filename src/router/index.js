@@ -17,6 +17,12 @@ import People from "../views/data_management/people/People"
 import Summary from "../views/data_management/plan/Summary"
 import Analysis from "../views/data_management/analysis/Analysis"
 import KgMerge from "../views/kg_merge/KgMerge"
+import KgCompletion from "../views/kg_completion/KgCompletion"
+import GetTriples from "../views/kg_completion/GetTriples"
+import LinkPrediction from "../views/kg_completion/LinkPrediction"
+import AutomatedCompletion from "../views/kg_completion/AutomatedCompletion"
+import HandleConflicts from "../views/kg_completion/HandleConflicts"
+import ViewHistory from "../views/kg_completion/ViewHistory"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
@@ -159,6 +165,41 @@ export default new Router({
           name: '实体对齐',
           component: KgMerge,
           show: true,
+        },
+
+        {
+          path: '/kg/completion',
+          name: '图谱补全',
+          component: KgCompletion,
+          show: true,
+          redirect:'GetTriples',
+          children:[
+            {
+              path: "/kg/completion/GetTriples",
+              name: "获取三元组",
+              component: GetTriples,
+            },
+            {
+              path: "/kg/completion/LinkPrediction",
+              name: "链接预测",
+              component: LinkPrediction
+            },
+            {
+              path: "/kg/completion/AutomatedCompletion",
+              name: "自动化补全",
+              component: AutomatedCompletion
+            },
+            {
+              path: "/kg/completion/HandleConflicts",
+              name: "冲突处理",
+              component: HandleConflicts
+            },
+            {
+              path: "/kg/completion/ViewHistory",
+              name: "历史补全",
+              component: ViewHistory
+            },
+          ]
         },
       ]
     }
