@@ -32,7 +32,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/login',
       name: '登录',
       component: Login,
       hidden: true
@@ -44,10 +44,13 @@ export default new Router({
       hidden: true
     },
     {
-      path: '/home',
+      path: '/',
       name: '主页',
       component: Home,
       hidden: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
       children:[
         {
           path:'/setting',
@@ -68,6 +71,9 @@ export default new Router({
       name: '数据管理',
       component: Home,
       show: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
       children:[
         {
           path: '/data/arm',
@@ -159,6 +165,9 @@ export default new Router({
       name: '图谱管理',
       component: Home,
       show: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
       children:[
         {
           path: '/kg/merge',
