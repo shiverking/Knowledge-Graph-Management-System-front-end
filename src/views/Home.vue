@@ -2,31 +2,18 @@
     <div class="common-layout" style="height: 100%">
         <el-header class="homeHeader">
           <div class="title">知识图谱管理系统</div>
-<!--          <div>-->
-<!--            <el-dropdown class="userInfo" @command="commandHandler">-->
-<!--              <span class="el-dropdown-link">-->
-<!--                {{user.name}}<i><img :src="user.userface" alt=""></i>-->
-<!--              </span>-->
-<!--              <el-dropdown-menu slot="dropdown">-->
-<!--                <el-dropdown-item command="userinfo">个人中心</el-dropdown-item>-->
-<!--                <el-dropdown-item command="setting">设置</el-dropdown-item>-->
-<!--                <el-dropdown-item command="logout" divided>注销登录</el-dropdown-item>-->
-<!--              </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
-            <el-dropdown>
-              <span class="el-dropdown-link" style="color: azure">
-                用户1
-                <i class="el-icon-arrow-down"></i>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>个人中心</el-dropdown-item>
-                  <el-dropdown-item>设置</el-dropdown-item>
-                  <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
+            <el-dropdown class="dropdown">
+              <div>
+              <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="vertical-align:middle;margin: 10px"></el-avatar>
+              <span style="color: azure;font-size: large;vertical-align:middle;">{{username}}</span>
+              <i class="el-icon-arrow-down" style="color: azure;font-size: large;vertical-align:middle;"></i>
+              <el-dropdown-menu>
+                <router-link to="/personal" class="routerlink" ><el-dropdown-item>个人中心</el-dropdown-item></router-link>
+                <router-link to="/setting" class="routerlink" ><el-dropdown-item>设置</el-dropdown-item></router-link>
+                <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+              </div>
             </el-dropdown>
-<!--          </div>-->
         </el-header>
         <el-container style="height: 100%; border: 1px solid #eee">
           <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
@@ -111,12 +98,18 @@
     text-decoration: none;
   }
   .homeHeader{
+    padding-right: 0px;
     background-color:#303030;
   }
   .title{
-    width: 95%;
+    float: left;
     color: #ffffff;
     display: inline-block;
+  }
+  .dropdown{
+    float: right;
+    height: inherit;
+    margin-right: 10px;
   }
 </style>
 <script>
@@ -125,15 +118,20 @@ export default {
   name: 'Home',
   data(){
     return {
-      loading: false,
-      form:{
-        userName: '',
-        passWord: '',
-        newPassword:'',
-      },
+      session:'',
+      username:'',
+      headurl:'',
     }
   },
+  created() {
+    this.session = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    this.username = this.session.username
+    this.headurl = this.session.headurl
+  },
   methods:{
+    test(){
+      console.log(this.username)
+    },
     handleLogout(){
         axios.post('/api/user/logout', this.$qs.stringify({
           token: store.state.token
