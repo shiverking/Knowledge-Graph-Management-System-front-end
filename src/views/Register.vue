@@ -5,7 +5,7 @@
         <span class="login-title">🔐用户注册</span>
       </div>
       <div class="login-form">
-        <el-form :model="form" :rules="loginRules" ref="loginForm">
+        <el-form :model="form" :rules="loginRules" ref="registerForm">
           <el-form-item prop="userName">
             <el-input type="text" v-model="form.userName" auto-complete="off" placeholder="请输入用户名">
               <template slot="prepend"><i style="font-size:20px" class="el-icon-user"></i></template>
@@ -57,37 +57,49 @@ export default {
   },
   methods:{
     handleRegister(){
-      this.$refs.loginForm.validate().then(()=>{
+      this.$refs.registerForm.validate().then(()=>{
         this.loading = true;
         if(this.form.passWord!=this.form.newPassword){
             this.loading=false;
-            this.$notify({
+            this.$message({
               message: '两次密码输入不一致',
-              position: 'bottom-right',
               type:'warning'
             });
         }
         else{
-          console.log(this.form);
+          axios.post('/api/user/register', {
+            username: this.form.userName,
+            password: this.form.passWord
+          }).then((response)=>{
+            this.loading=false;
+            //返回正确信息
+            if(response.data.status==200){
+              console.log(response)
+              this.$message({
+                message: '注册成功! 3秒后跳转登录界面',
+                type:'success'
+              });
+              setTimeout(() => {
+                // 跳转登录界面
+                this.$router.push('/login')
+              }, 3000);
+            }
+            else{
+              this.$message({
+                message: '注册失败！',
+                type:'waring'
+              });
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
         }
-        //模拟异步请求后台接口 登录操作
-        // setTimeout(()=>{
-        //   this.$router.push('/home');
-        //   this.loading = false;
-        // }, 1000)
       }).catch((error=>{
         this.$message({
           message: '输入错误！',
           type: 'warning'
         });
       }))
-    },
-    open2() {
-      this.$notify({
-        title: '自定义位置',
-        message: '右下角弹出的消息',
-        position: 'bottom-right'
-      });
     },
   }
 }

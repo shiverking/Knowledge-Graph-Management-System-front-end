@@ -22,7 +22,7 @@
                 <el-dropdown-menu>
                   <el-dropdown-item>个人中心</el-dropdown-item>
                   <el-dropdown-item>设置</el-dropdown-item>
-                  <el-dropdown-item divided>退出</el-dropdown-item>
+                  <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -33,8 +33,7 @@
             <el-menu
               :default-active="$route.path"
               class="el-menu-vertical-demo"
-              @open="handleOpen"
-              @close="handleClose">
+              >
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-edit-outline"></i>
@@ -89,10 +88,10 @@
             </el-menu>
           </el-aside>
           <el-main>
-            <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/home'"></el-empty>
+            <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
             <div class="breadcrumb">
-              <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/home'" >
-                <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+              <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'" >
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
               </el-breadcrumb>
             </div>
@@ -121,4 +120,41 @@
   }
 </style>
 <script>
+import store from "../store";
+export default {
+  name: 'Home',
+  data(){
+    return {
+      loading: false,
+      form:{
+        userName: '',
+        passWord: '',
+        newPassword:'',
+      },
+    }
+  },
+  methods:{
+    handleLogout(){
+        axios.post('/api/user/logout', this.$qs.stringify({
+          token: store.state.token
+        }),{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then((response) => {
+          //登出成功
+          if (response.data.code == 200) {
+            //删除token
+            store.commit('REMOVE_INFO')
+            // 跳转登录界面
+            this.$router.push('/login')
+          }
+          //登出失败
+          else {
+            this.$message.error({
+              message: '登出失败'
+            });
+          }
+        }).catch(function (error) {
+          console.log(error);
+        })
+      }
+  }
+}
 </script>
