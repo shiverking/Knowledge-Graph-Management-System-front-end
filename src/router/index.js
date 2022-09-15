@@ -26,6 +26,8 @@ import ViewHistory from "../views/kg_completion/ViewHistory"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
+import twoView from "../views/visualization/2dView.vue";
+import MergeHistory from "../views/kg_merge/MergeHistory";
 Vue.use(Router)
 
 export default new Router({
@@ -41,6 +43,13 @@ export default new Router({
       path: '/register',
       name: '注册',
       component: Register,
+      hidden: true
+    },
+    //测试可视化界面
+    {
+      path: '/2dView',
+      name: '2dView',
+      component:twoView,
       hidden: true
     },
     {
@@ -171,11 +180,16 @@ export default new Router({
       children:[
         {
           path: '/kg/merge',
-          name: '实体对齐',
+          name: '图谱融合',
           component: KgMerge,
           show: true,
         },
-
+        {
+          path: '/kg/merge/history',
+          name: '融合历史',
+          component: MergeHistory,
+          show: true,
+        },
         {
           path: '/kg/completion',
           name: '图谱补全',

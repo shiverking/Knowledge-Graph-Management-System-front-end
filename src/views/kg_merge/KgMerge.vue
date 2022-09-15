@@ -58,7 +58,14 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="400">
     </el-pagination>
-    <div id="neo4jd3" class="neo4jd3"></div>
+      <el-button style="margin-top: 12px;" @click="dialogTwoDViewVisible=true">预览</el-button>
+      <el-dialog :visible.sync="dialogTwoDViewVisible" custom-class="previewDialog"
+                 fullscreen
+                 close-on-press-escape
+      >
+        <TwoDView></TwoDView>
+      </el-dialog>
+
     </div>
     <div v-if="this.active==1">
       <el-select v-model="value" placeholder="请选择算法">
@@ -155,7 +162,7 @@
 <!--          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
         </div>
         <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
+          {{'问题列表' + o }}
         </div>
       </el-card>
     </div>
@@ -165,10 +172,6 @@
   </div>
 </template>
 <style>
-.neo4jd3 {
-  height: 100%;
-  overflow: hidden;
-}
 .text {
   font-size: 14px;
 }
@@ -185,18 +188,22 @@
 .clearfix:after {
   clear: both
 }
+
+
+.el-dialog__header {
+  /*display: none;*/
+  padding: 10px;
+}
+.dj-dialog-content {
+  padding: 0;
+  overflow: unset;
+}
+
 </style>
-<!--<style src="../../../static/neo4jd3.css"></style>-->
-<script src="../../plugins/neo4jd3.js"></script>
 <script>
-import "../../../static/neo4jd3.css";
-// import "../../plugins/neo4jd3.js";
-// this.neo4j = new Neo4jd3('#neo4jd3', {
-//   minCollision: 60,
-//   neo4jDataUrl: '/neo/query',
-//   neo4jData: '{"hhh":"ggg","jjj":"fff"}',
-// });
+import TwoDView from "../visualization/2dView";
 export default {
+  components: {TwoDView},
   data() {
     return {
       active: 0,
@@ -275,6 +282,7 @@ export default {
         address: '上海市普陀区金沙江路 1518 弄'
       }],
       dialogTableVisible: false,
+      dialogTwoDViewVisible:false,
     };
   },
 

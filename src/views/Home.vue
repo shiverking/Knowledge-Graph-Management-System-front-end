@@ -71,6 +71,7 @@
                   <router-link to="/kg/completion/HandleConflicts" class="routerlink"><el-menu-item index="4-2-4">冲突处理</el-menu-item></router-link>
                   <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-5">历史补全</el-menu-item></router-link>
                 </el-submenu>
+                <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink"><el-menu-item index="5">
                   <i class="el-icon-setting"></i>
