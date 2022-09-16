@@ -2,39 +2,25 @@
     <div class="common-layout" style="height: 100%">
         <el-header class="homeHeader">
           <div class="title">知识图谱管理系统</div>
-<!--          <div>-->
-<!--            <el-dropdown class="userInfo" @command="commandHandler">-->
-<!--              <span class="el-dropdown-link">-->
-<!--                {{user.name}}<i><img :src="user.userface" alt=""></i>-->
-<!--              </span>-->
-<!--              <el-dropdown-menu slot="dropdown">-->
-<!--                <el-dropdown-item command="userinfo">个人中心</el-dropdown-item>-->
-<!--                <el-dropdown-item command="setting">设置</el-dropdown-item>-->
-<!--                <el-dropdown-item command="logout" divided>注销登录</el-dropdown-item>-->
-<!--              </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
-            <el-dropdown>
-              <span class="el-dropdown-link" style="color: azure">
-                用户1
-                <i class="el-icon-arrow-down"></i>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>个人中心</el-dropdown-item>
-                  <el-dropdown-item>设置</el-dropdown-item>
-                  <el-dropdown-item divided>退出</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
+            <el-dropdown class="dropdown">
+              <div>
+              <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="vertical-align:middle;margin: 10px"></el-avatar>
+              <span style="color: azure;font-size: large;vertical-align:middle;">{{username}}</span>
+              <i class="el-icon-arrow-down" style="color: azure;font-size: large;vertical-align:middle;"></i>
+              <el-dropdown-menu>
+                <router-link to="/personal" class="routerlink" ><el-dropdown-item>个人中心</el-dropdown-item></router-link>
+                <router-link to="/setting" class="routerlink" ><el-dropdown-item>设置</el-dropdown-item></router-link>
+                <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+              </div>
             </el-dropdown>
-<!--          </div>-->
         </el-header>
         <el-container style="height: 100%; border: 1px solid #eee">
           <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
             <el-menu
               :default-active="$route.path"
               class="el-menu-vertical-demo"
-              @open="handleOpen"
-              @close="handleClose">
+              >
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-edit-outline"></i>
@@ -101,6 +87,16 @@
                 <router-link to="/kg/merge" class="routerlink">
                   <el-menu-item index="4-1">图谱融合</el-menu-item>
                 </router-link>
+                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-1">图谱融合</el-menu-item></router-link>
+                <el-submenu index="4-2">
+                  <template slot="title">图谱补全</template>
+                  <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">获取三元组</el-menu-item></router-link>
+                  <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutomatedCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/HandleConflicts" class="routerlink"><el-menu-item index="4-2-4">冲突处理</el-menu-item></router-link>
+                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-5">历史补全</el-menu-item></router-link>
+                </el-submenu>
+                <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink"><el-menu-item index="5">
                   <i class="el-icon-setting"></i>
@@ -113,15 +109,15 @@
             </el-menu>
           </el-aside>
           <el-main>
-            <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/home'"></el-empty>
+            <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
             <div class="breadcrumb">
-              <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/home'" >
-                <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+              <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'" >
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
               </el-breadcrumb>
             </div>
             <router-view>
-
+                
             </router-view>
           </el-main>
         </el-container>
@@ -136,13 +132,61 @@
     text-decoration: none;
   }
   .homeHeader{
+    padding-right: 0px;
     background-color:#303030;
   }
   .title{
-    width: 95%;
+    float: left;
     color: #ffffff;
     display: inline-block;
   }
+  .dropdown{
+    float: right;
+    height: inherit;
+    margin-right: 10px;
+  }
 </style>
 <script>
+import store from "../store";
+export default {
+  name: 'Home',
+  data(){
+    return {
+      session:'',
+      username:'',
+      headurl:'',
+    }
+  },
+  created() {
+    this.session = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    this.username = this.session.username
+    this.headurl = this.session.headurl
+  },
+  methods:{
+    test(){
+      console.log(this.username)
+    },
+    handleLogout(){
+        axios.post('/api/user/logout', this.$qs.stringify({
+          token: store.state.token
+        }),{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then((response) => {
+          //登出成功
+          if (response.data.code == 200) {
+            //删除token
+            store.commit('REMOVE_INFO')
+            // 跳转登录界面
+            this.$router.push('/login')
+          }
+          //登出失败
+          else {
+            this.$message.error({
+              message: '登出失败'
+            });
+          }
+        }).catch(function (error) {
+          console.log(error);
+        })
+      }
+  }
+}
 </script>

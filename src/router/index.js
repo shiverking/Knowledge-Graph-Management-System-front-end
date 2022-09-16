@@ -17,6 +17,12 @@ import People from "../views/data_management/people/People"
 import Summary from "../views/data_management/plan/Summary"
 import Analysis from "../views/data_management/analysis/Analysis"
 import KgMerge from "../views/kg_merge/KgMerge"
+import KgCompletion from "../views/kg_completion/KgCompletion"
+import GetTriples from "../views/kg_completion/GetTriples"
+import LinkPrediction from "../views/kg_completion/LinkPrediction"
+import AutomatedCompletion from "../views/kg_completion/AutomatedCompletion"
+import HandleConflicts from "../views/kg_completion/HandleConflicts"
+import ViewHistory from "../views/kg_completion/ViewHistory"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
@@ -26,13 +32,15 @@ import OntologyAutoBuild from "../views/ontology_management/OntologyAutoBuild"
 import StructuredDataToOntology from "../views/ontology_management/StructuredDataToOntology"
 import HalfStructuredDataToOntology from "../views/ontology_management/HalfStructuredDataToOntology"
 import NotStructuredDataToOntology from "../views/ontology_management/NotStructuredDataToOntology"
+import twoView from "../views/visualization/2dView.vue";
+import MergeHistory from "../views/kg_merge/MergeHistory";
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/login',
       name: '登录',
       component: Login,
       hidden: true
@@ -43,11 +51,21 @@ export default new Router({
       component: Register,
       hidden: true
     },
+    //测试可视化界面
     {
-      path: '/home',
+      path: '/2dView',
+      name: '2dView',
+      component:twoView,
+      hidden: true
+    },
+    {
+      path: '/',
       name: '主页',
       component: Home,
       hidden: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
       children:[
         {
           path:'/setting',
@@ -68,6 +86,9 @@ export default new Router({
       name: '数据管理',
       component: Home,
       show: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
       children:[
         {
           path: '/data/arm',
@@ -159,12 +180,55 @@ export default new Router({
       name: '图谱管理',
       component: Home,
       show: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
       children:[
         {
           path: '/kg/merge',
-          name: '实体对齐',
+          name: '图谱融合',
           component: KgMerge,
           show: true,
+        },
+        {
+          path: '/kg/merge/history',
+          name: '融合历史',
+          component: MergeHistory,
+          show: true,
+        },
+        {
+          path: '/kg/completion',
+          name: '图谱补全',
+          component: KgCompletion,
+          show: true,
+          redirect:'GetTriples',
+          children:[
+            {
+              path: "/kg/completion/GetTriples",
+              name: "获取三元组",
+              component: GetTriples,
+            },
+            {
+              path: "/kg/completion/LinkPrediction",
+              name: "链接预测",
+              component: LinkPrediction
+            },
+            {
+              path: "/kg/completion/AutomatedCompletion",
+              name: "自动化补全",
+              component: AutomatedCompletion
+            },
+            {
+              path: "/kg/completion/HandleConflicts",
+              name: "冲突处理",
+              component: HandleConflicts
+            },
+            {
+              path: "/kg/completion/ViewHistory",
+              name: "历史补全",
+              component: ViewHistory
+            },
+          ]
         },
       ]
     },

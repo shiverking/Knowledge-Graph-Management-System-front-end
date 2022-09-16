@@ -2,17 +2,17 @@
   <div class="login-page">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span class="login-title">🔐知识图谱管理系统</span>
+        <span class="login-title">🔐知识图谱中台</span>
       </div>
       <div class="login-form">
         <el-form :model="form" :rules="loginRules" ref="loginForm">
-          <el-form-item prop="userName">
-            <el-input type="text" v-model="form.userName" auto-complete="off" placeholder="请输入用户名">
+          <el-form-item prop="username">
+            <el-input type="text" v-model="form.username" auto-complete="off" placeholder="请输入用户名">
               <template slot="prepend"><i style="font-size:20px" class="el-icon-user"></i></template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="passWord">
-            <el-input type="text" v-model="form.passWord" auto-complete="off" placeholder="请输入密码">
+          <el-form-item prop="password">
+            <el-input type="text" v-model="form.password" auto-complete="off" placeholder="请输入密码">
               <template slot="prepend"><i style="font-size:20px" class="el-icon-key"></i></template>
             </el-input>
           </el-form-item>
@@ -27,51 +27,68 @@
 </template>
 
 <script>
-
+import store  from "../store";
 export default {
   name: 'Login',
   data(){
     return {
       loading: false,
       form:{
-        userName: '',
-        passWord: ''
+        username: '',
+        password: ''
       },
       loginRules:{
-        userName: [
+        username: [
           { required: true, message: '请输入账户', trigger: 'blur' },
         ],
-        passWord: [
+        password: [
           { required: true, message: '请输入密码', trigger: 'blur'}
         ]
       }
     }
   },
   methods:{
-    handleLogin(){
-      this.$refs.loginForm.validate().then(()=>{
+    handleLogin() {
+      this.$refs.loginForm.validate().then(() => {
         this.loading = true;
-
-        //模拟异步请求后台接口 登录操作
-        setTimeout(()=>{
-          this.$router.push('/home');
+        axios.post('/api/user/login', this.$qs.stringify({
+          username: this.form.username,
+          password: this.form.password
+        }),{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then((response) => {
           this.loading = false;
-        }, 1000)
-      }).catch((error=>{
+          //登录成功
+          if (response.data.code == 200) {
+            const token = response.data.data.token
+            const userinfo = response.data.data.userInfo
+            store.commit('SET_TOKEN', token)
+            store.commit('SET_USERINFO', userinfo)
+            // 跳转登录界面
+            this.$router.push('/')
+          }
+          //登录失败
+          else {
+            this.$message.error({
+              message: '用户名或密码错误'
+            });
+          }
+        }).catch(function (error) {
+          console.log(error);
+        })
+      }).catch((error => {
         this.$message({
-          message: '输入错误！',
+          message: '请输入正确数据',
           type: 'warning'
-        });
+        })
       }))
     },
-    notify() {
-      this.$notify.info({
-        title: '注册账户',
-        message: '请联系管理员',
-        position: 'bottom-right'
-      });
-    },
-  }
+    notify()
+    {this.$notify.info({
+          title: '注册账户',
+          message: '请联系管理员',
+          position: 'bottom-right'
+        });
+      }
+    }
 }
 </script>
 
