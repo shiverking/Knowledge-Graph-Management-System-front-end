@@ -20,6 +20,12 @@ import KgMerge from "../views/kg_merge/KgMerge"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
+import OntologyShow from "../views/ontology_management/OntologyShow"
+import OntologyUpdate from "../views/ontology_management/OntologyUpdate"
+import OntologyAutoBuild from "../views/ontology_management/OntologyAutoBuild"
+import StructuredDataToOntology from "../views/ontology_management/StructuredDataToOntology"
+import HalfStructuredDataToOntology from "../views/ontology_management/HalfStructuredDataToOntology"
+import NotStructuredDataToOntology from "../views/ontology_management/NotStructuredDataToOntology"
 Vue.use(Router)
 
 export default new Router({
@@ -160,6 +166,52 @@ export default new Router({
           component: KgMerge,
           show: true,
         },
+      ]
+    },
+    {
+      path:'/ontology',
+      name:'本体管理',
+      component:Home,
+      show: true,
+      children:[
+        {
+          path: '/ontology/ontologyshow',
+          name: '本体展示',
+          component: OntologyShow,
+          show: true
+        },
+        {
+          path: '/ontology/ontologyupdate',
+          name: '本体修改',
+          component: OntologyUpdate,
+          show: true
+        },
+        {
+          path: '/ontology/ontologyautobuild',
+          name: '本体自动化构建',
+          component: OntologyAutoBuild,
+          show: true,
+          children: [
+            {
+              path:'/ontology/structureddatatoontology',
+              name:'结构化数据',
+              component:StructuredDataToOntology,
+              show:true
+            },
+            {
+              path:'/ontology/halfstructureddatatoontology',
+              name:'半结构化数据',
+              component:HalfStructuredDataToOntology,
+              show: true
+            },
+            {
+              path:'/ontology/notstructureddatatoontology',
+              name:'非结构化数据',
+              component:NotStructuredDataToOntology,
+              show: true
+            }
+          ]
+        }
       ]
     }
   ],

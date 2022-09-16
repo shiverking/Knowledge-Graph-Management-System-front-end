@@ -42,7 +42,9 @@
                 </template>
                 <el-submenu index="1-1">
                   <template slot="title">武器装备数据</template>
-                  <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-1-1">飞机</el-menu-item></router-link>
+                  <router-link to="/data/arm/Aircraft" class="routerlink" >
+                    <el-menu-item index="1-1-1">飞机</el-menu-item>
+                  </router-link>
                   <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-1-3">火炮</el-menu-item></router-link>
                   <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-1-4">爆炸物</el-menu-item></router-link>
                   <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-5">舰船</el-menu-item></router-link>
@@ -63,10 +65,30 @@
                   <router-link to="/data/analysis/column" class="routerlink"><el-menu-item index="1-4-1">数据可视化</el-menu-item></router-link>
                 </el-submenu>
               </el-submenu>
-              <el-menu-item index="2">
-                <i class="el-icon-collection"></i>
-                <span slot="title">本体管理</span>
-              </el-menu-item>
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="el-icon-collection"></i>
+                  <span slot="title">本体管理</span>
+                </template>
+                <router-link to="/ontology/OntologyShow" class="routerlink">
+                  <el-menu-item index="2-1">本体展示</el-menu-item>
+                </router-link>
+                <router-link to="/ontology/OntologyUpdate" class="routerlink">
+                  <el-menu-item index="2-2">本体修改</el-menu-item>
+                </router-link>
+                <el-submenu index="2-3">
+                  <template slot="title">本体自动化构建</template>
+                  <router-link to="/ontology/StructuredDataToOntology" class="routerlink">
+                    <el-menu-item index="2-3-1">结构化数据</el-menu-item>
+                  </router-link>
+                  <router-link to="/ontology/HalfStructuredDataToOntology" class="routerlink">
+                    <el-menu-item index="2-3-2">半结构化数据</el-menu-item>
+                  </router-link>
+                  <router-link to="/ontology/NotStructuredDataToOntology" class="routerlink">
+                    <el-menu-item index="2-3-3">非结构化数据</el-menu-item>
+                  </router-link>
+                </el-submenu>
+              </el-submenu>
               <el-menu-item index="3">
                 <i class="el-icon-document-copy"></i>
                 <span slot="title">知识管理</span>
@@ -76,7 +98,9 @@
                   <i class="el-icon-share"></i>
                   <span slot="title">图谱管理</span>
                 </template>
-                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-1">图谱融合</el-menu-item></router-link>
+                <router-link to="/kg/merge" class="routerlink">
+                  <el-menu-item index="4-1">图谱融合</el-menu-item>
+                </router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink"><el-menu-item index="5">
                   <i class="el-icon-setting"></i>
