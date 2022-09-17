@@ -31,20 +31,21 @@
                   <router-link to="/data/arm/Aircraft" class="routerlink" >
                     <el-menu-item index="1-1-1">飞机</el-menu-item>
                   </router-link>
+                  <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-1-1">飞机</el-menu-item></router-link>
+                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-2">舰船</el-menu-item></router-link>
                   <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-1-3">火炮</el-menu-item></router-link>
                   <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-1-4">爆炸物</el-menu-item></router-link>
                   <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-5">舰船</el-menu-item></router-link>
+                  <router-link to="/data/arm/Misile" class="routerlink"><el-menu-item index="1-1-5">导弹</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-2">
                   <template slot="title">人员数据</template>
-                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-2">人员信息</el-menu-item></router-link>
-                  <router-link to="/data/people/education" class="routerlink"><el-menu-item index="1-2-3">教育信息</el-menu-item></router-link>
-                  <router-link to="/data/people/resume" class="routerlink"><el-menu-item index="1-2-4">履历信息</el-menu-item></router-link>
+                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-1">人员信息</el-menu-item></router-link>
+
                 </el-submenu>
                 <el-submenu index="1-3">
                   <template slot="title">计划与任务</template>
                   <router-link to="/data/plan/plan" class="routerlink"><el-menu-item index="1-3-1">作战计划</el-menu-item></router-link>
-                  <router-link to="/data/plan/task" class="routerlink"><el-menu-item index="1-3-2">作战任务</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-4">
                   <template slot="title">数据分析</template>
