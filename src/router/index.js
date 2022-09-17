@@ -3,11 +3,25 @@ import Router from 'vue-router'
 import Aircraft from '../views/data_management/arm/Aircraft'
 import Artillery from '../views/data_management/arm/Artillery'
 import Bomb from '../views/data_management/arm/Bomb'
-import Education from '../views/data_management/people/education'
+import AddAircraft from '../views/data_management/arm/AddAircraft'
+import AddMisile from '../views/data_management/arm/AddMisile'
+import AddVessel from '../views/data_management/arm/AddVessel'
+import AddArtillery from '../views/data_management/arm/AddArtillery'
+import AddBomb from '../views/data_management/arm/AddBomb'
+import ArtilleryUpdate from '../views/data_management/arm/ArtilleryUpdate'
+import AircraftUpdate from '../views/data_management/arm/AircraftUpdate'
+import MisileUpdate from '../views/data_management/arm/MisileUpdate'
+import BombUpdate from '../views/data_management/arm/BombUpdate'
+import VesselUpdate from '../views/data_management/arm/VesselUpdate'
+import AddPerson from '../views/data_management/people/AddPerson'
 import Person from '../views/data_management/people/Person'
-import Resume from '../views/data_management/people/Resume'
+import PersonDetail from '../views/data_management/people/PersonDetail'
+import PersonUpdate from '../views/data_management/people/PersonUpdate'
 import Plan from '../views/data_management/plan/Plan'
-import Task from '../views/data_management/plan/Task'
+import AddPlan from '../views/data_management/plan/AddPlan'
+import PlanUpdate from '../views/data_management/plan/PlanUpdate'
+import PlanDetail from '../views/data_management/plan/PlanDetail'
+import TaskDetail from '../views/data_management/plan/TaskDetail'
 import Vessel from '../views/data_management/arm/Vessel'
 import Column from '../views/data_management/analysis/Column'
 import Login from "../views/Login";
@@ -98,6 +112,56 @@ export default new Router({
           redirect:'Aircraft',
           children:[
             {
+              path: "/data/arm/AddAircraft",
+              name: "添加飞机",
+              component: AddAircraft,
+            },
+            {
+              path: "/data/arm/AddArtillery",
+              name: "添加火炮",
+              component: AddArtillery,
+            },
+            {
+              path: "/data/arm/AddVessel",
+              name: "添加舰船",
+              component: AddVessel,
+            },
+            {
+              path: "/data/arm/AddMisile",
+              name: "添加导弹",
+              component: AddMisile,
+            },
+            {
+              path: "/data/arm/AddBomb",
+              name: "添加爆炸物",
+              component: AddBomb,
+            },
+            {
+              path: "/data/arm/AircraftUpdate",
+              name: "编辑飞机",
+              component: AircraftUpdate,
+            },
+            {
+              path: "/data/arm/ArtilleryUpdate",
+              name: "编辑火炮",
+              component: ArtilleryUpdate,
+            },
+            {
+              path: "/data/arm/BombUpdate",
+              name: "编辑爆炸物",
+              component: BombUpdate,
+            },
+            {
+              path: "/data/arm/MisileUpdate",
+              name: "编辑导弹",
+              component: MisileUpdate,
+            },
+            {
+              path: "/data/arm/VesselUpdate",
+              name: "编辑舰船",
+              component: VesselUpdate,
+            },
+            {
               path: "/data/arm/Aircraft",
               name: "飞机",
               component: Aircraft,
@@ -131,14 +195,19 @@ export default new Router({
               component: Person
             },
             {
-              path: "/data/people/education",
-              name: "教育信息",
-              component: Education
+              path: "/data/people/AddPerson",
+              name: "增加人员信息",
+              component: AddPerson
             },
             {
-              path: "/data/people/resume",
-              name: "履历信息",
-              component: Resume
+              path: "/data/people/PersonUpdate",
+              name: "编辑人员信息",
+              component: PersonUpdate
+            },
+            {
+              path: "/data/people/PersonDetail",
+              name: "人员详情",
+              component: PersonDetail
             },
           ]
         },
@@ -154,9 +223,24 @@ export default new Router({
               component: Plan
             },
             {
-              path: "/data/plan/task",
-              name: "作战任务",
-              component: Task
+              path: "/data/plan/AddPlan",
+              name: "添加作战计划",
+              component: AddPlan
+            },
+            {
+              path: "/data/plan/PlanUpdate",
+              name: "编辑作战计划",
+              component: PlanUpdate
+            },
+            {
+              path: "/data/plan/PlanDetail",
+              name: "作战计划详情",
+              component: PlanDetail
+            },
+            {
+              path: "/data/plan/TaskDetail",
+              name: "作战任务详情",
+              component: TaskDetail
             },
           ]
         },
