@@ -35,7 +35,6 @@ import KgCompletion from "../views/kg_completion/KgCompletion"
 import GetTriples from "../views/kg_completion/GetTriples"
 import LinkPrediction from "../views/kg_completion/LinkPrediction"
 import AutomatedCompletion from "../views/kg_completion/AutomatedCompletion"
-import HandleConflicts from "../views/kg_completion/HandleConflicts"
 import ViewHistory from "../views/kg_completion/ViewHistory"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
@@ -301,11 +300,6 @@ export default new Router({
               path: "/kg/completion/AutomatedCompletion",
               name: "自动化补全",
               component: AutomatedCompletion
-            },
-            {
-              path: "/kg/completion/HandleConflicts",
-              name: "冲突处理",
-              component: HandleConflicts
             },
             {
               path: "/kg/completion/ViewHistory",
