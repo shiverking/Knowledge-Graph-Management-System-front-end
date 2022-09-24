@@ -88,7 +88,6 @@
                 <router-link to="/kg/merge" class="routerlink">
                   <el-menu-item index="4-1">图谱融合</el-menu-item>
                 </router-link>
-                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-1">图谱融合</el-menu-item></router-link>
                 <el-submenu index="4-2">
                   <template slot="title">图谱补全</template>
                   <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">获取三元组</el-menu-item></router-link>
