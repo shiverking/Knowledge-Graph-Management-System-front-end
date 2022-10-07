@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <el-select v-model="value" placeholder="冲突类型" style="margin-top: 20px;;">
+  <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="margin-top: 10px;">
+  <el-select v-model="value" placeholder="全部" style="margin-top: 0px;;">
             <el-option
             v-for="item in options"
             :key="item.value"
@@ -11,7 +11,7 @@
         <el-button>搜索</el-button>  
     <template>
     <el-table
-        :data="tableData"
+        :data="tableData2"
         border
         style="width: 100%; margin-top: 20px;">
         <el-table-column
@@ -23,16 +23,30 @@
         </template>
         </el-table-column>
         <el-table-column
-        label="姓名"
-        width="180">
+        label="三元组"
+        width="500">
         <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-            <p>姓名: {{ scope.row.name }}</p>
-            <p>住址: {{ scope.row.address }}</p>
+            <p>头实体: {{ scope.row.head }}</p>
+            <p>头实体类型: {{ scope.row.head_typ }}</p>
+            <p>尾实体: {{ scope.row.tail }}</p>
+            <p>尾实体类型: {{ scope.row.tail_typ }}</p>
+            <p>关系: {{ scope.row.rel }}</p>
             <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                <el-tag size="medium">{{ scope.row.head }}</el-tag>
+                <el-tag size="medium">{{ scope.row.head_typ }}</el-tag>
+                <el-tag size="medium">{{ scope.row.tail }}</el-tag>
+                <el-tag size="medium">{{ scope.row.tail_typ }}</el-tag>
+                <el-tag size="medium">{{ scope.row.rel }}</el-tag>
             </div>
             </el-popover>
+        </template>
+        </el-table-column>
+        <el-table-column
+        label="类别"
+        width="180">
+        <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
         </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -48,7 +62,7 @@
         </el-table-column>
     </el-table>
     </template>
-    </div>
+  </el-tabs>
 </template>
 <script>
   export default {
@@ -59,24 +73,20 @@
           label: '全部'
         }, {
           value: '选项2',
-          label: '实体对间新的关系'
+          label: '人员图谱'
         }, {
           value: '选项3',
-          label: '属性重复'
+          label: '装备图谱'
         }],
-        value: ''
-      }
-    }
-  }
-</script>
-<script>
-  export default {
-    data() {
-      return {
-        tableData: [{
+        activeName: 'first',
+        tableData2: [{
           date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          head: '约翰·保罗·琼斯号导弹驱逐舰',
+          head_typ: '驱逐舰',
+          tail: '美国',
+          tail_typ: '国家',
+          rel: '产国',
+          conflict_typ: '装备图谱'
         }, {
           date: '2016-05-04',
           name: '王小虎',
@@ -93,12 +103,15 @@
       }
     },
     methods: {
+      next() {
+        if (this.active++ > 2) this.active = 0;
+      },
       handleEdit(index, row) {
         console.log(index, row);
       },
       handleDelete(index, row) {
         console.log(index, row);
-      }
+      },
     }
   }
 </script>

@@ -7,8 +7,10 @@ import './plugins/element.js'
 import echarts from 'echarts'
 import axios from "axios"
 import qs from 'qs'
+import '@/axios.js'
 Vue.prototype.$echarts =echarts
 Vue.prototype.$qs = qs
+Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 //设置token过期时间，单位是ms 两小时过期
@@ -54,34 +56,7 @@ router.beforeEach((to, from, next) => {
         }
     }
 })
-// 配置请求的根路径
-axios.defaults.baseURL="http://127.0.0.1:8080/api";
-//axios 拦截器
-//http request 拦截器
-axios.interceptors.request.use((config) =>{
-      console.log(config)
-      if (store.state.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-            config.headers.Authorization = window.localStorage.getItem('token')
-      }
-            return config;
-      },
-     (err)=> {
-            return Promise.reject(err);
-    });
 
-// http response 拦截器
-axios.interceptors.response.use((response) =>{
-      return response
-    },
-    function(error){
-      if (error) {
-        store.commit('logout')
-        router.replace('/login')
-      }
-      // 返回接口返回的错误信息
-      return Promise.reject(error)
- })
-Vue.prototype.$http = axios
 
 new Vue({
   router,
