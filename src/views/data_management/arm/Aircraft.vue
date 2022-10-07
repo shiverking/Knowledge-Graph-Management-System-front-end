@@ -159,7 +159,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('http://localhost:8181/aircraft/search',{params:_this.ruleForm}).then(function(resp){
+          axios.get('/api/aircraft/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
             _this.tableData = resp.data.content
             _this.total = resp.data.totalElements
@@ -171,7 +171,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/aircraft/deleteById/'+row.id).then(function(resp){
+      axios.delete('/api/aircraft/deleteById/'+row.id).then(function(resp){
 
         _this.$alert('《'+row.aircraft_name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
@@ -198,7 +198,7 @@ export default {
 
       const _this = this
       if(_this.ruleForm.value ==''){
-        axios.get('http://localhost:8181/aircraft/findAll/'+(currentPage-1)+'/2').then(function(resp){
+        axios.get('/api/aircraft/findAll/'+(currentPage-1)+'/2').then(function(resp){
           console.log(resp)
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
@@ -206,7 +206,7 @@ export default {
         })}
       else{
         _this.ruleForm.page = currentPage
-        axios.get('http://localhost:8181/aircraft/search',{params:_this.ruleForm}).then(function(resp){
+        axios.get('/api/aircraft/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.content
           _this.total = resp.data.totalElements
@@ -218,7 +218,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('http://localhost:8181/aircraft/findAll/0/2').then(function(resp){
+    axios.get('/api/aircraft/findAll/0/2').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.content
       _this.pageSize = resp.data.size

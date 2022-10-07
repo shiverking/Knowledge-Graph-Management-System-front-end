@@ -168,7 +168,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('http://localhost:8181/vessel/search',{params:_this.ruleForm}).then(function(resp){
+          axios.get('/api/vessel/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
             _this.tableData = resp.data.content
             _this.total = resp.data.totalElements
@@ -180,7 +180,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/vesseel/deleteById/'+row.id).then(function(resp){
+      axios.delete('/api/vesseel/deleteById/'+row.id).then(function(resp){
         _this.$alert('《'+row.name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -200,7 +200,7 @@ export default {
     page(currentPage) {
       const _this = this
       if (_this.ruleForm.value == '') {
-        axios.get('http://localhost:8181/vessel/findAll/' + (currentPage - 1) + '/4').then(function (resp) {
+        axios.get('/api/vessel/findAll/' + (currentPage - 1) + '/4').then(function (resp) {
           console.log(resp)
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
@@ -208,7 +208,7 @@ export default {
         })
       } else {
         _this.ruleForm.page = _this.currentPage
-        axios.get('http://localhost:8181/vessel/search', {params: _this.ruleForm}).then(function (resp) {
+        axios.get('/api/vessel/search', {params: _this.ruleForm}).then(function (resp) {
           console.log(_this.ruleForm)
           _this.tableData = resp.data.content
           _this.total = resp.data.totalElements
@@ -221,7 +221,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('http://localhost:8181/vessel/findAll/0/4').then(function(resp){
+    axios.get('/api/vessel/findAll/0/4').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.content
       _this.pageSize = resp.data.size

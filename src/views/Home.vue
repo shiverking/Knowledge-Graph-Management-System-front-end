@@ -28,14 +28,10 @@
                 </template>
                 <el-submenu index="1-1">
                   <template slot="title">武器装备数据</template>
-                  <router-link to="/data/arm/Aircraft" class="routerlink" >
-                    <el-menu-item index="1-1-1">飞机</el-menu-item>
-                  </router-link>
                   <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-1-1">飞机</el-menu-item></router-link>
                   <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-2">舰船</el-menu-item></router-link>
                   <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-1-3">火炮</el-menu-item></router-link>
                   <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-1-4">爆炸物</el-menu-item></router-link>
-                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-5">舰船</el-menu-item></router-link>
                   <router-link to="/data/arm/Misile" class="routerlink"><el-menu-item index="1-1-5">导弹</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-2">

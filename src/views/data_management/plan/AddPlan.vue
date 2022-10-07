@@ -147,7 +147,7 @@ export default {
 
     change1(){
       const _this = this
-      axios.get('http://localhost:8181/task/findByPlanid/'+this.ruleForm.plan_id).then(function(resp){
+      axios.get('/api/findByPlanid/'+this.ruleForm.plan_id).then(function(resp){
         _this.options2 = resp.data
       })
     },
@@ -155,7 +155,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('http://localhost:8181/plan/save',this.ruleForm).then(function(resp){
+          axios.post('/api/plan/save',this.ruleForm).then(function(resp){
           })
         }
         else {
@@ -169,7 +169,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('http://localhost:8181/task/saves',this.formtask).then(function(resp){
+          axios.post('/api/task/saves',this.formtask).then(function(resp){
 
           })
         }
@@ -177,7 +177,7 @@ export default {
           return false;
         }
       })
-      axios.get('http://localhost:8181/person/saveplanid/'+this.person_id).then(function(resp){
+      axios.get('/api/person/saveplanid/'+this.person_id).then(function(resp){
         _this.$alert('《' + _this.ruleForm.plan_name + '》添加成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -193,7 +193,7 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/person/findAll').then(function(resp){
+    axios.get('/api/person/findAll').then(function(resp){
       _this.options1 = resp.data
     })
   }
