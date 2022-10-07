@@ -30,11 +30,15 @@ import Arm from "../views/data_management/arm/Arm"
 import People from "../views/data_management/people/People"
 import Summary from "../views/data_management/plan/Summary"
 import Analysis from "../views/data_management/analysis/Analysis"
+import TriplesManagement from "../views/triples_management/TriplesManagement"
+import KnowledgeExtraction from "../views/triples_extraction/KnowledgeExtraction"
+import NamedEntityRecognition from "../views/triples_extraction/NamedEntityRecognition"
+import TriplesExtraction from "../views/triples_extraction/TriplesExtraction"
 import KgMerge from "../views/kg_merge/KgMerge"
 import KgCompletion from "../views/kg_completion/KgCompletion"
 import GetTriples from "../views/kg_completion/GetTriples"
 import LinkPrediction from "../views/kg_completion/LinkPrediction"
-import AutomatedCompletion from "../views/kg_completion/AutomatedCompletion"
+import AutoCompletion from "../views/kg_completion/AutoCompletion"
 import ViewHistory from "../views/kg_completion/ViewHistory"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
@@ -259,6 +263,44 @@ export default new Router({
       ]
     },
     {
+      path: '/know',
+      name: '知识管理',
+      component: Home,
+      show: true,
+      meta:{
+        requireAuth:true //此时表示进入这个路由是需要登录的
+      },
+      children:[
+        {
+          path: '/know/triples_management',
+          name: '三元组管理',
+          component: TriplesManagement,
+          show: true,
+        },
+
+        {
+          path: '/know/triples_extracton',
+          name: '知识抽取',
+          component: KnowledgeExtraction,
+          show: true,
+          redirect:'NamedEntityRecognition',
+          children:[
+            {
+              path: "/know/triples_extracton/NamedEntityRecognition",
+              name: "命名实体识别",
+              component: NamedEntityRecognition,
+            },
+            {
+              path: "/know/triples_extracton/TriplesExtraction",
+              name: "三元组抽取",
+              component: TriplesExtraction
+            },
+  
+          ]
+        }
+      ]
+    } ,
+    {
       path: '/kg',
       name: '图谱管理',
       component: Home,
@@ -297,9 +339,9 @@ export default new Router({
               component: LinkPrediction
             },
             {
-              path: "/kg/completion/AutomatedCompletion",
+              path: "/kg/completion/AutoCompletion",
               name: "自动化补全",
-              component: AutomatedCompletion
+              component: AutoCompletion
             },
             {
               path: "/kg/completion/ViewHistory",
