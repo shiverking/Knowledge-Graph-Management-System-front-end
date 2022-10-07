@@ -76,6 +76,13 @@
                 <i class="el-icon-document-copy"></i>
                 <span slot="title">知识管理</span>
               </el-menu-item>
+                              <el-submenu index="3-1">
+                  <template slot="title">知识抽取</template>
+                  <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-1-1">实体抽取</el-menu-item></router-link>
+                  <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-1-2">三元组抽取</el-menu-item></router-link>
+                </el-submenu>
+                  <router-link to="/know/triples_management" class="routerlink"><el-menu-item index="3-2">三元组管理</el-menu-item></router-link>
+              </el-submenu>
               <el-submenu index="4">
                 <template slot="title">
                   <i class="el-icon-share"></i>
@@ -86,10 +93,10 @@
                 </router-link>
                 <el-submenu index="4-2">
                   <template slot="title">图谱补全</template>
-                  <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">获取三元组</el-menu-item></router-link>
+                  <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
                   <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
-                  <router-link to="/kg/completion/AutomatedCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
-                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-5">历史补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-4">历史补全</el-menu-item></router-link>
                 </el-submenu>
                 <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
               </el-submenu>

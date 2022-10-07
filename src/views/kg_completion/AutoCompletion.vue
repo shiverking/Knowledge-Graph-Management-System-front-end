@@ -56,13 +56,6 @@
             <span style="margin-left: 10px">{{ scope.row.result }}</span>
         </template>
         </el-table-column>
-        <el-table-column
-        label="补全来源"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.from }}</span>
-        </template>
-        </el-table-column>
         <el-table-column label="操作">
         <template slot-scope="scope">
             <el-button
@@ -101,8 +94,7 @@
           tail_typ: '国家',
           rel: '产国',
           conflict_typ: '0.38767',
-          result: '补全失败',
-          from: '自动化补全'
+          result: '补全失败'
         }, {
           date: '2016-05-04',
           name: '王小虎',

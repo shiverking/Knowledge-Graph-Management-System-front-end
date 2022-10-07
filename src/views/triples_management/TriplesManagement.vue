@@ -1,6 +1,6 @@
 <template>
-  <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="margin-top: 20px;">
-  <el-select v-model="value" placeholder="全部" style>
+  <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="margin-top: 10px;">
+  <el-select v-model="value" placeholder="全部" style="margin-top: 0px;;">
             <el-option
             v-for="item in options"
             :key="item.value"
@@ -43,24 +43,10 @@
         </template>
         </el-table-column>
         <el-table-column
-        label="三元组置信度"
+        label="类别"
         width="180">
         <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="补全结果"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.result }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="补全来源"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.from }}</span>
         </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -82,27 +68,25 @@
   export default {
     data() {
       return {
-        activeName: 'first',
         options: [{
           value: '选项1',
           label: '全部'
         }, {
           value: '选项2',
-          label: '补全成功'
+          label: '人员图谱'
         }, {
           value: '选项3',
-          label: '补全失败'
+          label: '装备图谱'
         }],
+        activeName: 'first',
         tableData2: [{
           date: '2016-05-02',
           head: '约翰·保罗·琼斯号导弹驱逐舰',
           head_typ: '驱逐舰',
-          tail: '台湾',
+          tail: '美国',
           tail_typ: '国家',
           rel: '产国',
-          conflict_typ: '0.38767',
-          result: '补全失败',
-          from: '自动化补全'
+          conflict_typ: '装备图谱'
         }, {
           date: '2016-05-04',
           name: '王小虎',
