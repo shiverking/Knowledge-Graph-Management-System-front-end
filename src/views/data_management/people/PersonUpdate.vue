@@ -221,7 +221,7 @@ export default {
         })
       }
       else {
-        axios.delete('http://localhost:8181/education/deleteById/' + item.id).then(function (resp) {
+        axios.delete('/api/education/deleteById/' + item.id).then(function (resp) {
 
           _this.formeducation.splice(index, 1);
           _this.$message({
@@ -253,7 +253,7 @@ export default {
         })
       }
       else {
-        axios.delete('http://localhost:8181/resume/deleteById/' + item.id).then(function (resp) {
+        axios.delete('/api/resume/deleteById/' + item.id).then(function (resp) {
 
           _this.formresume.splice(index, 1);
           _this.$message({
@@ -286,7 +286,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.put('http://localhost:8181/person/update',this.ruleForm).then(function(resp){
+          axios.put('/api/person/update',this.ruleForm).then(function(resp){
 
           })
         }
@@ -299,7 +299,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.put('http://localhost:8181/education/update',this.formeducation).then(function(resp){
+          axios.put('/api/education/update',this.formeducation).then(function(resp){
             console.log(_this.formeducation)
           })
         }
@@ -307,7 +307,7 @@ export default {
           return false;
         }
       });
-      axios.put('http://localhost:8181/resume/update',this.formresume).then(function(resp){
+      axios.put('/api/resume/update',this.formresume).then(function(resp){
         _this.$alert('《' + _this.ruleForm.name_cn + '》修改成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -324,15 +324,15 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/person/findById/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/person/findById/'+this.$route.query.id).then(function(resp){
 
       _this.ruleForm = resp.data[0]
     })
-    axios.get('http://localhost:8181/education/findById/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/education/findById/'+this.$route.query.id).then(function(resp){
       console.log(resp.data)
       _this.formeducation = resp.data
     })
-    axios.get('http://localhost:8181/resume/findById/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/resume/findById/'+this.$route.query.id).then(function(resp){
       _this.formresume = resp.data
     })
   }

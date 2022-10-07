@@ -94,7 +94,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('http://localhost:8181/person/search',{params:_this.ruleForm}).then(function(resp){
+          axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
             _this.tableData = resp.data.content
             _this.total = resp.data.totalElements
@@ -106,7 +106,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/person/deleteById/'+row.id).then(function(resp){
+      axios.delete('/api/person/deleteById/'+row.id).then(function(resp){
         _this.$alert('《'+row.name_cn+'》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -143,7 +143,7 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('http://localhost:8181/person/findAll/' + (currentPage - 1) + '/7').then(function (resp) {
+        axios.get('/api/person/findAll/' + (currentPage - 1) + '/7').then(function (resp) {
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
           _this.total = resp.data.totalElements
@@ -152,7 +152,7 @@ export default {
       }
       else{
         _this.ruleForm.page = _this.currentPage
-        axios.get('http://localhost:8181/person/search',{params:_this.ruleForm}).then(function(resp){
+        axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.content
           _this.total = resp.data.totalElements
@@ -186,7 +186,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('http://localhost:8181/person/findAll/0/7').then(function(resp){
+    axios.get('/api/person/findAll/0/7').then(function(resp){
       _this.tableData = resp.data.content
       _this.pageSize = resp.data.size
       _this.total = resp.data.totalElements

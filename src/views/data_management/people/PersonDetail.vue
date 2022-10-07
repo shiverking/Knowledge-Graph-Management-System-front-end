@@ -1,8 +1,5 @@
 <template>
   <div>
-    <el-link @click="edit()">
-      <font color="#6495ed"><返回</font></el-link>
-    <br/>
     <br/>
     <div>教育信息</div>
     <el-table
@@ -195,17 +192,17 @@ export default {
     }
   },
   methods: {
-    deleteBook(row) {
-      const _this = this
-      axios.delete('http://localhost:8181/book/deleteById/' + row.id).then(function (resp) {
-        _this.$alert('《' + row.name + '》删除成功！', '消息', {
-          confirmButtonText: '确定',
-          callback: action => {
-            window.location.reload()
-          }
-        })
-      })
-    },
+    // deleteBook(row) {
+    //   const _this = this
+    //   axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
+    //     _this.$alert('《' + row.name + '》删除成功！', '消息', {
+    //       confirmButtonText: '确定',
+    //       callback: action => {
+    //         window.location.reload()
+    //       }
+    //     })
+    //   })
+    // },
     edit() {
       this.$router.push({
         path: '/person',
@@ -226,22 +223,23 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/resume/findById/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/resume/findById/' + this.$route.query.id).then(function (resp) {
       _this.tableData1 = resp.data
     })
-    axios.get('http://localhost:8181/education/findById/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/education/findById/' + this.$route.query.id).then(function (resp) {
 
       _this.tableData = resp.data
     });
-    axios.get('http://localhost:8181/plan/findById/' + this.$route.query.id1).then(function (resp) {
+    axios.get('/api/plan/findById/' + this.$route.query.id1).then(function (resp) {
 
       _this.tableData2 = resp.data
     });
-    if (this.$route.query.id2 != null){
-      axios.get('http://localhost:8181/task/findById/' + this.$route.query.id2).then(function (resp) {
-      _this.tableData3 = resp.data
-    });
-  }}
+  //   if (this.$route.query.id2 != null){
+  //     axios.get('/api/task/findById/' + this.$route.query.id2).then(function (resp) {
+  //     _this.tableData3 = resp.data
+  //   });
+  // }
+    }
 }
 
 

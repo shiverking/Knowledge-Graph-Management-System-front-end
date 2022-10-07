@@ -1,10 +1,7 @@
 <template>
   <div>
-    <el-link @click="edit()">
-      <font color="#6495ed"><返回</font></el-link>
-    <br/>
-    <br/>
 
+    <br/>
     <div>指挥官信息</div>
     <el-table
       :data="tableData1"
@@ -178,7 +175,7 @@ export default {
   methods: {
     deleteBook(row) {
       const _this = this
-      axios.delete('http://localhost:8181/book/deleteById/' + row.id).then(function (resp) {
+      axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
         _this.$alert('《' + row.name + '》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -211,11 +208,11 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/vessel/findByTaskid/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/vessel/findByTaskid/' + this.$route.query.id).then(function (resp) {
       console.log(resp)
       _this.tableData = resp.data
     });
-    axios.get('http://localhost:8181/person/findByTaskid/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/person/findByTaskid/' + this.$route.query.id).then(function (resp) {
       _this.tableData1 = resp.data
     });
     // axios.get('http://localhost:8181/plan/findById/' + this.$route.query.id1).then(function (resp) {

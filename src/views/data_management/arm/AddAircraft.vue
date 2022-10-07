@@ -88,7 +88,7 @@
                 const _this = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        axios.post('http://localhost:8181/aircraft/save',this.ruleForm).then(function(resp){
+                        axios.post('/api/aircraft/save',this.ruleForm).then(function(resp){
                             if(resp.data == 'success'){
                                 _this.$alert('《'+_this.ruleForm.aircraft_name+'》添加成功！', '消息', {
                                     confirmButtonText: '确定',
