@@ -74,8 +74,9 @@
                 <el-submenu index="4-2">
                   <template slot="title">图谱补全</template>
                   <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
-                  <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">自动化补全</el-menu-item></router-link>
-                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-5">历史补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-4">历史补全</el-menu-item></router-link>
                 </el-submenu>
               </el-submenu>
               <router-link to="/setting" class="routerlink"><el-menu-item index="5">

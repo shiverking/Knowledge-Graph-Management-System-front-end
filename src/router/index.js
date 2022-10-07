@@ -24,10 +24,12 @@ import KgMerge from "../views/kg_merge/KgMerge"
 import KgCompletion from "../views/kg_completion/KgCompletion"
 import GetTriples from "../views/kg_completion/GetTriples"
 import LinkPrediction from "../views/kg_completion/LinkPrediction"
+import AutoCompletion from "../views/kg_completion/AutoCompletion"
 import ViewHistory from "../views/kg_completion/ViewHistory"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
+import { Autocomplete } from 'element-ui'
 Vue.use(Router)
 
 export default new Router({
@@ -232,6 +234,11 @@ export default new Router({
               path: "/kg/completion/LinkPrediction",
               name: "链接预测",
               component: LinkPrediction
+            },
+            {
+              path: "/kg/completion/AutoCompletion",
+              name: "自动化补全",
+              component: AutoCompletion
             },
             {
               path: "/kg/completion/ViewHistory",
