@@ -47,12 +47,12 @@
     methods:{
       task(){
         const _this =this
-        axios.get('http://localhost:8181/task/count').then(function (resp){
+        axios.get('/api/task/count').then(function (resp){
           _this.data1 =resp.data
       })},
       drawLine(){
         const _this =this
-        axios.get('http://localhost:8181/artillery/count').then(function (resp){
+        axios.get('/api/artillery/count').then(function (resp){
 
           let myChart = _this.$echarts.init(document.getElementById('myChart'))
           myChart.setOption(

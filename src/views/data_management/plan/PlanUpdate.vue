@@ -165,7 +165,7 @@ export default {
         })
       }
       else {
-        axios.delete('http://localhost:8181/task/deleteById/' + item.id).then(function (resp) {
+        axios.delete('/api/task/deleteById/' + item.id).then(function (resp) {
 
           _this.formtask.splice(index, 1);
           _this.$message({
@@ -199,7 +199,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.put('http://localhost:8181/plan/update',this.ruleForm).then(function(resp){
+          axios.put('/api/plan/update',this.ruleForm).then(function(resp){
 
           })
         }
@@ -213,7 +213,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.get('http://localhost:8181/person/setplanid/'+this.person_id+'/'+this.ruleForm.id+'/'+this.person_id_old).then(function(resp){
+          axios.get('/api/person/setplanid/'+this.person_id+'/'+this.ruleForm.id+'/'+this.person_id_old).then(function(resp){
             console.log(_this.formeducation)
           })
         }
@@ -221,7 +221,7 @@ export default {
           return false;
         }
       });
-      axios.put('http://localhost:8181/task/update',this.formtask).then(function(resp){
+      axios.put('/api/task/update',this.formtask).then(function(resp){
         _this.$alert('《' + _this.ruleForm.plan_name + '》修改成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -238,18 +238,18 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/plan/findById/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/plan/findById/'+this.$route.query.id).then(function(resp){
 
       _this.ruleForm = resp.data[0]
     })
-    axios.get('http://localhost:8181/person/findByPlanid/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/person/findByPlanid/'+this.$route.query.id).then(function(resp){
       _this.person_id = resp.data[0].id
       _this.person_id_old = resp.data[0].id
     })
-    axios.get('http://localhost:8181/person/findAll/').then(function(resp){
+    axios.get('/api/person/findAll/').then(function(resp){
       _this.options1 = resp.data
     })
-    axios.get('http://localhost:8181/task/findByPlanid/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/task/findByPlanid/'+this.$route.query.id).then(function(resp){
       _this.formtask = resp.data
     })
     // axios.get('http://localhost:8181/person/deleteplanid/'+this.person_id).then(function(resp){

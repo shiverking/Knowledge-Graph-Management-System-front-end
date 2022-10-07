@@ -219,7 +219,7 @@ export default {
     },
     change1(){
       const _this = this
-      axios.get('http://localhost:8181/task/findByPlanid/'+this.ruleForm.plan_id).then(function(resp){
+      axios.get('/api/task/findByPlanid/'+this.ruleForm.plan_id).then(function(resp){
         _this.options2 = resp.data
       })
     },
@@ -227,7 +227,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('http://localhost:8181/person/save',this.ruleForm).then(function(resp){
+          axios.post('/api/person/save',this.ruleForm).then(function(resp){
 
           })
         }
@@ -242,7 +242,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('http://localhost:8181/education/saves',this.formeducation).then(function(resp){
+          axios.post('/api/education/saves',this.formeducation).then(function(resp){
           console.log(_this.formeducation)
         })
         }
@@ -250,7 +250,7 @@ export default {
           return false;
         }
       });
-      axios.post('http://localhost:8181/resume/saves',this.formresume).then(function(resp){
+      axios.post('/api/resume/saves',this.formresume).then(function(resp){
         _this.$alert('《' + _this.ruleForm.name_cn + '》添加成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -267,7 +267,7 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/plan/findAll').then(function(resp){
+    axios.get('/api/plan/findAll').then(function(resp){
       _this.options1 = resp.data
     })
   }

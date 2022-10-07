@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Aircraft from '../views/data_management/arm/Aircraft'
 import Artillery from '../views/data_management/arm/Artillery'
 import Bomb from '../views/data_management/arm/Bomb'
+import Misile from '../views/data_management/arm/Misile'
 import AddAircraft from '../views/data_management/arm/AddAircraft'
 import AddMisile from '../views/data_management/arm/AddMisile'
 import AddVessel from '../views/data_management/arm/AddVessel'
@@ -183,6 +184,11 @@ export default new Router({
               path: "/data/arm/Vessel",
               name: "舰船",
               component: Vessel
+            },
+            {
+              path: "/data/arm/Misile",
+              name: "舰船",
+              component: Misile
             },
           ]
         },
