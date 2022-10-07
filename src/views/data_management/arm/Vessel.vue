@@ -1,126 +1,186 @@
 <template>
   <div>
+    <div>
+      <br>
+      <el-form ref="formInline" :inline="true" :model="ruleForm" class="demo-form-inline">
+
+        <el-form-item label="字段名称：">
+          <el-select v-model="ruleForm.key" placeholder="请选择字段名称" >
+            <el-option label="舰船名称" value ="name"></el-option>
+            <el-option label="制造商" value ="manufacturer"></el-option>
+            <el-option label="类型" value ="type"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="值：">
+          <el-input v-model="ruleForm.value" placeholder="请输入字段值"></el-input>
+
+        </el-form-item >
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="submitForm('formInline')" >搜索</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon = "el-icon-circle-plus-outline" size='big'  @click="add()">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table
-      :data="tableData"
-      border
-      style="width: 95%">
+        :data="tableData"
+        border
+        style="width: 95%">
       <el-table-column
-        fixed
-        prop="vessel_id"
-        label="舰船编号"
-        width="50">
+          fixed
+          prop="id"
+          label="舰船编号"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="舰船名称"
-        width="100">
+          prop="name"
+          label="舰船名称"
+          width="100">
       </el-table-column>
       <el-table-column
-        prop="picture"
-        label="图片"
-        width="100">
+          prop="picture"
+          label="图片"
+          width="100">
         <template slot-scope="scope">
           <img :src="scope.row.picture" width="80" height="80"  />
         </template>
       </el-table-column>
       <el-table-column
-        prop="description"
-        label="简介"
-        width="200">
+          prop="description"
+          label="简介"
+          width="200">
       </el-table-column>
       <el-table-column
-        prop="manufacturer"
-        label="制造商"
-        width="100">
+          prop="manufacturer"
+          label="制造商"
+          width="100">
       </el-table-column>
       <el-table-column
-        prop="product_date"
-        label="生产时间"
-        width="100">
+          prop="product_date"
+          label="生产时间"
+          width="100">
       </el-table-column>
       <el-table-column
-        prop="launch_time"
-        label="下水时间"
-        width="50">
+          prop="launch_time"
+          label="下水时间"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="service_time"
-        label="服役时间"
-        width="50">
+          prop="service_time"
+          label="服役时间"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="status"
-        label="状态"
-        width="50">
+          prop="status"
+          label="状态"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="subtype"
-        label="次型"
-        width="50">
+          prop="subtype"
+          label="次型"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="length"
-        label="长度"
-        width="50">
+          prop="length"
+          label="长度"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="width"
-        label="宽度"
-        width="100">
+          prop="width"
+          label="宽度"
+          width="100">
       </el-table-column>
       <el-table-column
-        prop="crew_num"
-        label="载员"
-        width="100">
+          prop="crew_num"
+          label="载员"
+          width="100">
       </el-table-column>
       <el-table-column
-        prop="full_load_displacement"
-        label="满载排水量"
-        width="50">
+          prop="full_load_displacement"
+          label="满载排水量"
+          width="50">
       </el-table-column>
       <el-table-column
-        prop="speed"
-        label="速度"
-        width="100">
+          prop="speed"
+          label="速度"
+          width="100">
       </el-table-column>
       <el-table-column
-        prop="type"
-        label="类型"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="task.task_name"
-        label="执行任务"
-        width="50">
+          prop="type"
+          label="类型"
+          width="50">
       </el-table-column>
 
-      <!--            <el-table-column-->
-      <!--                    fixed="right"-->
-      <!--                    label="操作"-->
-      <!--                    width="100">-->
-      <!--                <template slot-scope="scope">-->
-      <!--                    <el-button @click="edit(scope.row)" type="text" size="small" >修改</el-button>-->
-      <!--                    <el-button @click="deleteBook(scope.row)" type="text" size="small">删除</el-button>-->
-      <!--                </template>-->
-      <!--            </el-table-column>-->
+      <el-table-column
+          fixed="right"
+          label="操作"
+          width="100">
+        <template slot-scope="scope">
+          <el-button @click="edit(scope.row)" type="text" size="big" >编辑</el-button>
+          <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size="pageSize"
-      :total="total"
-      @current-change="page">
+        background
+        layout="prev, pager, next"
+        :page-size="pageSize"
+        :total="total"
+        @current-change="page">
     </el-pagination>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      currentPage:'1',
+      pageSize:'1',
+      total:'11',
+      tableData: [],
+      ruleForm: {
+        key: '',
+        value: '',
+        page: '',
+        size: 3,
+      },
+      rules: {
+        name: [
+          { required: true, message: '图书名称不能为空', trigger: 'blur' }
+        ],
+        author:[
+          { required: true, message: '作者不能为空', trigger: 'blur' }
+        ]
+      }
+    };
+  },
   methods: {
+    add() {
+      this.$router.push({
+        path: '/data/arm/AddVessel',
+      })
+    },
+    submitForm(formName) {
+      const _this = this
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          _this.ruleForm.page = _this.currentPage
+          axios.get('http://localhost:8181/vessel/search',{params:_this.ruleForm}).then(function(resp){
+            console.log(_this.ruleForm)
+            _this.tableData = resp.data.content
+            _this.total = resp.data.totalElements
+          })
+        } else {
+          return false;
+        }
+      });
+    },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/book/deleteById/'+row.id).then(function(resp){
+      axios.delete('http://localhost:8181/vesseel/deleteById/'+row.id).then(function(resp){
         _this.$alert('《'+row.name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -131,30 +191,33 @@ export default {
     },
     edit(row) {
       this.$router.push({
-        path: '/update',
+        path: '/data/arm/VesselUpdate',
         query:{
           id:row.id
         }
       })
     },
-    page(currentPage){
+    page(currentPage) {
       const _this = this
-      axios.get('http://localhost:8181/vessel/findAll/'+(currentPage-1)+'/4').then(function(resp){
-        console.log(resp)
-        _this.tableData = resp.data.content
-        _this.pageSize = resp.data.size
-        _this.total = resp.data.totalElements
-      })
+      if (_this.ruleForm.value == '') {
+        axios.get('http://localhost:8181/vessel/findAll/' + (currentPage - 1) + '/4').then(function (resp) {
+          console.log(resp)
+          _this.tableData = resp.data.content
+          _this.pageSize = resp.data.size
+          _this.total = resp.data.totalElements
+        })
+      } else {
+        _this.ruleForm.page = _this.currentPage
+        axios.get('http://localhost:8181/vessel/search', {params: _this.ruleForm}).then(function (resp) {
+          console.log(_this.ruleForm)
+          _this.tableData = resp.data.content
+          _this.total = resp.data.totalElements
+        })
+      }
     }
   },
 
-  data() {
-    return {
-      pageSize:'1',
-      total:'11',
-      tableData: []
-    }
-  },
+
 
   created() {
     const _this = this

@@ -7,6 +7,19 @@
       <el-step title="质量评估"></el-step>
     </el-steps>
     <div v-if="this.active==0">
+    <el-button style="margin-top: 12px;" @click="dialogAllKGVisible = true">查看所有图谱</el-button>
+      <span>当前选择图谱名称:militarykg</span>
+      <el-dialog :visible.sync="dialogAllKGVisible">
+      <el-form :model="form">
+        <el-form-item label="图谱名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAllKGVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogAllKGVisible = false;displayKgItems">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-table
         :data="tableData"
         height="350"
@@ -53,12 +66,19 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage4"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="100"
+        :page-sizes=pageSizes
+        :page-size=pageSize
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total=total>
     </el-pagination>
-    <div id="neo4jd3" class="neo4jd3"></div>
+      <el-button style="margin-top: 12px;" @click="dialogTwoDViewVisible=true">预览</el-button>
+      <el-dialog :visible.sync="dialogTwoDViewVisible" custom-class="previewDialog"
+                 fullscreen
+                 close-on-press-escape
+      >
+        <TwoDView></TwoDView>
+      </el-dialog>
+
     </div>
     <div v-if="this.active==1">
       <el-select v-model="value" placeholder="请选择算法">
@@ -155,7 +175,7 @@
 <!--          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
         </div>
         <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
+          {{'问题列表' + o }}
         </div>
       </el-card>
     </div>
@@ -165,10 +185,6 @@
   </div>
 </template>
 <style>
-.neo4jd3 {
-  height: 100%;
-  overflow: hidden;
-}
 .text {
   font-size: 14px;
 }
@@ -185,18 +201,23 @@
 .clearfix:after {
   clear: both
 }
+
+
+.el-dialog__header {
+  /*display: none;*/
+  padding: 10px;
+}
+.dj-dialog-content {
+  padding: 0;
+  overflow: unset;
+}
+
 </style>
-<!--<style src="../../../static/neo4jd3.css"></style>-->
-<script src="../../plugins/neo4jd3.js"></script>
 <script>
-import "../../../static/neo4jd3.css";
-// import "../../plugins/neo4jd3.js";
-// this.neo4j = new Neo4jd3('#neo4jd3', {
-//   minCollision: 60,
-//   neo4jDataUrl: '/neo/query',
-//   neo4jData: '{"hhh":"ggg","jjj":"fff"}',
-// });
+import TwoDView from "../visualization/2dView";
+import store from "../../store";
 export default {
+  components: {TwoDView},
   data() {
     return {
       active: 0,
@@ -227,35 +248,7 @@ export default {
         label: '同时保留'
       },],
       value: '',
-      tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
+      tableData: [],
       multipleSelection: [],
       gridData: [{
         date: '2016-05-02',
@@ -275,6 +268,23 @@ export default {
         address: '上海市普陀区金沙江路 1518 弄'
       }],
       dialogTableVisible: false,
+      dialogTwoDViewVisible:false,
+      dialogAllKGVisible:false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '120px',
+      //分页设置
+      pageSize:"50",
+      pageSizes:"[50, 100, 150, 200]",
+      total:"400"
     };
   },
 
@@ -297,8 +307,38 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    handleCurrentChange(val){
+        axios.post('/api/kg/getAllTriples', this.$qs.stringify({
+          page:`${val}`,
+          limit: this.pageSize
+        }),{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then((response) => {
+          console.log(response)
+          //获取信息成功
+          // if (response.status==200) {
+          //   this.total = response
+          // }
+      })
+      // ${val}
     }
-  },
+  }
+    // displayKgItems(){
+    //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({
+    //     page: this.,
+    //     limit: this.pageSize
+    //   }),{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then((response) => {
+    //     this.loading = false;
+    //     //登录成功
+    //     if (response.data.code == 200) {
+    //       const token = response.data.data.token
+    //       const userinfo = response.data.data.userInfo
+    //       store.commit('SET_TOKEN', token)
+    //       store.commit('SET_USERINFO', userinfo)
+    //       // 跳转登录界面
+    //       this.$router.push('/')
+    //     }
+    // }
+  // },
 
 }
 </script>

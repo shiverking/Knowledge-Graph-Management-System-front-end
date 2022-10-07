@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div>
+    <div >
       <br>
       <el-form ref="formInline" :inline="true" :model="ruleForm" class="demo-form-inline">
 
         <el-form-item label="字段名称：">
           <el-select v-model="ruleForm.key" placeholder="请选择字段名称" >
-            <el-option label="火炮" value ="name"></el-option>
+            <el-option label="导弹名称" value ="name"></el-option>
             <el-option label="研发公司" value ="rd_company"></el-option>
             <el-option label="类型" value ="type"></el-option>
           </el-select>
@@ -19,28 +19,24 @@
           <el-button type="primary" icon="el-icon-search" @click="submitForm('formInline')" >搜索</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon = "el-icon-circle-plus-outline" size='big'  @click="add()">添加</el-button>
+        <el-button type="primary" icon = "el-icon-circle-plus-outline" size='big'  @click="add()">添加</el-button>
         </el-form-item>
+
       </el-form>
     </div>
     <el-table
         :data="tableData"
         border
-        style="width: 100%">
+        style="width: 90%">
       <el-table-column
           fixed
           prop="id"
-          label="火炮编号"
+          label="导弹编号"
           width="50">
       </el-table-column>
       <el-table-column
           prop="name"
-          label="火炮名称"
-          width="100">
-      </el-table-column>
-      <el-table-column
-          prop="country"
-          label="国家"
+          label="导弹名称"
           width="100">
       </el-table-column>
       <el-table-column
@@ -57,49 +53,46 @@
           width="200">
       </el-table-column>
       <el-table-column
-          prop="product_date"
-          label="研发时间"
-          width="100">
-      </el-table-column>
-      <el-table-column
           prop="rd_company"
           label="研发公司"
           width="100">
       </el-table-column>
       <el-table-column
-          prop="length"
+          prop="bomb_length"
           label="长度"
           width="50">
       </el-table-column>
       <el-table-column
-          prop="weight"
+          prop="bomb_weight"
           label="重量"
           width="50">
       </el-table-column>
+
       <el-table-column
-          prop="diameter"
-          label="口径"
+          prop="winspan"
+          label="翼展"
           width="50">
       </el-table-column>
       <el-table-column
-          prop="barrel_length"
-          label="炮管长度"
+          prop="guidance_system"
+          label="制导系统"
           width="50">
       </el-table-column>
+
       <el-table-column
-          prop="muzzle_velocity"
-          label="炮口初速"
-          width="50">
+          prop="max_speed"
+          label="最快速度"
+          width="100">
       </el-table-column>
       <el-table-column
           prop="scope"
           label="射程"
-          width="100">
+          width="50">
       </el-table-column>
       <el-table-column
           prop="type"
           label="类型"
-          width="100">
+          width="50">
       </el-table-column>
 
       <el-table-column
@@ -127,7 +120,7 @@
 export default {
   data() {
     return {
-      currentPage:'1',
+      currentPage:1,
       pageSize:'1',
       total:'11',
       tableData: [],
@@ -135,7 +128,7 @@ export default {
         key: '',
         value: '',
         page: '',
-        size: 3,
+        size: 2,
       },
       rules: {
         name: [
@@ -148,18 +141,13 @@ export default {
     };
   },
   methods: {
-    add() {
-      this.$router.push({
-        path: '/data/arm/AddArtillery',
-      })
-    },
     submitForm(formName) {
       const _this = this
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('http://localhost:8181/artillery/search',{params:_this.ruleForm}).then(function(resp){
-            console.log(_this.ruleForm)
+          axios.get('http://localhost:8181/misile/search',{params:_this.ruleForm}).then(function(resp){
+            console.log(resp)
             _this.tableData = resp.data.content
             _this.total = resp.data.totalElements
           })
@@ -170,7 +158,8 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/artillery/deleteById/'+row.id).then(function(resp){
+      axios.delete('http://localhost:8181/misile/deleteById/'+row.id).then(function(resp){
+
         _this.$alert('《'+row.name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -179,9 +168,14 @@ export default {
         })
       })
     },
+    add() {
+      this.$router.push({
+        path: '/data/arm/AddMisile',
+      })
+    },
     edit(row) {
       this.$router.push({
-        path: '/data/arm/ArtilleryUpdate',
+        path: '/data/arm/MisileUpdate',
         query:{
           id:row.id
         }
@@ -190,7 +184,7 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('http://localhost:8181/artillery/findAll/' + (currentPage - 1) + '/3').then(function (resp) {
+        axios.get('http://localhost:8181/misile/findAll/' + (currentPage - 1) + '/2').then(function (resp) {
           console.log(resp)
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
@@ -198,20 +192,23 @@ export default {
         })
       }
       else{
-        _this.ruleForm.page = _this.currentPage
-        axios.get('http://localhost:8181/artillery/search',{params:_this.ruleForm}).then(function(resp){
+        _this.ruleForm.page= currentPage
+        axios.get('http://localhost:8181/misile/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.content
+          _this.pageSize = resp.data.size
           _this.total = resp.data.totalElements
         })
+
       }
     }
+
   },
 
 
   created() {
     const _this = this
-    axios.get('http://localhost:8181/artillery/findAll/0/3').then(function(resp){
+    axios.get('http://localhost:8181/misile/findAll/0/2').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.content
       _this.pageSize = resp.data.size

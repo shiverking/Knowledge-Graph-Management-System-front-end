@@ -28,37 +28,59 @@
                 </template>
                 <el-submenu index="1-1">
                   <template slot="title">武器装备数据</template>
+                  <router-link to="/data/arm/Aircraft" class="routerlink" >
+                    <el-menu-item index="1-1-1">飞机</el-menu-item>
+                  </router-link>
                   <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-1-1">飞机</el-menu-item></router-link>
+                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-2">舰船</el-menu-item></router-link>
                   <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-1-3">火炮</el-menu-item></router-link>
                   <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-1-4">爆炸物</el-menu-item></router-link>
                   <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-5">舰船</el-menu-item></router-link>
+                  <router-link to="/data/arm/Misile" class="routerlink"><el-menu-item index="1-1-5">导弹</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-2">
                   <template slot="title">人员数据</template>
-                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-2">人员信息</el-menu-item></router-link>
-                  <router-link to="/data/people/education" class="routerlink"><el-menu-item index="1-2-3">教育信息</el-menu-item></router-link>
-                  <router-link to="/data/people/resume" class="routerlink"><el-menu-item index="1-2-4">履历信息</el-menu-item></router-link>
+                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-1">人员信息</el-menu-item></router-link>
+
                 </el-submenu>
                 <el-submenu index="1-3">
                   <template slot="title">计划与任务</template>
                   <router-link to="/data/plan/plan" class="routerlink"><el-menu-item index="1-3-1">作战计划</el-menu-item></router-link>
-                  <router-link to="/data/plan/task" class="routerlink"><el-menu-item index="1-3-2">作战任务</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-4">
                   <template slot="title">数据分析</template>
                   <router-link to="/data/analysis/column" class="routerlink"><el-menu-item index="1-4-1">数据可视化</el-menu-item></router-link>
                 </el-submenu>
               </el-submenu>
-              <el-menu-item index="2">
-                <i class="el-icon-collection"></i>
-                <span slot="title">本体管理</span>
-              </el-menu-item>
-              <el-submenu index="3">
+              <el-submenu index="2">
                 <template slot="title">
-                  <i class="el-icon-document-copy"></i>
-                  <span slot="title">知识管理</span>
-                 </template>
-                <el-submenu index="3-1">
+                  <i class="el-icon-collection"></i>
+                  <span slot="title">本体管理</span>
+                </template>
+                <router-link to="/ontology/OntologyShow" class="routerlink">
+                  <el-menu-item index="2-1">本体展示</el-menu-item>
+                </router-link>
+                <router-link to="/ontology/OntologyUpdate" class="routerlink">
+                  <el-menu-item index="2-2">本体修改</el-menu-item>
+                </router-link>
+                <el-submenu index="2-3">
+                  <template slot="title">本体自动化构建</template>
+                  <router-link to="/ontology/StructuredDataToOntology" class="routerlink">
+                    <el-menu-item index="2-3-1">结构化数据</el-menu-item>
+                  </router-link>
+                  <router-link to="/ontology/HalfStructuredDataToOntology" class="routerlink">
+                    <el-menu-item index="2-3-2">半结构化数据</el-menu-item>
+                  </router-link>
+                  <router-link to="/ontology/NotStructuredDataToOntology" class="routerlink">
+                    <el-menu-item index="2-3-3">非结构化数据</el-menu-item>
+                  </router-link>
+                </el-submenu>
+              </el-submenu>
+              <el-menu-item index="3">
+                <i class="el-icon-document-copy"></i>
+                <span slot="title">知识管理</span>
+              </el-menu-item>
+                              <el-submenu index="3-1">
                   <template slot="title">知识抽取</template>
                   <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-1-1">实体抽取</el-menu-item></router-link>
                   <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-1-2">三元组抽取</el-menu-item></router-link>
@@ -70,7 +92,9 @@
                   <i class="el-icon-share"></i>
                   <span slot="title">图谱管理</span>
                 </template>
-                <router-link to="/kg/merge" class="routerlink"><el-menu-item index="4-1">图谱融合</el-menu-item></router-link>
+                <router-link to="/kg/merge" class="routerlink">
+                  <el-menu-item index="4-1">图谱融合</el-menu-item>
+                </router-link>
                 <el-submenu index="4-2">
                   <template slot="title">图谱补全</template>
                   <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
@@ -78,6 +102,7 @@
                   <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
                   <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-4">历史补全</el-menu-item></router-link>
                 </el-submenu>
+                <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink"><el-menu-item index="5">
                   <i class="el-icon-setting"></i>
