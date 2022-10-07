@@ -41,7 +41,6 @@
                 <el-submenu index="1-2">
                   <template slot="title">人员数据</template>
                   <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-1">人员信息</el-menu-item></router-link>
-
                 </el-submenu>
                 <el-submenu index="1-3">
                   <template slot="title">计划与任务</template>
@@ -76,11 +75,12 @@
                   </router-link>
                 </el-submenu>
               </el-submenu>
-              <el-menu-item index="3">
-                <i class="el-icon-document-copy"></i>
-                <span slot="title">知识管理</span>
-              </el-menu-item>
-                              <el-submenu index="3-1">
+              <el-submenu index="3">
+                <template slot="title">
+                  <i class="el-icon-document-copy"></i>
+                  <span slot="title">知识管理</span>
+                </template>
+                <el-submenu index="3-1">
                   <template slot="title">知识抽取</template>
                   <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-1-1">实体抽取</el-menu-item></router-link>
                   <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-1-2">三元组抽取</el-menu-item></router-link>
@@ -104,14 +104,18 @@
                 </el-submenu>
                 <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
               </el-submenu>
-              <router-link to="/setting" class="routerlink"><el-menu-item index="5">
+              <router-link to="/setting" class="routerlink">
+                <el-menu-item index="5">
                   <i class="el-icon-setting"></i>
                   <span slot="title">设置</span>
-              </el-menu-item></router-link>
-              <router-link to="/personal" class="routerlink"><el-menu-item index="5">
-                <i class="el-icon-user"></i>
-                <span slot="title">个人中心</span>
-              </el-menu-item></router-link>
+                </el-menu-item>
+              </router-link>
+              <router-link to="/personal" class="routerlink">
+                <el-menu-item index="5">
+                    <i class="el-icon-user"></i>
+                    <span slot="title">个人中心</span>
+                </el-menu-item>
+              </router-link>
             </el-menu>
           </el-aside>
           <el-main>
