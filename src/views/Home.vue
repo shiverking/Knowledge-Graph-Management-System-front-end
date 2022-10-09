@@ -74,14 +74,20 @@
               <el-submenu index="3">
                 <template slot="title">
                   <i class="el-icon-document-copy"></i>
-                  <span slot="title">知识管理</span>
+                  <span slot="title">三元组管理</span>
                 </template>
                 <el-submenu index="3-1">
-                  <template slot="title">知识抽取</template>
-                  <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-1-1">实体抽取</el-menu-item></router-link>
-                  <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-1-2">三元组抽取</el-menu-item></router-link>
+                  <template slot="title">结构化数据管理</template>
+                  <router-link to="/know/triples_management/IncrementalStructuredData" class="routerlink" ><el-menu-item index="3-1-1">增量数据管理</el-menu-item></router-link>              
                 </el-submenu>
-                  <router-link to="/know/triples_management" class="routerlink"><el-menu-item index="3-2">三元组管理</el-menu-item></router-link>
+                <el-submenu index="3-2">
+                  <template slot="title">非结构化数据管理</template>
+                  <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-2-1">实体抽取</el-menu-item></router-link>
+                  <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-2-2">三元组抽取</el-menu-item></router-link>
+                </el-submenu>
+                <router-link to="/know/CandidateDatasets" class="routerlink">
+                  <el-menu-item index="3-3">候选数据集管理</el-menu-item>
+                </router-link>
               </el-submenu>
               <el-submenu index="4">
                 <template slot="title">
@@ -95,8 +101,8 @@
                   <template slot="title">图谱补全</template>
                   <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
                   <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
-                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
-                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-4">历史补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全图谱</el-menu-item></router-link>
+                  <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
                 </el-submenu>
                 <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-3">版本管理</el-menu-item></router-link>
               </el-submenu>
