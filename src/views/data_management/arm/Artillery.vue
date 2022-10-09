@@ -158,7 +158,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('http://localhost:8181/artillery/search',{params:_this.ruleForm}).then(function(resp){
+          axios.get('/api/artillery/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
             _this.tableData = resp.data.content
             _this.total = resp.data.totalElements
@@ -170,7 +170,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/artillery/deleteById/'+row.id).then(function(resp){
+      axios.delete('/api/artillery/deleteById/'+row.id).then(function(resp){
         _this.$alert('《'+row.name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -190,7 +190,7 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('http://localhost:8181/artillery/findAll/' + (currentPage - 1) + '/3').then(function (resp) {
+        axios.get('/api/artillery/findAll/' + (currentPage - 1) + '/3').then(function (resp) {
           console.log(resp)
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
@@ -199,7 +199,7 @@ export default {
       }
       else{
         _this.ruleForm.page = _this.currentPage
-        axios.get('http://localhost:8181/artillery/search',{params:_this.ruleForm}).then(function(resp){
+        axios.get('/api/artillery/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.content
           _this.total = resp.data.totalElements
@@ -211,7 +211,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('http://localhost:8181/artillery/findAll/0/3').then(function(resp){
+    axios.get('/api/artillery/findAll/0/3').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.content
       _this.pageSize = resp.data.size

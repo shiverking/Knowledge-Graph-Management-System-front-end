@@ -146,7 +146,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('http://localhost:8181/misile/search',{params:_this.ruleForm}).then(function(resp){
+          axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
             console.log(resp)
             _this.tableData = resp.data.content
             _this.total = resp.data.totalElements
@@ -158,7 +158,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('http://localhost:8181/misile/deleteById/'+row.id).then(function(resp){
+      axios.delete('/api/misile/deleteById/'+row.id).then(function(resp){
 
         _this.$alert('《'+row.name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
@@ -184,7 +184,7 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('http://localhost:8181/misile/findAll/' + (currentPage - 1) + '/2').then(function (resp) {
+        axios.get('/api/misile/findAll/' + (currentPage - 1) + '/2').then(function (resp) {
           console.log(resp)
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
@@ -193,7 +193,7 @@ export default {
       }
       else{
         _this.ruleForm.page= currentPage
-        axios.get('http://localhost:8181/misile/search',{params:_this.ruleForm}).then(function(resp){
+        axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.content
           _this.pageSize = resp.data.size
@@ -208,7 +208,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('http://localhost:8181/misile/findAll/0/2').then(function(resp){
+    axios.get('/api/misile/findAll/0/2').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.content
       _this.pageSize = resp.data.size

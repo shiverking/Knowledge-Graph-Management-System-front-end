@@ -253,7 +253,7 @@ export default {
         })
       }
       else {
-        axios.get('http://localhost:8181/person/deletetask/' + item.id).then(function (resp) {
+        axios.get('/api/person/deletetask/' + item.id).then(function (resp) {
 
           _this.formtask.splice(index, 1);
           _this.$message({
@@ -281,7 +281,7 @@ export default {
         })
       }
       else {
-        axios.get('http://localhost:8181/vessel/deletetask/' + item.id).then(function (resp) {
+        axios.get('/api/vessel/deletetask/' + item.id).then(function (resp) {
 
           _this.formtask.splice(index, 1);
           _this.$message({
@@ -293,7 +293,7 @@ export default {
     },
     deleteBook(row) {
       const _this = this
-      axios.delete('http://localhost:8181/book/deleteById/' + row.id).then(function (resp) {
+      axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
         _this.$alert('《' + row.name + '》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -310,12 +310,12 @@ export default {
 
     editmsg(row) {
       const _this =this
-      axios.get('http://localhost:8181/person/findByTaskid/'+row.id).then(function(resp){
+      axios.get('/api/person/findByTaskid/'+row.id).then(function(resp){
         _this.formperson = resp.data
         _this.person_old = resp.data
         console.log(resp.data)
       })
-      axios.get('http://localhost:8181/vessel/findByTaskid/'+row.id).then(function(resp){
+      axios.get('/api/vessel/findByTaskid/'+row.id).then(function(resp){
         _this.formvessel = resp.data
         _this.vessel_old = resp.data
         console.log(resp.data)
@@ -337,11 +337,11 @@ export default {
 
     submitForm1() {
       for(var i =0;i<this.person_old.length;i++){
-        axios.get('http://localhost:8181/person/deletetask/'+this.person_old[i].id).then(function(resp){
+        axios.get('/api/person/deletetask/'+this.person_old[i].id).then(function(resp){
         })
       }
       for(var m =0;m<this.vessel_old.length;m++){
-        axios.get('http://localhost:8181/vessel/deletetask/'+this.vessel_old[m].id).then(function(resp){
+        axios.get('/api/vessel/deletetask/'+this.vessel_old[m].id).then(function(resp){
         })
       }
 
@@ -353,11 +353,11 @@ export default {
     submitForm2() {
       const _this =this
       for(var j =0;j<this.formperson.length;j++){
-        axios.get('http://localhost:8181/person/settaskid/'+this.formperson[j].id+'/'+this.ruleForm.id).then(function(resp){
+        axios.get('/api/person/settaskid/'+this.formperson[j].id+'/'+this.ruleForm.id).then(function(resp){
         })
       }
       for(var n =0;n<this.formvessel.length;n++){
-        axios.get('http://localhost:8181/vessel/settaskid/'+this.formvessel[n].id+'/'+this.ruleForm.id).then(function(resp){
+        axios.get('/api/vessel/settaskid/'+this.formvessel[n].id+'/'+this.ruleForm.id).then(function(resp){
         })
       }
       this.dialogVisible =false;
@@ -390,18 +390,18 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('http://localhost:8181/task/findByPlanid/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/task/findByPlanid/' + this.$route.query.id).then(function (resp) {
       console.log(resp)
       _this.tableData = resp.data
     })
-    axios.get('http://localhost:8181/person/findByPlanid/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/person/findByPlanid/' + this.$route.query.id).then(function (resp) {
 
       _this.tableData1 = resp.data
     });
-    axios.get('http://localhost:8181/person/findAll/').then(function(resp){
+    axios.get('/api/person/findAll/').then(function(resp){
       _this.options1 = resp.data
     })
-    axios.get('http://localhost:8181/vessel/findAll/').then(function(resp){
+    axios.get('/api/vessel/findAll/').then(function(resp){
       _this.options2 = resp.data
     })
 

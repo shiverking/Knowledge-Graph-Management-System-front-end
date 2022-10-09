@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Aircraft from '../views/data_management/arm/Aircraft'
 import Artillery from '../views/data_management/arm/Artillery'
 import Bomb from '../views/data_management/arm/Bomb'
+import Misile from '../views/data_management/arm/Misile'
 import AddAircraft from '../views/data_management/arm/AddAircraft'
 import AddMisile from '../views/data_management/arm/AddMisile'
 import AddVessel from '../views/data_management/arm/AddVessel'
@@ -39,7 +40,9 @@ import KgCompletion from "../views/kg_completion/KgCompletion"
 import GetTriples from "../views/kg_completion/GetTriples"
 import LinkPrediction from "../views/kg_completion/LinkPrediction"
 import AutoCompletion from "../views/kg_completion/AutoCompletion"
-import ViewHistory from "../views/kg_completion/ViewHistory"
+import CompletionModel from "../views/kg_completion/CompletionModel"
+import IncrementalStructuredData from "../views/triples_management/IncrementalStructuredData"
+import CandidateDatasets from "../views/candidate_datasets/CandidateDatasets"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
@@ -184,6 +187,11 @@ export default new Router({
               name: "舰船",
               component: Vessel
             },
+            {
+              path: "/data/arm/Misile",
+              name: "舰船",
+              component: Misile
+            },
           ]
         },
         {
@@ -264,7 +272,7 @@ export default new Router({
     },
     {
       path: '/know',
-      name: '知识管理',
+      name: '三元组管理',
       component: Home,
       show: true,
       meta:{
@@ -273,30 +281,42 @@ export default new Router({
       children:[
         {
           path: '/know/triples_management',
-          name: '三元组管理',
+          name: '结构化数据管理',
           component: TriplesManagement,
           show: true,
+          redirect: 'Ent_ent_rel',
+          children:[
+            {
+              path: "/know/triples_management/IncrementalStructuredData",
+              name: "增量结构化数据管理",
+              component: IncrementalStructuredData,
+            },
+          ]
         },
-
         {
           path: '/know/triples_extracton',
-          name: '知识抽取',
+          name: '非结构化数据管理',
           component: KnowledgeExtraction,
           show: true,
           redirect:'NamedEntityRecognition',
           children:[
             {
               path: "/know/triples_extracton/NamedEntityRecognition",
-              name: "命名实体识别",
+              name: "实体抽取",
               component: NamedEntityRecognition,
             },
             {
               path: "/know/triples_extracton/TriplesExtraction",
               name: "三元组抽取",
               component: TriplesExtraction
-            },
-  
+            },  
           ]
+        },
+        {
+          path: '/know/CandidateDatasets',
+          name: '候选数据集管理',
+          component: CandidateDatasets,
+          show: true,
         }
       ]
     } ,
@@ -344,9 +364,9 @@ export default new Router({
               component: AutoCompletion
             },
             {
-              path: "/kg/completion/ViewHistory",
-              name: "历史补全",
-              component: ViewHistory
+              path: "/kg/completion/CompletionModel",
+              name: "补全模型管理",
+              component: CompletionModel
             },
           ]
         },
