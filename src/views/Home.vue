@@ -1,5 +1,5 @@
 <template>
-    <div class="common-layout" style="height: 100%">
+    <div class="common-layout" style="height: 120vh">
         <el-header class="homeHeader">
           <div class="title">知识图谱管理系统</div>
             <el-dropdown class="dropdown">
@@ -98,7 +98,7 @@
                   <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
                   <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-4">历史补全</el-menu-item></router-link>
                 </el-submenu>
-                <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
+                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-3">版本管理</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink">
                 <el-menu-item index="5">
@@ -116,7 +116,7 @@
           </el-aside>
           <el-main>
             <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
-            <div class="breadcrumb">
+            <div class="breadcrumb" style="margin:10px;">
               <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'" >
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
@@ -130,6 +130,9 @@
       </div>
 </template>
 <style>
+  .el-main {
+    overflow:visible;
+  }
   .el-header {
     color: #333;
     line-height: 60px;
