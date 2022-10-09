@@ -8,6 +8,7 @@ import echarts from 'echarts'
 import axios from "axios"
 import qs from 'qs'
 import '@/axios.js'
+
 Vue.prototype.$echarts =echarts
 Vue.prototype.$qs = qs
 Vue.prototype.$http = axios
