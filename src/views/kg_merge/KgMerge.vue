@@ -8,13 +8,17 @@
     </el-steps>
     <div v-if="this.active==0">
     <el-button style="margin-top: 12px;" @click="dialogAllKGVisible = true">查看所有图谱</el-button>
-      <span>当前选择图谱名称:militarykg</span>
+      <el-card class="box-card" shadow="hover">
+        融合图谱:
+      </el-card>
+      <el-card class="box-card" shadow="hover">
+        候选图谱:
+      </el-card>
+<!--      <span>当前选择图谱名称:militarykg</span>-->
       <el-dialog :visible.sync="dialogAllKGVisible">
-      <el-form :model="form">
-        <el-form-item label="图谱名称" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
+        <h3>选择融合图谱</h3>
+        <el-divider></el-divider>
+        <h3>选择候选图谱</h3>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAllKGVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogAllKGVisible = false;displayKgItems">确 定</el-button>
