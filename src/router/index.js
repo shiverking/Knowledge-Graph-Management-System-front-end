@@ -53,7 +53,8 @@ import StructuredDataToOntology from "../views/ontology_management/StructuredDat
 import HalfStructuredDataToOntology from "../views/ontology_management/HalfStructuredDataToOntology"
 import NotStructuredDataToOntology from "../views/ontology_management/NotStructuredDataToOntology"
 import twoView from "../views/visualization/2dView.vue";
-import MergeHistory from "../views/kg_merge/MergeHistory";
+import CheckKg from "../views/kg_merge/CheckKg";
+
 Vue.use(Router)
 
 export default new Router({
@@ -336,9 +337,9 @@ export default new Router({
           show: true,
         },
         {
-          path: '/kg/merge/history',
-          name: '融合历史',
-          component: MergeHistory,
+          path: '/kg/check',
+          name: '图谱查找',
+          component: CheckKg,
           show: true,
         },
         {

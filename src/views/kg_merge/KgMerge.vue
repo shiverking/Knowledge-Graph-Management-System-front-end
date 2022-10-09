@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-steps :active="active" finish-status="success"  style="margin: 10px" simple>
-      <el-step title="目标预览" ></el-step>
+      <el-step title="生成候选" ></el-step>
       <el-step title="实体对齐" ></el-step>
       <el-step title="图谱融合" ></el-step>
       <el-step title="质量评估"></el-step>
@@ -97,7 +97,7 @@
       </el-input>
       <el-button style="margin-top: 12px;" @click="calculate">开始计算</el-button>
       <div style="margin-top: 20px;margin-bottom: 10px;">
-        <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
+<!--        <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
         <el-button @click="toggleSelection()">取消选择</el-button>
       </div>
       <el-table
@@ -145,7 +145,7 @@
         <el-descriptions-item label="原图谱列表"><a>点击查看</a></el-descriptions-item>
         <el-descriptions-item label="待融合实体列表"><a>点击查看</a></el-descriptions-item>
         <el-descriptions-item label="备注">
-          <el-tag size="small">学校</el-tag>
+          <el-tag size="small">装备</el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="操作时间">2022-10-01</el-descriptions-item>
       </el-descriptions>
