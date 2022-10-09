@@ -1,22 +1,18 @@
 <template>
-  <el-tabs v-model="activeName" @tab-click="handleClick" type="card" style="margin-top: 20px;">
-  <el-select v-model="value" placeholder="全部" style>
-            <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            </el-option>
-        </el-select>
-        <el-button>搜索</el-button>  
-    <template>
-    <el-table
+  <div style="margin-top: 20px;">
+    <el-card class="box-card" shadow="never">
+      <p><b>结构化增量数据</b></p>
+      <el-table
         :data="tableData2"
         border
-        style="width: 100%; margin-top: 20px;">
+        style="width: 100%; margin-top: 10px;">
+        <el-table-column
+        type="selection"
+        width="55">
+        </el-table-column>
         <el-table-column
         label="日期"
-        width="180">
+        width>
         <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -43,24 +39,17 @@
         </template>
         </el-table-column>
         <el-table-column
-        label="三元组置信度"
+        label="类别"
         width="180">
         <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
         </template>
         </el-table-column>
         <el-table-column
-        label="补全结果"
+        label="存储方式"
         width="180">
         <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.result }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="补全来源"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.from }}</span>
+            <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
         </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -74,47 +63,53 @@
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
         </el-table-column>
-    </el-table>
-    </template>
-  </el-tabs>
+      </el-table>
+      <el-button type="primary" style="margin-top: 10px;" @click="next">生成候选数据集</el-button>
+    </el-card>
+  </div>
 </template>
 <script>
   export default {
     data() {
       return {
-        activeName: 'first',
         options: [{
           value: '选项1',
           label: '全部'
         }, {
           value: '选项2',
-          label: '补全成功'
+          label: '人员图谱'
         }, {
           value: '选项3',
-          label: '补全失败'
+          label: '装备图谱'
         }],
+        activeName: 'first',
         tableData2: [{
           date: '2016-05-02',
           head: '约翰·保罗·琼斯号导弹驱逐舰',
           head_typ: '驱逐舰',
-          tail: '台湾',
+          tail: '美国',
           tail_typ: '国家',
           rel: '产国',
-          conflict_typ: '0.38767',
-          result: '补全失败',
-          from: '自动化补全'
+          conflict_typ: '装备图谱',
+          storage_mode: 'neo4j'
         }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
+          date: '2016-05-02',
+        head: '普林斯顿号导弹巡洋舰',
+        head_typ: '巡洋舰',
+        tail: '英格尔斯造船',
+        tail_typ: '制造厂',
+        rel: '制造厂',
+        conflict_typ: '装备图谱',
+        storage_mode: 'neo4j'
         }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
+          date: '2016-05-02-12-11-10',
+        head: '约书亚·温克',
+        head_typ: 'Per',
+        tail: '尼米兹号航空母舰',
+        tail_typ: '航空母舰',
+        rel: '指挥军舰',
+        conflict_typ: '人员图谱',
+        storage_mode: 'neo4j'
         }]
       }
     },
