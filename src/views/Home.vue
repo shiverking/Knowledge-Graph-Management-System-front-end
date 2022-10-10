@@ -2,7 +2,10 @@
     <div class="common-layout" style="height: 120vh">
         <el-header class="homeHeader">
           <div class="title">知识图谱管理系统</div>
-            <el-dropdown class="dropdown">
+          <el-input placeholder="请输入内容" v-model="searchPage" class="input-with-select" style="position: relative;width: 400px;left: 83px">
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+          <el-dropdown class="dropdown">
               <div>
               <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="vertical-align:middle;margin: 10px"></el-avatar>
               <span style="color: azure;font-size: large;vertical-align:middle;">{{username}}</span>
@@ -170,6 +173,7 @@ export default {
       session:'',
       username:'',
       headurl:'',
+      searchPage:'',
     }
   },
   created() {

@@ -1,8 +1,6 @@
 <template>
   <div class="gContainer">
-    <!-- <d3graph /> -->
-<!--    <gSearch @getData="update" class="gSearch"/>-->
-    <d3graph
+    <d3graphsmall
       :data="data"
       :names="names"
       :labels="labels"
@@ -13,12 +11,12 @@
 <style>
 </style>
 <script>
-import d3graph from '@/components/d3graph.vue'
+import d3graphsmall from '@/components/d3graph_small.vue'
 import json from "../../data/records.json";
 export default {
-  name: 'twoDView',
+  name: 'twoDViewSmall',
   components: {
-    d3graph
+    d3graphsmall
   },
   data () {
     return {
