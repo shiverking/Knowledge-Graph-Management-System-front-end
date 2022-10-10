@@ -9,11 +9,26 @@
     <div v-if="this.active==0">
       <el-button  @click="dialogAllKGVisible = true" style="display:inline-block;margin: 10px;" type="primary">选择图谱</el-button>
       <el-button  style="display: inline-block;margin: 10px;" type="danger">全部清空</el-button>
+      <el-button  style="display: inline-block;margin: 10px;" type="primary">导入</el-button>
       <el-card class="box-card" shadow="never" style="width: 50%;display:block;margin:10px;">
         融合图谱:
+        <el-input
+            autosize
+            placeholder="请输入内容"
+            v-model="value_merge_kg"
+            style=" border: 0px;"
+        >
+        </el-input>
       </el-card>
       <el-card class="box-card" shadow="never" style="width: 50%;display:block;margin:10px;">
         候选图谱:
+        <el-input
+            autosize
+            placeholder="请输入内容"
+            v-model="value_candidate_kg"
+            style=" border: none;"
+        >
+        </el-input>
       </el-card>
       <!--对话框-->
       <el-dialog :visible.sync="dialogAllKGVisible">
@@ -36,7 +51,7 @@
               @change="handleChange"
               :data="value_merge_data1"
               v-if="this.select_kg_active==0">
-            <span slot-scope="{ option }">{{ option.key }} - {{ option.label }}</span>
+            <span slot-scope="{ option }">{{ option.label }}</span>
           </el-transfer>
 
         <el-transfer
@@ -52,7 +67,7 @@
             @change="handleChange"
             :data="value_merge_data2"
             v-if="this.select_kg_active==1">
-          <span slot-scope="{ option }">{{ option.key }} - {{ option.label }}</span>
+          <span slot-scope="{ option }">{{ option.label }}</span>
         </el-transfer>
         </div>
         <el-button style="margin-top: 12px;display: block;" @click="select_kg_next">下一步</el-button>
@@ -264,17 +279,29 @@ import store from "../../store";
 export default {
   components: {TwoDView},
   data() {
-    //选择图谱的假数据
+    //选择图谱的假数据(主版本)
     const generateData = _ => {
       const data = [];
-      for (let i = 1; i <= 15; i++) {
+      for (let i = 1; i <= 5; i++) {
         data.push({
           key: i,
-          label: `备选项 ${ i }`,
+          label: `主图谱 ${ i }`,
         });
       }
       return data;
     };
+    //选择图谱的假数据(候选版本)
+    const generateCandidateData = _ => {
+      const data = [];
+      for (let i = 1; i <= 15; i++) {
+        data.push({
+          key: i,
+          label: `候选图谱 ${ i }`,
+        });
+      }
+      return data;
+    };
+
     return {
       active: 0,
       options: [{
@@ -347,9 +374,8 @@ export default {
       value_merge_data1: generateData(),
       value_merge_kg: [1],
       //选择图谱穿梭框1
-      value_merge_data2: generateData(),
+      value_merge_data2: generateCandidateData(),
       value_candidate_kg: [1],
-
     };
   },
 

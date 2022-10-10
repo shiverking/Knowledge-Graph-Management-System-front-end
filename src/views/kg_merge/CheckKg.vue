@@ -25,13 +25,7 @@
       <!--分类查找-->
       <el-tab-pane label="版本库" name="second">
 
-        <!--主题选择-->
-        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-        <div style="margin: 15px 0;"></div>
-        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-          <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-        </el-checkbox-group>
-
+        <!--选择库 -->
         <el-select v-model="value" placeholder="请选择库" style="display: block">
           <el-option
               v-for="item in options"
@@ -41,7 +35,13 @@
           </el-option>
         </el-select>
 
-          <el-autocomplete
+        <!--主题选择-->
+        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+        <div style="margin: 15px 0;"></div>
+        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+          <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+        </el-checkbox-group>
+           <el-autocomplete
               v-model="state"
               :fetch-suggestions="querySearchAsync"
               placeholder="请输入内容"
@@ -59,20 +59,20 @@
               key="version_table"
           >
             <el-table-column
-                prop="name"
-                label="id"
+                prop="id"
+                label="ID"
                 >
             </el-table-column>
             <el-table-column
-                prop="address"
+                prop="name"
                 label="名称"
-                :formatter="formatter">
+            >
             </el-table-column>
             <el-table-column
                 prop="tag"
                 label="标签"
 
-                :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                :filters="[{ text: '单位', value: '家' }, { text: '公司', value: '公司' }]"
                 :filter-method="filterTag"
                 filter-placement="bottom-end">
               <template slot-scope="scope">
@@ -147,7 +147,7 @@
               key="log_table"
           >
             <el-table-column
-                prop="address"
+                prop="id"
                 label="id">
             </el-table-column>
             <el-table-column
@@ -160,25 +160,25 @@
         </div>
         <div class="record-right">
           <el-timeline  v-loading="true">
-                     <el-timeline-item timestamp="2022/4/12" placement="top">
-                        <el-card>
-                          <h4>军事图谱融合</h4>
-                          <p>张三 提交于 2022/4/12 20:46</p>
-                        </el-card>
-                      </el-timeline-item>
-                      <el-timeline-item timestamp="2022/4/3" placement="top">
-                        <el-card>
-                          <h4>军事图谱补充</h4>
-                          <p>李四提交于 2018/4/3 20:46</p>
-                        </el-card>
-                      </el-timeline-item>
-                      <el-timeline-item timestamp="2022/4/2" placement="top">
-                        <el-card>
-                          <h4>第三舰队图谱补充</h4>
-                          <p>王五 提交于 2022/4/2 20:46</p>
-                        </el-card>
-                      </el-timeline-item>
-                    </el-timeline>
+             <el-timeline-item timestamp="2022/4/12" placement="top">
+                <el-card>
+                  <h4>军事图谱融合</h4>
+                  <p>张三 提交于 2022/4/12 20:46</p>
+                </el-card>
+              </el-timeline-item>
+              <el-timeline-item timestamp="2022/4/3" placement="top">
+                <el-card>
+                  <h4>军事图谱补充</h4>
+                  <p>李四提交于 2018/4/3 20:46</p>
+                </el-card>
+              </el-timeline-item>
+              <el-timeline-item timestamp="2022/4/2" placement="top">
+                <el-card>
+                  <h4>第三舰队图谱补充</h4>
+                  <p>王五 提交于 2022/4/2 20:46</p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -186,7 +186,7 @@
 </template>
 <script>
 import TwoDViewSmall from "../visualization/2dViewSmall";
-const cityOptions = ['上海', '北京', '广州', '深圳'];
+const cityOptions = ['部队', '装备', '单位', '人员'];
 export default {
   components: {
     TwoDViewSmall,
@@ -197,25 +197,25 @@ export default {
       state: '',
       timeout:  null,
       tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-        tag: '家'
+        date: '2022-08-04',
+        id: '52a75fce',
+        name: '第十一航母打击群',
+        tag: '打击群'
       }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄',
-        tag: '公司'
+        date: '2021-07-19',
+        id:'6b1a790e',
+        name: '第十二航母打击群',
+        tag: '打击群'
       }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        tag: '家'
+        date: '2022-10-3',
+        id: 'fd4c1b89'  ,
+        name: '第七舰载机联队',
+        tag: '联队'
       }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄',
-        tag: '公司'
+        date: '2022-4-23',
+        id: 'a2db27c3' ,
+        name: '第五战斗机编队',
+        tag: '编队'
       }],
       activeName: 'first',
       input1: '',
