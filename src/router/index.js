@@ -52,7 +52,6 @@ import OntologyAutoBuild from "../views/ontology_management/OntologyAutoBuild"
 import StructuredDataToOntology from "../views/ontology_management/StructuredDataToOntology"
 import HalfStructuredDataToOntology from "../views/ontology_management/HalfStructuredDataToOntology"
 import NotStructuredDataToOntology from "../views/ontology_management/NotStructuredDataToOntology"
-import twoView from "../views/visualization/2dView.vue";
 import CheckKg from "../views/kg_merge/CheckKg";
 
 Vue.use(Router)
@@ -70,13 +69,6 @@ export default new Router({
       path: '/register',
       name: '注册',
       component: Register,
-      hidden: true
-    },
-    //测试可视化界面
-    {
-      path: '/2dView',
-      name: '2dView',
-      component:twoView,
       hidden: true
     },
     {

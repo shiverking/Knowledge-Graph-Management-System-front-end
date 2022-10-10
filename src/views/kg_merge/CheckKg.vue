@@ -118,7 +118,7 @@
               :direction="direction"
               :before-close="handleClose">
               <div class="block" style="margin: 10px">
-            <el-image :src="src"></el-image>
+                <TwoDViewSmall></TwoDViewSmall>
           </div>
               <el-descriptions  direction="horizontal" :column="1" border style="margin: 10px;">
                 <el-descriptions-item label="图谱名称">第十一舰队打击群</el-descriptions-item>
@@ -185,8 +185,12 @@
   </div>
 </template>
 <script>
+import TwoDViewSmall from "../visualization/2dViewSmall";
 const cityOptions = ['上海', '北京', '广州', '深圳'];
 export default {
+  components: {
+    TwoDViewSmall,
+  },
   data() {
     return {
       restaurants: [],
@@ -213,7 +217,6 @@ export default {
         address: '上海市普陀区金沙江路 1516 弄',
         tag: '公司'
       }],
-      src: '../../../static/avatar/kg.png',
       activeName: 'first',
       input1: '',
       input2: '',
