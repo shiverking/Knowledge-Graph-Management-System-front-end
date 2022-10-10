@@ -53,13 +53,10 @@
                   <span slot="title">本体管理</span>
                 </template>
                 <router-link to="/ontology/OntologyShow" class="routerlink">
-                  <el-menu-item index="2-1">本体展示</el-menu-item>
-                </router-link>
-                <router-link to="/ontology/OntologyUpdate" class="routerlink">
-                  <el-menu-item index="2-2">本体修改</el-menu-item>
+                  <el-menu-item index="2-1">本体展示与修改</el-menu-item>
                 </router-link>
                 <el-submenu index="2-3">
-                  <template slot="title">本体自动化构建</template>
+                  <template slot="title">候选本体构建</template>
                   <router-link to="/ontology/StructuredDataToOntology" class="routerlink">
                     <el-menu-item index="2-3-1">结构化数据</el-menu-item>
                   </router-link>

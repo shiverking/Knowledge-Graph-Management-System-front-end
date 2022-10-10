@@ -1,6 +1,7 @@
 <template>
   <div id="main" class="main">
     <div id="show_ontology_like_graph" class="show_ontology" >
+      <span class="desc">本体结构展示</span>
       <svg width="100%" height="100%" preserveAspectRatio="xMinYMin meet"></svg>
     </div>
     <el-card class="add_class">
@@ -291,7 +292,7 @@ export default {
 }
 .show_ontology {
   float: left;
-  height: 100%;
+  height: 125%;
   width: 45%;
   margin-top: 20px;
   overflow-x:scroll;
@@ -303,13 +304,13 @@ export default {
 }
 .add_class{
   margin-left: 20px;
-  height: 53%;
+  height: 63%;
   width: 25%;
   float: left;
 }
 .add_relation{
   margin-left: 5px;
-  height: 53%;
+  height: 63%;
   width: 25%;
   float: right;
 }
@@ -317,7 +318,7 @@ export default {
   float: left;
   margin-left: 20px;
   width: 53%;
-  height: 47%;
+  height: 57%;
   margin-top: 20px;
 }
 </style>

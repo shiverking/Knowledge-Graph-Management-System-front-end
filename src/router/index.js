@@ -47,7 +47,6 @@ import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
 import OntologyShow from "../views/ontology_management/OntologyShow"
-import OntologyUpdate from "../views/ontology_management/OntologyUpdate"
 import OntologyAutoBuild from "../views/ontology_management/OntologyAutoBuild"
 import StructuredDataToOntology from "../views/ontology_management/StructuredDataToOntology"
 import HalfStructuredDataToOntology from "../views/ontology_management/HalfStructuredDataToOntology"
@@ -383,12 +382,6 @@ export default new Router({
           path: '/ontology/ontologyshow',
           name: '本体展示',
           component: OntologyShow,
-          show: true
-        },
-        {
-          path: '/ontology/ontologyupdate',
-          name: '本体修改',
-          component: OntologyUpdate,
           show: true
         },
         {
