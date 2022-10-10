@@ -1,7 +1,7 @@
 <template>
   <div id="main" class="main">
     <div id="show_ontology_like_graph" class="show_ontology" >
-      <svg width="100%" height="100%" preserveAspectRatio="xMinYMin meet"></svg>
+      <svg width="100%" height="100%" preserveAspectRatio="xMinYMin meet" id="testsvg"></svg>
     </div>
     <el-card class="add_class">
       <span class="desc">添加节点</span>
@@ -65,10 +65,16 @@
 </template>
 
 <script>
-import * as d3 from '../../plugins/d3.v5.min.js'
+import * as d3 from 'd3';
+import Panzoom from '@panzoom/panzoom';
+// import * as d3 from '../../plugins/d3.v5.min.js'
+// 初始化panzoom
 export default {
   name: 'OntologyShow',
+
   data() {
+
+
     return{
       dataset:{
         name: "Thing",
@@ -162,6 +168,12 @@ export default {
       let marge = {top: 50, bottom: 0, left: 10, right: 0};
 
       let svg = d3.select("svg");
+      // 给画布绑定zoom事件（缩放、平移）
+      // svg.call(d3.zoom().on('zoom', event => {
+      //   // console.log(event)
+      //   var scale = event.transform.k,translate = [event.transform.x, event.transform.y]
+      //   svg.attr('transform', 'translate(' + translate[0] + ', ' + translate[1] + ') scale(' + scale + ')');
+      // }))
       //设置长宽
       for (let i = 0; i < svg.length; i++) {
         svg[i].setAttribute('viewBox', '0,0,' + svg[i].getBBox().width + ',' + svg[i].getBBox().height + '')
@@ -274,10 +286,21 @@ export default {
           });
         }
       });
+    },
+    initPanzoom(){
+      const elem = document.getElementById('testsvg')
+      const panzoom = Panzoom(elem, {
+        maxScale: 5
+      })
+      panzoom.pan(10, 10)
+      panzoom.zoom(2, { animate: true })
+      button.addEventListener('click', panzoom.zoomIn)
+      elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
     }
   },
   mounted(){
     this.draw()
+    this.initPanzoom()
   }
 }
 </script>
@@ -294,8 +317,8 @@ export default {
   height: 100%;
   width: 45%;
   margin-top: 20px;
-  overflow-x:scroll;
-  overflow-y:scroll;
+  /*overflow-x:scroll;*/
+  /*overflow-y:scroll;*/
 }
 .desc{
   font-size: 16px;
