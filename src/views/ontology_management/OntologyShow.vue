@@ -3,28 +3,32 @@
     <div id="show_ontology_like_graph" class="show_ontology" >
       <svg width="100%" height="100%" preserveAspectRatio="xMinYMin meet"></svg>
     </div>
-    <div id="add_class_form" class="add_class">
+    <el-card class="add_class">
+      <span class="desc">添加节点</span>
+      <br><br>
       <el-form ref="form" :model="addClass" label-width="80px">
-        <el-form-item label="节点名称">
-          <el-input v-model="addClass.name"></el-input>
-        </el-form-item>
-        <el-form-item label="备注信息">
-          <el-input v-model="addClass.desc" placeholder="请输入备注"></el-input>
-        </el-form-item>
-        <el-form-item label="父节点">
-          <el-select v-model="addClass.father" placeholder="请选择父节点">
-            <el-option label="无" value=""></el-option>
-            <el-option label="父节点一" value="Country"></el-option>
-            <el-option label="父节点二" value="Sky"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit" size="small">添加节点</el-button>
-          <el-button size="small">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div id="add_relation_form" class="add_relation">
+          <el-form-item label="节点名称">
+            <el-input v-model="addClass.name"></el-input>
+          </el-form-item>
+          <el-form-item label="备注信息">
+            <el-input v-model="addClass.desc" placeholder="请输入备注"></el-input>
+          </el-form-item>
+          <el-form-item label="父节点">
+            <el-select v-model="addClass.father" placeholder="请选择父节点">
+              <el-option label="无" value=""></el-option>
+              <el-option label="父节点一" value="Country"></el-option>
+              <el-option label="父节点二" value="Sky"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="checkAddClass" size="small">确认添加</el-button>
+            <el-button size="small">取消</el-button>
+          </el-form-item>
+        </el-form>
+    </el-card>
+    <el-card class="add_relation">
+      <span class="desc">添加关系</span>
+      <br><br>
       <el-form ref="form" :model="addRelation" label-width="80px">
         <el-form-item label="关系名称">
           <el-input v-model="addRelation.name"></el-input>
@@ -42,26 +46,21 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit" size="small">添加关系</el-button>
+          <el-button type="primary" @click="checkAddRelation" size="small">确认添加</el-button>
           <el-button size="small">取消</el-button>
         </el-form-item>
       </el-form>
-    </div>
-    <div id="show_class_info" class="class_info">
-      <el-descriptions title="节点详细信息" direction="vertical" :column="3" border>
+    </el-card>
+    <el-card class="class_info">
+      <el-descriptions title="节点详细信息" direction="vertical" :column="4" border>
         <el-descriptions-item label="节点名">Country</el-descriptions-item>
         <el-descriptions-item label="父节点">GIS</el-descriptions-item>
         <el-descriptions-item label="备注">国家信息</el-descriptions-item>
-      </el-descriptions>
-    </div>
-    <div id="show_mapping_table" class="mapping_table">
-      <el-descriptions title="节点对应实例信息" direction="vertical" :column="3" border>
         <el-descriptions-item label="数据库url">localhost:3306</el-descriptions-item>
-        <el-descriptions-item label="数据表">FKFD</el-descriptions-item>
-        <el-descriptions-item label="所选节点">Country</el-descriptions-item>
+        <el-descriptions-item label="数据库">FKFD</el-descriptions-item>
         <el-descriptions-item label="映射数据表">t_country</el-descriptions-item>
       </el-descriptions>
-    </div>
+    </el-card>
   </div>
 </template>
 
@@ -254,8 +253,27 @@ export default {
             return d.data.name;
           });
     },
-    onSubmit() {
-      console.log('submit!');
+    checkAddClass() {
+      this.$alert('是否确认添加', '添加节点', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          });
+        }
+      });
+    },
+    checkAddRelation(){
+      this.$alert('是否确认添加', '添加关系', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          });
+        }
+      });
     }
   },
   mounted(){
@@ -274,36 +292,32 @@ export default {
 .show_ontology {
   float: left;
   height: 100%;
-  width: 50%;
+  width: 45%;
   margin-top: 20px;
   overflow-x:scroll;
   overflow-y:scroll;
 }
+.desc{
+  font-size: 16px;
+  font-weight: 700;
+}
 .add_class{
-  border: 2px solid gray;
-  border-radius: 5px;
   margin-left: 20px;
-  height: 45%;
-  width: 20%;
+  height: 53%;
+  width: 25%;
   float: left;
 }
 .add_relation{
-  border: 2px solid gray;
-  border-radius: 5px;
-  margin-left: 20px;
-  height: 45%;
-  width: 20%;
+  margin-left: 5px;
+  height: 53%;
+  width: 25%;
   float: right;
 }
 .class_info {
   float: left;
   margin-left: 20px;
-  width: 20%;
-  height: 45%;
-}
-.mapping_table {
-  float: right;
-  width: 20%;
-  height: 45%;
+  width: 53%;
+  height: 47%;
+  margin-top: 20px;
 }
 </style>
