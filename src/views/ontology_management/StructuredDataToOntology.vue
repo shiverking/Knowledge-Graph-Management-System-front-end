@@ -34,33 +34,33 @@ export default {
   data() {
     return {
       tableData: [{
-        url: '2016-05-03',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'fkfd',
+        table: 't_new_country'
       }, {
-        url: '2016-05-02',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'fkfd',
+        table: 't_new_task'
       }, {
-        url: '2016-05-04',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'new_fkfd',
+        table: 't_gis'
       }, {
-        url: '2016-05-01',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'new_fkfd',
+        table: 't_person'
       }, {
-        url: '2016-05-08',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'new_fkfd',
+        table: 't_company'
       }, {
-        url: '2016-05-06',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'new_fkfd',
+        table: 't_school'
       }, {
-        url: '2016-05-07',
-        database: '王小虎',
-        table: '上海市普陀区金沙江路 1518 弄'
+        url: 'http://localhost:8080',
+        database: 'fkfd',
+        table: 't_new_bomb'
       }],
       multipleSelection: []
     }
