@@ -1,0 +1,75 @@
+{
+  "name": "Thing",
+  "children": [
+    {
+      "name": "Equipment",
+      "children": [
+        {"name": "Land", "value": 100},
+        {
+          "name": "Sea",
+          "children": [
+            {"name": "Vessel", "value": 100}
+          ]
+        },
+        {
+          "name": "Sky",
+          "children": [
+            {"name": "Aircraft", "value": 100}
+          ]
+        },
+        {
+          "name": "Space",
+          "children": [
+            {"name": "Misile", "value": 100}
+          ]
+        },
+        {
+          "name": "Weapon",
+          "children": [
+            {"name": "Artillery", "value": 100},
+            {"name": "Bomb", "value": 100}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GIS",
+      "children": [
+        {"name": "Country", "value": 100},
+        {"name": "LongitudeAndLatitude", "value": 100}
+      ]
+    },
+    {
+      "name": "Mechanism",
+      "children": [
+        {"name": "Company", "value": 100},
+        {"name": "School", "value": 100}
+      ]
+    },
+    {
+      "name": "OperationalInformation",
+      "children": [
+        {
+          "name": "Plan",
+          "children": [
+            {"name": "Task", "value": 100}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Person",
+      "children": [
+        {"name": "Commander", "value": 100},
+        {
+          "name": "Experience",
+          "children": [
+            {"name": "Education", "value": 100},
+            {"name": "Resume", "value": 100}
+          ]
+        },
+        {"name": "OrdinarySoldier", "value": 100}
+      ]
+    }
+  ]
+}
