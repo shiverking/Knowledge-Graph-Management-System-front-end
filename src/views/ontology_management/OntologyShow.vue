@@ -2,7 +2,7 @@
   <div id="main" class="main">
     <div id="show_ontology_like_graph" class="show_ontology" >
       <span class="desc">本体结构展示</span>
-<!--      <svg width="100%" height="100%" preserveAspectRatio="xMinYMin meet"></svg>-->
+      <svg id="show_ontology_in_svg" width="100%" height="100%"></svg>
     </div>
     <el-card class="class_info">
       <el-descriptions title="节点详细信息" direction="vertical" :column="2" border>
@@ -121,6 +121,7 @@
 import * as d3 from '../../plugins/d3.v5.min.js'
 import * as echarts from 'echarts';
 import * as jquery from '../../plugins/jquery.min.js'
+import Panzoom from '@panzoom/panzoom';
 export default {
   name: 'OntologyShow',
   data() {
@@ -412,10 +413,21 @@ export default {
           });
         }
       });
-    }
+    },
+    // initPanzoom(){
+    //   // const elem = document.getElementById('show_ontology_like_graph')
+    //   // const panzoom = Panzoom(elem, {
+    //   //   maxScale: 5
+    //   // })
+    //   // panzoom.pan(10, 10)
+    //   // panzoom.zoom(2, { animate: true })
+    //   // elem.addEventListener('click', panzoom.zoomIn)
+    //   // elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
+    // }
   },
   mounted(){
     this.draw()
+    // this.initPanzoom()
   }
 }
 </script>
@@ -429,9 +441,10 @@ export default {
 }
 .show_ontology {
   float: left;
-  height: 125%;
-  width: 68%;
+  height: 750px;
+  width: 800px;
   margin-top: 20px;
+  /*border: red 1px solid;*/
   /*overflow-x:scroll;*/
   /*overflow-y:scroll;*/
 }
