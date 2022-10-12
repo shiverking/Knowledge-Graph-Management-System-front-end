@@ -288,7 +288,7 @@ export default new Router({
           children:[
             {
               path: "/know/triples_management/IncrementalStructuredData",
-              name: "增量结构化数据管理",
+              name: "增量数据管理",
               component: IncrementalStructuredData,
             },
           ]
@@ -350,7 +350,7 @@ export default new Router({
           children:[
             {
               path: "/kg/completion/GetTriples",
-              name: "获取三元组",
+              name: "手动添加",
               component: GetTriples,
             },
             {
@@ -360,7 +360,7 @@ export default new Router({
             },
             {
               path: "/kg/completion/AutoCompletion",
-              name: "自动化补全",
+              name: "半自动化补全",
               component: AutoCompletion
             },
             {

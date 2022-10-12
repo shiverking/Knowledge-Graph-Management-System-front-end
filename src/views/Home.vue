@@ -101,7 +101,7 @@
                   <template slot="title">图谱补全</template>
                   <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
                   <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
-                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全图谱</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全</el-menu-item></router-link>
                   <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
                 </el-submenu>
                 <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
