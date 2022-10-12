@@ -24,6 +24,7 @@
         </el-option>
       </el-select>
       <el-button type="primary">训练新模型</el-button>
+      <el-progress :percentage="100" :format="format" :width="50" style="margin-top:10px"></el-progress>
     </el-card>
     <el-card class="box-card" shadow="never" style="margin-top:10px">
       <div class="block">
@@ -32,7 +33,7 @@
       <el-table
         :data="tableData"
         border
-        style="width: 100%; margin-top: 20px;">
+        style="width: 100%;">
         <el-table-column
           fixed
           prop="date"

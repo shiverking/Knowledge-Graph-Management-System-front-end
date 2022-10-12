@@ -1,6 +1,5 @@
 <template>
   <div style="margin-top: 10px;">
-    <p><b>半自动化图谱补全</b></p>
     <el-card class="box-card" shadow="never">
       <p><b>设置补全模型</b></p>
       <el-upload
