@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Echarts 树形图示例</title>
+  <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport' />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link href='../../assets/stylesheets/bootstrap/bootstrap.css' media='all' rel='stylesheet' type='text/css' />
+  <style>
+    *{padding: 0;margin: 0;}
+    .menu{
+      /*这个样式不写，右键弹框会一直显示在画布的左下角*/
+      position: absolute;
+      background: #ffff;
+      border-radius: 5px;
+      left: -99999px;
+      top: -999999px;
+      z-index:1;
+    }
+    .menu ul{list-style: none}
+    .menu ul li{
+      padding: 5px 10px;
+      color: #228EFB;
+      border-bottom: 1px dashed #228EFB;
+      font-size: 17px;
+    }
+    .menu ul li:last-child{
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body class='contrast-blue'>
+<div id='wrapper'>
+  <section id='content'>
+    <div class="nav-part">
+      <div class="cur-position risk">
+        树模型>>编辑
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="querycontext">
+      </div>
+    </div>
+    <div class="tree-container">
+      <div id="main" style="width:100%;height:1000px;"></div>
+    </div>
+  </section>
+</div>
+<!--右键弹出菜单-->
+<div id="rightMenu" class="menu" style="display:none;">
+  <ul>
+    <li onclick="editModelNode()">编辑节点</li>
+    <li onclick="addModelNode()">增加子节点</li>
+    <li onclick="deleteModelNode('1')">删除当前节点</li>
+    <li onclick="deleteModelNode('2')">删除子节点</li>
+  </ul>
+</div>
+</body>
+<script src='https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js' type='text/javascript'></script>
+<script src='https://cdn.staticfile.org/echarts/5.1.0/echarts.js' type='text/javascript'></script>
+<script type="text/javascript">
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom, 'dark');//
+  var option;
+  //flare.json是静态JSON文件，为了测试所用，实际应用时替换为接口返回的数据
+  //注意：json数据格式中子节点的key名必须为children
+  myChart.showLoading();//echarts自带的Loading遮罩方法
+  $.getJSON('testecharts.json', {}, function (data) {
+    myChart.hideLoading();
+    data.collapsed=false;
+    data.children.forEach(function (datum, index) {
+      datum.collapsed = true
+    });
+    option={
+      tooltip: {
+        show:true,
+        trigger: 'item',
+        triggerOn: 'mousemove',
+        position:"bottom",
+        textStyle:{
+          color:"#228EFB",
+          fontSize:17
+        },
+        extraCssText:'width:300px;white-space:pre-wrap;',
+        formatter:function(params, ticket, callback){
+          var tsxx=params.data.describes==""||params.data.describes==null?params.data.name:params.data.describes;
+          return tsxx;
+        }
+      },
+      series: [
+        {
+          type: 'tree',
+          data: [data],
+          top: 'middle',
+          left: 'center',
+//	 		                bottom: '1%',
+//	 		                right: '15%',
+          symbolSize: 15,
+          itemStyle:{
+            color: '#228EFB' ,
+          },
+          lineStyle:{
+            color: '#DDD',
+          },
+          label: {
+            color: "#FFF",
+            position: 'left',
+            verticalAlign: 'middle',
+            align: 'right',
+            fontSize: 18
+          },
+          leaves: {
+            label: {
+              position: 'right',
+              verticalAlign: 'middle',
+              align: 'left'
+            }
+          },
+          emphasis: {
+            focus: 'descendant'
+          },
+          edgeForkPosition: "72%",
+          roam : true,//鼠标缩放，拖拽整颗树
+          expandAndCollapse: true,
+          animationDuration: 550,
+          animationDurationUpdate: 750
+        }
+      ]
+    };
+    myChart.setOption(option);
+  }, 'json');
+  //新增或者修改节点后，调用后台保存或更新数据
+  function submitForm(){
+    //请求成功后
+    var flag=true;//模拟请求接口返回成功
+    if(flag){
+      alert(resData.msg);
+      data=resData.result[0];
+      if(czlx=="addRoot"){
+        $("#modelRootId").val(data.id);//根节点
+      }
+      data.collapsed=false;
+      data.children.forEach(function (datum, index) {
+        datum.collapsed = true
+      });
+      option={
+        tooltip: {
+          show:true,
+          trigger: 'item',
+          triggerOn: 'mousemove',
+          position:"bottom",
+          textStyle:{
+            color:"#228EFB",
+            fontSize:17
+          },
+          extraCssText:'width:300px;white-space:pre-wrap;',
+          formatter:function(params, ticket, callback){
+            var tsxx=params.data.describes==""||params.data.describes==null?params.data.name:params.data.describes;
+            return tsxx;
+          }
+        },
+        series: [
+          {
+            type: 'tree',
+            data: [data],
+            top: 'middle',
+            left: 'center',
+//			 		                bottom: '1%',
+//			 		                right: '15%',
+            symbolSize: 15,
+            itemStyle:{
+              color: '#228EFB' ,
+            },
+            lineStyle:{
+              color: '#DDD',
+            },
+            label: {
+              color: "#FFF",
+              position: 'left',
+              verticalAlign: 'middle',
+              align: 'right',
+              fontSize: 18
+            },
+            leaves: {
+              label: {
+                position: 'right',
+                verticalAlign: 'middle',
+                align: 'left'
+              }
+            },
+            emphasis: {
+              focus: 'descendant'
+            },
+            edgeForkPosition: "72%",
+            roam:true,//鼠标缩放，拖拽整颗树
+            expandAndCollapse: true,
+            animationDuration: 550,
+            animationDurationUpdate: 750
+          }
+        ]
+      };
+      var sfEdit=true;//是否为新增或修改
+      if(sfEdit){
+        myChart.clear();
+        $('.tree-container').click();
+      }
+      myChart.setOption(option);
+    }
+  }
+  myChart.on("click", this.treeNodeclick);
+  // 	节点点击事件
+  function treeNodeclick(param){
+    /* true 代表点击的是圆点
+       fasle 表示点击的是当前节点的文本
+    */
+    if(param.event.target.culling === true){
+      if (typeof param.seriesIndex == 'undefined') {
+        return;
+      }
+      if (param.type == 'click') {
+        if (!param.data.hasChild) {
+          if(param.data.collapsed == undefined || param.data.collapsed == true){
+            console.log("未定义或者是未展开，下次即将展开");
+            param.data.collapsed=false;
+          }else{
+            console.log("下次不展开");
+            param.data.collapsed=true;
+          }
+          return;
+        }
+      }
+      return ;
+    } else if(param.event.target.culling === false){
+// 	        let args = param.data; //当前节点及其子节点的值
+// 	        let level = param.data.level; //当前节点的层级 eg:"1-1-0",可以通过level判断当前的层级，从而进行不同的操作
+// // 	        this.textNodeclick(args,level);
+    }
+  }
+  /**
+   * 鼠标右键，弹出右键操作菜单
+   */
+  $("#main").bind("contextmenu", function () { return false; });//防止默认菜单弹出（查看图像,图像另存为等）
+  var gloab_param=null;
+  myChart.on("contextmenu", function(params){
+    gloab_param=params;
+    $('#rightMenu').css({
+      'display': 'block',
+      'left': params.event.offsetX+15,//此处根据自己实际情况调整右键操作菜单显示位置
+      'top' : params.event.offsetY -110
+    });
+  });
+  /**
+   * 点击画布的时候隐藏右键菜单
+   */
+  $('.tree-container').click(function () {
+    $('#rightMenu').css({
+      'display': 'none',
+      'left': '-9999px',
+      'top': '-9999px'
+    });
+  });
+  //编辑节点
+  function editModelNode(){
+    //editData为编辑的当前节点数据Obj
+    var editData=gloab_param.data;
+  }
+  //添加子节点
+  function addModelNode(){
+    console.log("新增");
+  }
+  //删除当前节点
+  function deleteModelNode(deleteType){
+    var ts="删除当前节点后，当前节点下所有子节点也会被删除，确定要删除当前节点吗？";
+    if(window.confirm(ts)){
+      //此处请求后台删除节点数据
+      var flag=true;//模拟请求成功，重新渲染整个树
+      if(flag){
+        var data=resData.result[0];
+        data.collapsed=false;
+        data.children.forEach(function (datum, index) {
+          datum.collapsed = true
+        });
+        option={
+          tooltip: {
+            show:true,
+            trigger: 'item',
+            triggerOn: 'mousemove',
+            position:"bottom",
+            textStyle:{
+              color:"#228EFB",
+              fontSize:17
+            },
+            extraCssText:'width:300px;white-space:pre-wrap;',
+            formatter:function(params, ticket, callback){
+              var tsxx=params.data.describes==""||params.data.describes==null?params.data.name:params.data.describes;
+              return tsxx;
+            }
+          },
+          series: [
+            {
+              type: 'tree',
+              data: [data],
+              top: 'middle',
+              left: 'center',
+//     				 		                bottom: '1%',
+//     				 		                right: '15%',
+              symbolSize: 15,
+              itemStyle:{
+                color: '#228EFB' ,
+              },
+              lineStyle:{
+                color: '#DDD',
+              },
+              label: {
+                color: "#FFF",
+                position: 'left',
+                verticalAlign: 'middle',
+                align: 'right',
+                fontSize: 18
+              },
+              leaves: {
+                label: {
+                  position: 'right',
+                  verticalAlign: 'middle',
+                  align: 'left'
+                }
+              },
+              emphasis: {
+                focus: 'descendant'
+              },
+              edgeForkPosition: "72%",
+              roam:true,//鼠标缩放，拖拽整颗树
+              expandAndCollapse: true,
+              animationDuration: 550,
+              animationDurationUpdate: 750
+            }
+          ]
+        };
+        myChart.clear();
+        $('.tree-container').click();
+        myChart.setOption(option);
+      }else{//数据已经清空了，页面reload
+        window.location.reload();
+      }
+    }
+  }
+  //根据指定key的值删除对应的对象
+  function removeByValue(arr, attrKey, attrValue){
+    var index=0;
+    for(var i in arr){
+      if(arr[i][attrKey]==attrValue){
+        index=i;
+        break;
+      }
+    }
+    arr.splice(index,1);
+  }
+</script>
+</html>

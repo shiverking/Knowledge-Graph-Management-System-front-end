@@ -40,18 +40,19 @@ import KgCompletion from "../views/kg_completion/KgCompletion"
 import GetTriples from "../views/kg_completion/GetTriples"
 import LinkPrediction from "../views/kg_completion/LinkPrediction"
 import AutoCompletion from "../views/kg_completion/AutoCompletion"
-import ViewHistory from "../views/kg_completion/ViewHistory"
+import CompletionModel from "../views/kg_completion/CompletionModel"
+import IncrementalStructuredData from "../views/triples_management/IncrementalStructuredData"
+import CandidateDatasets from "../views/candidate_datasets/CandidateDatasets"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
 import OntologyShow from "../views/ontology_management/OntologyShow"
-import OntologyUpdate from "../views/ontology_management/OntologyUpdate"
 import OntologyAutoBuild from "../views/ontology_management/OntologyAutoBuild"
 import StructuredDataToOntology from "../views/ontology_management/StructuredDataToOntology"
 import HalfStructuredDataToOntology from "../views/ontology_management/HalfStructuredDataToOntology"
 import NotStructuredDataToOntology from "../views/ontology_management/NotStructuredDataToOntology"
-import twoView from "../views/visualization/2dView.vue";
-import MergeHistory from "../views/kg_merge/MergeHistory";
+import CheckKg from "../views/kg_merge/CheckKg";
+
 Vue.use(Router)
 
 export default new Router({
@@ -67,13 +68,6 @@ export default new Router({
       path: '/register',
       name: '注册',
       component: Register,
-      hidden: true
-    },
-    //测试可视化界面
-    {
-      path: '/2dView',
-      name: '2dView',
-      component:twoView,
       hidden: true
     },
     {
@@ -270,7 +264,7 @@ export default new Router({
     },
     {
       path: '/know',
-      name: '知识管理',
+      name: '三元组管理',
       component: Home,
       show: true,
       meta:{
@@ -279,30 +273,42 @@ export default new Router({
       children:[
         {
           path: '/know/triples_management',
-          name: '三元组管理',
+          name: '结构化数据管理',
           component: TriplesManagement,
           show: true,
+          redirect: 'Ent_ent_rel',
+          children:[
+            {
+              path: "/know/triples_management/IncrementalStructuredData",
+              name: "增量数据管理",
+              component: IncrementalStructuredData,
+            },
+          ]
         },
-
         {
           path: '/know/triples_extracton',
-          name: '知识抽取',
+          name: '非结构化数据管理',
           component: KnowledgeExtraction,
           show: true,
           redirect:'NamedEntityRecognition',
           children:[
             {
               path: "/know/triples_extracton/NamedEntityRecognition",
-              name: "命名实体识别",
+              name: "实体抽取",
               component: NamedEntityRecognition,
             },
             {
               path: "/know/triples_extracton/TriplesExtraction",
               name: "三元组抽取",
               component: TriplesExtraction
-            },
-  
+            },  
           ]
+        },
+        {
+          path: '/know/CandidateDatasets',
+          name: '候选数据集管理',
+          component: CandidateDatasets,
+          show: true,
         }
       ]
     } ,
@@ -322,9 +328,9 @@ export default new Router({
           show: true,
         },
         {
-          path: '/kg/merge/history',
-          name: '融合历史',
-          component: MergeHistory,
+          path: '/kg/check',
+          name: '图谱查找',
+          component: CheckKg,
           show: true,
         },
         {
@@ -336,7 +342,7 @@ export default new Router({
           children:[
             {
               path: "/kg/completion/GetTriples",
-              name: "获取三元组",
+              name: "手动添加",
               component: GetTriples,
             },
             {
@@ -346,13 +352,13 @@ export default new Router({
             },
             {
               path: "/kg/completion/AutoCompletion",
-              name: "自动化补全",
+              name: "半自动化补全",
               component: AutoCompletion
             },
             {
-              path: "/kg/completion/ViewHistory",
-              name: "历史补全",
-              component: ViewHistory
+              path: "/kg/completion/CompletionModel",
+              name: "补全模型管理",
+              component: CompletionModel
             },
           ]
         },
@@ -368,12 +374,6 @@ export default new Router({
           path: '/ontology/ontologyshow',
           name: '本体展示',
           component: OntologyShow,
-          show: true
-        },
-        {
-          path: '/ontology/ontologyupdate',
-          name: '本体修改',
-          component: OntologyUpdate,
           show: true
         },
         {

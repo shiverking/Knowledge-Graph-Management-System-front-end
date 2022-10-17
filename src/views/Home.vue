@@ -1,8 +1,11 @@
 <template>
-    <div class="common-layout" style="height: 100%">
+    <div class="common-layout" style="height: 120vh">
         <el-header class="homeHeader">
           <div class="title">知识图谱管理系统</div>
-            <el-dropdown class="dropdown">
+          <el-input placeholder="请输入内容" v-model="searchPage" class="input-with-select" style="position: relative;width: 400px;left: 83px">
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+          <el-dropdown class="dropdown">
               <div>
               <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="vertical-align:middle;margin: 10px"></el-avatar>
               <span style="color: azure;font-size: large;vertical-align:middle;">{{username}}</span>
@@ -37,7 +40,6 @@
                 <el-submenu index="1-2">
                   <template slot="title">人员数据</template>
                   <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-1">人员信息</el-menu-item></router-link>
-
                 </el-submenu>
                 <el-submenu index="1-3">
                   <template slot="title">计划与任务</template>
@@ -54,13 +56,10 @@
                   <span slot="title">本体管理</span>
                 </template>
                 <router-link to="/ontology/OntologyShow" class="routerlink">
-                  <el-menu-item index="2-1">本体展示</el-menu-item>
-                </router-link>
-                <router-link to="/ontology/OntologyUpdate" class="routerlink">
-                  <el-menu-item index="2-2">本体修改</el-menu-item>
+                  <el-menu-item index="2-1">本体展示与修改</el-menu-item>
                 </router-link>
                 <el-submenu index="2-3">
-                  <template slot="title">本体自动化构建</template>
+                  <template slot="title">候选本体构建</template>
                   <router-link to="/ontology/StructuredDataToOntology" class="routerlink">
                     <el-menu-item index="2-3-1">结构化数据</el-menu-item>
                   </router-link>
@@ -72,16 +71,23 @@
                   </router-link>
                 </el-submenu>
               </el-submenu>
-              <el-menu-item index="3">
-                <i class="el-icon-document-copy"></i>
-                <span slot="title">知识管理</span>
-              </el-menu-item>
-                              <el-submenu index="3-1">
-                  <template slot="title">知识抽取</template>
-                  <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-1-1">实体抽取</el-menu-item></router-link>
-                  <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-1-2">三元组抽取</el-menu-item></router-link>
+              <el-submenu index="3">
+                <template slot="title">
+                  <i class="el-icon-document-copy"></i>
+                  <span slot="title">三元组管理</span>
+                </template>
+                <el-submenu index="3-1">
+                  <template slot="title">结构化数据管理</template>
+                  <router-link to="/know/triples_management/IncrementalStructuredData" class="routerlink" ><el-menu-item index="3-1-1">增量数据管理</el-menu-item></router-link>              
                 </el-submenu>
-                  <router-link to="/know/triples_management" class="routerlink"><el-menu-item index="3-2">三元组管理</el-menu-item></router-link>
+                <el-submenu index="3-2">
+                  <template slot="title">非结构化数据管理</template>
+                  <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-2-1">实体抽取</el-menu-item></router-link>
+                  <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-2-2">三元组抽取</el-menu-item></router-link>
+                </el-submenu>
+                <router-link to="/know/CandidateDatasets" class="routerlink">
+                  <el-menu-item index="3-3">候选数据集管理</el-menu-item>
+                </router-link>
               </el-submenu>
               <el-submenu index="4">
                 <template slot="title">
@@ -95,24 +101,28 @@
                   <template slot="title">图谱补全</template>
                   <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
                   <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
-                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">自动化补全</el-menu-item></router-link>
-                  <router-link to="/kg/completion/ViewHistory" class="routerlink"><el-menu-item index="4-2-4">历史补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全</el-menu-item></router-link>
+                  <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
                 </el-submenu>
-                <router-link to="/kg/merge/history" class="routerlink"><el-menu-item index="4-3">历史记录</el-menu-item></router-link>
+                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-3">版本管理</el-menu-item></router-link>
               </el-submenu>
-              <router-link to="/setting" class="routerlink"><el-menu-item index="5">
+              <router-link to="/setting" class="routerlink">
+                <el-menu-item index="5">
                   <i class="el-icon-setting"></i>
                   <span slot="title">设置</span>
-              </el-menu-item></router-link>
-              <router-link to="/personal" class="routerlink"><el-menu-item index="5">
-                <i class="el-icon-user"></i>
-                <span slot="title">个人中心</span>
-              </el-menu-item></router-link>
+                </el-menu-item>
+              </router-link>
+              <router-link to="/personal" class="routerlink">
+                <el-menu-item index="5">
+                    <i class="el-icon-user"></i>
+                    <span slot="title">个人中心</span>
+                </el-menu-item>
+              </router-link>
             </el-menu>
           </el-aside>
           <el-main>
             <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
-            <div class="breadcrumb">
+            <div class="breadcrumb" style="margin:10px;">
               <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'" >
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
@@ -126,6 +136,9 @@
       </div>
 </template>
 <style>
+  .el-main {
+    overflow:visible;
+  }
   .el-header {
     color: #333;
     line-height: 60px;
@@ -157,6 +170,7 @@ export default {
       session:'',
       username:'',
       headurl:'',
+      searchPage:'',
     }
   },
   created() {

@@ -2,28 +2,37 @@
   <div>
     <!-- 绘制模式选择 -->
     <div id="mode">
-<!--      <div class="gState" style="margin-bottom: 20px;">-->
-<!--        <span-->
-<!--          @click="changeTextState(0)"-->
-<!--          :class="{ active: isShowText }"-->
-<!--          style="border-top-right-radius:0;border-bottom-right-radius:0;"-->
-<!--        >显示</span>-->
-<!--        <span-->
-<!--          @click="changeTextState(2)"-->
-<!--          :class="{ active: textState === 2 }"-->
-<!--          style="border-top-left-radius:0;border-bottom-left-radius:0;position:relative;left:-5px;"-->
-<!--        >隐藏</span>-->
-<!--      </div>-->
-      <el-input @input="searchKeyWords" v-model="keywords" clearable placeholder="请输入查找节点" />
-<!--      <div class="font-sky" style="text-align: left;">-->
-<!--        <p>节点个数：{{ nodes.length }}</p>-->
-<!--        <br>-->
-<!--        <p>关系个数：{{ links.length }}</p>-->
-<!--        <br>-->
-<!--      </div>-->
+      <p>搜索节点</p>
+      <div class="gState" style="margin-bottom: 20px;">
+        <span
+          @click="changeTextState(0)"
+          :class="{ active: isShowText }"
+          style="border-top-right-radius:0;border-bottom-right-radius:0;"
+        >显示</span>
+        <span
+          @click="changeTextState(2)"
+          :class="{ active: textState === 2 }"
+          style="border-top-left-radius:0;border-bottom-left-radius:0;position:relative;left:-5px;"
+        >隐藏</span>
+      </div>
+      <el-input @input="searchKeyWords" v-model="keywords" clearable placeholder="请输入内容" />
+      <div class="font-sky" style="text-align: left;">
+        <p>节点个数：{{ nodes.length }}</p>
+        <br>
+        <p>关系个数：{{ links.length }}</p>
+        <br>
+        <p>平均度数：{{ gDegree }}</p>
+        <br>
+        <p>图密度：{{ gDensity }}</p>
+        <br>
+        <p>稀疏度：{{ gSparsity }}</p>
+      </div>
     </div>
-    <!--绘制区域-->
-    <svg id="svg" width="800" height="750"></svg>
+    <svg
+      id="svg"
+      width="1200"
+      height="750"
+    ></svg>
     <!-- 绘制图例 -->
     <div id="indicator">
       <!-- 利用item 遍历一个数组 利用index 遍历另外一个数组 -->
@@ -225,6 +234,27 @@ export default {
       // `this` 指向 vm 实例
       return this.textState === 0
     },
+    gDensity () {
+      return this.nodes.length <= 1 ? 0 : (this.links.length / (this.nodes.length * (this.nodes.length - 1))).toFixed(2)
+    },
+    gDegree () {
+      return (this.links.length / this.nodes.length).toFixed(2)
+    },
+    // 企业实体的平均度数
+    gMainDegree () {
+      // 遍历节点
+      // this.nodes.forEach(node => {
+      //   
+      // })
+      // // 遍历关系
+      // this.links.forEach(link => {
+      //   
+      // })
+    },
+    // 稀疏度
+    gSparsity () {
+      return (this.links.length / (this.nodes.length * Math.log(this.nodes.length))).toFixed(2)
+    }
   },
   watch: {
     // 当请求到新的数据时，重新渲染
@@ -1030,7 +1060,7 @@ export default {
 $opacity: 0.15;  /* 显示的不透明度 */
 $activeColor: #1E90FF;  /* 激活的颜色 */
 svg {
-  margin: 0px 0px;
+  margin: 20px 0px;
   // border: 1px #000 solid;
 }
 /*设置节点及边的样式*/
@@ -1116,8 +1146,8 @@ svg {
   position: absolute;
   // left: 50px;
   // bottom: 30px;
-  left: 1vw;
-  bottom: 1vw;
+  left: 3vw;
+  bottom: 2vw;
   text-align: left;
   color: #f2f2f2;
   font-size: 14px;
@@ -1141,8 +1171,8 @@ svg {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  top: 10px;
-  left: 10px;
+  top: 200px;
+  left: 40px;
   .gState span {
     display: inline-block;
     border: 1px solid #fff;
@@ -1170,8 +1200,8 @@ svg {
 /*悬浮节点的info样式*/
 #info {
   position: absolute;
-  bottom: 18px;
-  right: 23px;
+  bottom: 40px;
+  right: 30px;
   width: 270px;
   .node-card {
     border: 1px solid #9faecf;

@@ -1,264 +1,82 @@
 <template>
-  <el-tabs v-model="activeName" @tab-click="handleClick"  type="card" style="margin-top: 20px;">
-    <el-tab-pane label="手动添加" name="first">
-        <el-input
-        type="textarea"
-        :rows="5"
-        placeholder="格式要求：(实体1，实体1类型，实体2，实体2类型，关系)"
-        v-model="textarea">
-        </el-input>
-          <el-button style="margin-top: 10px;" @click="next">输入完成</el-button>
-        <template>
-  <el-table
-    :data="tableData"
-    style="width: 100%; margin-top:10px"
-    border
-    max-height="250">
-    <el-table-column
-      fixed
-      prop="date"
-      label="时间"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="头实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="province"
-      label="头实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="city"
-      label="尾实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="尾实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="zip"
-      label="关系"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      fixed="right"
-      label="操作">
-      <template slot-scope="scope">
-        <el-button
-          @click.native.prevent="deleteRow(scope.$index, tableData)"
-          type="text"
-          size="small">
-          移除
-        </el-button>
+  <div style="margin-top:20px">
+    <el-card class="box-card" shadow="never">
+      <p><b>文件导入</b></p>
+      <el-upload
+      class="upload-demo"
+      action="https://jsonplaceholder.typicode.com/posts/"
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :before-remove="beforeRemove"
+      multiple
+      :limit="3"
+      :on-exceed="handleExceed"
+      :file-list="fileList">
+      <el-button size type="primary">选取文件</el-button>
+      </el-upload>
+      <p style="margin-top: 10px;"><font size="3">格式要求：实体1，实体1类型，实体2，实体2类型，关系，只接受.txt/.csv文件</font></p>
+      <template>
+        <el-table
+        :data="tableData"
+        style="width: 100%; margin-top:10px"
+        border
+        max-height="250">
+          <el-table-column
+            fixed
+            prop="date"
+            label="时间"
+            width>
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="头实体"
+            width>
+          </el-table-column>
+          <el-table-column
+            prop="province"
+            label="头实体类型"
+            width>
+          </el-table-column>
+          <el-table-column
+            prop="city"
+            label="尾实体"
+            width>
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="尾实体类型"
+            width>
+          </el-table-column>
+          <el-table-column
+            prop="zip"
+            label="关系"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="deleteRow(scope.$index, tableData)"
+                type="text"
+                size="small">
+                移除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+        background
+        layout="prev, pager, next"
+        style="margin-top:10px"
+        :total="1000">
+        </el-pagination>
       </template>
-    </el-table-column>
-  </el-table>
-</template>
-          <el-button style="margin-top: 10px;" @click="next">筛选完毕</el-button>
-    </el-tab-pane>
-    <el-tab-pane label="文件导入" name="second">
-        <el-upload
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        multiple
-        :limit="3"
-        :on-exceed="handleExceed"
-        :file-list="fileList">
-        <el-button size="small" type="primary">选取文件</el-button>
-        </el-upload>
-        <p style="margin-top: 10px;"><font size="3">格式要求：(实体1，实体1类型，实体2，实体2类型，关系)，只接受.txt/.csv文件</font></p>
-        <template>
-  <el-table
-    :data="tableData"
-    style="width: 100%; margin-top:10px"
-    border
-    max-height="250">
-    <el-table-column
-      fixed
-      prop="date"
-      label="时间"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="头实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="province"
-      label="头实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="city"
-      label="尾实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="尾实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="zip"
-      label="关系"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      fixed="right"
-      label="操作">
-      <template slot-scope="scope">
-        <el-button
-          @click.native.prevent="deleteRow(scope.$index, tableData)"
-          type="text"
-          size="small">
-          移除
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-</template>
-          <el-button style="margin-top: 10px;" @click="next">筛选完毕</el-button>
-    </el-tab-pane>
-    <el-tab-pane label="数据库导入" name="third">
-        <el-select v-model="value1" multiple placeholder="选择数据库">
-            <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            </el-option>
-        </el-select>
-        <el-select
-            v-model="value2"
-            multiple
-            collapse-tags
-            style="margin-left: 20px;"
-            placeholder="选择表">
-            <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            </el-option>
-        </el-select>
-        <el-button style="margin-left: 20px;">读取三元组</el-button> 
-        <template>
-  <el-table
-    :data="tableData"
-    style="width: 100%; margin-top:10px"
-    border
-    max-height="250">
-    <el-table-column
-      fixed
-      prop="date"
-      label="时间"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="头实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="province"
-      label="头实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="city"
-      label="尾实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="尾实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="zip"
-      label="关系"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      fixed="right"
-      label="操作">
-      <template slot-scope="scope">
-        <el-button
-          @click.native.prevent="deleteRow(scope.$index, tableData)"
-          type="text"
-          size="small">
-          移除
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-</template>
-          <el-button style="margin-top: 10px;" @click="next">筛选完毕</el-button>
-    </el-tab-pane>
-    <el-tab-pane label="插入图谱" name="fourth">
-        <template>
-  <el-table
-    :data="tableData"
-    style="width: 100%; margin-top:10px"
-    border
-    max-height="250">
-    <el-table-column
-      fixed
-      prop="date"
-      label="时间"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="头实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="province"
-      label="头实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="city"
-      label="尾实体"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="尾实体类型"
-      width>
-    </el-table-column>
-    <el-table-column
-      prop="zip"
-      label="关系"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      fixed="right"
-      label="操作">
-      <template slot-scope="scope">
-        <el-button
-          @click.native.prevent="deleteRow(scope.$index, tableData)"
-          type="text"
-          size="small">
-          移除
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-</template>
-          <el-button style="margin-top: 10px;" @click="next">开始抽取</el-button>
-<template>
-<el-table
+      <el-button type="primary" style="margin-top: 10px;" @click="next">置信度检测</el-button>
+    </el-card>
+    <el-card class="box-card" shadow="never" style="margin-top:10px">
+      <p><b>置信度检测</b></p>
+      <el-table
         :data="tableData2"
         border
         style="width: 100%; margin-top: 20px;">
@@ -272,7 +90,7 @@
         </el-table-column>
         <el-table-column
         label="三元组"
-        width="500">
+        width="600">
         <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
             <p>头实体: {{ scope.row.head }}</p>
@@ -292,16 +110,9 @@
         </el-table-column>
         <el-table-column
         label="三元组置信度"
-        width="180">
+        width>
         <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="补全结果"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.result }}</span>
         </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -315,11 +126,17 @@
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
         </el-table-column>
-    </el-table>
-    </template>
-          <el-button style="margin-top: 10px;" @click="next">保存结果</el-button>
-    </el-tab-pane>
-      </el-tabs>
+      </el-table>
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      style="margin-top:10px"
+      :total="1000">
+      </el-pagination>
+      <el-button type="primary" style="margin-top: 10px;" @click="next">保存结果</el-button>
+      <el-button type="primary" style="margin-top: 10px;" @click="next">插入图谱</el-button>
+    </el-card>  
+  </div>
 </template>
 <script>
   export default {

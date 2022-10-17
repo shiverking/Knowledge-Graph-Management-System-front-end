@@ -6,7 +6,7 @@
       class="inline-input"
       v-model="input"
       :fetch-suggestions="querySearch"
-      placeholder="请输入内容1"
+      placeholder="请输入内容"
       :trigger-on-focus="false"
       @select="handleSelect"
       clearable

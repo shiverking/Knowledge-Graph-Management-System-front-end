@@ -1,7 +1,7 @@
 <template>
   <div class="gContainer">
     <!-- <d3graph /> -->
-<!--    <gSearch @getData="update" class="gSearch"/>-->
+    <gSearch @getData="update" class="gSearch"/>
     <d3graph
       :data="data"
       :names="names"
@@ -11,13 +11,18 @@
   </div>
 </template>
 <style>
+.gSearch{
+  position: sticky;
+  top: 10px;
+}
 </style>
 <script>
+import gSearch from '@/components/gSearch.vue'
 import d3graph from '@/components/d3graph.vue'
-import json from "../../data/records.json";
 export default {
   name: 'twoDView',
   components: {
+    gSearch,
     d3graph
   },
   data () {
@@ -29,16 +34,29 @@ export default {
       },
       names: ['企业', '贸易类型', '地区', '国家'],
       labels: ['Enterprise', 'Type', 'Region', 'Country'],
-      linkTypes: ['', 'type', 'locate', 'export'],
+      linkTypes: ['', 'type', 'locate', 'export']
     }
   },
   methods: {
+    // 视图更新
+    update (json) {
+      console.log('update')
+      console.log(json)
+      this.d3jsonParser(json)
+    },
     /*eslint-disable*/
-    // 解析json数据，主要负责数据的去重、标准化.
+    // 解析json数据，主要负责数据的去重、标准化
     d3jsonParser (json) {
       const nodes =[]
       const links = [] // 存放节点和关系
       const nodeSet = [] // 存放去重后nodes的id
+
+      // 使用vue直接通过require获取本地json，不再需要使用d3.json获取数据
+      // d3.json('./../data/records.json', function (error, data) {
+      //   if (error) throw error
+      //   graph = data
+      //   console.log(graph[0].p)
+      // })
 
       for (let item of json) {
         for (let segment of item.p.segments) {
@@ -67,12 +85,13 @@ export default {
           })
         }
       }
-      return { nodes, links }
+      console.log(nodes)
+      console.log(links)
+      // this.links = links
+      // this.nodes = nodes
+      this.data = { nodes, links }
+      // return { nodes, links }
     }
-  },
-  created() {
-      var json = require('../../data/records.json')
-      this.data = this.d3jsonParser(json)
   }
 }
 </script>

@@ -1,20 +1,77 @@
 <template>
   <div>
     <el-steps :active="active" finish-status="success"  style="margin: 10px" simple>
-      <el-step title="目标预览" ></el-step>
+      <el-step title="生成候选" ></el-step>
       <el-step title="实体对齐" ></el-step>
       <el-step title="图谱融合" ></el-step>
       <el-step title="质量评估"></el-step>
     </el-steps>
     <div v-if="this.active==0">
-    <el-button style="margin-top: 12px;" @click="dialogAllKGVisible = true">查看所有图谱</el-button>
-      <span>当前选择图谱名称:militarykg</span>
+      <el-button  @click="dialogAllKGVisible = true" style="display:inline-block;margin: 10px;" type="primary">选择图谱</el-button>
+      <el-button  style="display: inline-block;margin: 10px;" type="danger">全部清空</el-button>
+      <el-button  style="display: inline-block;margin: 10px;" type="primary">导入</el-button>
+      <el-card class="box-card" shadow="never" style="width: 50%;display:block;margin:10px;">
+        融合图谱:
+        <el-input
+            autosize
+            placeholder="请输入内容"
+            v-model="value_merge_kg"
+            style=" border: 0px;"
+        >
+        </el-input>
+      </el-card>
+      <el-card class="box-card" shadow="never" style="width: 50%;display:block;margin:10px;">
+        候选图谱:
+        <el-input
+            autosize
+            placeholder="请输入内容"
+            v-model="value_candidate_kg"
+            style=" border: none;"
+        >
+        </el-input>
+      </el-card>
+      <!--对话框-->
       <el-dialog :visible.sync="dialogAllKGVisible">
-      <el-form :model="form">
-        <el-form-item label="图谱名称" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
+        <el-steps :active="select_kg_active" finish-status="success">
+          <el-step title="选择融合图谱"></el-step>
+          <el-step title="选择候选图谱"></el-step>
+        </el-steps>
+          <!--选择融合图谱-->
+        <div style="text-align: center;">
+          <el-transfer
+              class="transfer"
+              v-model="value_merge_kg"
+              filterable
+              :titles="['待选', '已选']"
+              :button-texts="['撤销', '选择']"
+              :format="{
+                noChecked: '${total}',
+                hasChecked: '${checked}/${total}'
+              }"
+              @change="handleChange"
+              :data="value_merge_data1"
+              v-if="this.select_kg_active==0">
+            <span slot-scope="{ option }">{{ option.label }}</span>
+          </el-transfer>
+
+        <el-transfer
+            class="transfer"
+            v-model="value_candidate_kg"
+            filterable
+            :titles="['待选', '已选']"
+            :button-texts="['撤销', '选择']"
+            :format="{
+                noChecked: '${total}',
+                hasChecked: '${checked}/${total}'
+              }"
+            @change="handleChange"
+            :data="value_merge_data2"
+            v-if="this.select_kg_active==1">
+          <span slot-scope="{ option }">{{ option.label }}</span>
+        </el-transfer>
+        </div>
+        <el-button style="margin-top: 12px;display: block;" @click="select_kg_next">下一步</el-button>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAllKGVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogAllKGVisible = false;displayKgItems">确 定</el-button>
@@ -72,11 +129,8 @@
         :total=total>
     </el-pagination>
       <el-button style="margin-top: 12px;" @click="dialogTwoDViewVisible=true">预览</el-button>
-      <el-dialog :visible.sync="dialogTwoDViewVisible" custom-class="previewDialog"
-                 fullscreen
-                 close-on-press-escape
-      >
-        <TwoDView></TwoDView>
+      <el-dialog :visible.sync="dialogTwoDViewVisible" close-on-press-escape>
+          <TwoDView></TwoDView>
       </el-dialog>
 
     </div>
@@ -97,7 +151,7 @@
       </el-input>
       <el-button style="margin-top: 12px;" @click="calculate">开始计算</el-button>
       <div style="margin-top: 20px;margin-bottom: 10px;">
-        <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
+<!--        <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
         <el-button @click="toggleSelection()">取消选择</el-button>
       </div>
       <el-table
@@ -145,7 +199,7 @@
         <el-descriptions-item label="原图谱列表"><a>点击查看</a></el-descriptions-item>
         <el-descriptions-item label="待融合实体列表"><a>点击查看</a></el-descriptions-item>
         <el-descriptions-item label="备注">
-          <el-tag size="small">学校</el-tag>
+          <el-tag size="small">装备</el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="操作时间">2022-10-01</el-descriptions-item>
       </el-descriptions>
@@ -211,7 +265,13 @@
   padding: 0;
   overflow: unset;
 }
-
+.transfer{
+  text-align: left;
+  display: inline-block;
+}
+.el-dialog{
+  margin-top: 2vh !important;
+}
 </style>
 <script>
 import TwoDView from "../visualization/2dView";
@@ -219,6 +279,29 @@ import store from "../../store";
 export default {
   components: {TwoDView},
   data() {
+    //选择图谱的假数据(主版本)
+    const generateData = _ => {
+      const data = [];
+      for (let i = 1; i <= 5; i++) {
+        data.push({
+          key: i,
+          label: `主图谱 ${ i }`,
+        });
+      }
+      return data;
+    };
+    //选择图谱的假数据(候选版本)
+    const generateCandidateData = _ => {
+      const data = [];
+      for (let i = 1; i <= 15; i++) {
+        data.push({
+          key: i,
+          label: `候选图谱 ${ i }`,
+        });
+      }
+      return data;
+    };
+
     return {
       active: 0,
       options: [{
@@ -284,14 +367,27 @@ export default {
       //分页设置
       pageSize:"50",
       pageSizes:"[50, 100, 150, 200]",
-      total:"400"
+      total:"400",
+      //选择图谱切换步骤条
+      select_kg_active:0,
+      //选择图谱穿梭框1
+      value_merge_data1: generateData(),
+      value_merge_kg: [1],
+      //选择图谱穿梭框1
+      value_merge_data2: generateCandidateData(),
+      value_candidate_kg: [1],
     };
   },
 
   methods: {
+    //总体的下一步
     next() {
       // this.active++;
       if (this.active++ > 2) this.active = 0;
+    },
+    select_kg_next(){
+      console.log(this.select_kg_active)
+      if(this.select_kg_active++ > 1) this.select_kg_active=0;
     },
     calculate(){
       console.log("开始计算")
@@ -320,6 +416,10 @@ export default {
           // }
       })
       // ${val}
+    },
+    //第一个穿梭框数据变化时
+    handleChange(value, direction, movedKeys) {
+      console.log(value, direction, movedKeys);
     }
   }
     // displayKgItems(){
