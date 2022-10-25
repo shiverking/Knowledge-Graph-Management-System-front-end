@@ -1,8 +1,6 @@
 <template>
   <div>
-    <el-link @click="edit()">
-      <font color="#6495ed"><返回</font></el-link>
-    <br/>
+
     <br/>
     <el-dialog title="任务配置" :visible.sync="dialogVisible" width="60%">
 

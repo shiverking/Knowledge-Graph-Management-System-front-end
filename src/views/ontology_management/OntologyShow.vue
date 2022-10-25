@@ -2,7 +2,7 @@
   <div id="main" class="main">
     <div id="show_ontology_like_graph" class="show_ontology" >
       <span class="desc">本体结构展示</span>
-      <svg width="100%" height="100%" preserveAspectRatio="xMinYMin meet"  id="testsvg"></svg>
+      <svg id="show_ontology_in_svg" width="100%" height="100%"></svg>
     </div>
     <el-card class="class_info">
       <el-descriptions title="节点详细信息" direction="vertical" :column="2" border>
@@ -118,10 +118,10 @@
 </template>
 
 <script>
-import * as d3 from 'd3';
+import * as d3 from '../../plugins/d3.v5.min.js'
+import * as echarts from 'echarts';
+import * as jquery from '../../plugins/jquery.min.js'
 import Panzoom from '@panzoom/panzoom';
-// import * as d3 from '../../plugins/d3.v5.min.js'
-// 初始化panzoom
 export default {
   name: 'OntologyShow',
 
@@ -220,107 +220,157 @@ export default {
     }
   },
   methods:{
+    // draw(){
+    //   //定义边界
+    //   let marge = {top: 50, bottom: 0, left: 10, right: 0};
+    //
+    //   let svg = d3.select("svg");
+    //   //设置长宽
+    //   for (let i = 0; i < svg.length; i++) {
+    //     svg[i].setAttribute('viewBox', '0,0,' + svg[i].getBBox().width + ',' + svg[i].getBBox().height + '')
+    //   }
+    //   let graph = document.getElementById("show_ontology_like_graph")
+    //   let width = parseInt(window.getComputedStyle(graph).width);
+    //   let height = parseInt(window.getComputedStyle(graph).height);
+    //   let g = svg.append("g")
+    //       .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
+    //
+    //   let scale = svg.append("g")
+    //       .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
+    //   //创建一个hierarchy layout
+    //   let hierarchyData = d3.hierarchy(this.$data.dataset)
+    //       .sum(function (d) {
+    //         return d.value;
+    //       });
+    //
+    //   //创建一个树状图
+    //   let tree = d3.tree()
+    //       .size([width, height])
+    //       // .size([width - 400, height - 200])
+    //       .separation(function (a, b) {
+    //         return (a.parent == b.parent ? 1 : 2) / a.depth;
+    //       })
+    //
+    //   //初始化树状图，也就是传入数据,并得到绘制树基本数据
+    //   let treeData = tree(hierarchyData);
+    //   console.log(treeData);
+    //   //得到节点
+    //   let nodes = treeData.descendants();
+    //   let links = treeData.links();
+    //
+    //   //输出节点和边
+    //   console.log(nodes);
+    //   console.log(links);
+    //
+    //   //创建一个贝塞尔生成曲线生成器
+    //   let Bézier_curve_generator = d3.linkHorizontal()
+    //       .x(function (d) {
+    //         return d.y;
+    //       })
+    //       .y(function (d) {
+    //         return d.x;
+    //       });
+    //
+    //   //有了节点和边集的数据后，我们就可以开始绘制了，
+    //   //绘制边
+    //   g.append("g")
+    //       .selectAll("path")
+    //       .data(links)
+    //       .enter()
+    //       .append("path")
+    //       .attr("d", function (d) {
+    //         let start = {x: d.source.x, y: d.source.y};
+    //         let end = {x: d.target.x, y: d.target.y};
+    //         return Bézier_curve_generator({source: start, target: end});
+    //       })
+    //       .attr("fill", "none")
+    //       .attr("stroke", "green")
+    //       .attr("stroke-width", 1);
+    //
+    //       //绘制节点和文字
+    //     //先创建用以绘制每个节点和对应文字的分组<g>
+    //   let gs = g.append("g")
+    //       .selectAll("g")
+    //       .data(nodes)
+    //       .enter()
+    //       .append("g")
+    //       .attr("transform", function (d) {
+    //         let cx = d.x;
+    //         let cy = d.y;
+    //         return "translate(" + cy + "," + cx + ")";
+    //       });
+    //   //绘制节点
+    //   gs.append("circle")
+    //       .attr("r", 6)
+    //       .attr("fill", "white")
+    //       .attr("stroke", "blue")
+    //       .attr("stroke-width", 1);
+    //   //文字
+    //   gs.append("text")
+    //       .attr("x", function (d) {
+    //         return d.children ? -40 : 8;
+    //       })
+    //       .attr("y", -5)
+    //       .attr("dy", 10)
+    //       .text(function (d) {
+    //         return d.data.name;
+    //       });
+    // },
     draw(){
-      //定义边界
-      let marge = {top: 50, bottom: 0, left: 10, right: 0};
+      let ROOT_PATH = 'test';
+      let chartDom = document.getElementById('show_ontology_like_graph');
+      let myChart = echarts.init(chartDom,);
+      let option;
 
-      let svg = d3.select("svg");
-      // 给画布绑定zoom事件（缩放、平移）
-      // svg.call(d3.zoom().on('zoom', event => {
-      //   // console.log(event)
-      //   var scale = event.transform.k,translate = [event.transform.x, event.transform.y]
-      //   svg.attr('transform', 'translate(' + translate[0] + ', ' + translate[1] + ') scale(' + scale + ')');
-      // }))
-      //设置长宽
-      for (let i = 0; i < svg.length; i++) {
-        svg[i].setAttribute('viewBox', '0,0,' + svg[i].getBBox().width + ',' + svg[i].getBBox().height + '')
+      myChart.showLoading();
+      // jquery.getJSON('../../data/ontology.json', {},,'json');
+      var ontology_data  = require('../../data/ontology.json')
+      function initEcharts (data){
+        myChart.hideLoading();
+        data.children.forEach(function (datum, index) {
+          index % 2 === 0 && (datum.collapsed = true);
+        });
+        myChart.setOption(
+            (option = {
+              tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove'
+              },
+              series: [
+                {
+                  type: 'tree',
+                  data: [data],
+                  top: '1%',
+                  left: '7%',
+                  bottom: '1%',
+                  right: '20%',
+                  symbolSize: 7,
+                  label: {
+                    position: 'left',
+                    verticalAlign: 'middle',
+                    align: 'right',
+                    fontSize: 9
+                  },
+                  leaves: {
+                    label: {
+                      position: 'right',
+                      verticalAlign: 'middle',
+                      align: 'left'
+                    }
+                  },
+                  emphasis: {
+                    focus: 'descendant'
+                  },
+                  expandAndCollapse: true,
+                  animationDuration: 550,
+                  animationDurationUpdate: 750
+                }
+              ]
+            })
+        );
       }
-      let graph = document.getElementById("show_ontology_like_graph")
-      let width = parseInt(window.getComputedStyle(graph).width);
-      let height = parseInt(window.getComputedStyle(graph).height);
-      let g = svg.append("g")
-          .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
-
-      let scale = svg.append("g")
-          .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
-      //创建一个hierarchy layout
-      let hierarchyData = d3.hierarchy(this.$data.dataset)
-          .sum(function (d) {
-            return d.value;
-          });
-
-      //创建一个树状图
-      let tree = d3.tree()
-          .size([width, height])
-          // .size([width - 400, height - 200])
-          .separation(function (a, b) {
-            return (a.parent == b.parent ? 1 : 2) / a.depth;
-          })
-
-      //初始化树状图，也就是传入数据,并得到绘制树基本数据
-      let treeData = tree(hierarchyData);
-      console.log(treeData);
-      //得到节点
-      let nodes = treeData.descendants();
-      let links = treeData.links();
-
-      //输出节点和边
-      console.log(nodes);
-      console.log(links);
-
-      //创建一个贝塞尔生成曲线生成器
-      let Bézier_curve_generator = d3.linkHorizontal()
-          .x(function (d) {
-            return d.y;
-          })
-          .y(function (d) {
-            return d.x;
-          });
-
-      //有了节点和边集的数据后，我们就可以开始绘制了，
-      //绘制边
-      g.append("g")
-          .selectAll("path")
-          .data(links)
-          .enter()
-          .append("path")
-          .attr("d", function (d) {
-            let start = {x: d.source.x, y: d.source.y};
-            let end = {x: d.target.x, y: d.target.y};
-            return Bézier_curve_generator({source: start, target: end});
-          })
-          .attr("fill", "none")
-          .attr("stroke", "green")
-          .attr("stroke-width", 1);
-
-          //绘制节点和文字
-        //先创建用以绘制每个节点和对应文字的分组<g>
-      let gs = g.append("g")
-          .selectAll("g")
-          .data(nodes)
-          .enter()
-          .append("g")
-          .attr("transform", function (d) {
-            let cx = d.x;
-            let cy = d.y;
-            return "translate(" + cy + "," + cx + ")";
-          });
-      //绘制节点
-      gs.append("circle")
-          .attr("r", 6)
-          .attr("fill", "white")
-          .attr("stroke", "blue")
-          .attr("stroke-width", 1);
-      //文字
-      gs.append("text")
-          .attr("x", function (d) {
-            return d.children ? -40 : 8;
-          })
-          .attr("y", -5)
-          .attr("dy", 10)
-          .text(function (d) {
-            return d.data.name;
-          });
+      initEcharts(ontology_data);
+      option && myChart.setOption(option);
     },
     checkUpdateClass(){
       this.$alert('是否确认修改', '修改节点', {
@@ -366,20 +416,20 @@ export default {
         }
       });
     },
-    initPanzoom(){
-      const elem = document.getElementById('testsvg')
-      const panzoom = Panzoom(elem, {
-        maxScale: 5
-      })
-      panzoom.pan(10, 10)
-      panzoom.zoom(2, { animate: true })
-      button.addEventListener('click', panzoom.zoomIn)
-      elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
-    }
+    // initPanzoom(){
+    //   // const elem = document.getElementById('show_ontology_like_graph')
+    //   // const panzoom = Panzoom(elem, {
+    //   //   maxScale: 5
+    //   // })
+    //   // panzoom.pan(10, 10)
+    //   // panzoom.zoom(2, { animate: true })
+    //   // elem.addEventListener('click', panzoom.zoomIn)
+    //   // elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
+    // }
   },
   mounted(){
     this.draw()
-    this.initPanzoom()
+    // this.initPanzoom()
   }
 }
 </script>
@@ -393,9 +443,10 @@ export default {
 }
 .show_ontology {
   float: left;
-  height: 125%;
-  width: 68%;
+  height: 750px;
+  width: 800px;
   margin-top: 20px;
+  /*border: red 1px solid;*/
   /*overflow-x:scroll;*/
   /*overflow-y:scroll;*/
 }
