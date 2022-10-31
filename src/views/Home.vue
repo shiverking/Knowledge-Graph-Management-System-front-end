@@ -18,7 +18,7 @@
               </div>
             </el-dropdown>
         </el-header>
-        <el-container style="height: 100%; border: 1px solid #eee">
+        <el-container style="height: 100%;">
           <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
             <el-menu
               :default-active="$route.path"
@@ -117,7 +117,7 @@
                   <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全</el-menu-item></router-link>
                   <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
                 </el-submenu>
-                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-3">版本管理</el-menu-item></router-link>
+                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-3">版本控制</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink">
                 <el-menu-item index="5">
