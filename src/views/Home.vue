@@ -173,6 +173,53 @@
     height: inherit;
     margin-right: 10px;
   }
+  /*优化滚动条*/
+  .el-aside {
+    height: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+  }
+  .el-aside::-webkit-scrollbar-track-piece {
+    background-color: #f8f8f800;
+  }
+  .el-aside::-webkit-scrollbar {
+    width: 6px;
+    transition: all 2s;
+  }
+  .el-aside::-webkit-scrollbar-thumb {
+    background-color: #dddddd;
+    border-radius: 100px;
+  }
+  .el-aside::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+  }
+  .el-aside::-webkit-scrollbar-corner {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  /*全局滚动条*/
+  body {
+    height: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    /*overflow: scroll;*/
+  }
+  body::-webkit-scrollbar-track-piece {
+    background-color: #f8f8f800;
+  }
+  body::-webkit-scrollbar {
+    width: 10px;
+    transition: all 2s;
+  }
+  body::-webkit-scrollbar-thumb {
+    background-color: #dddddd;
+    border-radius: 100px;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+  }
+  body::-webkit-scrollbar-corner {
+    background-color: rgba(255, 255, 255, 0);
+  }
 </style>
 <script>
 import store from "../store";
