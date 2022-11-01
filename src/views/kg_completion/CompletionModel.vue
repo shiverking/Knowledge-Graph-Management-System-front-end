@@ -24,7 +24,6 @@
         </el-option>
       </el-select>
       <el-button type="primary">训练新模型</el-button>
-      <el-progress :percentage="100" :format="format" :width="50" style="margin-top:10px"></el-progress>
     </el-card>
     <el-card class="box-card" shadow="never" style="margin-top:10px">
       <div class="block">
@@ -75,7 +74,7 @@
       background
       layout="prev, pager, next"
       style="margin-top:10px"
-      :total="1000">
+      :total="1">
       </el-pagination>
     </el-card>
   </div>

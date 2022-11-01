@@ -69,7 +69,7 @@
         background
         layout="prev, pager, next"
         style="margin-top:10px"
-        :total="1000">
+        :total="1">
         </el-pagination>
       </template>
       <el-button type="primary" style="margin-top: 10px;" @click="next">开始预测</el-button>
@@ -131,7 +131,7 @@
       background
       layout="prev, pager, next"
       style="margin-top:10px"
-      :total="1000">
+      :total="1">
       </el-pagination>
       <el-button type="primary" style="margin-top: 10px;" @click="next">保存结果</el-button>
     </el-card>  

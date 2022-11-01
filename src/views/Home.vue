@@ -89,12 +89,11 @@
                   <i class="el-icon-document-copy"></i>
                   <span slot="title">三元组管理</span>
                 </template>
-                <el-submenu index="3-1">
-                  <template slot="title">结构化数据管理</template>
-                  <router-link to="/know/triples_management/IncrementalStructuredData" class="routerlink" ><el-menu-item index="3-1-1">增量数据管理</el-menu-item></router-link>              
-                </el-submenu>
+                <router-link to="/know/IncrementalStructuredData" class="routerlink">
+                  <el-menu-item index="3-1">增量结构化数据管理</el-menu-item>
+                </router-link>
                 <el-submenu index="3-2">
-                  <template slot="title">非结构化数据管理</template>
+                  <template slot="title">增量非结构化数据管理</template>
                   <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-2-1">实体抽取</el-menu-item></router-link>
                   <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-2-2">三元组抽取</el-menu-item></router-link>
                 </el-submenu>
@@ -117,7 +116,8 @@
                   <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全</el-menu-item></router-link>
                   <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
                 </el-submenu>
-                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-3">版本控制</el-menu-item></router-link>
+                <router-link to="/kg/error_detection" class="routerlink"><el-menu-item index="4-3">图谱质量检测</el-menu-item></router-link>
+                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-4">版本控制</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink">
                 <el-menu-item index="5">
