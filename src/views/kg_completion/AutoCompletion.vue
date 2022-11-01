@@ -58,7 +58,7 @@
         background
         layout="prev, pager, next"
         style="margin-top:10px"
-        :total="1000">
+        :total="1">
       </el-pagination>
       <el-button size type="primary" style="margin-top:10px">置信度检测</el-button>
     </el-card>
@@ -70,7 +70,7 @@
           style="width: 100%; margin-top;">
           <el-table-column
           label="日期"
-          width="180">
+          width="400">
           <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -105,7 +105,7 @@
           </el-table-column>
           <el-table-column
           label="补全结果"
-          width="180">
+          width="100">
           <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.result }}</span>
           </template>
@@ -126,7 +126,7 @@
         background
         layout="prev, pager, next"
         style="margin-top:10px"
-        :total="1000">
+        :total="1">
       </el-pagination>
       <el-button size type="primary" style="margin-top:10px">插入图谱</el-button>
     </el-card>
@@ -149,36 +149,23 @@
           label: '2022-10-10'
         }],
         tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
+          date: '2022-10-9-12:33',
+          name: '增量结构化数据_2022_10_9_12_33',
+          province: '1324',
+          city: '未插入',
         }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1517 弄',
-          zip: 200333
+          date: '2022-10-12-19:33',
+          name: '增量结构化数据_2022_10_12_19_33',
+          province: '1232',
+          city: '未插入',
         }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1519 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        }],
+          date: '2022-10-14-12:21',
+          name: '实体抽取数据_2022_10_14_12_21',
+          province: '34',
+          city: '未插入',
+        },],
         tableData2: [{
-          date: '2016-05-02',
+          date: new Date(),
           head: '约翰·保罗·琼斯号导弹驱逐舰',
           head_typ: '驱逐舰',
           tail: '台湾',
@@ -187,7 +174,7 @@
           conflict_typ: '0.38767',
           result: '补全失败'
         }, {
-          date: '2016-05-04',
+          date: new Date(),
           head: '普林斯顿号导弹巡洋舰',
           head_typ: '巡洋舰',
           tail: '英格尔斯造船',
@@ -196,7 +183,7 @@
           conflict_typ: '0.88767',
           result: '补全成功'
         }, {
-          date: '2016-05-01',
+          date: new Date(),
           head: '约书亚·温克',
           head_typ: '人物',
           tail: '尼米兹号航空母舰',
