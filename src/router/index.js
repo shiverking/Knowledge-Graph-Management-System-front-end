@@ -31,7 +31,6 @@ import Arm from "../views/data_management/arm/Arm"
 import People from "../views/data_management/people/People"
 import Summary from "../views/data_management/plan/Summary"
 import Analysis from "../views/data_management/analysis/Analysis"
-import TriplesManagement from "../views/triples_management/TriplesManagement"
 import KnowledgeExtraction from "../views/triples_extraction/KnowledgeExtraction"
 import NamedEntityRecognition from "../views/triples_extraction/NamedEntityRecognition"
 import TriplesExtraction from "../views/triples_extraction/TriplesExtraction"
@@ -41,8 +40,10 @@ import GetTriples from "../views/kg_completion/GetTriples"
 import LinkPrediction from "../views/kg_completion/LinkPrediction"
 import AutoCompletion from "../views/kg_completion/AutoCompletion"
 import CompletionModel from "../views/kg_completion/CompletionModel"
+import ErrorDetection from "../views/error_detection/ErrorDetection"
 import IncrementalStructuredData from "../views/triples_management/IncrementalStructuredData"
 import CandidateDatasets from "../views/candidate_datasets/CandidateDatasets"
+import TotalTriples from "../views/total_triples_management/TotalTriples"
 import Personal from "../views/Personal";
 import setting from "../views/Setting";
 import Register from "../views/Register";
@@ -272,22 +273,14 @@ export default new Router({
       },
       children:[
         {
-          path: '/know/triples_management',
-          name: '结构化数据管理',
-          component: TriplesManagement,
+          path: '/know/IncrementalStructuredData',
+          name: '增量结构化数据管理',
+          component: IncrementalStructuredData,
           show: true,
-          redirect: 'Ent_ent_rel',
-          children:[
-            {
-              path: "/know/triples_management/IncrementalStructuredData",
-              name: "增量数据管理",
-              component: IncrementalStructuredData,
-            },
-          ]
         },
         {
           path: '/know/triples_extracton',
-          name: '非结构化数据管理',
+          name: '增量非结构化数据管理',
           component: KnowledgeExtraction,
           show: true,
           redirect:'NamedEntityRecognition',
@@ -308,6 +301,12 @@ export default new Router({
           path: '/know/CandidateDatasets',
           name: '候选数据集管理',
           component: CandidateDatasets,
+          show: true,
+        },
+        {
+          path: '/know/TotalTriples',
+          name: '全部三元组管理',
+          component: TotalTriples,
           show: true,
         }
       ]
@@ -361,6 +360,12 @@ export default new Router({
               component: CompletionModel
             },
           ]
+        },
+        {
+          path: '/kg/error_detection',
+          name: '图谱质量检测',
+          component: ErrorDetection,
+          show: true,
         },
       ]
     },

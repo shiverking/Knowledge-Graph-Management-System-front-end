@@ -69,7 +69,7 @@
         background
         layout="prev, pager, next"
         style="margin-top:10px"
-        :total="1000">
+        :total="1">
         </el-pagination>
       </template>
       <el-button type="primary" style="margin-top: 10px;" @click="next">置信度检测</el-button>
@@ -131,7 +131,7 @@
       background
       layout="prev, pager, next"
       style="margin-top:10px"
-      :total="1000">
+      :total="1">
       </el-pagination>
       <el-button type="primary" style="margin-top: 10px;" @click="next">保存结果</el-button>
       <el-button type="primary" style="margin-top: 10px;" @click="next">插入图谱</el-button>
@@ -143,7 +143,7 @@
     data() {
       return {
         activeName: 'first',
-                tableData: [{
+        tableData: [{
           date: '2016-05-02-12-11-10',
           name: '约翰·保罗·琼斯号导弹驱逐舰',
           province: '驱逐舰',
