@@ -2,24 +2,19 @@
   <div style="margin-top: 20px;">
     <el-card class="box-card" shadow="never">
       <p><b>文件导入</b></p>
-      <p style="margin-top: 10px;"><font size="3">格式要求：文本信息，只接受.txt文件</font></p>
       <el-upload
-        ref="uploadRef"
         class="upload-demo"
+        ref="upload"
         action="https://jsonplaceholder.typicode.com/posts/"
-        :multiple="true"
-        :show-file-list="true"
-        accept=".txt"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :before-upload="handleBeforeUpload"
-        :limit="1"
-        :on-exceed="handleExceed"
-        :on-change="handleChange"
-        :file-list="fileList">
-        <el-button size type="primary">选取文件</el-button>
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button slot="trigger"  type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">格式要求：文本信息，只接受.txt文件</div>
       </el-upload>
-      <el-button style="margin-top:10px" type="primary" @click="load_txt()">读取文本信息</el-button>
+      <el-button style="margin-top:10px" type="primary" @click="open3">读取文本信息</el-button>
       <el-table
         :data="tableData"
         border
@@ -30,7 +25,7 @@
         </el-table-column>
         <el-table-column
         label="日期"
-        width="400">
+        width="200">
         <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -63,7 +58,7 @@
         style="margin-top:10px"
         :total="1">
       </el-pagination>
-      <el-button type="primary" style="margin-top: 10px;" @click="load_entitis()">开始抽取</el-button>
+      <el-button type="primary" style="margin-top: 10px;" @click="open1">开始抽取</el-button>
     </el-card>
     <el-card class="box-card" shadow="never" style="margin-top:10px">
       <p><b>实体抽取</b></p>
@@ -77,7 +72,7 @@
         </el-table-column>
         <el-table-column
         label="日期"
-        width="400">
+        width="200">
         <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -126,13 +121,6 @@
         </template>
         </el-table-column>
         <el-table-column
-        label="存储方式"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
         label="操作"
         width="180">
         <template slot-scope="scope">
@@ -164,11 +152,11 @@
         activeName: 'first',
         fileList: [],
         tableData: [{
-            date: new Date(),
+            date: '2022-11-1-14:26:23',
             sentence: '最近一段时间以来，美国在南海地区动作不断，不仅越发频繁，并且力度不断加大，除了每天平均出动4到5架侦察机外，美军还派出“里根”号和“尼米兹”号两艘航母战斗群前往南海举行联合演习，其频率也达到历史之最，光是在今年7月就已经超过两次。同时，美军驱逐舰以及侦察机多次出没在南海海域。8月8日，美海军“里根”号航母作战群由日本海转移至东海活动。同时，还发现1架P-8A反潜巡逻机前往台湾海峡南部空域侦察。',
           }],
         tableData2: [{
-          date: new Date(),
+          date: '2022-11-1-14:26:23',
           conflict_typ: '装备图谱,地理图谱',
           storage_mode: 'neo4j'
         }],
@@ -233,6 +221,15 @@
           });          
         });
       },
+      open1() {
+        const h = this.$createElement;
+
+        this.$notify({
+          title: '成功',
+          message: h('i', { style: 'color: teal'}, '抽取完成！'),
+          type: 'success'
+        })
+      },
       open2() {
         this.$prompt('请输入保存路径', '提示', {
           confirmButtonText: '确定',
@@ -250,13 +247,23 @@
           });       
         });
       },
-      load_file(){
-        fileList.push(
-        {
-          name: '2022-10-11-10:35:25.txt',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-        )
+      open3() {
+        const h = this.$createElement;
+
+        this.$notify({
+          title: '成功',
+          message: h('i', { style: 'color: teal'}, '读取完成！'),
+          type: 'success'
+        })
+      },
+      submitUpload() {
+        this.$refs.upload.submit();
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
       }
     }
   }
