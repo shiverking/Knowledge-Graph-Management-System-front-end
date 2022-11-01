@@ -1097,9 +1097,6 @@ svg {
     opacity: $opacity;
   }
 }
-// #positiveMarker path {
-//   fill: #fff;
-// }
 </style>
 <style lang="scss" scoped>
 @media only screen and (max-width: 1125px){

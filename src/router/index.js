@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import ArmAnalysis from '../views/data_management/arm/ArmAnalysis'
 import Aircraft from '../views/data_management/arm/Aircraft'
 import Artillery from '../views/data_management/arm/Artillery'
 import Bomb from '../views/data_management/arm/Bomb'
@@ -23,6 +24,10 @@ import AddPlan from '../views/data_management/plan/AddPlan'
 import PlanUpdate from '../views/data_management/plan/PlanUpdate'
 import PlanDetail from '../views/data_management/plan/PlanDetail'
 import TaskDetail from '../views/data_management/plan/TaskDetail'
+import DataSource from '../views/data_management/data_source/DataSource'
+import TripleData from '../views/data_management/triple/TripleData'
+import Unstructure from '../views/data_management/test/Unstructure'
+import Meta from '../views/data_management/test/Meta'
 import Vessel from '../views/data_management/arm/Vessel'
 import Column from '../views/data_management/analysis/Column'
 import Login from "../views/Login";
@@ -96,13 +101,38 @@ export default new Router({
     },
     {
       path: '/data',
-      name: '数据管理',
+      name: '核心集管理',
       component: Home,
       show: true,
       meta:{
         requireAuth:true //此时表示进入这个路由是需要登录的
       },
       children:[
+        {
+          path: "/data/analysis/column",
+          name: "数据分析",
+          component: Column
+        },
+        {
+          path: "/data/datasource",
+          name: "数据源管理",
+          component: DataSource
+        },
+        {
+          path: "/data/TripleData",
+          name: "三元组数据管理",
+          component: TripleData
+        },
+        {
+          path: "/data/Unstructure",
+          name: "非结构化数据管理",
+          component: Unstructure
+        },
+        {
+          path: "/data/Meta",
+          name: "元数据管理",
+          component: Meta
+        },
         {
           path: '/data/arm',
           name: '武器装备数据',
@@ -159,6 +189,11 @@ export default new Router({
               path: "/data/arm/VesselUpdate",
               name: "编辑舰船",
               component: VesselUpdate,
+            },
+            {
+              path: "/data/arm/ArmAnalysis",
+              name: "武器装备数据分析",
+              component: ArmAnalysis,
             },
             {
               path: "/data/arm/Aircraft",
@@ -248,20 +283,20 @@ export default new Router({
             },
           ]
         },
-        {
-          path: "/data/analysis",
-          name: "数据分析",
-          component: Analysis,
-          show: true,
-          children: [
-            {
-              path: "/data/analysis/column",
-              name: "数据可视化",
-              component: Column
-            },
-          ]
-        },
-      ]
+        // {
+        //   path: "/data/analysis",
+        //   name: "数据分析",
+        //   component: Analysis,
+        //   show: true,
+        //   children: [
+        //     {
+        //       path: "/data/analysis/column",
+        //       name: "数据可视化",
+        //       component: Column
+        //     },
+        //   ]
+        // },
+      ],
     },
     {
       path: '/know',
