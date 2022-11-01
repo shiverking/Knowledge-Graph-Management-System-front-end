@@ -2,24 +2,19 @@
   <div style="margin-top: 20px;">
     <el-card class="box-card" shadow="never">
       <p><b>文件导入</b></p>
-      <p style="margin-top: 10px;"><font size="3">格式要求：文本信息，只接受.txt文件</font></p>
       <el-upload
-        ref="uploadRef"
         class="upload-demo"
+        ref="upload"
         action="https://jsonplaceholder.typicode.com/posts/"
-        :multiple="true"
-        :show-file-list="true"
-        accept=".txt"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :before-upload="handleBeforeUpload"
-        :limit="1"
-        :on-exceed="handleExceed"
-        :on-change="handleChange"
-        :file-list="fileList">
-        <el-button size type="primary">选取文件</el-button>
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button slot="trigger"  type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">格式要求：文本信息，只接受.txt文件</div>
       </el-upload>
-      <el-button style="margin-top:10px" type="primary" @click="load_txt()">读取文本信息</el-button>
+      <el-button style="margin-top:10px" type="primary" @click="open3">读取文本信息</el-button>
       <el-table
         :data="tableData"
         border
@@ -30,7 +25,7 @@
         </el-table-column>
         <el-table-column
         label="日期"
-        width="400">
+        width="200">
         <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -63,7 +58,7 @@
         style="margin-top:10px"
         :total="1">
       </el-pagination>
-      <el-button type="primary" style="margin-top: 10px;" @click="load_entitis()">开始抽取</el-button>
+      <el-button type="primary" style="margin-top: 10px;" @click="open1">开始抽取</el-button>
     </el-card>
     <el-card class="box-card" shadow="never" style="margin-top:10px">
       <p><b>实体抽取</b></p>
@@ -77,7 +72,7 @@
         </el-table-column>
         <el-table-column
         label="日期"
-        width="400">
+        width="200">
         <template slot-scope="scope">
             <i class="el-icon-time"></i>
             <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -104,13 +99,6 @@
         </template>
         </el-table-column>
         <el-table-column
-        label="存储方式"
-        width="100">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
         label="操作"
         width="150">
         <template slot-scope="scope">
@@ -133,6 +121,7 @@
       <el-button type="primary" style="margin-top: 10px;" @click="open2()">保存结果</el-button>
       <el-button type="primary" style="margin-top: 10px;" @click="open()">生成候选数据集</el-button>
     </el-card>
+
   </div>
 </template>
 <script>
@@ -142,17 +131,17 @@
         activeName: 'first',
         fileList: [],
         tableData: [{
-            date: new Date(),
+            date: '2022-11-1-14:26:23',
             sentence: '尼米兹号航空母舰采用核动力推进，装备4座升降机、4台蒸汽弹射器和4条拦阻索，可以每20秒弹射一架作战飞机。舰载作战联队中的机型配备根据作战任务性质的有所不同，可搭载不同用途的舰载飞机对敌方飞机、舰船、潜艇和陆地目标发动攻击，并保护海上舰队。',
           }],
         tableData2: [{
-          date: new Date(),
+          date: '2022-11-1-14:26:23',
           sentence: '尼米兹号航空母舰采用核动力推进，装备4座升降机、4台蒸汽弹射器和4条拦阻索，可以每20秒弹射一架作战飞机。',
           triples: '(尼米兹号航空母舰,航空母舰,核动力推进,技术,技术),(尼米兹号航空母舰,航空母舰,升降机,装备,装备),(尼米兹号航空母舰,航空母舰,蒸汽弹射器,装备,装备),(尼米兹号航空母舰,航空母舰,拦阻索,装备,装备),(尼米兹号航空母舰,航空母舰,飞机,作战装备,搭载)',
           conflict_typ: '装备图谱',
           storage_mode: 'neo4j'
         },{
-          date: new Date(),
+          date: '2022-11-1-14:26:23',
           sentence: '舰载作战联队中的机型配备根据作战任务性质的有所不同，可搭载不同用途的舰载飞机对敌方飞机、舰船、潜艇和陆地目标发动攻击，并保护海上舰队。',
           triples: '(舰载作战联队,舰载机联队,飞机,作战装备,搭载),(舰载作战联队,舰载机联队,飞机,作战装备,作战目标),(舰载作战联队,舰载机联队,舰船,作战装备,作战目标),(舰载作战联队,舰载机联队,潜艇,作战装备,作战目标)',
           conflict_typ: '装备图谱',
@@ -219,6 +208,15 @@
           });          
         });
       },
+      open1() {
+        const h = this.$createElement;
+
+        this.$notify({
+          title: '成功',
+          message: h('i', { style: 'color: teal'}, '抽取完成！'),
+          type: 'success'
+        })
+      },
       open2() {
         this.$prompt('请输入保存路径', '提示', {
           confirmButtonText: '确定',
@@ -236,13 +234,23 @@
           });       
         });
       },
-      load_file(){
-        fileList.push(
-        {
-          name: '2022-10-11-10:35:25.txt',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-        )
+      open3() {
+        const h = this.$createElement;
+
+        this.$notify({
+          title: '成功',
+          message: h('i', { style: 'color: teal'}, '读取完成！'),
+          type: 'success'
+        })
+      },
+      submitUpload() {
+        this.$refs.upload.submit();
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
       }
     }
   }
