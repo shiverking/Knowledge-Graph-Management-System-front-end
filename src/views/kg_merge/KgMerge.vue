@@ -10,26 +10,20 @@
       <el-button  @click="dialogAllKGVisible = true" style="display:inline-block;margin: 10px;" type="primary">选择图谱</el-button>
       <el-button  style="display: inline-block;margin: 10px;" type="danger">全部清空</el-button>
       <el-button  style="display: inline-block;margin: 10px;" type="primary">导入</el-button>
-      <el-card class="box-card" shadow="never" style="width: 50%;display:block;margin:10px;">
-        融合图谱:
-        <el-input
-            autosize
-            placeholder="请输入内容"
-            v-model="value_merge_kg"
-            style=" border: 0px;"
-        >
-        </el-input>
-      </el-card>
-      <el-card class="box-card" shadow="never" style="width: 50%;display:block;margin:10px;">
-        候选图谱:
-        <el-input
-            autosize
-            placeholder="请输入内容"
-            v-model="value_candidate_kg"
-            style=" border: none;"
-        >
-        </el-input>
-      </el-card>
+      <el-row :gutter="12">
+        <el-col :span="12">
+          <el-card class="box-card" shadow="never" style="display:block;margin:10px;">
+            融合图谱:
+            <span>{{value_merge_kg}}</span>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="never" style="display:block;margin:10px;">
+            候选图谱:
+            <span>{{value_candidate_kg}}</span>
+          </el-card>
+        </el-col>
+      </el-row>
       <!--对话框-->
       <el-dialog :visible.sync="dialogAllKGVisible">
         <el-steps :active="select_kg_active" finish-status="success">

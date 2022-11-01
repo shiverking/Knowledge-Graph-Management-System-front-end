@@ -18,37 +18,50 @@
               </div>
             </el-dropdown>
         </el-header>
-        <el-container style="height: 100%; border: 1px solid #eee">
+        <el-container style="height: 100%;">
           <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
             <el-menu
               :default-active="$route.path"
               class="el-menu-vertical-demo"
               >
               <el-submenu index="1">
-                <template slot="title">
+                <template slot="title" >
                   <i class="el-icon-edit-outline"></i>
-                  <span>数据管理</span>
+                  <span>核心集管理</span>
                 </template>
-                <el-submenu index="1-1">
-                  <template slot="title">武器装备数据</template>
-                  <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-1-1">飞机</el-menu-item></router-link>
-                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-1-2">舰船</el-menu-item></router-link>
-                  <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-1-3">火炮</el-menu-item></router-link>
-                  <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-1-4">爆炸物</el-menu-item></router-link>
-                  <router-link to="/data/arm/Misile" class="routerlink"><el-menu-item index="1-1-5">导弹</el-menu-item></router-link>
-                </el-submenu>
-                <el-submenu index="1-2">
-                  <template slot="title">人员数据</template>
-                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-2-1">人员信息</el-menu-item></router-link>
-                </el-submenu>
+                <router-link to="/data/analysis/column" class="routerlink"><el-menu-item index="1-1">数据分析</el-menu-item></router-link>
+                <router-link to="/data/datasource" class="routerlink"><el-menu-item index="1-2">数据源管理</el-menu-item></router-link>
                 <el-submenu index="1-3">
-                  <template slot="title">计划与任务</template>
-                  <router-link to="/data/plan/plan" class="routerlink"><el-menu-item index="1-3-1">作战计划</el-menu-item></router-link>
+                  <template slot="title">武器装备数据</template>
+                  <router-link to="/data/arm/ArmAnalysis" class="routerlink"><el-menu-item index="1-3-1">武器装备数据分析</el-menu-item></router-link>
+                  <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-3-2">飞机</el-menu-item></router-link>
+                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-3-3">舰船</el-menu-item></router-link>
+                  <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-3-4">火炮</el-menu-item></router-link>
+                  <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-3-5">爆炸物</el-menu-item></router-link>
+                  <router-link to="/data/arm/Misile" class="routerlink"><el-menu-item index="1-3-6">导弹</el-menu-item></router-link>
                 </el-submenu>
                 <el-submenu index="1-4">
-                  <template slot="title">数据分析</template>
-                  <router-link to="/data/analysis/column" class="routerlink"><el-menu-item index="1-4-1">数据可视化</el-menu-item></router-link>
+                  <template slot="title">人员数据</template>
+                  <router-link to="/data/people/PersonAnalysis" class="routerlink"><el-menu-item index="1-4-1">人员数据分析</el-menu-item></router-link>
+                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-4-2">人员信息</el-menu-item></router-link>
                 </el-submenu>
+                <el-submenu index="1-5">
+                  <template slot="title">计划与任务</template>
+                  <router-link to="/data/plan/plan" class="routerlink"><el-menu-item index="1-5-1">作战计划</el-menu-item></router-link>
+                </el-submenu>
+
+                <router-link to="/data/analysis" class="routerlink"><el-menu-item index="1-6">本体数据管理</el-menu-item></router-link>
+                <router-link to="/data/tripledata" class="routerlink"><el-menu-item index="1-7">三元组数据管理</el-menu-item></router-link>
+
+              </el-submenu>
+              <el-submenu index="6">
+                <template slot="title">
+                  <i class="el-icon-edit-outline"></i>
+                  <span slot="title">数据集管理</span>
+
+                </template>
+                <router-link to="/data/Meta" class="routerlink"><el-menu-item index="6-1">元数据管理</el-menu-item></router-link>
+                <router-link to="/data/Unstructure" class="routerlink"><el-menu-item index="6-1">非结构化数据管理</el-menu-item></router-link>
               </el-submenu>
               <el-submenu index="2">
                 <template slot="title">
@@ -104,7 +117,7 @@
                   <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
                 </el-submenu>
                 <router-link to="/kg/error_detection" class="routerlink"><el-menu-item index="4-3">图谱质量检测</el-menu-item></router-link>
-                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-4">版本管理</el-menu-item></router-link>
+                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-4">版本控制</el-menu-item></router-link>
               </el-submenu>
               <router-link to="/setting" class="routerlink">
                 <el-menu-item index="5">
