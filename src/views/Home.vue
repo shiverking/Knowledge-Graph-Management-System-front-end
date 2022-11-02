@@ -1,8 +1,8 @@
 <template>
     <div class="common-layout" style="height: 120vh">
-        <el-header class="homeHeader">
+        <el-header class="homeHeader" id="boxFixed" :class="{ is_fixed: isFixed}">
           <div class="header_left">
-            <el-avatar src="../static/icon/01.png" style="vertical-align:middle;margin: 9px;background-color: #063a6b;"></el-avatar>
+            <el-avatar src="../../static/icon/01.png" style="vertical-align:middle;margin: 9px;background-color: #063a6b;"></el-avatar>
             <div class="title">知识图谱管理系统</div>
           </div>
           <div class="header_right">
@@ -24,7 +24,7 @@
           </div>
         </el-header>
         <el-container style="height: 100%;">
-          <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
+          <el-aside  width="230px" style="background-color: rgb(238, 241, 246)" id="navFixed" :class="{ is_fixed_nav_left: isNavLeftFixed}">
             <el-menu
               :default-active="$route.path"
               class="el-menu-vertical-demo"
@@ -138,7 +138,7 @@
               </router-link>
             </el-menu>
           </el-aside>
-          <el-main>
+          <el-main  class="main_area">
             <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
             <div class="breadcrumb" style="margin:10px;">
               <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'" >
@@ -193,6 +193,23 @@
     left:-5px;
     width: 85%;
     background-color: #e3e7ea;
+  }
+  .is_fixed {
+    position: fixed;
+    top: 0px;
+    z-index: 9999;
+    width: 100%;
+  }
+  .is_fixed_nav_left {
+    position: fixed;
+    top: 60px;
+    z-index: 999;
+    /*width: 230px;*/
+  }
+  .main_area{
+    position: absolute;
+    left: 230px;
+    width:85%;
   }
   /*优化滚动条*/
   .el-aside {
@@ -252,6 +269,11 @@ export default {
       username:'',
       headurl:'',
       searchPage:'',
+      //表头吸顶
+      isFixed: false,
+      offsetTop: 0,
+      //左侧导航栏固定
+      isNavLeftFixed: false,
     }
   },
   created() {
@@ -283,7 +305,26 @@ export default {
         }).catch(function (error) {
           console.log(error);
         })
-      }
-  }
+      },
+    initHeight() {
+      var scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop //计算滚动条距离顶部的距离
+          this.isFixed = scrollTop > this.offsetTop ? true : false//当滚动条大于吸顶距离顶部的距离试,就加上css样式
+          this.isNavLeftFixed = scrollTop > this.offsetTop ? true : false
+    }
+  },
+  mounted() {
+    //监听滚动
+    window.addEventListener('scroll', this.initHeight)
+    //执行下一步
+    this.$nextTick(() => {
+      this.offsetTop = document.querySelector('#boxFixed').offsetTop //吸顶距离顶部的距离
+    })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll) //在销毁的生命周期取消监听事件,提高性能
+  },
 }
 </script>
