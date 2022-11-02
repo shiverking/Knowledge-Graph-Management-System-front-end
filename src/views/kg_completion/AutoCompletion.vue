@@ -2,19 +2,15 @@
   <div style="margin-top: 10px;">
     <el-card class="box-card" shadow="never">
       <p><b>设置补全模型</b></p>
-      <el-upload
-        class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        multiple
-        :limit="3"
-        :on-exceed="handleExceed"
-        :file-list="fileList">
-      <span style="margin-top; margin-right:10px"><font size="3">当前补全模型版本为<b>{{message}}</b></font></span>
-      <el-button size type="primary">选择模型</el-button>
-      </el-upload>
+      <el-button size type="primary" @click="dialogTableVisible = true">选择模型</el-button>
+      <p style="margin-top; margin-right:10px"><font size="3">当前补全模型版本为<b>{{message}}</b></font></p>
+      <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+        <el-table :data="gridData">
+          <el-table-column property="date" label="日期" width="150"></el-table-column>
+          <el-table-column property="name" label="姓名" width="200"></el-table-column>
+          <el-table-column property="address" label="地址"></el-table-column>
+        </el-table>
+      </el-dialog>
     </el-card>
     <el-card class="box-card" style="margin-top:10px" shadow="never">
       <p><b>选择候选数据集</b></p>
@@ -191,7 +187,26 @@
           rel: '指挥军舰',
           conflict_typ: '0.83767',
           result: '补全成功'
-        },]
+        },],
+        gridData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }],
+        dialogTableVisible: false,
+        dialogFormVisible: false,
       }
     },
     methods: {
