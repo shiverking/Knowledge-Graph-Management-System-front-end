@@ -1,15 +1,19 @@
 <template>
     <div class="common-layout" style="height: 120vh">
-        <el-header class="homeHeader">
-          <div class="title">知识图谱管理系统</div>
-          <el-input placeholder="请输入内容" v-model="searchPage" class="input-with-select" style="position: relative;width: 400px;left: 83px">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-          <el-dropdown class="dropdown">
+        <el-header class="homeHeader" id="boxFixed" :class="{ is_fixed: isFixed}">
+          <div class="header_left">
+            <el-avatar src="../../static/icon/01.png" style="vertical-align:middle;margin: 9px;background-color: #063a6b;"></el-avatar>
+            <div class="title">知识图谱管理系统</div>
+          </div>
+          <div class="header_right">
+            <el-input placeholder="请输入内容" v-model="searchPage" class="input-with-select" style="position: relative;width: 33%;left: 2%">
+              <el-button slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+            <el-dropdown class="dropdown">
               <div>
               <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="vertical-align:middle;margin: 10px"></el-avatar>
               <span style="color: azure;font-size: large;vertical-align:middle;">{{username}}</span>
-              <i class="el-icon-arrow-down" style="color: azure;font-size: large;vertical-align:middle;"></i>
+              <i class="el-icon-arrow-down" style="color: #000000;font-size: large;vertical-align:middle;"></i>
               <el-dropdown-menu>
                 <router-link to="/personal" class="routerlink" ><el-dropdown-item>个人中心</el-dropdown-item></router-link>
                 <router-link to="/setting" class="routerlink" ><el-dropdown-item>设置</el-dropdown-item></router-link>
@@ -17,9 +21,10 @@
               </el-dropdown-menu>
               </div>
             </el-dropdown>
+          </div>
         </el-header>
         <el-container style="height: 100%;">
-          <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
+          <el-aside  width="230px" style="background-color: rgb(238, 241, 246)" id="navFixed" :class="{ is_fixed_nav_left: isNavLeftFixed}">
             <el-menu
               :default-active="$route.path"
               class="el-menu-vertical-demo"
@@ -133,7 +138,7 @@
               </router-link>
             </el-menu>
           </el-aside>
-          <el-main>
+          <el-main  class="main_area">
             <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
             <div class="breadcrumb" style="margin:10px;">
               <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'" >
@@ -160,18 +165,98 @@
     text-decoration: none;
   }
   .homeHeader{
-    padding-right: 0px;
-    background-color:#303030;
+    padding: 0px;
   }
   .title{
-    float: left;
+    font-weight: bold;
     color: #ffffff;
     display: inline-block;
   }
   .dropdown{
     float: right;
     height: inherit;
-    margin-right: 10px;
+    position: relative;
+    right: 1%;
+  }
+  .header_left{
+    display: inline-block;
+    width:230px;
+    height:inherit;
+    margin: 0px;
+    background-color: #063a6b;
+  }
+  .header_right{
+    position: relative;
+    display: inline-block;
+    height:inherit;
+    margin: 0px;
+    left:-5px;
+    width: 85%;
+    background-color: #e3e7ea;
+  }
+  .is_fixed {
+    position: fixed;
+    top: 0px;
+    z-index: 9999;
+    width: 100%;
+  }
+  .is_fixed_nav_left {
+    position: fixed;
+    top: 60px;
+    z-index: 999;
+    /*width: 230px;*/
+  }
+  .main_area{
+    position: absolute;
+    left: 230px;
+    width:85%;
+  }
+  /*优化滚动条*/
+  .el-aside {
+    height: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+  }
+  .el-aside::-webkit-scrollbar-track-piece {
+    background-color: #f8f8f800;
+  }
+  .el-aside::-webkit-scrollbar {
+    width: 6px;
+    transition: all 2s;
+  }
+  .el-aside::-webkit-scrollbar-thumb {
+    background-color: #dddddd;
+    border-radius: 100px;
+  }
+  .el-aside::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+  }
+  .el-aside::-webkit-scrollbar-corner {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  /*全局滚动条*/
+  body {
+    height: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    /*overflow: scroll;*/
+  }
+  body::-webkit-scrollbar-track-piece {
+    background-color: #f8f8f800;
+  }
+  body::-webkit-scrollbar {
+    width: 10px;
+    transition: all 2s;
+  }
+  body::-webkit-scrollbar-thumb {
+    background-color: #dddddd;
+    border-radius: 100px;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+  }
+  body::-webkit-scrollbar-corner {
+    background-color: rgba(255, 255, 255, 0);
   }
 </style>
 <script>
@@ -184,6 +269,11 @@ export default {
       username:'',
       headurl:'',
       searchPage:'',
+      //表头吸顶
+      isFixed: false,
+      offsetTop: 0,
+      //左侧导航栏固定
+      isNavLeftFixed: false,
     }
   },
   created() {
@@ -215,7 +305,26 @@ export default {
         }).catch(function (error) {
           console.log(error);
         })
-      }
-  }
+      },
+    initHeight() {
+      var scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop //计算滚动条距离顶部的距离
+          this.isFixed = scrollTop > this.offsetTop ? true : false//当滚动条大于吸顶距离顶部的距离试,就加上css样式
+          this.isNavLeftFixed = scrollTop > this.offsetTop ? true : false
+    }
+  },
+  mounted() {
+    //监听滚动
+    window.addEventListener('scroll', this.initHeight)
+    //执行下一步
+    this.$nextTick(() => {
+      this.offsetTop = document.querySelector('#boxFixed').offsetTop //吸顶距离顶部的距离
+    })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll) //在销毁的生命周期取消监听事件,提高性能
+  },
 }
 </script>
