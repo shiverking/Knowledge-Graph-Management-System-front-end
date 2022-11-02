@@ -1,15 +1,19 @@
 <template>
     <div class="common-layout" style="height: 120vh">
         <el-header class="homeHeader">
-          <div class="title">知识图谱管理系统</div>
-          <el-input placeholder="请输入内容" v-model="searchPage" class="input-with-select" style="position: relative;width: 400px;left: 83px">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-          <el-dropdown class="dropdown">
+          <div class="header_left">
+            <el-avatar src="../static/icon/01.png" style="vertical-align:middle;margin: 9px;background-color: #063a6b;"></el-avatar>
+            <div class="title">知识图谱管理系统</div>
+          </div>
+          <div class="header_right">
+            <el-input placeholder="请输入内容" v-model="searchPage" class="input-with-select" style="position: relative;width: 33%;left: 2%">
+              <el-button slot="append" icon="el-icon-search"></el-button>
+            </el-input>
+            <el-dropdown class="dropdown">
               <div>
               <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="vertical-align:middle;margin: 10px"></el-avatar>
               <span style="color: azure;font-size: large;vertical-align:middle;">{{username}}</span>
-              <i class="el-icon-arrow-down" style="color: azure;font-size: large;vertical-align:middle;"></i>
+              <i class="el-icon-arrow-down" style="color: #000000;font-size: large;vertical-align:middle;"></i>
               <el-dropdown-menu>
                 <router-link to="/personal" class="routerlink" ><el-dropdown-item>个人中心</el-dropdown-item></router-link>
                 <router-link to="/setting" class="routerlink" ><el-dropdown-item>设置</el-dropdown-item></router-link>
@@ -17,6 +21,7 @@
               </el-dropdown-menu>
               </div>
             </el-dropdown>
+          </div>
         </el-header>
         <el-container style="height: 100%;">
           <el-aside  width="230px" style="background-color: rgb(238, 241, 246)">
@@ -160,18 +165,34 @@
     text-decoration: none;
   }
   .homeHeader{
-    padding-right: 0px;
-    background-color:#303030;
+    padding: 0px;
   }
   .title{
-    float: left;
+    font-weight: bold;
     color: #ffffff;
     display: inline-block;
   }
   .dropdown{
     float: right;
     height: inherit;
-    margin-right: 10px;
+    position: relative;
+    right: 1%;
+  }
+  .header_left{
+    display: inline-block;
+    width:230px;
+    height:inherit;
+    margin: 0px;
+    background-color: #063a6b;
+  }
+  .header_right{
+    position: relative;
+    display: inline-block;
+    height:inherit;
+    margin: 0px;
+    left:-5px;
+    width: 85%;
+    background-color: #e3e7ea;
   }
   /*优化滚动条*/
   .el-aside {
