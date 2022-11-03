@@ -191,7 +191,7 @@
     height:inherit;
     margin: 0px;
     left:-5px;
-    width: 85%;
+    width: calc(100% - 230px);
     background-color: #e3e7ea;
   }
   .is_fixed {
@@ -209,7 +209,7 @@
   .main_area{
     position: absolute;
     left: 230px;
-    width:85%;
+    width: calc(100% - 230px);
   }
   /*优化滚动条*/
   .el-aside {
