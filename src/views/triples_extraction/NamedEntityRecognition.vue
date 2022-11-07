@@ -62,7 +62,8 @@
 <!--      </el-card>-->
 <!--    </el-dialog>-->
     <el-button type="primary"  @click="open1">文件导入</el-button>
-    <el-button type="primary" @click="named_entity_extraction" style="margin: 0px;">开始抽取</el-button>
+    <el-button type="primary" @click="named_entity_extraction" style="margin: 0px;">开始识别</el-button>
+    <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
     <el-select v-model="algorithm_value" placeholder="请选择算法">
       <el-option
           v-for="item in algoritm_options"
@@ -79,10 +80,11 @@
     v-model="extract_data"
     >
     </el-input>
-    <el-card shadow="always"  class="ner_card">
+    <el-card shadow="always"  class="ner_card" v-loading="loading">
       <h4 class="ner_label">结果标注</h4>
+        <span class="ner_result" id="ner_result">{{extract_data}}</span>
     </el-card>
-    <el-card shadow="always"  class="ner_card">
+    <el-card shadow="always"  class="ner_card" v-loading="loading">
       <h4 class="ner_label">抽取结果</h4>
       <el-table
           :data="extract_table"
@@ -114,11 +116,21 @@ p {
   word-wrap: break-word;
   text-indent: 2em;
 }
+.ner_result{
+  word-break: normal;
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+}
 </style>
 <script>
+  import $ from '../../plugins/jquery.min.js'
   export default {
     data() {
       return {
+        //加载
+        loading :false,
         activeName: 'first',
         fileList: [],
         //选择算法
@@ -131,7 +143,7 @@ p {
           label: 'Bert_BiLSTM_CRF'
         }],
         //抽取数据
-        extract_data:"约瑟夫·拜登,毕业于特拉华大学和雪城大学，当过一段时间律师，1970年踏入政界 ，1972年11月当选联邦参议员并六次连任至2009年。1988年和2007年两度竞选美国总统，都没有成功。期间担任参议院司法委员会主席及高级成员16年、对外关系委员会主席及高级成员12年 。2008、2013年两度成为奥巴马的竞选搭档。2009—2017年任副总统。2019年4月25日宣布参选美国总统。2021年1月7日确认当选。1月20日宣誓就任。",
+        extract_data:"约瑟夫·拜登,毕业于特拉华大学和雪城大学，当过一段时间律师，1970年踏入政界，1972年11月当选联邦参议员并六次连任至2009年。1988年和2007年两度竞选美国总统，都没有成功。期间担任参议院司法委员会主席及高级成员16年、对外关系委员会主席及高级成员12年。2008、2013年两度成为奥巴马的竞选搭档。2009—2017年任副总统。2019年4月25日宣布参选美国总统。2021年1月7日确认当选。1月20日宣誓就任。",
         extract_table:[],
         tableData: [{
             date: '2022-11-1-14:26:23',
@@ -248,6 +260,7 @@ p {
           });
         }
         else{
+          this.loading = true;
           //axios请求
           axios.post('/pythonApi/named_entity_extraction',{
             data: this.extract_data,
@@ -258,16 +271,42 @@ p {
                 type: 'success',
                 message: '抽取成功!'
               });
+              let arr = response.data.data;
               //赋值给表格
-               this.extract_table= response.data.data;
+               this.extract_table= arr;
+               //设置文本高亮
+              this.setHeightKeyWord(arr);
+              this.loading = false;
               }
           })
-          .catch(function (error) {//网上很多例子都是直接输出error，根本无法拦截接口返回的错误信息，试试我的方法
-            var data=error.response.data;
-            _this.$message.error(data.msg);
+          .catch(function (error) {
+            console.log(error)
           })
         }
       },
+      //重置内容
+      reset(){
+        this.extract_data='';
+        this.extract_table = [];
+        $("#ner_result").html("");
+      },
+      //文本高亮
+      setHeightKeyWord(keywords) {
+        var tempHTML = $("#ner_result").html();
+        /* 关键字替换文本 该文本设置有高亮颜色 */
+        var replaceText = "<font style='color:red;'>$1</font>";
+        for(var i = 0; i < keywords.length; i++) {
+          var keyword = keywords[i]["content"];
+          /* 关键字正则匹配规则 */
+          var r = new RegExp("(" + keyword + ")", "ig");
+          /* 将匹配到的关键字替换成我们预设的文本 */
+          tempHTML = tempHTML.replace(r, replaceText);
+        }
+        console.log(tempHTML)
+          /* 将文本显示到浏览器上 */
+        $("#ner_result").html(tempHTML);
+      },
+
       submitUpload() {
         this.$refs.upload.submit();
       },
