@@ -343,6 +343,7 @@ export default {
                   bottom: '1%',
                   right: '20%',
                   symbolSize: 7,
+                  roam: true,
                   label: {
                     position: 'left',
                     verticalAlign: 'middle',
