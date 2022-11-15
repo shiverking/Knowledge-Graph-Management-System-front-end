@@ -32,110 +32,159 @@
               <el-submenu index="1">
                 <template slot="title" >
                   <i class="el-icon-edit-outline"></i>
-                  <span>核心集管理</span>
+                  <span>数据管理</span>
                 </template>
-                <router-link to="/data/analysis/column" class="routerlink"><el-menu-item index="1-1">数据分析</el-menu-item></router-link>
-                <router-link to="/data/datasource" class="routerlink"><el-menu-item index="1-2">数据源管理</el-menu-item></router-link>
+                <el-submenu index="1-1">
+                  <template slot="title">
+                    <i class="el-icon-rank"></i>
+                    非结构化数据管理</template>
+                  <router-link to="/data/unstructure/ner" class="routerlink" ><el-menu-item index="1-1-1">实体抽取</el-menu-item></router-link>
+                  <router-link to="/data/unstructure/triplesExtraction" class="routerlink"><el-menu-item index="1-1-2">三元组抽取</el-menu-item></router-link>
+                </el-submenu>
+                <el-submenu index="1-2">
+                  <template slot="title">
+                    <i class="el-icon-s-data"></i>
+                    半结构化数据管理</template>
+                </el-submenu>
                 <el-submenu index="1-3">
-                  <template slot="title">武器装备数据</template>
-                  <router-link to="/data/arm/ArmAnalysis" class="routerlink"><el-menu-item index="1-3-1">武器装备数据分析</el-menu-item></router-link>
-                  <router-link to="/data/arm/Aircraft" class="routerlink" ><el-menu-item index="1-3-2">飞机</el-menu-item></router-link>
-                  <router-link to="/data/arm/Vessel" class="routerlink"><el-menu-item index="1-3-3">舰船</el-menu-item></router-link>
-                  <router-link to="/data/arm/Artillery" class="routerlink"><el-menu-item index="1-3-4">火炮</el-menu-item></router-link>
-                  <router-link to="/data/arm/Bomb" class="routerlink"><el-menu-item index="1-3-5">爆炸物</el-menu-item></router-link>
-                  <router-link to="/data/arm/Misile" class="routerlink"><el-menu-item index="1-3-6">导弹</el-menu-item></router-link>
+                  <template slot="title">
+                    <i class="el-icon-s-grid"></i>
+                    结构化数据管理</template>
+                  <router-link to="/data/structure/analysis" class="routerlink"><el-menu-item index="1-3-1">数据分析</el-menu-item></router-link>
+                  <el-submenu index="1-3-2">
+                    <template slot="title">武器数据</template>
+                    <router-link to="/data/structure/arm/ArmAnalysis" class="routerlink"><el-menu-item index="1-3-2-1">武器数据分析</el-menu-item></router-link>
+                    <router-link to="/data/structure/arm/Aircraft" class="routerlink" ><el-menu-item index="1-3-2-2">飞机</el-menu-item></router-link>
+                    <router-link to="/data/structure/arm/Vessel" class="routerlink"><el-menu-item index="1-3-2-3">舰船</el-menu-item></router-link>
+                    <router-link to="/data/structure/arm/Artillery" class="routerlink"><el-menu-item index="1-3-2-4">火炮</el-menu-item></router-link>
+                    <router-link to="/data/structure/arm/Bomb" class="routerlink"><el-menu-item index="1-3-2-5">爆炸物</el-menu-item></router-link>
+                    <router-link to="/data/structure/arm/Misile" class="routerlink"><el-menu-item index="1-3-2-6">导弹</el-menu-item></router-link>
+                  </el-submenu>
+                  <el-submenu index="1-3-3">
+                    <template slot="title">人员数据</template>
+                    <router-link to="/data/structure/people/PersonAnalysis" class="routerlink"><el-menu-item index="1-3-3-1">人员数据分析</el-menu-item></router-link>
+                    <router-link to="/data/structure/people/person" class="routerlink"><el-menu-item index="1-3-3-2">人员信息</el-menu-item></router-link>
+                  </el-submenu>
+                  <el-submenu index="1-3-4">
+                    <template slot="title">计划与任务</template>
+                    <router-link to="/data/structure/plan/plan" class="routerlink"><el-menu-item index="1-3-4-1">作战计划</el-menu-item></router-link>
+                  </el-submenu>
+                  <router-link to="/data/structure/triples" class="routerlink"><el-menu-item index="1-3-5">三元组管理</el-menu-item></router-link>
                 </el-submenu>
-                <el-submenu index="1-4">
-                  <template slot="title">人员数据</template>
-                  <router-link to="/data/people/PersonAnalysis" class="routerlink"><el-menu-item index="1-4-1">人员数据分析</el-menu-item></router-link>
-                  <router-link to="/data/people/person" class="routerlink"><el-menu-item index="1-4-2">人员信息</el-menu-item></router-link>
-                </el-submenu>
-                <el-submenu index="1-5">
-                  <template slot="title">计划与任务</template>
-                  <router-link to="/data/plan/plan" class="routerlink"><el-menu-item index="1-5-1">作战计划</el-menu-item></router-link>
-                </el-submenu>
-
-                <router-link to="/data/analysis" class="routerlink"><el-menu-item index="1-6">本体数据管理</el-menu-item></router-link>
-                <router-link to="/data/tripledata" class="routerlink"><el-menu-item index="1-7">三元组数据管理</el-menu-item></router-link>
-
-              </el-submenu>
-              <el-submenu index="6">
-                <template slot="title">
-                  <i class="el-icon-edit-outline"></i>
-                  <span slot="title">数据集管理</span>
-
-                </template>
-                <router-link to="/data/Meta" class="routerlink"><el-menu-item index="6-1">元数据管理</el-menu-item></router-link>
-                <router-link to="/data/Unstructure" class="routerlink"><el-menu-item index="6-1">非结构化数据管理</el-menu-item></router-link>
               </el-submenu>
               <el-submenu index="2">
                 <template slot="title">
                   <i class="el-icon-collection"></i>
-                  <span slot="title">本体管理</span>
+                  <span slot="title">候选生成管理</span>
                 </template>
-                <router-link to="/ontology/OntologyShow" class="routerlink">
-                  <el-menu-item index="2-1">本体展示与修改</el-menu-item>
-                </router-link>
-                <el-submenu index="2-3">
-                  <template slot="title">候选本体构建</template>
-                  <router-link to="/ontology/StructuredDataToOntology" class="routerlink">
-                    <el-menu-item index="2-3-1">结构化数据</el-menu-item>
+                <el-submenu index="2-1">
+                  <template slot="title">候选图谱</template>
+                  <router-link to="/candidate/kg/show" class="routerlink">
+                    <el-menu-item index="2-1-1">候选图谱展示</el-menu-item>
                   </router-link>
-                  <router-link to="/ontology/HalfStructuredDataToOntology" class="routerlink">
-                    <el-menu-item index="2-3-2">半结构化数据</el-menu-item>
+                  <router-link to="/candidate/kg/build" class="routerlink">
+                    <el-menu-item index="2-1-2">候选图谱构建</el-menu-item>
                   </router-link>
-                  <router-link to="/ontology/NotStructuredDataToOntology" class="routerlink">
-                    <el-menu-item index="2-3-3">非结构化数据</el-menu-item>
+                </el-submenu>
+                <el-submenu index="2-2">
+                  <template slot="title">候选本体</template>
+                  <router-link to="/candidate/ontology/show" class="routerlink">
+                    <el-menu-item index="2-2-1">候选本体展示</el-menu-item>
+                  </router-link>
+                  <router-link to="/candidate/ontology/build" class="routerlink">
+                    <el-menu-item index="2-2-2">候选本体构建</el-menu-item>
                   </router-link>
                 </el-submenu>
               </el-submenu>
               <el-submenu index="3">
                 <template slot="title">
-                  <i class="el-icon-document-copy"></i>
-                  <span slot="title">三元组管理</span>
+                  <i class="el-icon-share"></i>
+                  <span slot="title">融合管理</span>
                 </template>
-                <router-link to="/know/IncrementalStructuredData" class="routerlink">
-                  <el-menu-item index="3-1">增量结构化数据管理</el-menu-item>
-                </router-link>
-                <el-submenu index="3-2">
-                  <template slot="title">增量非结构化数据管理</template>
-                  <router-link to="/know/triples_extracton/NamedEntityRecognition" class="routerlink" ><el-menu-item index="3-2-1">实体抽取</el-menu-item></router-link>
-                  <router-link to="/know/triples_extracton/TriplesExtraction" class="routerlink"><el-menu-item index="3-2-2">三元组抽取</el-menu-item></router-link>
+                <el-submenu index="3-1">
+                  <template slot="title">
+                    <i class="el-icon-connection"></i>图谱融合</template>
+                  <router-link to="/merge/kg/merge" class="routerlink" ><el-menu-item index="3-1-1"><i class="el-icon-rank"></i>融合</el-menu-item></router-link>
+                  <router-link to="/merge/kg/evaluation" class="routerlink"><el-menu-item index="3-1-2"><i class="el-icon-edit"></i>质量评估</el-menu-item></router-link>
+                  <router-link to="/merge/kg/completion" class="routerlink"><el-menu-item index="3-1-3"><i class="el-icon-pie-chart"></i>图谱补全</el-menu-item></router-link>
+                  <router-link to="/merge/kg/versionControl" class="routerlink"><el-menu-item index="3-1-4"><i class="el-icon-tickets"></i>版本记录</el-menu-item></router-link>
                 </el-submenu>
-                <router-link to="/know/CandidateDatasets" class="routerlink">
-                  <el-menu-item index="3-3">候选数据集管理</el-menu-item>
-                </router-link>
+                <el-submenu index="3-2">
+                  <template slot="title">
+                    <i class="el-icon-link"></i>本体融合</template>
+                  <router-link to="/merge/onotology/merge" class="routerlink" ><el-menu-item index="3-2-1"><i class="el-icon-rank"></i>融合</el-menu-item></router-link>
+                  <router-link to="/merge/ontology/completion" class="routerlink"><el-menu-item index="3-2-3"><i class="el-icon-pie-chart"></i>本体补全</el-menu-item></router-link>
+                  <router-link to="/merge/ontology/versionControl" class="routerlink"><el-menu-item index="3-2-4"><i class="el-icon-tickets"></i>版本记录</el-menu-item></router-link>
+                </el-submenu>
               </el-submenu>
               <el-submenu index="4">
                 <template slot="title">
-                  <i class="el-icon-share"></i>
-                  <span slot="title">图谱管理</span>
+                  <i class="el-icon-coin"></i>
+                  <span slot="title">核心数仓管理</span>
                 </template>
-                <router-link to="/kg/merge" class="routerlink">
-                  <el-menu-item index="4-1">图谱融合</el-menu-item>
-                </router-link>
-                <el-submenu index="4-2">
-                  <template slot="title">图谱补全</template>
-                  <router-link to="/kg/completion/GetTriples" class="routerlink" ><el-menu-item index="4-2-1">手动添加</el-menu-item></router-link>
-                  <router-link to="/kg/completion/LinkPrediction" class="routerlink"><el-menu-item index="4-2-2">链接预测</el-menu-item></router-link>
-                  <router-link to="/kg/completion/AutoCompletion" class="routerlink"><el-menu-item index="4-2-3">半自动化补全</el-menu-item></router-link>
-                  <router-link to="/kg/completion/CompletionModel" class="routerlink"><el-menu-item index="4-2-4">补全模型管理</el-menu-item></router-link>
+                <el-submenu index="4-1">
+                  <template slot="title">
+                    <i class="el-icon-aim"></i>
+                    核心图谱</template>
+                  <router-link to="/coredata/mainkg/display" class="routerlink" ><el-menu-item index="4-1-1"><i class="el-icon-view"></i>图谱展示</el-menu-item></router-link>
+                  <router-link to="/coredata/mainkg/topic" class="routerlink"><el-menu-item index="4-1-2"><i class="el-icon-brush"></i>主题图谱</el-menu-item></router-link>
+                  <router-link to="/coredata/mainkg/situation" class="routerlink"><el-menu-item index="4-1-3"><i class="el-icon-map-location"></i>态势认知图谱</el-menu-item></router-link>
+                  <router-link to="/coredata/mainkg/version" class="routerlink"><el-menu-item index="4-1-4"><i class="el-icon-tickets"></i>版本控制</el-menu-item></router-link>
                 </el-submenu>
-                <router-link to="/kg/error_detection" class="routerlink"><el-menu-item index="4-3">图谱质量检测</el-menu-item></router-link>
-                <router-link to="/kg/check" class="routerlink"><el-menu-item index="4-4">版本控制</el-menu-item></router-link>
+                <el-submenu index="4-2">
+                  <template slot="title">
+                    <i class="el-icon-discover"></i>
+                    核心本体</template>
+                  <router-link to="/coredata/mainontology/display" class="routerlink" ><el-menu-item index="4-2-1"><i class="el-icon-view"></i>本体展示</el-menu-item></router-link>
+                  <router-link to="/coredata/mainontology/version" class="routerlink"><el-menu-item index="4-2-2"><i class="el-icon-tickets"></i>版本控制</el-menu-item></router-link>
+                </el-submenu>
               </el-submenu>
-              <router-link to="/setting" class="routerlink">
-                <el-menu-item index="5">
-                  <i class="el-icon-setting"></i>
-                  <span slot="title">设置</span>
-                </el-menu-item>
-              </router-link>
-              <router-link to="/personal" class="routerlink">
-                <el-menu-item index="5">
+              <el-submenu index="5">
+                <template slot="title">
+                  <i class="el-icon-thumb"></i>
+                  <span slot="title">用户应用管理</span>
+                </template>
+                <el-submenu index="5-1">
+                  <template slot="title">
                     <i class="el-icon-user"></i>
-                    <span slot="title">个人中心</span>
-                </el-menu-item>
-              </router-link>
+                    用户管理</template>
+                  <router-link to="/applicationmanagement/user/authority" class="routerlink" ><el-menu-item index="5-1-1"><i class="el-icon-lock"></i>权限管理</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/user/role" class="routerlink"><el-menu-item index="5-1-2"><i class="el-icon-s-custom"></i>角色管理</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/user/setting" class="routerlink"><el-menu-item index="5-1-3"><i class="el-icon-setting"></i><span slot="title">设置</span></el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/user/personal" class="routerlink"><el-menu-item index="5-1-4"><i class="el-icon-user"></i><span slot="title">个人中心</span></el-menu-item></router-link>
+                </el-submenu>
+                <el-submenu index="5-2">
+                  <template slot="title">
+                    <i class="el-icon-set-up"></i>
+                    接口集成管理
+                  </template>
+                  <router-link to="/applicationmanagement/interface/meta" class="routerlink" ><el-menu-item index="5-2-1">与元数据集成</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/interface/cognize" class="routerlink"><el-menu-item index="5-2-2">与认知推理集成</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/interface/display" class="routerlink"><el-menu-item index="5-2-3">与前端展示集成</el-menu-item></router-link>
+                </el-submenu>
+                <el-submenu index="5-3">
+                  <template slot="title">
+                    <i class="el-icon-guide"></i>
+                    知识推理管理
+                  </template>
+                  <router-link to="/applicationmanagement/reason/integration" class="routerlink" ><el-menu-item index="5-3-1">推理集成</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/reason/verify" class="routerlink"><el-menu-item index="5-3-2">推理验证</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/reason/attack" class="routerlink"><el-menu-item index="5-3-3">攻击预测</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/reason/event" class="routerlink"><el-menu-item index="5-3-4">事件预测</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/reason/hypergraph" class="routerlink"><el-menu-item index="5-3-5">超图预测</el-menu-item></router-link>
+                </el-submenu>
+                <el-submenu index="5-4">
+                  <template slot="title">
+                    <i class="el-icon-headset"></i>
+                    辅助决策管理
+                  </template>
+                  <router-link to="/applicationmanagement/decision/build" class="routerlink" ><el-menu-item index="5-4-1">态势认知构建</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/decision/situationAnalysis" class="routerlink"><el-menu-item index="5-4-2">态势认知分析</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/decision/map" class="routerlink"><el-menu-item index="5-4-3">态势要图展示</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/decision/evaluation" class="routerlink"><el-menu-item index="5-4-4">态势评估</el-menu-item></router-link>
+                  <router-link to="/applicationmanagement/decision/cognitiveDecision" class="routerlink"><el-menu-item index="5-4-5">认知决策验证</el-menu-item></router-link>
+                </el-submenu>
+              </el-submenu>
             </el-menu>
           </el-aside>
           <el-main  class="main_area">
