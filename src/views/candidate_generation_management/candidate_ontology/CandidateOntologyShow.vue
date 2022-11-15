@@ -1,484 +1,275 @@
 <template>
-  <div id="main" class="main">
-    <div id="show_ontology_like_graph" class="show_ontology" >
-      <span class="desc">本体结构展示</span>
-      <svg id="show_ontology_in_svg" width="100%" height="100%"></svg>
-    </div>
-    <el-card class="class_info" style="margin-top: 0px;margin-left: 0px;position: absolute;right: 11px;height: auto">
-      <el-descriptions title="节点详细信息" direction="vertical" :column="2" border>
-        <el-descriptions-item label="节点名">Country</el-descriptions-item>
-        <el-descriptions-item label="父节点">GIS</el-descriptions-item>
-        <el-descriptions-item label="备注">国家信息</el-descriptions-item>
-        <el-descriptions-item label="数据库url">localhost:3306</el-descriptions-item>
-        <el-descriptions-item label="数据库">FKFD</el-descriptions-item>
-        <el-descriptions-item label="映射数据表">t_country</el-descriptions-item>
-      </el-descriptions>
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <div class="grid-content bg-purple">
-          <el-button id="update_class_button" @click="updateClassButton = true" type="primary" class="update_button">
-            修改节点
-          </el-button>
-        </div>
-        </el-col>
-        <el-col :span="6"><div class="grid-content bg-purple">
-          <el-button id="update_relation_button" @click="updateRelationButton = true" type="primary" class="update_button">
-            修改关系
-          </el-button>
-        </div></el-col>
-        <el-col :span="6"><div class="grid-content bg-purple">
-          <el-button id="add_class_button" @click="addClassButton = true" type="primary" class="update_button">
-            添加节点
-          </el-button>
-        </div></el-col>
-        <el-col :span="6"><div class="grid-content bg-purple">
-          <el-button id="add_relation_button" @click="addRelationButton = true" type="primary" class="update_button">
-            添加关系
-          </el-button>
-        </div></el-col>
-      </el-row>
-
-      <el-drawer title="请输入需要修改的节点的信息" :visible.sync="updateClassButton" :with-header="true">
-        <el-form ref="form" :model="addClass" label-width="80px">
-          <el-form-item label="节点名称">
-            <el-input v-model="addClass.name"></el-input>
-          </el-form-item>
-          <el-form-item label="备注信息">
-            <el-input v-model="addClass.desc" placeholder="请修改备注"></el-input>
-          </el-form-item>
-          <el-form-item label="父节点">
-            <el-select v-model="addClass.father" placeholder="请修改父节点">
-              <el-option label="无" value=""></el-option>
-              <el-option label="父节点一" value="Country"></el-option>
-              <el-option label="父节点二" value="Sky"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="checkUpdateClass" size="small">确认修改</el-button>
-            <el-button size="small">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-drawer>
-
-      <el-drawer title="请输入需要修改的关系的信息" :visible.sync="updateRelationButton" :with-header="true">
-        <el-form ref="form" :model="addRelation" label-width="80px">
-          <el-form-item label="关系名称">
-            <el-input v-model="addRelation.name"></el-input>
-          </el-form-item>
-          <el-form-item label="头节点">
-            <el-select v-model="addRelation.classList" placeholder="请选择头节点">
-              <el-option label="头节点一" value="Country"></el-option>
-              <el-option label="头节点二" value="Sky"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="尾节点">
-            <el-select v-model="addRelation.classList" placeholder="请选择尾节点">
-              <el-option label="尾节点一" value="Country"></el-option>
-              <el-option label="尾节点二" value="Sky"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="checkUpdateRelation" size="small">确认修改</el-button>
-            <el-button size="small">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-drawer>
-
-      <el-drawer title="请输入需要添加的节点的信息" :visible.sync="addClassButton" :with-header="true">
-        <el-form ref="form" :model="addClass" label-width="80px">
-          <el-form-item label="节点名称">
-            <el-input v-model="addClass.name"></el-input>
-          </el-form-item>
-          <el-form-item label="备注信息">
-            <el-input v-model="addClass.desc" placeholder="请输入备注"></el-input>
-          </el-form-item>
-          <el-form-item label="父节点">
-            <el-select v-model="addClass.father" placeholder="请选择父节点">
-              <el-option label="无" value=""></el-option>
-              <el-option label="父节点一" value="Country"></el-option>
-              <el-option label="父节点二" value="Sky"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="checkAddClass" size="small">确认添加</el-button>
-            <el-button size="small">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-drawer>
-
-      <el-drawer title="请输入需要添加的关系的信息" :visible.sync="addRelationButton" :with-header="true">
-        <el-form ref="form" :model="addRelation" label-width="80px">
-          <el-form-item label="关系名称">
-            <el-input v-model="addRelation.name"></el-input>
-          </el-form-item>
-          <el-form-item label="头节点">
-            <el-select v-model="addRelation.classList" placeholder="请选择头节点">
-              <el-option label="头节点一" value="Country"></el-option>
-              <el-option label="头节点二" value="Sky"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="尾节点">
-            <el-select v-model="addRelation.classList" placeholder="请选择尾节点">
-              <el-option label="尾节点一" value="Country"></el-option>
-              <el-option label="尾节点二" value="Sky"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="checkAddRelation" size="small">确认添加</el-button>
-            <el-button size="small">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-drawer>
-    </el-card>
-
-  </div>
+  <!--
+    需要在 HTML 中创建一个用于容纳 G6 绘制的图的容器，通常为 div  标签。
+    G6 在绘制时会在该容器下追加 canvas 标签，然后将图绘制在其中。
+  -->
+  <div id="mountNode"></div>
 </template>
 
 <script>
-import * as d3 from '../../../plugins/d3.v5.min.js'
-import * as echarts from 'echarts';
-import * as jquery from '../../../plugins/jquery.min.js'
-import Panzoom from '@panzoom/panzoom';
-export default {
-  name: 'OntologyShow',
-  data() {
-    return{
-      dataset:{
-        name: "Thing",
-        children: [
-          {
-            name: "Equipment",
-            children: [
-              {name: "Land", value: 100},
-              {
-                name: "Sea",
-                children: [
-                  {name: "Vessel", value: 100}
-                ]
-              },
-              {
-                name: "Sky",
-                children: [
-                  {name: "Aircraft", value: 100}
-                ]
-              },
-              {
-                name: "Space",
-                children: [
-                  {name: "Misile", value: 100}
-                ]
-              },
-              {
-                name: "Weapon",
-                children: [
-                  {name: "Artillery", value: 100},
-                  {name: "Bomb", value: 100}
-                ]
-              }
-            ]
-          },
-          {
-            name: "GIS",
-            children: [
-              {name: "Country", value: 100},
-              {name: "LongitudeAndLatitude", value: 100},
-            ]
-          },
-          {
-            name: "Mechanism",
-            children: [
-              {name: "Company", value: 100},
-              {name: "School", value: 100}
-            ]
-          },
-          {
-            name: "OperationalInformation",
-            children: [
-              {
-                name: "Plan",
-                children: [
-                  {name: "Task", value: 100}
-                ]
-              }
-            ]
-          },
-          {
-            name: "Person",
-            children: [
-              {name: "Commander", value: 100},
-              {
-                name: "Experience",
-                children: [
-                  {name: "Education", value: 100},
-                  {name: "Resume", value: 100}
-                ]
-              },
-              {name: "OrdinarySoldier", value: 100}
-            ]
-          }
-        ]
-      },
-      addClass: {
-        name: '',
-        father: '',
-        desc: ''
-      },
-      addRelation:{
-        name:'',
-        classList:''
-      },
-      updateClassButton:false,
-      updateRelationButton:false,
-      addClassButton:false,
-      addRelationButton:false
-    }
-  },
-  methods:{
-    // draw(){
-    //   //定义边界
-    //   let marge = {top: 50, bottom: 0, left: 10, right: 0};
-    //
-    //   let svg = d3.select("svg");
-    //   //设置长宽
-    //   for (let i = 0; i < svg.length; i++) {
-    //     svg[i].setAttribute('viewBox', '0,0,' + svg[i].getBBox().width + ',' + svg[i].getBBox().height + '')
-    //   }
-    //   let graph = document.getElementById("show_ontology_like_graph")
-    //   let width = parseInt(window.getComputedStyle(graph).width);
-    //   let height = parseInt(window.getComputedStyle(graph).height);
-    //   let g = svg.append("g")
-    //       .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
-    //
-    //   let scale = svg.append("g")
-    //       .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
-    //   //创建一个hierarchy layout
-    //   let hierarchyData = d3.hierarchy(this.$data.dataset)
-    //       .sum(function (d) {
-    //         return d.value;
-    //       });
-    //
-    //   //创建一个树状图
-    //   let tree = d3.tree()
-    //       .size([width, height])
-    //       // .size([width - 400, height - 200])
-    //       .separation(function (a, b) {
-    //         return (a.parent == b.parent ? 1 : 2) / a.depth;
-    //       })
-    //
-    //   //初始化树状图，也就是传入数据,并得到绘制树基本数据
-    //   let treeData = tree(hierarchyData);
-    //   console.log(treeData);
-    //   //得到节点
-    //   let nodes = treeData.descendants();
-    //   let links = treeData.links();
-    //
-    //   //输出节点和边
-    //   console.log(nodes);
-    //   console.log(links);
-    //
-    //   //创建一个贝塞尔生成曲线生成器
-    //   let Bézier_curve_generator = d3.linkHorizontal()
-    //       .x(function (d) {
-    //         return d.y;
-    //       })
-    //       .y(function (d) {
-    //         return d.x;
-    //       });
-    //
-    //   //有了节点和边集的数据后，我们就可以开始绘制了，
-    //   //绘制边
-    //   g.append("g")
-    //       .selectAll("path")
-    //       .data(links)
-    //       .enter()
-    //       .append("path")
-    //       .attr("d", function (d) {
-    //         let start = {x: d.source.x, y: d.source.y};
-    //         let end = {x: d.target.x, y: d.target.y};
-    //         return Bézier_curve_generator({source: start, target: end});
-    //       })
-    //       .attr("fill", "none")
-    //       .attr("stroke", "green")
-    //       .attr("stroke-width", 1);
-    //
-    //       //绘制节点和文字
-    //     //先创建用以绘制每个节点和对应文字的分组<g>
-    //   let gs = g.append("g")
-    //       .selectAll("g")
-    //       .data(nodes)
-    //       .enter()
-    //       .append("g")
-    //       .attr("transform", function (d) {
-    //         let cx = d.x;
-    //         let cy = d.y;
-    //         return "translate(" + cy + "," + cx + ")";
-    //       });
-    //   //绘制节点
-    //   gs.append("circle")
-    //       .attr("r", 6)
-    //       .attr("fill", "white")
-    //       .attr("stroke", "blue")
-    //       .attr("stroke-width", 1);
-    //   //文字
-    //   gs.append("text")
-    //       .attr("x", function (d) {
-    //         return d.children ? -40 : 8;
-    //       })
-    //       .attr("y", -5)
-    //       .attr("dy", 10)
-    //       .text(function (d) {
-    //         return d.data.name;
-    //       });
-    // },
-    draw(){
-      let ROOT_PATH = 'test';
-      let chartDom = document.getElementById('show_ontology_like_graph');
-      let myChart = echarts.init(chartDom,);
-      let option;
-
-      myChart.showLoading();
-      // jquery.getJSON('../../data/ontology.json', {},,'json');
-      var ontology_data  = require('../../../data/ontology.json')
-      function initEcharts (data){
-        myChart.hideLoading();
-        data.children.forEach(function (datum, index) {
-          index % 2 === 0 && (datum.collapsed = true);
-        });
-        myChart.setOption(
-            (option = {
-              tooltip: {
-                trigger: 'item',
-                triggerOn: 'mousemove'
-              },
-              series: [
-                {
-                  type: 'tree',
-                  data: [data],
-                  top: '1%',
-                  left: '7%',
-                  bottom: '1%',
-                  right: '20%',
-                  symbolSize: 7,
-                  roam: true,
-                  label: {
-                    position: 'left',
-                    verticalAlign: 'middle',
-                    align: 'right',
-                    fontSize: 9
-                  },
-                  leaves: {
-                    label: {
-                      position: 'right',
-                      verticalAlign: 'middle',
-                      align: 'left'
-                    }
-                  },
-                  emphasis: {
-                    focus: 'descendant'
-                  },
-                  expandAndCollapse: true,
-                  animationDuration: 550,
-                  animationDurationUpdate: 750
-                }
-              ]
-            })
-        );
+  import * as G6 from '../../../plugins/g6.min.js';
+  export default {
+    name:'CandidateOntologyShow',
+    data() {
+      return {
       }
-      initEcharts(ontology_data);
-      option && myChart.setOption(option);
     },
-    checkUpdateClass(){
-      this.$alert('是否确认修改', '修改节点', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'success',
-            message: '修改成功'
+    methods:{
+      initGraph(){
+        //缩略图 (Minimap) 是一种常见的用于快速预览和探索图的工具，可作为导航辅助用户探索大规模图。
+        // Minimap 是 G6 的插件之一，引入 G6 后可以直接使用。实例化 Minimap 对象，并将其配置到图实例的插件列表里即可
+        // 实例化 minimap 插件
+        const minimap = new G6.Minimap({
+          size: [100, 100],
+          className: 'minimap',
+          type: 'delegate',
+        });
+
+        // Grid网格可用于辅助用户在拖拽节点时对齐到网格。
+        // 实例化 grid 插件
+        const grid = new G6.Grid();
+
+        // 实例化图
+        const graph = new G6.Graph({
+          container: 'mountNode', // 指定挂载容器
+          width: 1200, // 图的宽度
+          height: 500, // 图的高度
+          // 为优化超出屏幕到问题，G6 提供了图的两个相关配置项
+          // fitView: true, //设置是否将图适配到画布中
+          // fitViewPadding: [20, 40, 50, 20], //画布上四周的留白宽度
+
+//    适用场景：所有节点统一的属性配置，所有边统一的属性配置。
+//    使用方式：使用图的两个配置项：
+//    defaultNode：节点在默认状态下的样式属性（style）和其他属性；
+//    defaultEdge：边在默认状态下的样式属性（style）和其他属性。
+          // 节点在默认状态下的样式配置（style）和其他配置
+          defaultNode: {
+            size: 30, // 节点大小
+            // 节点样式配置
+            style: {
+              fill: 'steelblue', // 节点填充色
+              stroke: '#666', // 节点描边色
+              lineWidth: 1, // 节点描边粗细
+            },
+            // 节点上的标签文本配置
+            labelCfg: {
+              // 节点上的标签文本样式配置
+              style: {
+                fill: '#fff', // 节点标签文字颜色
+              },
+            },
+          },
+          // 边在默认状态下的样式配置（style）和其他配置
+          defaultEdge:{
+            // 去掉全局配置的 style
+            // 边上的标签文本配置
+            labelCfg: {
+              autoRotate: true, // 边上的标签文本根据边的方向旋转
+            },
+          },
+
+//    当实例化图时没有配置布局时：
+//    若数据中节点有位置信息（x 和 y），则按照数据的位置信息进行绘制；
+//    若数据中节点没有位置信息，则默认使用 Random Layout 进行布局。
+//    实例化图时全局配置
+//       G6 使用布局的方式非常简单，在图实例化的时候，加上 layout 配置即可。
+//       下面代码在实例化图时设置了布局方法为 type: 'force'，即经典力导向图布局。
+//       并设置了参数 preventOverlap: true ，表示希望节点不重叠。
+          layout: {
+            // Object，可选，布局的方法及其配置项，默认为 random 布局。
+            type: 'force', // 指定为力导向布局
+            preventOverlap: true, // 防止节点重叠
+            // nodeSize: 30        // 节点大小，用于算法中防止节点重叠时的碰撞检测。由于已经在上一节的元素配置中设置了每个节点的 size 属性，则不需要在此设置 nodeSize。
+            //linkDistance 属性用来指定布局的时候边的距离长度
+            linkDistance: 100, // 指定边距离为100
+          },
+
+          // G6 中的交互行为
+          // Mode 是 G6 交互行为的管理机制，一个 mode 是多种行为 Behavior 的组合，允许用户通过切换不同的模式进行交互行为的管理。
+          modes: {
+            default: [
+              'drag-canvas', // 允许拖拽画布
+              'zoom-canvas', //放缩画布
+              'drag-node', //拖拽节点
+
+              //    交互工具是指配置到图上交互模式中的工具。使用交互工具时，有两个步骤：
+              //    Step 1: 在实例化图时配置 modes；
+              //    Step 2: 为交互工具定义样式。
+              // 由于 tooltip 实际上是一个悬浮的 <div> 标签，因此可在 HTML 的 <style> 标签或 CSS 中设置样式
+              // {
+              //   type: 'tooltip', // 提示框
+              //   formatText(model) {
+              //     // 提示框文本内容
+              //     const text = 'label: ' + model.label + '<br/> class: ' + model.class;
+              //     return text;
+              //   },
+              // },
+              // edge-tooltip 边提示框
+              // 边提示框可以用在边的详细信息的展示。当鼠标滑过边时，显示一个浮层告知边的详细信息
+              // {
+              //   type: 'edge-tooltip', // 边提示框
+              //   formatText(model) {
+              //     // 边提示框文本内容
+              //     const text =
+              //         'source: ' +
+              //         model.source +
+              //         '<br/> target: ' +
+              //         model.target +
+              //         '<br/> weight: ' +
+              //         model.weight;
+              //     return text;
+              //   },
+              // },
+            ],
+          },
+
+          // 举例解释不同模式
+          // 上面代码中的 modes 定义了 G6 的模式，default 是默认的模式，还可以允许有其他的模式，
+          // 比如：编辑模式 edit 等。不同的模式，用户能进行的行为可以不同，比如默认模式能拖拽画布，编辑模式不允许拖拽画布
+          // modes: {
+          //   default: ['drag-canvas'],
+          //   edit: []
+          // }
+
+          // 在实例化图时，通过 nodeStateStyles 和 edgeStateStyles 两个配置项可以配置元素在不同状态下的样式。
+          // 下面代码设置了节点分别在 hover 和 click 状态为 true 时的样式，边在 click 状态为 true 时的样式
+          // 节点不同状态下的样式集合
+          nodeStateStyles: {
+            // 鼠标 hover 上节点，即 hover 状态为 true 时的样式
+            hover: {
+              fill: 'lightsteelblue',
+            },
+            // 鼠标点击节点，即 click 状态为 true 时的样式
+            click: {
+              stroke: '#000',
+              lineWidth: 3,
+            },
+          },
+          // 边不同状态下的样式集合
+          edgeStateStyles: {
+            // 鼠标点击边，即 click 状态为 true 时的样式
+            click: {
+              stroke: 'steelblue',
+            },
+          },
+
+          //配置插件
+          plugins: [minimap,grid], // 将 minimap 实例配置到图上
+
+          // animate: true, // Boolean，可选，全局变化时否使用动画过渡
+        });
+
+        // 修改 index.html，通过 fetch 函数异步加载远程的数据源，并传入 G6 的图实例中：
+        // fetch 函数允许我们发起网络请求，加载数据，而其异步的过程可以通过 async/await 进行更合理的控制。
+        // 这里我们为了方便起见，将主要逻辑放在了 main 函数里面
+        const main = async () => {
+          const response = await fetch(
+              'https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json',
+          );
+          const remoteData = await response.json();
+          //读入数据后，通过遍历的方式写入配置。下面代码展示了如何遍历数据进行属性的配置
+          const nodes = remoteData.nodes;
+          // 图中有一些节点被渲染成了矩形，还有一些被渲染成了椭圆形。
+          // 除了设置 type 属性之外，我们还覆盖了上文全局配置的节点的 size 属性，在矩形和椭圆的情况下，size 是一个数组；
+          // 而在默认圆形的情况下，G6 将仍然读取全局配置的 size 属性为数字 30。
+          // 也就是说，动态配置属性让我们既可以根据数据的不同配置不同的属性值，也可以有能力覆盖全局静态的属性值。
+          nodes.forEach((node) => {
+            if (!node.style) {
+              node.style = {};
+            }
+            switch (
+                node.class // 根据节点数据中的 class 属性配置图形
+                ) {
+              case 'c0': {
+                node.type = 'circle'; // class = 'c0' 时节点图形为 circle
+                break;
+              }
+              case 'c1': {
+                node.type = 'rect'; // class = 'c1' 时节点图形为 rect
+                node.size = [35, 20]; // class = 'c1' 时节点大小
+                break;
+              }
+              case 'c2': {
+                node.type = 'ellipse'; // class = 'c2' 时节点图形为 ellipse
+                node.size = [35, 20]; // class = 'c2' 时节点大小
+                break;
+              }
+            }
           });
-        }
-      });
-    },
-    checkUpdateRelation(){
-      this.$alert('是否确认修改', '修改关系', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'success',
-            message: '修改成功'
+          // 遍历边数据,根据数据的比重不同，配置不一样边的粗细：
+          const edges = remoteData.edges;
+          edges.forEach((edge) => {
+            if (!edge.style) {
+              edge.style = {};
+            }
+            edge.style.lineWidth = edge.weight; // 边的粗细映射边数据中的 weight 属性数值
+            // 移到此处
+            edge.style.opacity = 0.6;
+            edge.style.stroke = 'grey';
           });
-        }
-      });
-    },
-    checkAddClass() {
-      this.$alert('是否确认添加', '添加节点', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'success',
-            message: '添加成功'
+          graph.data(remoteData);// 加载远程数据
+          graph.render(); // 渲染
+
+          // G6 中所有元素监听都挂载在图实例上，如下代码中的 graph 对象是 G6.Graph 的实例，
+          // graph.on()  函数监听了某元素类型（node / edge）的某种事件（click / mouseenter / mouseleave / ... 所有事件参见：Event API）
+          // 我们通过下面代码，为 Tutorial 案例 增加点和边上的监听事件，并在监听函数里使用 graph.setItemState() 改变元素的状态
+          // 鼠标进入节点
+          graph.on('node:mouseenter', (e) => {
+            const nodeItem = e.item; // 获取鼠标进入的节点元素对象
+            graph.setItemState(nodeItem, 'hover', true); // 设置当前节点的 hover 状态为 true
           });
-        }
-      });
-    },
-    checkAddRelation(){
-      this.$alert('是否确认添加', '添加关系', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'success',
-            message: '添加成功'
+
+          // 鼠标离开节点
+          graph.on('node:mouseleave', (e) => {
+            const nodeItem = e.item; // 获取鼠标离开的节点元素对象
+            graph.setItemState(nodeItem, 'hover', false); // 设置当前节点的 hover 状态为 false
           });
-        }
-      });
+
+          // 点击节点
+          graph.on('node:click', (e) => {
+            // 先将所有当前是 click 状态的节点置为非 click 状态
+            const clickNodes = graph.findAllByState('node', 'click');
+            clickNodes.forEach((cn) => {
+              graph.setItemState(cn, 'click', false);
+            });
+            const nodeItem = e.item; // 获取被点击的节点元素对象
+            graph.setItemState(nodeItem, 'click', true); // 设置当前节点的 click 状态为 true
+          });
+
+          // 点击边
+          graph.on('edge:click', (e) => {
+            // 先将所有当前是 click 状态的边置为非 click 状态
+            const clickEdges = graph.findAllByState('edge', 'click');
+            clickEdges.forEach((ce) => {
+              graph.setItemState(ce, 'click', false);
+            });
+            const edgeItem = e.item; // 获取被点击的边元素对象
+            graph.setItemState(edgeItem, 'click', true); // 设置当前边的 click 状态为 true
+          });
+        };
+        main()
+        // 数据的加载和图的渲染是两个步骤，可以分开进行。
+        // graph.data(initData); // 加载数据
+        // 调用 graph.render() 方法之后，G6 引擎会根据加载的数据进行图的绘制。结果如下：
+        // graph.render(); // 渲染
+      },
+
     },
-    // initPanzoom(){
-    //   // const elem = document.getElementById('show_ontology_like_graph')
-    //   // const panzoom = Panzoom(elem, {
-    //   //   maxScale: 5
-    //   // })
-    //   // panzoom.pan(10, 10)
-    //   // panzoom.zoom(2, { animate: true })
-    //   // elem.addEventListener('click', panzoom.zoomIn)
-    //   // elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
-    // }
-  },
-  mounted(){
-    this.draw()
-    // this.initPanzoom()
+    mounted() {
+      this.initGraph()
+    }
   }
-}
 </script>
 
-<style lang="css">
-.main {
-  background: white;
-  height: 600px;
-  width: 100%;
-  margin-top: 20px;
-}
-.show_ontology {
-  float: left;
-  height: 750px;
-  width: 800px;
-  margin-top: 20px;
-  /*border: red 1px solid;*/
-  /*overflow-x:scroll;*/
-  /*overflow-y:scroll;*/
-}
-.desc{
-  font-size: 16px;
-  font-weight: 700;
-}
-.update_button{
-  /*margin-left: 150px;*/
-  margin-top: 10px;
-  /*float: right;*/
-}
-.class_info {
-  float: left;
-  margin-left: 20px;
-  width: 30%;
-  height: 110%;
-  margin-top: 20px;
-}
+<style>
+  /* 提示框的样式 */
+  .g6-tooltip {
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #545454;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 8px;
+    box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+  }
 </style>
