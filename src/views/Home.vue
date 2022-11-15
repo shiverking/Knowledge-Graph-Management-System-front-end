@@ -49,10 +49,10 @@
                 非结构化数据管理
               </template>
               <router-link to="/data/unstructure/ner" class="routerlink">
-                <el-menu-item index="1-1-1">实体抽取</el-menu-item>
+                <el-menu-item index="1-1-1"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
               </router-link>
               <router-link to="/data/unstructure/triplesExtraction" class="routerlink">
-                <el-menu-item index="1-1-2">三元组抽取</el-menu-item>
+                <el-menu-item index="1-1-2"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="1-2">
@@ -116,21 +116,21 @@
               <span slot="title">候选生成管理</span>
             </template>
             <el-submenu index="2-1">
-              <template slot="title">候选图谱</template>
+              <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
               <router-link to="/candidate/kg/show" class="routerlink">
-                <el-menu-item index="2-1-1">候选图谱展示</el-menu-item>
+                <el-menu-item index="2-1-1"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/build" class="routerlink">
-                <el-menu-item index="2-1-2">候选图谱构建</el-menu-item>
+                <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="2-2">
-              <template slot="title">候选本体</template>
+              <template slot="title"><i class="el-icon-cloudy-and-sunny"></i>候选本体</template>
               <router-link to="/candidate/ontology/show" class="routerlink">
-                <el-menu-item index="2-2-1">候选本体展示</el-menu-item>
+                <el-menu-item index="2-2-1"><i class="el-icon-moon"></i>候选本体展示</el-menu-item>
               </router-link>
               <router-link to="/candidate/ontology/build" class="routerlink">
-                <el-menu-item index="2-2-2">候选本体构建</el-menu-item>
+                <el-menu-item index="2-2-2"><i class="el-icon-moon-night"></i>候选本体构建</el-menu-item>
               </router-link>
             </el-submenu>
           </el-submenu>
@@ -184,14 +184,14 @@
               <router-link to="/coredata/mainkg/display" class="routerlink">
                 <el-menu-item index="4-1-1"><i class="el-icon-view"></i>图谱展示</el-menu-item>
               </router-link>
+              <router-link to="/coredata/mainkg/version" class="routerlink">
+                <el-menu-item index="4-1-4"><i class="el-icon-tickets"></i>版本控制</el-menu-item>
+              </router-link>
               <router-link to="/coredata/mainkg/topic" class="routerlink">
                 <el-menu-item index="4-1-2"><i class="el-icon-brush"></i>主题图谱</el-menu-item>
               </router-link>
               <router-link to="/coredata/mainkg/situation" class="routerlink">
                 <el-menu-item index="4-1-3"><i class="el-icon-map-location"></i>态势认知图谱</el-menu-item>
-              </router-link>
-              <router-link to="/coredata/mainkg/version" class="routerlink">
-                <el-menu-item index="4-1-4"><i class="el-icon-tickets"></i>版本控制</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="4-2">
@@ -520,22 +520,18 @@ export default {
         {"value": "/核心数仓管理/核心图谱/版本控制", "location":"/coredata/mainkg/version"},
         {"value": "/核心数仓管理/核心本体/核心本体展示", "location":"/coredata/mainontology/display"},
         {"value": "/核心数仓管理/核心本体/版本控制", "location":"/coredata/mainontology/version"},
-
         {"value": "/用户应用管理/用户管理/权限管理", "location":"/applicationmanagement/user/authority"},
         {"value": "/用户应用管理/用户管理/角色管理", "location":"/applicationmanagement/user/role"},
         {"value": "/用户应用管理/用户管理/设置", "location":"/applicationmanagement/user/setting"},
         {"value": "/用户应用管理/用户管理/个人中心", "location":"/applicationmanagement/user/role"},
-
         {"value": "/用户应用管理/接口管理/元数据", "location":"/applicationmanagement/interface/meta"},
         {"value": "/用户应用管理/接口管理/认知推理", "location":"/applicationmanagement/interface/cognize"},
         {"value": "/用户应用管理/接口管理/前端", "location":"/applicationmanagement/interface/display"},
-
         {"value": "/用户应用管理/知识推理管理/推理集成", "location":"/applicationmanagement/reason/integration"},
         {"value": "/用户应用管理/知识推理管理/推理验证", "location":"/applicationmanagement/reason/verify"},
         {"value": "/用户应用管理/知识推理管理/攻击预测", "location":"/applicationmanagement/reason/attack"},
         {"value": "/用户应用管理/知识推理管理/时间预测", "location":"/applicationmanagement/reason/event"},
         {"value": "/用户应用管理/知识推理管理/超图预测", "location":"/applicationmanagement/reason/hypergraph"},
-
         {"value": "/用户应用管理/态势认知构建/态势认知构建", "location":"/applicationmanagement/decision/build"},
         {"value": "/用户应用管理/态势认知构建/态势认知分析", "location":"/applicationmanagement/decision/situationAnalysis"},
         {"value": "/用户应用管理/态势认知构建/态势要图展示", "location":"/applicationmanagement/decision/map"},
