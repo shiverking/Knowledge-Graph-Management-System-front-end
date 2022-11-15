@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div style="margin-top:20px">
     <el-card class="box-card" shadow="never">
       <p><b>文件导入</b></p>
@@ -142,341 +142,125 @@
       <el-button type="primary" style="margin-top: 10px;" @click="open3">插入图谱</el-button>
     </el-card>  
   </div>
+</template> -->
+<template>
+  <div style="margin-top: 20px;">
+    <el-button type="primary"  @click="open1">文件导入</el-button>
+    <el-button type="primary" @click="named_entity_extraction" style="margin: 0px;">开始识别</el-button>
+    <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
+    <el-select v-model="algorithm_value" placeholder="请选择算法">
+      <el-option
+          v-for="item in algoritm_options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+      </el-option>
+    </el-select>
+    <el-input
+    style="display: block;margin-top:10px;"
+    type="textarea"
+    :autosize="{ minRows: 2, maxRows: 20}"
+    placeholder="请输入内容"
+    v-model="extract_data"
+    >
+    </el-input>
+    <el-card shadow="always"  class="ner_card" v-loading="loading">
+      <h4 class="ner_label">三元组分类结果</h4>
+        <span class="ner_result" id="ner_result">{{printRes}}</span>
+    </el-card>
+    <el-card shadow="always"  class="ner_card" v-loading="loading">
+      <h4 class="ner_label">抽取结果</h4>
+      <el-table
+          :data="extract_table"
+          style="width: 100%">
+        <el-table-column
+            prop="content"
+            label="实体"
+            >
+        </el-table-column>
+        <el-table-column
+            prop="label"
+            label="类别"
+            >
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
 </template>
+<style>
+.ner_card{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.ner_label{
+  margin: 0px;
+}
+p {
+  word-break: break-all;
+  word-wrap: break-word;
+  text-indent: 2em;
+}
+.ner_result{
+  word-break: normal;
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+</style>
 <script>
   export default {
     data() {
       return {
-        pageSize: 10, // 每页多少条
-        currentPage1: 1, // 当前页
-        currentPage2: 1, // 当前页
-        total: 20, // 总数据条数
-        pageList:[{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·沃克',
-          head_typ: 'Per',
-          tail: '美国海军第11航母打击群',
-          tail_typ: '单位',
-          rel: '任职单位',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '攻击战斗机中队137',
-          head_typ: '队伍',
-          tail: '亚当“吉利根”布莱恩',
-          tail_typ: 'Per',
-          rel: '执行官',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '尼米兹号航空母舰',
-          head_typ: '航空母舰',
-          tail: '里斯托弗·莱尔斯',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '海军陆战队战斗机攻击中队323',
-          head_typ: '队伍',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '检测通过，置信度0.9644538164138794',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '克雷格·西科拉',
-          head_typ: 'Per',
-          tail: '中校',
-          tail_typ: '军衔',
-          rel: '军衔',
-          conflict_typ: '检测通过，置信度0.6499826312065125',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约瑟夫·福斯特',
-          head_typ: 'Per',
-          tail: '柯蒂斯·威尔伯号驱逐舰',
-          tail_typ: '驱逐舰',
-          rel: '指挥军舰',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '本杰明·华盛顿',
-          head_typ: 'Per',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '国家',
-          conflict_typ: '测通过，置信度0.9684066772460938',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '拉尔夫·约翰逊号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '科林·罗伯茨',
-          tail_typ: 'Per',
-          rel: '指挥官',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '韦恩·迈耶号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '丹·科尔贝克',
-          tail_typ: 'Per',
-          rel: '产国',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '罗纳德·费尔班克斯',
-          head_typ: 'Per',
-          tail: '斯科特·利平科特',
-          tail_typ: 'Per',
-          rel: '国家',
-          conflict_typ: '检测不通过',
-        },],
-        pageList2:[{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·沃克',
-          head_typ: 'Per',
-          tail: '美国海军第11航母打击群',
-          tail_typ: '单位',
-          rel: '任职单位',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '攻击战斗机中队137',
-          head_typ: '队伍',
-          tail: '亚当“吉利根”布莱恩',
-          tail_typ: 'Per',
-          rel: '执行官',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '尼米兹号航空母舰',
-          head_typ: '航空母舰',
-          tail: '里斯托弗·莱尔斯',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '海军陆战队战斗机攻击中队323',
-          head_typ: '队伍',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '检测通过，置信度0.9644538164138794',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '克雷格·西科拉',
-          head_typ: 'Per',
-          tail: '中校',
-          tail_typ: '军衔',
-          rel: '军衔',
-          conflict_typ: '检测通过，置信度0.6499826312065125',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约瑟夫·福斯特',
-          head_typ: 'Per',
-          tail: '柯蒂斯·威尔伯号驱逐舰',
-          tail_typ: '驱逐舰',
-          rel: '指挥军舰',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '本杰明·华盛顿',
-          head_typ: 'Per',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '国家',
-          conflict_typ: '测通过，置信度0.9684066772460938',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '拉尔夫·约翰逊号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '科林·罗伯茨',
-          tail_typ: 'Per',
-          rel: '指挥官',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '韦恩·迈耶号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '丹·科尔贝克',
-          tail_typ: 'Per',
-          rel: '产国',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '罗纳德·费尔班克斯',
-          head_typ: 'Per',
-          tail: '斯科特·利平科特',
-          tail_typ: 'Per',
-          rel: '国家',
-          conflict_typ: '检测不通过',
-        },],
-        tableData: [{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·沃克',
-          head_typ: 'Per',
-          tail: '美国海军第11航母打击群',
-          tail_typ: '单位',
-          rel: '任职单位',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '攻击战斗机中队137',
-          head_typ: '队伍',
-          tail: '亚当“吉利根”布莱恩',
-          tail_typ: 'Per',
-          rel: '执行官',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '尼米兹号航空母舰',
-          head_typ: '航空母舰',
-          tail: '里斯托弗·莱尔斯',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '检测不通过',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '海军陆战队战斗机攻击中队323',
-          head_typ: '队伍',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '检测通过，置信度0.9644538164138794',
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '克雷格·西科拉',
-          head_typ: 'Per',
-          tail: '中校',
-          tail_typ: '军衔',
-          rel: '军衔',
-          conflict_typ: '检测通过，置信度0.6499826312065125',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约瑟夫·福斯特',
-          head_typ: 'Per',
-          tail: '柯蒂斯·威尔伯号驱逐舰',
-          tail_typ: '驱逐舰',
-          rel: '指挥军舰',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '本杰明·华盛顿',
-          head_typ: 'Per',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '国家',
-          conflict_typ: '测通过，置信度0.9684066772460938',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '拉尔夫·约翰逊号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '科林·罗伯茨',
-          tail_typ: 'Per',
-          rel: '指挥官',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '韦恩·迈耶号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '丹·科尔贝克',
-          tail_typ: 'Per',
-          rel: '产国',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '罗纳德·费尔班克斯',
-          head_typ: 'Per',
-          tail: '斯科特·利平科特',
-          tail_typ: 'Per',
-          rel: '国家',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '安东尼·梅西',
-          head_typ: 'Per',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '国家',
-          conflict_typ: '检测通过，置信度0.9557742476463318',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '伊利湖号导弹巡洋舰',
-          head_typ: '巡洋舰',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '检测通过，置信度0.9236108660697937',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '电子攻击中队139',
-          head_typ: '队伍',
-          tail: '雅各布·弗尔巴斯',
-          tail_typ: 'Per',
-          rel: '指挥官',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '克里斯托弗·斯威尼',
-          head_typ: 'Per',
-          tail: '美国海军第11航母打击群',
-          tail_typ: '单位',
-          rel: '军衔',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约瑟夫·福斯特',
-          head_typ: 'Per',
-          tail: '中校',
-          tail_typ: '军衔',
-          rel: '部门',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '舰队后勤支援中队30第4分遣队',
-          head_typ: '队伍',
-          tail: '约翰·沃克',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '攻击战斗机中队137',
-          head_typ: '队伍',
-          tail: '普林斯顿号导弹巡洋舰',
-          tail_typ: '巡洋舰',
-          rel: '指挥官',
-          conflict_typ: '检测不通过',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·保罗·琼斯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '检测通过，置信度0.9713948965072632',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·保罗·琼斯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '巴斯钢铁造船厂',
-          tail_typ: '制造厂',
-          rel: '制造厂',
-          conflict_typ: '检测通过，置信度0.5822768211364746',
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '克里斯托弗·J·格林',
-          head_typ: 'Per',
-          tail: '韦恩·迈耶号导弹驱逐舰',
-          tail_typ: '驱逐舰',
-          rel: '指挥军舰',
-          conflict_typ: '检测通过，置信度0.5480439066886902',
-        }]
+        loading:false,
+        extract_data:"本杰明·华盛顿,邦克山号导弹巡洋舰,指挥军舰\n攻击战斗机中队137,凯利“马古”多森巴克,指挥官\n约瑟夫·福斯特,海军部门,部门\n柯蒂斯·威尔伯号导弹驱逐舰,约瑟夫·福斯特,执行官\n安东尼·梅西,道尔顿·特劳斯,同事\n丹·科尔贝克,中校,军衔\n罗纳德·费尔班克斯,美国,国家\n空中指挥与控制中队116,约瑟夫·詹姆斯,指挥军士长\n道尔顿·特劳斯,军士长,军衔\n海上战斗直升机中队6,内森·希基,指挥军士长",
+        extract_table:[],
+        printRes: [],
       };
     },
     methods: {
+      named_entity_extraction(){
+        let content = this.extract_data;
+        //如果为空，提示
+        if(content==""){
+          this.$message({
+            type: 'warning',
+            message: '请输入信息'
+          });
+        }
+        else{
+          this.loading = true;
+          //axios请求
+          axios.post('/pythonApi/triple_classification',{
+            data: this.extract_data,
+          })
+          .then((response)=>{
+            if (response.status == 200) {
+              this.$message({
+                type: 'success',
+                message: '抽取成功!'
+              });
+              let arr = response.data.data;
+              //赋值给表格
+              this.printRes = response.data.data
+              // this.extract_table= response.data.data.preds;
+               //设置文本高亮
+              // this.setHeightKeyWord(arr);
+              this.loading = false;
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        }
+      },
+      //重置内容
+      reset(){
+        this.extract_data='';
+        this.extract_table = [];
+        this.printRes = [];
+        $("#ner_result").html("");
+      },
       open1() {
         const h = this.$createElement;
 

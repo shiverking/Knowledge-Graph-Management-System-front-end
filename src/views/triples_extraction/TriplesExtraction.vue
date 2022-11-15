@@ -1,126 +1,5 @@
 <template>
   <div style="margin-top: 20px;">
-<!--    <el-card class="box-card" shadow="never">-->
-<!--      <p><b>文件导入</b></p>-->
-<!--      <el-upload-->
-<!--        class="upload-demo"-->
-<!--        ref="upload"-->
-<!--        action="https://jsonplaceholder.typicode.com/posts/"-->
-<!--        :on-preview="handlePreview"-->
-<!--        :on-remove="handleRemove"-->
-<!--        :file-list="fileList"-->
-<!--        :auto-upload="false">-->
-<!--        <el-button slot="trigger"  type="primary">选取文件</el-button>-->
-<!--        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>-->
-<!--        <div slot="tip" class="el-upload__tip">格式要求：文本信息，只接受.txt文件</div>-->
-<!--      </el-upload>-->
-<!--      <el-button style="margin-top:10px" type="primary" @click="open3">读取文本信息</el-button>-->
-<!--      <el-table-->
-<!--        :data="tableData"-->
-<!--        border-->
-<!--        style="width: 100%; margin-top: 20px;">-->
-<!--        <el-table-column-->
-<!--              type="selection"-->
-<!--              width="55">-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="日期"-->
-<!--        width="200">-->
-<!--        <template slot-scope="scope">-->
-<!--            <i class="el-icon-time"></i>-->
-<!--            <span style="margin-left: 10px">{{ scope.row.date }}</span>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="待抽取文本"-->
-<!--        width>-->
-<!--        <template slot-scope="scope">-->
-<!--            <span style="margin-left: 10px">{{ scope.row.sentence }}</span>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column -->
-<!--        label="操作"-->
-<!--        width="180">-->
-<!--        <template slot-scope="scope">-->
-<!--            <el-button-->
-<!--            size="mini"-->
-<!--            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-<!--            <el-button-->
-<!--            size="mini"-->
-<!--            type="danger"-->
-<!--            @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--      </el-table>-->
-<!--      <el-pagination-->
-<!--        background-->
-<!--        layout="prev, pager, next"-->
-<!--        style="margin-top:10px"-->
-<!--        :total="1">-->
-<!--      </el-pagination>-->
-<!--      <el-button type="primary" style="margin-top: 10px;" @click="open1">开始抽取</el-button>-->
-<!--    </el-card>-->
-<!--    <el-card class="box-card" shadow="never" style="margin-top:10px">-->
-<!--      <p><b>实体抽取</b></p>-->
-<!--      <el-table-->
-<!--        :data="tableData2"-->
-<!--        border-->
-<!--        style="width: 100%; margin-top: 20px;">-->
-<!--        <el-table-column-->
-<!--              type="selection"-->
-<!--              width="55">-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="日期"-->
-<!--        width="200">-->
-<!--        <template slot-scope="scope">-->
-<!--            <i class="el-icon-time"></i>-->
-<!--            <span style="margin-left: 10px">{{ scope.row.date }}</span>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="待抽取句子"-->
-<!--        width>-->
-<!--        <template slot-scope="scope">-->
-<!--            <span style="margin-left: 10px">{{ scope.row.sentence }}</span>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="三元组抽取">-->
-<!--        <template slot-scope="scope">-->
-<!--          <span style="margin-left: 10px;">{{ scope.row.triples }}</span>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="所属图谱"-->
-<!--        width="100">-->
-<!--        <template slot-scope="scope">-->
-<!--            <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--        label="操作"-->
-<!--        width="150">-->
-<!--        <template slot-scope="scope">-->
-<!--            <el-button-->
-<!--            size="mini"-->
-<!--            @click="handleEdit(scope.$index, scope.row)">选择</el-button>-->
-<!--            <el-button-->
-<!--            size="mini"-->
-<!--            type="danger"-->
-<!--            @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-<!--        </template>-->
-<!--        </el-table-column>-->
-<!--      </el-table>-->
-<!--      <el-pagination-->
-<!--        background-->
-<!--        layout="prev, pager, next"-->
-<!--        style="margin-top:10px"-->
-<!--        :total="1">-->
-<!--      </el-pagination>-->
-<!--      <el-button type="primary" style="margin-top: 10px;" @click="open2()">保存结果</el-button>-->
-<!--      <el-button type="primary" style="margin-top: 10px;" @click="open()">生成候选数据集</el-button>-->
-<!--    </el-card>-->
     <el-button type="primary" >文件导入</el-button>
     <el-button type="primary" @click="triples_extraction" style="margin: 0px;">开始抽取</el-button>
     <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
@@ -144,7 +23,6 @@
       <h4 class="triples_label">结果标注</h4>
       <span class="triples_result" id="triples_result">{{extract_data}}</span>
     </el-card>
-
     <el-card shadow="always"  class="triples_card_left_half" v-loading="loading" element-loading-text="疯狂抽取中">
         <h4 class="triples_label">抽取结果</h4>
         <el-table
@@ -171,7 +49,6 @@
         <h4 class="triples_label">三元组预览</h4>
         <div id="triples_show" style="height: 500px;width: auto" ><el-empty description="暂无预览" image="../../static/icon/no_data.png"></el-empty></div>
       </el-card>
-    <el-button @click="genrateData">测试</el-button>
   </div>
 
 </template>
@@ -215,42 +92,8 @@
         activeName: 'first',
         fileList: [],
         //三元组抽取数据
-        extract_data:"唐纳德·特朗普(DonaldTrump，1946年6月14日-)，出生于美国纽约，祖籍德国巴伐利亚自由州，德裔美国共和党籍政治家、企业家、房地产商人、电视人，第45任美国总统(2017年1月20日-2021年1月20日)。特朗普于1968年获得宾夕法尼亚大学沃顿商学院经济学学士学位，随后任职于父亲弗雷德·特朗普的房地产公司。",
+        extract_data:"唐纳德·特朗普(Donald Trump，1946年6月14日-)，出生于美国纽约，祖籍德国巴伐利亚自由州，德裔美国共和党籍政治家、企业家、房地产商人、电视人，第45任美国总统(2017年1月20日-2021年1月20日)。特朗普于1968年获得宾夕法尼亚大学沃顿商学院经济学学士学位，随后任职于父亲弗雷德·特朗普的房地产公司。",
         extract_table:[],
-        tableData: [{
-            date: '2022-11-1-14:26:23',
-            sentence: '尼米兹号航空母舰采用核动力推进，装备4座升降机、4台蒸汽弹射器和4条拦阻索，可以每20秒弹射一架作战飞机。舰载作战联队中的机型配备根据作战任务性质的有所不同，可搭载不同用途的舰载飞机对敌方飞机、舰船、潜艇和陆地目标发动攻击，并保护海上舰队。',
-          }],
-        tableData2: [{
-          date: '2022-11-1-14:26:23',
-          sentence: '尼米兹号航空母舰采用核动力推进，装备4座升降机、4台蒸汽弹射器和4条拦阻索，可以每20秒弹射一架作战飞机。',
-          triples: '(尼米兹号航空母舰,航空母舰,核动力推进,技术,技术),(尼米兹号航空母舰,航空母舰,升降机,装备,装备),(尼米兹号航空母舰,航空母舰,蒸汽弹射器,装备,装备),(尼米兹号航空母舰,航空母舰,拦阻索,装备,装备),(尼米兹号航空母舰,航空母舰,飞机,作战装备,搭载)',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          sentence: '舰载作战联队中的机型配备根据作战任务性质的有所不同，可搭载不同用途的舰载飞机对敌方飞机、舰船、潜艇和陆地目标发动攻击，并保护海上舰队。',
-          triples: '(舰载作战联队,舰载机联队,飞机,作战装备,搭载),(舰载作战联队,舰载机联队,飞机,作战装备,作战目标),(舰载作战联队,舰载机联队,舰船,作战装备,作战目标),(舰载作战联队,舰载机联队,潜艇,作战装备,作战目标)',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        }],
-        test_data:[
-          {
-            "head": "唐纳德·特朗普",
-            "rel": "出生地",
-            "tail": "美国纽约"
-          },
-          {
-            "head": "唐纳德·特朗普",
-            "rel": "毕业院校",
-            "tail": "宾夕法尼亚大学"
-          },
-          {
-            "head": "唐纳德·特朗普",
-            "rel": "出生日期",
-            "tail": "1946年6月14日"
-          }
-        ]
       };
     },
 
