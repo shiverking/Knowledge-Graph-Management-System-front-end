@@ -499,7 +499,7 @@ export default new Router({
     //第五部分，用户应用管理
     {
       path:'/applicationmanagement',
-      name:'用户应用管理',
+      name:'场景应用管理',
       component:Home,
       show: true,
       children:[

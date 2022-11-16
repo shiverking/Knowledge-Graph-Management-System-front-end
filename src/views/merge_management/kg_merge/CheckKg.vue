@@ -297,14 +297,7 @@ export default {
   width: 10%;
   background-color: #fff;
 }
-.area-left{
-  width:70%;
-  float: left;
-}
-.area-right{
-  width:30%;
-  float: right;
-}
+
 .record-left{
   width:30%;
   float: left;
@@ -313,17 +306,5 @@ export default {
   width:70%;
   float: right;
 }
-.card{
-  margin: 10px;
-}
-.to_update{
-  margin: 10px;
-}
-.card_label{
-  margin: 0px;
-}
-.main_data_row{
-  margin-top: 6px;
-  margin-bottom: 8px;
-}
+
 </style>

@@ -75,7 +75,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import * as echarts from 'echarts';
 import graph from "../../../data/mainkg_example.json";
@@ -235,5 +234,25 @@ export default {
 </script>
 
 <style scoped>
-
+.area-left{
+  width:70%;
+  float: left;
+}
+.area-right{
+  width:30%;
+  float: right;
+}
+.card{
+  margin: 10px;
+}
+.to_update{
+  margin: 10px;
+}
+.card_label{
+  margin: 0px;
+}
+.main_data_row{
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
 </style>

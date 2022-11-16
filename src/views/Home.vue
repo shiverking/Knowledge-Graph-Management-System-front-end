@@ -210,7 +210,7 @@
           <el-submenu index="5" class="parent_submenu">
             <template slot="title">
               <i class="el-icon-thumb"></i>
-              <span slot="title">用户应用管理</span>
+              <span slot="title">场景应用管理</span>
             </template>
             <el-submenu index="5-1">
               <template slot="title">
@@ -520,23 +520,23 @@ export default {
         {"value": "/核心数仓管理/核心图谱/版本控制", "location":"/coredata/mainkg/version"},
         {"value": "/核心数仓管理/核心本体/核心本体展示", "location":"/coredata/mainontology/display"},
         {"value": "/核心数仓管理/核心本体/版本控制", "location":"/coredata/mainontology/version"},
-        {"value": "/用户应用管理/用户管理/权限管理", "location":"/applicationmanagement/user/authority"},
-        {"value": "/用户应用管理/用户管理/角色管理", "location":"/applicationmanagement/user/role"},
-        {"value": "/用户应用管理/用户管理/设置", "location":"/applicationmanagement/user/setting"},
-        {"value": "/用户应用管理/用户管理/个人中心", "location":"/applicationmanagement/user/role"},
-        {"value": "/用户应用管理/接口管理/元数据", "location":"/applicationmanagement/interface/meta"},
-        {"value": "/用户应用管理/接口管理/认知推理", "location":"/applicationmanagement/interface/cognize"},
-        {"value": "/用户应用管理/接口管理/前端", "location":"/applicationmanagement/interface/display"},
-        {"value": "/用户应用管理/知识推理管理/推理集成", "location":"/applicationmanagement/reason/integration"},
-        {"value": "/用户应用管理/知识推理管理/推理验证", "location":"/applicationmanagement/reason/verify"},
-        {"value": "/用户应用管理/知识推理管理/攻击预测", "location":"/applicationmanagement/reason/attack"},
-        {"value": "/用户应用管理/知识推理管理/时间预测", "location":"/applicationmanagement/reason/event"},
-        {"value": "/用户应用管理/知识推理管理/超图预测", "location":"/applicationmanagement/reason/hypergraph"},
-        {"value": "/用户应用管理/态势认知构建/态势认知构建", "location":"/applicationmanagement/decision/build"},
-        {"value": "/用户应用管理/态势认知构建/态势认知分析", "location":"/applicationmanagement/decision/situationAnalysis"},
-        {"value": "/用户应用管理/态势认知构建/态势要图展示", "location":"/applicationmanagement/decision/map"},
-        {"value": "/用户应用管理/态势认知构建/态势评估", "location":"/applicationmanagement/decision/evaluation"},
-        {"value": "/用户应用管理/态势认知构建/认知决策验证", "location":"/applicationmanagement/decision/cognitiveDecision"},
+        {"value": "/场景应用管理/用户管理/权限管理", "location":"/applicationmanagement/user/authority"},
+        {"value": "/场景应用管理/用户管理/角色管理", "location":"/applicationmanagement/user/role"},
+        {"value": "/场景应用管理/用户管理/设置", "location":"/applicationmanagement/user/setting"},
+        {"value": "/场景应用管理/用户管理/个人中心", "location":"/applicationmanagement/user/role"},
+        {"value": "/场景应用管理/接口管理/元数据", "location":"/applicationmanagement/interface/meta"},
+        {"value": "/场景应用管理/接口管理/认知推理", "location":"/applicationmanagement/interface/cognize"},
+        {"value": "/场景应用管理/接口管理/前端", "location":"/applicationmanagement/interface/display"},
+        {"value": "/场景应用管理/知识推理管理/推理集成", "location":"/applicationmanagement/reason/integration"},
+        {"value": "/场景应用管理/知识推理管理/推理验证", "location":"/applicationmanagement/reason/verify"},
+        {"value": "/场景应用管理/知识推理管理/攻击预测", "location":"/applicationmanagement/reason/attack"},
+        {"value": "/场景应用管理/知识推理管理/时间预测", "location":"/applicationmanagement/reason/event"},
+        {"value": "/场景应用管理/知识推理管理/超图预测", "location":"/applicationmanagement/reason/hypergraph"},
+        {"value": "/场景应用管理/态势认知构建/态势认知构建", "location":"/applicationmanagement/decision/build"},
+        {"value": "/场景应用管理/态势认知构建/态势认知分析", "location":"/applicationmanagement/decision/situationAnalysis"},
+        {"value": "/场景应用管理/态势认知构建/态势要图展示", "location":"/applicationmanagement/decision/map"},
+        {"value": "/场景应用管理/态势认知构建/态势评估", "location":"/applicationmanagement/decision/evaluation"},
+        {"value": "/场景应用管理/态势认知构建/认知决策验证", "location":"/applicationmanagement/decision/cognitiveDecision"},
       ];
     },
     querySearch(queryString, cb) {

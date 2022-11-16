@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-      <el-tab-pane label="候选图谱" closable='false' name ="overview" >
+      <el-tab-pane label="候选图谱"  name="overview">
         <el-card class="box-card" shadow="never">
           <p><b>候选图谱列表</b></p>
           <div class="block">
@@ -34,11 +34,11 @@
                 type="selection"
                 width="55">
             </el-table-column>
-            <el-table-column label="头实体"width>
+            <el-table-column label="头实体" width>
             </el-table-column>
             <el-table-column label="关系" width>
             </el-table-column>
-            <el-table-column label="尾实体"width>
+            <el-table-column label="尾实体" width>
             </el-table-column>
             <el-table-column
                 label="创建时间"
@@ -98,18 +98,24 @@
           :key="item.name"
           :label="item.title"
           :name="item.name"
+          :closable="item.close"
       >
-      <detail :myName="name"></detail>
+        <keep-alive>
+            <component :is="item.content" :containerId="item.name"></component>
+        </keep-alive>
       </el-tab-pane>
     </el-tabs>
     <el-button type="primary" @click="addTab(editableTabsValue)">查看候选图谱</el-button>
   </div>
 </template>
 <script>
-import detail from "../../../components/candidate_kg/detail";
+import Detail from "../../../components/candidate_kg/Detail";
+import DataSource from "../../../components/data_source/DataSource";
+import Vue from 'vue'
+import {create} from "http-proxy-middleware/lib/path-rewriter";
 export default {
-  components:{
-    detail,
+  components: {
+    Detail,
   },
   data() {
     return {
@@ -120,26 +126,34 @@ export default {
       total: 29, // 总数据条数
       //可变分页结构
       editableTabsValue: 'overview',
-      editableTabs: [{
-        title: '图谱详情1',
-        name: '1',
-      }],
-      tabIndex: 2,
-      name:"test",
+      editableTabs: [],
+      // editableTabs: [{
+      //   title: '图谱详情',
+      //   name: this.tabIndex,
+      //   content: Detail,
+      //   close: true
+      // }],
+      tabIndex: 0,
     }
   },
   methods: {
     //动态增加删除tab页
     addTab(targetName) {
+      if (this.editableTabs.length > 5) {
+        this.$message({
+          message: "最多同时查看6个候选图谱!",
+          type: "warning"
+        });
+        return;
+      }
       let newTabName = ++this.tabIndex + '';
       this.editableTabs.push({
-        title: 'New Tab',
+        title: "图谱测试", //标签名
         name: newTabName,
-        content: 'New Tab content'
+        content: Detail, //对应组件名称
+        close: true
       });
       this.editableTabsValue = newTabName;
-      //修改传参值
-      this.name = newTabName;
     },
     removeTab(targetName) {
       let tabs = this.editableTabs;
@@ -237,8 +251,8 @@ export default {
       });
     }
     ,
+    mounted() {
+    },
   },
-  mounted() {
-  }
 }
 </script>
