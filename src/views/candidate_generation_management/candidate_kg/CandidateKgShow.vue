@@ -1,9 +1,8 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-      <el-tab-pane label="候选图谱"  name="overview">
+      <el-tab-pane label="候选图谱列表"  name="overview">
         <el-card class="box-card" shadow="never">
-          <p><b>候选图谱列表</b></p>
           <div class="block">
             <!--时间选择器-->
             <el-date-picker
@@ -23,7 +22,7 @@
                   :value="item.value">
               </el-option>
             </el-select>
-            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">读取数据</el-button>
+            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">查询</el-button>
           </div>
           <el-table
               :data="pageList"
@@ -170,6 +169,10 @@ export default {
       }
       this.editableTabsValue = activeName;
       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+      //如果所有标签页都被关闭，则打开最初的候选图谱列表tab
+      if(this.editableTabs.length==0){
+        this.editableTabsValue = "overview";
+      }
     },
     handleEdit(index, row) {
       console.log(index, row);

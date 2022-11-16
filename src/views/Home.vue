@@ -7,7 +7,7 @@
         <div class="title">知识图谱管理系统</div>
       </div>
       <div class="header_right">
-        <el-autocomplete placeholder="请输入要查找的页面" v-model="state" class="inline-input"
+        <el-autocomplete placeholder="请输入要查找的页面g" v-model="state" class="inline-input"
                          style="position: relative;width: 33%;left: 2%" :fetch-suggestions="querySearch"
                          :trigger-on-focus="false"
                          @select="handleSelect">
@@ -105,9 +105,6 @@
                   <el-menu-item index="1-3-4-1">作战计划</el-menu-item>
                 </router-link>
               </el-submenu>
-              <router-link to="/data/structure/triples" class="routerlink">
-                <el-menu-item index="1-3-5">三元组管理</el-menu-item>
-              </router-link>
             </el-submenu>
           </el-submenu>
           <el-submenu index="2" class="parent_submenu">
@@ -499,12 +496,11 @@ export default {
       return [
         {"value": "主页", "location":"/"},
         {"value": "/数据管理/结构化数据管理/数据分析", "location":"/data/structure/analysis"},
-        {"value": "/数据管理/结构化数据管理/三元组管理", "location":"/merge/kg/merge"},
         {"value": "/数据管理/半结构化数据管理", "location":"/data/semistructure"},
         {"value": "/数据管理/非结构化数据管理/实体抽取", "location":"/data/unstructure/ner"},
         {"value": "/数据管理/非结构化数据管理/三元组抽取", "location":"/data/unstructure/triplesExtraction"},
         {"value": "/候选生成管理/图谱融合/候选图谱展示", "location":"/candidate/kg/show"},
-        {"value": "/候选生成管理/图谱融合/候选图谱构建示", "location":"/candidate/kg/build"},
+        {"value": "/候选生成管理/图谱融合/候选图谱构建", "location":"/candidate/kg/build"},
         {"value": "/候选生成管理/本体融合/候选本体展示", "location":"/candidate/ontology/show"},
         {"value": "/候选生成管理/本体融合/候选本体构建", "location":"/candidate/ontology/build"},
         {"value": "/融合管理/图谱融合/融合", "location":"/merge/kg/merge"},

@@ -87,7 +87,6 @@ import Evaluation from "../views/user_application_management/decision/Evaluation
 import Map from "../views/user_application_management/decision/Map";
 import SituationAnalysis from "../views/user_application_management/decision/SituationAnalysis";
 import CognitiveDecision from "../views/user_application_management/decision/CognitiveDecision";
-import TotalTriples from "../views/data_management/structured_data_management/TotalTriples";
 Vue.use(Router)
 
 export default new Router({
@@ -131,12 +130,6 @@ export default new Router({
               path:'/data/structure/analysis',
               name:'数据分析',
               component:Analysis,
-              show:true
-            },
-            {
-              path:'/data/structure/triples',
-              name:'三元组管理',
-              component:TotalTriples,
               show:true
             },
             {

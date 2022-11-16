@@ -1,95 +1,102 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-card class="box-card" shadow="never">
-      <p><b>结构化增量数据</b></p>
-      <div class="block">
-        <el-date-picker
-          v-model="value1"
-          type="datetimerange"
-          :picker-options="pickerOptions"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          align="right">
-        </el-date-picker>
-        <el-button type="primary" style="margin-top: 10px;" @click="load_all()">读取数据</el-button>
-      </div>
-      <el-table
-        :data="pageList"
-        border
-        style="width: 100%; margin-top:10px"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-        type="selection"
-        width="55">
-        </el-table-column>
-        <el-table-column
-        label="日期"
-        width="200">
-        <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
-        width>
-        <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-            <p>头实体: {{ scope.row.head }}</p>
-            <p>头实体类型: {{ scope.row.head_typ }}</p>
-            <p>尾实体: {{ scope.row.tail }}</p>
-            <p>尾实体类型: {{ scope.row.tail_typ }}</p>
-            <p>关系: {{ scope.row.rel }}</p>
-            <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.head }}</el-tag>
-                <el-tag size="medium">{{ scope.row.head_typ }}</el-tag>
-                <el-tag size="medium">{{ scope.row.tail }}</el-tag>
-                <el-tag size="medium">{{ scope.row.tail_typ }}</el-tag>
-                <el-tag size="medium">{{ scope.row.rel }}</el-tag>
-            </div>
-            </el-popover>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="类别"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="存储方式"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column 
-        label="操作"
-        width="180">
-        <template slot-scope="scope">
-            <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        background
-        @current-change="current_change"
-        :current-page="currentPage1"
-        :page-size="pageSize"
-        layout="prev, pager, next"
-        style="margin-top:10px"
-        :total="total">
-      </el-pagination>
-      <el-button type="primary" style="margin-top: 10px;" @click="open">生成候选数据集</el-button>
-    </el-card>
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tab-pane label="三元组" name="first">
+        三元组测试
+      </el-tab-pane>
+      <el-tab-pane label="三元组(未归类)" name="second">
+        <el-card class="box-card" shadow="never">
+          <div class="block">
+            <el-date-picker
+                v-model="value1"
+                type="datetimerange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
+            </el-date-picker>
+            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">读取数据</el-button>
+          </div>
+          <el-table
+              :data="pageList"
+              border
+              style="width: 100%; margin-top:10px"
+              @selection-change="handleSelectionChange">
+            <el-table-column
+                type="selection"
+                width="55">
+            </el-table-column>
+            <el-table-column
+                label="日期"
+                width="200">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
+                width>
+              <template slot-scope="scope">
+                <el-popover trigger="hover" placement="top">
+                  <p>头实体: {{ scope.row.head }}</p>
+                  <p>头实体类型: {{ scope.row.head_typ }}</p>
+                  <p>尾实体: {{ scope.row.tail }}</p>
+                  <p>尾实体类型: {{ scope.row.tail_typ }}</p>
+                  <p>关系: {{ scope.row.rel }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="medium">{{ scope.row.head }}</el-tag>
+                    <el-tag size="medium">{{ scope.row.head_typ }}</el-tag>
+                    <el-tag size="medium">{{ scope.row.tail }}</el-tag>
+                    <el-tag size="medium">{{ scope.row.tail_typ }}</el-tag>
+                    <el-tag size="medium">{{ scope.row.rel }}</el-tag>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="类别"
+                width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="存储方式"
+                width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="操作"
+                width="180">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              background
+              @current-change="current_change"
+              :current-page="currentPage1"
+              :page-size="pageSize"
+              layout="prev, pager, next"
+              style="margin-top:10px"
+              :total="total">
+          </el-pagination>
+          <el-button type="primary" style="margin-top: 10px;" @click="open">生成候选数据集</el-button>
+        </el-card>
+      </el-tab-pane>
+    </el-tabs>
+
   </div>
 </template>
 <script>
@@ -494,12 +501,16 @@
       }
     },
     methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
+      //处理tab页点击事件
+      handleClick(tab, event) {
+        console.log(tab, event);
       },
-      handleDelete(index, row) {
-        console.log(index, row);
-      },
+      // handleEdit(index, row) {
+      //   console.log(index, row);
+      // },
+      // handleDelete(index, row) {
+      //   console.log(index, row);
+      // },
       del_all(){
         for (var i = 0; i < this.multipleSelection.length; i ++){
           for (var j = 0; j < this.tableData.length; j ++){
