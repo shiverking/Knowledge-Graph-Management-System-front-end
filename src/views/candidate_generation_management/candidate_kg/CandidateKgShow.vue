@@ -33,51 +33,28 @@
                 type="selection"
                 width="55">
             </el-table-column>
-            <el-table-column label="头实体" width>
+            <el-table-column label="名称(最新版本)" width>
             </el-table-column>
-            <el-table-column label="关系" width>
+            <el-table-column label="创建者" width>
             </el-table-column>
-            <el-table-column label="尾实体" width>
-            </el-table-column>
-            <el-table-column
-                label="创建时间"
-                width="200">
+            <el-table-column label="最后修改时间" width>
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
                 <span style="margin-left: 10px">{{ scope.row.date }}</span>
               </template>
             </el-table-column>
             <el-table-column
-                label="状态"
-                width="180">
+                label="创建时间">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="存储方式"
-                width="180">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.date }}</span>
               </template>
             </el-table-column>
             <el-table-column
                 label="操作"
                 width="180">
               <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">详情
-                </el-button>
-                <el-button
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">详情
-                </el-button>
-                <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除
-                </el-button>
+                <el-button type="primary" @click="handleEdit(scope.$index, scope.row)">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -126,12 +103,6 @@ export default {
       //可变分页结构
       editableTabsValue: 'overview',
       editableTabs: [],
-      // editableTabs: [{
-      //   title: '图谱详情',
-      //   name: this.tabIndex,
-      //   content: Detail,
-      //   close: true
-      // }],
       tabIndex: 0,
     }
   },

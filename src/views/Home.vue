@@ -7,7 +7,7 @@
         <div class="title">知识图谱管理系统</div>
       </div>
       <div class="header_right">
-        <el-autocomplete placeholder="请输入要查找的页面g" v-model="state" class="inline-input"
+        <el-autocomplete placeholder="请输入要查找的页面" v-model="state" class="inline-input"
                          style="position: relative;width: 33%;left: 2%" :fetch-suggestions="querySearch"
                          :trigger-on-focus="false"
                          @select="handleSelect">
@@ -354,7 +354,7 @@
 .is_fixed {
   position: fixed;
   top: 0px;
-  z-index: 9999;
+  z-index: 999;
   width: 100%;
 }
 
