@@ -22,10 +22,10 @@ axios.interceptors.response.use((response) =>{
         return response
     },
     function(error){
-        if (error) {
-            store.commit('logout')
-            router.replace('/login')
-        }
+        // if (error) {
+        //     store.commit('logout')
+        //     router.replace('/login')
+        // }
         // 返回接口返回的错误信息
         return Promise.reject(error)
     })
