@@ -1,9 +1,9 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs type="border-card" v-loading="loading">
-      <el-tab-pane label="读取数据">
-        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_datasets()">读取数据集</el-button>
-        <el-dialog title="选择候选数据集" :visible.sync="dialogTableVisible">
+      <el-tab-pane label="选择候选图谱">
+        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_datasets()">读取候选图谱</el-button>
+        <el-dialog title="读取候选图谱" :visible.sync="dialogTableVisible">
           <el-table
             ref="multipleTable"
             :data="gridData"
@@ -158,7 +158,7 @@
         </el-dialog>
       </el-tab-pane>
       <el-tab-pane label="置信检测">
-        <el-button type="primary"  @click="next">读取数据集</el-button>
+        <el-button type="primary"  @click="next">读取候选图谱</el-button>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
         <el-table
@@ -224,7 +224,7 @@
         <el-button type="primary" @click="insert_triples_to_neo4j();" style="margin-top:10px;">开始插入</el-button>
       </el-tab-pane>
       <el-tab-pane label="插入图谱">
-        <el-button type="primary"  @click="next">读取数据集</el-button>
+        <el-button type="primary"  @click="next">读取候选图谱</el-button>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
         <el-table
@@ -308,67 +308,65 @@
         </el-card>      
       </el-tab-pane>
       <el-tab-pane label="模型管理">
-        <el-card>
-          <el-table
-            :data="tableData4"
-            style="width: 100%; margin-top:;"
-            border
-            max-height="350">
-            <el-table-column
-              prop="time"
-              label="创建时间"
-              width="250">
-            </el-table-column>
-            <el-table-column
-              prop="stem"
-              label="模型名称"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="train_set"
-              label="训练数据"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="Hits1"
-              label="Hits@1"
-              width="">
-            </el-table-column>
-            <el-table-column
-              prop="Hits10"
-              label="Hits@10"
-              width="">
-            </el-table-column>
-            <el-table-column
-              prop="MRR"
-              label="MRR"
-              width="">
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              width="">
-              <template slot-scope="scope">
-                <el-button
-                  @click.native.prevent="deleteRow(scope.$index, modelSelectionTable)"
-                  type="text"
-                  size="small">
-                  移除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-pagination
-            @size-change="sizeChange4"
-            @current-change="currentChange4"
-            :current-page="tableData4_page"
-            :page-size="tableData4_size"
-            :page-sizes="pageSizes"
-            background
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="tableData4_total"
-            style="margin-top: 10px;">
-          </el-pagination>
-        </el-card>
+        <el-table
+          :data="tableData4"
+          style="width: 100%; margin-top:;"
+          border
+          max-height="350">
+          <el-table-column
+            prop="time"
+            label="创建时间"
+            width="250">
+          </el-table-column>
+          <el-table-column
+            prop="stem"
+            label="模型名称"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            prop="train_set"
+            label="训练数据"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            prop="Hits1"
+            label="Hits@1"
+            width="">
+          </el-table-column>
+          <el-table-column
+            prop="Hits10"
+            label="Hits@10"
+            width="">
+          </el-table-column>
+          <el-table-column
+            prop="MRR"
+            label="MRR"
+            width="">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="deleteRow(scope.$index, modelSelectionTable)"
+                type="text"
+                size="small">
+                移除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          @size-change="sizeChange4"
+          @current-change="currentChange4"
+          :current-page="tableData4_page"
+          :page-size="tableData4_size"
+          :page-sizes="pageSizes"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData4_total"
+          style="margin-top: 10px;">
+        </el-pagination>
         <el-card id="gpu_status" el-card shadow="always" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
         <el-card id="cpu_status" el-card shadow="always" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
         <el-card shadow="always" style="margin-top:10px; width:auto; height:360px;" v-loading="trainLoading" element-loading-text="拼命训练中">
