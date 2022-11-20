@@ -141,13 +141,13 @@
                 <i class="el-icon-connection"></i>图谱融合
               </template>
               <router-link to="/merge/kg/merge" class="routerlink">
-                <el-menu-item index="3-1-1"><i class="el-icon-rank"></i>融合</el-menu-item>
-              </router-link>
-              <router-link to="/merge/kg/evaluation" class="routerlink">
-                <el-menu-item index="3-1-2"><i class="el-icon-edit"></i>质量评估</el-menu-item>
+                <el-menu-item index="3-1-1"><i class="el-icon-rank"></i>图谱融合</el-menu-item>
               </router-link>
               <router-link to="/merge/kg/completion" class="routerlink">
-                <el-menu-item index="3-1-3"><i class="el-icon-pie-chart"></i>图谱补全</el-menu-item>
+                <el-menu-item index="3-1-2"><i class="el-icon-pie-chart"></i>图谱补全</el-menu-item>
+              </router-link>
+              <router-link to="/merge/kg/evaluation" class="routerlink">
+                <el-menu-item index="3-1-3"><i class="el-icon-edit"></i>质量评估</el-menu-item>
               </router-link>
               <router-link to="/merge/kg/versionControl" class="routerlink" id="test">
                 <el-menu-item index="3-1-4"><i class="el-icon-tickets"></i>版本记录</el-menu-item>
@@ -211,79 +211,87 @@
             </template>
             <el-submenu index="5-1">
               <template slot="title">
-                <i class="el-icon-user"></i>
-                用户管理
-              </template>
-              <router-link to="/applicationmanagement/user/authority" class="routerlink">
-                <el-menu-item index="5-1-1"><i class="el-icon-lock"></i>权限管理</el-menu-item>
-              </router-link>
-              <router-link to="/applicationmanagement/user/role" class="routerlink">
-                <el-menu-item index="5-1-2"><i class="el-icon-s-custom"></i>角色管理</el-menu-item>
-              </router-link>
-              <router-link to="/applicationmanagement/user/setting" class="routerlink">
-                <el-menu-item index="5-1-3"><i class="el-icon-setting"></i><span slot="title">设置</span></el-menu-item>
-              </router-link>
-              <router-link to="/applicationmanagement/user/personal" class="routerlink">
-                <el-menu-item index="5-1-4"><i class="el-icon-user"></i><span slot="title">个人中心</span></el-menu-item>
-              </router-link>
-            </el-submenu>
-            <el-submenu index="5-2">
-              <template slot="title">
                 <i class="el-icon-set-up"></i>
                 接口集成管理
               </template>
               <router-link to="/applicationmanagement/interface/meta" class="routerlink">
-                <el-menu-item index="5-2-1">与元数据集成</el-menu-item>
+                <el-menu-item index="5-1-1">与元数据集成</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/interface/cognize" class="routerlink">
-                <el-menu-item index="5-2-2">与认知推理集成</el-menu-item>
+                <el-menu-item index="5-1-2">与认知推理集成</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/interface/display" class="routerlink">
-                <el-menu-item index="5-2-3">与前端展示集成</el-menu-item>
+                <el-menu-item index="5-1-3">与前端展示集成</el-menu-item>
               </router-link>
             </el-submenu>
-            <el-submenu index="5-3">
+            <el-submenu index="5-2">
               <template slot="title">
                 <i class="el-icon-guide"></i>
                 知识推理管理
               </template>
               <router-link to="/applicationmanagement/reason/integration" class="routerlink">
-                <el-menu-item index="5-3-1">推理集成</el-menu-item>
+                <el-menu-item index="5-2-1">推理集成</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/reason/verify" class="routerlink">
-                <el-menu-item index="5-3-2">推理验证</el-menu-item>
+                <el-menu-item index="5-2-2">推理验证</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/reason/attack" class="routerlink">
-                <el-menu-item index="5-3-3">攻击预测</el-menu-item>
+                <el-menu-item index="5-2-3">攻击预测</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/reason/event" class="routerlink">
-                <el-menu-item index="5-3-4">事件预测</el-menu-item>
+                <el-menu-item index="5-2-4">事件预测</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/reason/hypergraph" class="routerlink">
-                <el-menu-item index="5-3-5">超图预测</el-menu-item>
+                <el-menu-item index="5-2-5">超图预测</el-menu-item>
               </router-link>
             </el-submenu>
-            <el-submenu index="5-4">
+            <el-submenu index="5-3">
               <template slot="title">
                 <i class="el-icon-headset"></i>
                 辅助决策管理
               </template>
               <router-link to="/applicationmanagement/decision/build" class="routerlink">
-                <el-menu-item index="5-4-1">态势认知构建</el-menu-item>
+                <el-menu-item index="5-3-1">态势认知构建</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/decision/situationAnalysis" class="routerlink">
-                <el-menu-item index="5-4-2">态势认知分析</el-menu-item>
+                <el-menu-item index="5-3-2">态势认知分析</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/decision/map" class="routerlink">
-                <el-menu-item index="5-4-3">态势要图展示</el-menu-item>
+                <el-menu-item index="5-3-3">态势要图展示</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/decision/evaluation" class="routerlink">
-                <el-menu-item index="5-4-4">态势评估</el-menu-item>
+                <el-menu-item index="5-3-4">态势评估</el-menu-item>
               </router-link>
               <router-link to="/applicationmanagement/decision/cognitiveDecision" class="routerlink">
-                <el-menu-item index="5-4-5">认知决策验证</el-menu-item>
+                <el-menu-item index="5-3-5">认知决策验证</el-menu-item>
               </router-link>
             </el-submenu>
+          </el-submenu>
+          <el-submenu index="6" class="parent_submenu">
+            <template slot="title">
+              <i class="el-icon-thumb"></i>
+              <span slot="title">系统管理</span>
+            </template>            
+            <el-menu-item index="6-1">
+              <router-link  to="/system_management/authority" class="routerlink">
+                <i class="el-icon-lock"></i>权限管理
+              </router-link>
+            </el-menu-item>
+            <el-menu-item index="6-2">          
+              <router-link to="/system_management/role" class="routerlink">
+                <i class="el-icon-s-custom"></i>角色管理
+              </router-link>
+            </el-menu-item>
+            <el-menu-item index="6-3">  
+              <router-link to="/system_management/setting" class="routerlink">
+                <i class="el-icon-setting"></i>设置
+              </router-link>
+            </el-menu-item>
+            <el-menu-item index="6-4">  
+              <router-link to="/system_management/personal" class="routerlink">
+              <i class="el-icon-user"></i>个人中心  
+              </router-link>
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -516,10 +524,10 @@ export default {
         {"value": "/核心数仓管理/核心图谱/版本控制", "location":"/coredata/mainkg/version"},
         {"value": "/核心数仓管理/核心本体/核心本体展示", "location":"/coredata/mainontology/display"},
         {"value": "/核心数仓管理/核心本体/版本控制", "location":"/coredata/mainontology/version"},
-        {"value": "/场景应用管理/用户管理/权限管理", "location":"/applicationmanagement/user/authority"},
-        {"value": "/场景应用管理/用户管理/角色管理", "location":"/applicationmanagement/user/role"},
-        {"value": "/场景应用管理/用户管理/设置", "location":"/applicationmanagement/user/setting"},
-        {"value": "/场景应用管理/用户管理/个人中心", "location":"/applicationmanagement/user/role"},
+        {"value": "/系统管理/权限管理", "location":"/system_management/authority"},
+        {"value": "/系统管理/角色管理", "location":"/system_management/role"},
+        {"value": "/系统管理/设置", "location":"/system_management/setting"},
+        {"value": "/系统管理/个人中心", "location":"/system_management/personal"},
         {"value": "/场景应用管理/接口管理/元数据", "location":"/applicationmanagement/interface/meta"},
         {"value": "/场景应用管理/接口管理/认知推理", "location":"/applicationmanagement/interface/cognize"},
         {"value": "/场景应用管理/接口管理/前端", "location":"/applicationmanagement/interface/display"},

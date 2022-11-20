@@ -66,11 +66,6 @@ import CoreOntology from "../views/coredata_warehouse/core_ontology/CoreOntology
 import CoreOntologyShow from "../views/coredata_warehouse/core_ontology/CoreOntologyShow";
 import CoreOntologyVersionControl from "../views/coredata_warehouse/core_ontology/CoreOntologyVersionControl";
 // 第五部分,用户应用管理组件
-import User from "../views/user_application_management/user/User";
-import Personal from "../views/user_application_management/user/Personal";
-import Setting from "../views/user_application_management/user/Setting";
-import Authority from "../views/user_application_management/user/Authority";
-import Role from "../views/user_application_management/user/Role";
 import Interface from "../views/user_application_management/interface/Interface";
 import Display from "../views/user_application_management/interface/Display";
 import MetaData from "../views/user_application_management/interface/MetaData";
@@ -87,6 +82,11 @@ import Evaluation from "../views/user_application_management/decision/Evaluation
 import Map from "../views/user_application_management/decision/Map";
 import SituationAnalysis from "../views/user_application_management/decision/SituationAnalysis";
 import CognitiveDecision from "../views/user_application_management/decision/CognitiveDecision";
+// 第六部分,系统管理
+import Personal from "../views/system_management/Personal";
+import Setting from "../views/system_management/Setting";
+import Authority from "../views/system_management/Authority";
+import Role from "../views/system_management/Role";
 Vue.use(Router)
 
 export default new Router({
@@ -497,38 +497,6 @@ export default new Router({
       show: true,
       children:[
         {
-          path: '/applicationmanagement/user',
-          name: '用户管理',
-          component: User,
-          show: true,
-          children: [
-            {
-              path:'/applicationmanagement/user/authority',
-              name:'权限管理',
-              component:Authority,
-              show:true
-            },
-            {
-              path:'/applicationmanagement/user/role',
-              name:'角色管理',
-              component:Role,
-              show: true
-            },
-            {
-              path:'/applicationmanagement/user/setting',
-              name:'设置',
-              component:Setting,
-              show:true
-            },
-            {
-              path:'/applicationmanagement/user/personal',
-              name:'个人中心',
-              component:Personal,
-              show: true
-            },
-          ]
-        },
-        {
           path: '/applicationmanagement/interface',
           name: '接口集成管理',
           component: Interface,
@@ -630,6 +598,39 @@ export default new Router({
             }
           ]
         }
+      ]
+    },
+    //第六部分，系统管理
+    {
+      path: '/system_management',
+      name: '系统管理',
+      component: Home,
+      show: true,
+      children: [
+        {
+          path:'/system_management/authority',
+          name:'权限管理',
+          component:Authority,
+          show:true
+        },
+        {
+          path:'/system_management/role',
+          name:'角色管理',
+          component:Role,
+          show: true
+        },
+        {
+          path:'/system_management/setting',
+          name:'设置',
+          component:Setting,
+          show:true
+        },
+        {
+          path:'/system_management/personal',
+          name:'个人中心',
+          component:Personal,
+          show: true
+        },
       ]
     },
   ],

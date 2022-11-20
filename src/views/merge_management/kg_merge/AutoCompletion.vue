@@ -1,9 +1,9 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs type="border-card" v-loading="loading">
-      <el-tab-pane label="读取数据">
-        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_datasets()">读取数据集</el-button>
-        <el-dialog title="选择候选数据集" :visible.sync="dialogTableVisible">
+      <el-tab-pane label="选择候选图谱">
+        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_datasets()">读取候选图谱</el-button>
+        <el-dialog title="读取候选图谱" :visible.sync="dialogTableVisible">
           <el-table
             ref="multipleTable"
             :data="gridData"
@@ -100,15 +100,14 @@
           :total="tableData1_total"
           style="margin-top: 10px;">
         </el-pagination>
-        <el-button type="primary" @click="dialogOfModelSelection = true" style="margin-top:10px;">开始检测</el-button>
+        <el-button type="primary" @click="dialogOfModelSelection = true; get_saved_models_list();" style="margin-top:10px;">开始检测</el-button>
         <el-dialog title="选择补全模型" :visible.sync="dialogOfModelSelection">
           <span style="margin-top; margin-right:10px"><font size="3">当前补全模型为<b>{{model_name}}</b></font></span>
           <el-table
             border
             ref="singleTable"
-            :data="modelSelectionTable"
+            :data="tableData4"
             highlight-current-row
-            @current-change="handleCurrentChange"
             style="width: 100%; margin-top: 10px;">
             <el-table-column
               type="index"
@@ -117,16 +116,17 @@
             <el-table-column
               property="time"
               label="创建时间"
-              width>
+              width="250">
             </el-table-column>
             <el-table-column
-              property="model_name"
+              property="stem"
               label="模型名称"
-              width>
+              width ="200">
             </el-table-column>
             <el-table-column
               property="train_set"
-              label="训练集">
+              label="训练集"
+              width="200">
             </el-table-column>
             <el-table-column
               property="Hits1"
@@ -142,8 +142,14 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            layout="prev, pager, next"
-            :total="50">
+            @size-change="sizeChange4"
+            @current-change="currentChange4"
+            :current-page="tableData4_page"
+            :page-size="tableData4_size"
+            :page-sizes="pageSizes"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData4_total"
+            style="margin-top: 10px;">
           </el-pagination>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogOfModelSelection = false;">取消</el-button>
@@ -152,7 +158,7 @@
         </el-dialog>
       </el-tab-pane>
       <el-tab-pane label="置信检测">
-        <el-button type="primary"  @click="next">读取数据集</el-button>
+        <el-button type="primary"  @click="next">读取候选图谱</el-button>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
         <el-table
@@ -218,7 +224,7 @@
         <el-button type="primary" @click="insert_triples_to_neo4j();" style="margin-top:10px;">开始插入</el-button>
       </el-tab-pane>
       <el-tab-pane label="插入图谱">
-        <el-button type="primary"  @click="next">读取数据集</el-button>
+        <el-button type="primary"  @click="next">读取候选图谱</el-button>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
         <el-table
@@ -298,22 +304,22 @@
         </el-input>
         <el-card shadow="always"  class="ner_card">
           <h4 class="ner_label">链接预测结果</h4>
-            <span class="ner_result" id="ner_result" style="margin-top:10px">{{LinkPredictionResult}}</span>
+          <span class="ner_result" id="ner_result" style="margin-top:10px">{{LinkPredictionResult}}</span>
         </el-card>      
       </el-tab-pane>
       <el-tab-pane label="模型管理">
         <el-table
-          :data="modelSelectionTable"
+          :data="tableData4"
           style="width: 100%; margin-top:;"
           border
-          max-height="250">
+          max-height="350">
           <el-table-column
             prop="time"
             label="创建时间"
-            width="200">
+            width="250">
           </el-table-column>
           <el-table-column
-            prop="model_name"
+            prop="stem"
             label="模型名称"
             width="200">
           </el-table-column>
@@ -351,14 +357,19 @@
           </el-table-column>
         </el-table>
         <el-pagination
+          @size-change="sizeChange4"
+          @current-change="currentChange4"
+          :current-page="tableData4_page"
+          :page-size="tableData4_size"
+          :page-sizes="pageSizes"
           background
-          layout="prev, pager, next"
-          style="margin-top:10px"
-          :total="1000">
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData4_total"
+          style="margin-top: 10px;">
         </el-pagination>
-        <el-card id="gpu_status" el-card shadow="never" style="height:360px; width:420px;float: left; margin-top: 10px; margin-right: 10px;"></el-card>
-        <el-card id="cpu_status" el-card shadow="never" style="height:360px; width:420px;float: left; margin-top: 10px; margin-right: 10px;"></el-card>
-        <el-card shadow="never" style="margin-top:10px; width:auto; height:360px;">
+        <el-card id="gpu_status" el-card shadow="always" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
+        <el-card id="cpu_status" el-card shadow="always" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
+        <el-card shadow="always" style="margin-top:10px; width:auto; height:360px;" v-loading="trainLoading" element-loading-text="拼命训练中">
           <el-form ref="form" :model="form" label-width="80px">
             <b>训练新模型</b>
             <el-form-item label="选择模型" style="margin-top:15px">
@@ -386,14 +397,18 @@
               </el-col>
             </el-row>
           </el-form>
-          <el-button type="primary" @click="trainingVisible = true; start();">开始训练</el-button>
-          <el-dialog title="训练中..." :visible.sync="trainingVisible">
-            <div slot="footer" class="dialog-footer">
-              <el-progress :text-inside="true" :stroke-width="18" :percentage="percentage" style="margin-bottom:10px" status="success"></el-progress>
-              <el-button @click="trainingVisible = false">取消</el-button>
-              <el-button type="primary" @click="trainingVisible = false;">确定</el-button>
-            </div>
-          </el-dialog>
+          <el-button type="primary" @click="train_model();get_updating_train_log();">开始训练</el-button>
+        </el-card>
+        <el-card shadow="always"  class="ner_card" v-loading="loading">
+          <h4 class="ner_label">训练日志</h4>
+            <el-input
+              style="display: block;margin-top:10px;"
+              type="textarea"
+              :rows="5"
+              placeholder="没有训练进行..."
+              v-model="resultAfterTrainNewModel"
+              >
+            </el-input>
         </el-card>
       </el-tab-pane>
     </el-tabs> 
@@ -403,6 +418,7 @@
 .ner_card{
   margin-top: 10px;
   margin-bottom: 10px;
+  max-height:500px;
 }
 .ner_label{
   margin: 0px;
@@ -426,21 +442,7 @@ p {
     data() {
       return {
         // 选中补全模型的表格，放置在dialog中
-        modelSelectionTable: [{
-          time: '2022-11-7-9-45',
-          model_name: 'ConvE_2022_11_7_9_45',
-          train_set: '十一航母打击群demo',
-          Hits1: '0.0',
-          Hits10: '0.0',
-          MRR: '0.0',
-        },{
-          time: '2022-11-15-9-49',
-          model_name: 'ConvE_2022_11-15_9_49',
-          train_set: '十一航母打击群demo',
-          Hits1: '0.0',
-          Hits10: '0.0',
-          MRR: '0.0',
-        },],
+        modelSelectionTable: [],
         dialogOfModelSelection: false, // 设置补全模型dialog显示的boolean变量
         currentRow: null, //补全模型的选中行
         loading :false,
@@ -450,19 +452,28 @@ p {
         tableData1_page: 1,
         tableData2_page: 1,
         tableData3_page: 1,
+        tableData4_page: 1,
+        tableData5_page: 1,
         tableData1_size: 10,
         tableData2_size: 10,
         tableData3_size: 10,
+        tableData4_size: 5,
+        tableData5_size: 5,
         tableData1_total: 0,
         tableData2_total: 0,
         tableData3_total: 0,
+        tableData4_total: 0,
+        tableData5_total: 0,
         tableData1 : [],
         tableData2 : [],
         tableData3 : [],
-        pageSizes:[10,20,30,40,50,60],
+        tableData4 : [],
+        tableData5 : [],
+        pageSizes:[5,10,20,30,40,50,60],
         allTriplesBeforeCheck:[],
         gridData:[],
         datasets_path: 'E:/KG_system_service/candidate_datasets',
+        saved_model_path: 'E:/KG_system_service/KGtest/ConvE/models',
         dialogTableVisible: false,
         model_name:'ConvE_2022_10_7_9_45.h5',
         multipleSelection: [],
@@ -470,6 +481,9 @@ p {
         TriplesBeforeLinkPrediction:"育空号补给舰,制造厂\n尼米兹号航空母舰,执行官\n马修·托德,同事\n大卫·凯悦,同事\n以赛亚·因凡特,家庭信息\n邦克山号导弹巡洋舰,指挥军士长\n第9驱逐舰中队,巡洋舰\n约书亚 B.乔纳,家庭信息\n亚伦·温伯利,国籍\n普林斯顿号导弹巡洋舰,指挥官",
         LinkPredictionResult: '',
         trainingVisible: false,
+        trainLoading: false,
+        train_success: false,
+        resultAfterTrainNewModel: '',
         form: {
           name: 'ConvE_2022_11_16',
           model: 'ConvE',
@@ -477,8 +491,7 @@ p {
           batch:'128',
           epoch: '600'
         },
-        formLabelWidth: '120px',
-        percentage : 0
+        formLabelWidth: '120px', //表单样式
       }
     },
     methods: {
@@ -491,18 +504,15 @@ p {
         );
         this.tableData1_total = this.allTriplesBeforeCheck.length
       },
-      //page改变时的回调函数，参数为当前页码
       currentChange(val){
         this.tableData1_page = val
         this.getTableData()
       },
-      //size改变时回调的函数，参数为当前的size
       sizeChange(val){
         this.tableData1_size = val
         this.tableData1_page = 1
         this.getTableData()
       },
-
       //tableData2获取表格数据，自行分页
       getTableData2(){
         //allData为全部数据
@@ -512,18 +522,15 @@ p {
         );
         this.tableData2_total = this.triplesBeforeInsert.length
       },
-      //page改变时的回调函数，参数为当前页码
       currentChange2(val){
         this.tableData2_page = val
         this.getTableData2()
       },
-      //size改变时回调的函数，参数为当前的size
       sizeChange2(val){
         this.tableData2_size = val
         this.tableData2_page = 1
         this.getTableData2()
       },
-
       //tableData3获取表格数据，自行分页
       getTableData3(){
         //allData为全部数据
@@ -533,22 +540,38 @@ p {
         );
         this.tableData3_total = this.resultAfterInsert.length
       },
-      //page改变时的回调函数，参数为当前页码
       currentChange3(val){
         this.tableData3_page = val
         this.getTableData3()
       },
-      //size改变时回调的函数，参数为当前的size
       sizeChange3(val){
         this.tableData3_size = val
         this.tableData3_page = 1
         this.getTableData3()
       },
-
+      //tableData4获取表格数据，自行分页
+      getTableData4(){
+        //allData为全部数据
+        this.tableData4 = this.modelSelectionTable.slice(
+          (this.tableData4_page - 1) * this.tableData4_size,
+          this.tableData4_page * this.tableData4_size
+        );
+        this.tableData4_total = this.modelSelectionTable.length
+      },
+      currentChange4(val){
+        this.tableData4_page = val
+        this.getTableData4()
+      },
+      sizeChange4(val){
+        this.tableData4_size = val
+        this.tableData4_page = 1
+        this.getTableData4()
+      },
       // 候选数据集的多项选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
       }, 
+      //读取候选三元组中的数据
       readTriplesFromSelectedDataset(){
         for (var j = 0; j < this.multipleSelection.length; j ++){
           this.selectedDatasets.push(this.multipleSelection[j]['stem'])
@@ -588,6 +611,7 @@ p {
         }
         this.selectedDatasets = []
       },  
+      //送给后端质检服务
       send_for_quality_inspection(){
         //如果为空，提示
         if(this.allTriplesBeforeCheck.length == 0){
@@ -622,6 +646,7 @@ p {
           })
         }
       }, 
+      //插入图谱服务
       insert_triples_to_neo4j(){
         //如果为空，提示
         if(this.triplesBeforeInsert.length == 0){
@@ -656,6 +681,7 @@ p {
           })
         }
       },
+      //读取候选数据集的三元组数目
       get_candidate_datasets(){
         let content = this.datasets_path;
         //如果为空，提示
@@ -671,11 +697,6 @@ p {
           axios.post('/pythonApi/get_candidate_datasets',{})
           .then((response)=>{
             if (response.status == 200) {
-              // const h = this.$createElement;
-              // this.$notify({
-              //   title: '标题名称',
-              //   message: h('i', { style: 'color: teal'}, '这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案')
-              // });
               //赋值给表格
               this.gridData= response.data.data;
                //设置文本高亮
@@ -688,8 +709,9 @@ p {
           })
         }
       },
-      link_prediction(){
-        let content = this.TriplesBeforeLinkPrediction;
+      //读取保存好的模型
+      get_saved_models_list(){
+        let content = this.saved_model_path;
         //如果为空，提示
         if(content==""){
           this.$message({
@@ -700,14 +722,44 @@ p {
         else{
           this.loading = true;
           //axios请求
+          axios.post('/pythonApi/get_saved_models_list',{})
+          .then((response)=>{
+            if (response.status == 200) {
+              //赋值给表格
+              this.modelSelectionTable = response.data.data;
+               //设置文本高亮
+              this.loading = false;
+              this.getTableData4();
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        }
+      },
+      //请求链接预测服务
+      link_prediction(){
+        let content = this.TriplesBeforeLinkPrediction;
+        //如果为空，提示
+        if(content==""){
+          this.$message({
+            type: 'warning',
+            message: '请输入待预测三元组！'
+          });
+        }
+        else{
+          this.loading = true;
+          //axios请求
           axios.post('/pythonApi/link_prediction',{
             data: this.TriplesBeforeLinkPrediction,
           })
           .then((response)=>{
             if (response.status == 200) {
-              this.$message({
-                type: 'success',
-                message: '抽取成功!'
+              const h = this.$createElement;
+              this.$notify({
+                title: '链接预测完毕',
+                message: h('i', { style: 'color: teal'}, '链接预测结果已加载！'),
+                offset: 100
               });
               //赋值给表格
               this.LinkPredictionResult = ""
@@ -723,7 +775,57 @@ p {
           })
         }
       },
-      //重置内容
+      //请求训练模型服务
+      train_model(){
+        let content = this.form['name'];
+        //如果为空，提示
+        if(content==""){
+          this.$message({
+            type: 'warning',
+            message: '请输入训练参数！'
+          });
+        }
+        else{
+          this.trainLoading = true;
+          this.train_success = false;
+          //axios请求
+          axios.post('/pythonApi/train_new_model',{
+            data: this.form,
+          })
+          .then((response)=>{
+            if (response.status == 200) {
+              const h = this.$createElement;
+              this.$notify({
+                title: '训练完毕',
+                message: h('i', { style: 'color: teal'}, '训练成功，模型已保存！'),
+                offset: 100
+              });
+              this.trainLoading = false;
+              this.train_success = true;
+              this.get_saved_models_list();
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        }
+      },
+      //轮询请求日志
+      get_updating_train_log(){
+        var _time; 
+        _time = setInterval(() => {
+          axios.post('/pythonApi/get_train_log',{
+          }).then((response)=>{
+            if (response.status == 200) {
+              this.resultAfterTrainNewModel = response.data.data;
+              }
+          });
+          if(this.train_success == true){
+            clearInterval(_time);
+          }
+        },1000)
+      },
+      //重置整个流程中的内容
       reset(){
         this.tableData1 = [],
         this.tableData2 = [],
@@ -732,47 +834,61 @@ p {
         this.triplesBeforeInsert = [],
         this.resultAfterInsert = []
       },
+      //重置链接预测输入和结果
       CleanLinkPredictionResult(){
         this.LinkPredictionResult = '',
         this.TriplesBeforeLinkPrediction = []
       },
-      start() {
-        while(this.percentage <= 100){
-          this.percentage += 10
-        }
-      },
-      end() {
-          this.percentage = 0
-      },
+      //删除模型操作
       deleteRow(index, rows) {
         rows.splice(index, 1);
       },
+      //获取gpu状态:每2秒请求一次
       get_gpu_status(){
         var chartDom = document.getElementById('gpu_status');
         var myChart = echarts.init(chartDom);
         var option;
-
-        function randomData() {
-          now = new Date(+now + oneDay);
-          value = value + Math.random() * 21 - 10;
+        //请求cpu占用数据
+        function get_status_of_gpu(callback){
+          //axios请求
+          axios.post('/pythonApi/get_status_of_gpu',{
+          })
+          .then((response)=>{
+            if (response.status == 200) {
+              callback(response.data.data);
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        };
+        function random_30_data(i) {
+          var t=new Date();//你已知的时间
+          var t_s=t.getTime();//转化为时间戳毫秒数
+          var nt=new Date();//定义一个新时间
+          nt.setTime(t_s-1000*(i));//设置新时间比旧时间多一分钟
+          return {
+            name: nt.toString(),
+            value: [nt,0]
+          };
+        };
+        function randomData(cpuData) {
+          let now = new Date();
           return {
             name: now.toString(),
             value: [
-              [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
-              Math.round(value)
+              now,
+              cpuData
             ]
           };
-        }
+        };
         let data = [];
-        let now = new Date(1997, 9, 3);
-        let oneDay = 24 * 3600 * 1000;
-        let value = Math.random() * 1000;
-        for (var i = 0; i < 1000; i++) {
-          data.push(randomData());
-        }
+        for (var i = 60; i > 0; i -= 2) {
+          data.push(random_30_data(i));
+        };
         option = {
           title: {
-            text: 'GPU:0内存使用率',
+            text: 'GPU:0 内存使用率',
             textStyle:{
               lineHeight:50,
               line:50,
@@ -806,6 +922,8 @@ p {
           yAxis: {
             type: 'value',
             boundaryGap: [0, '100%'],
+            min: 0,
+	          max: 100,
             splitLine: {
               show: false
             }
@@ -825,49 +943,70 @@ p {
             }
           ]
         };
+        
         setInterval(function () {
-          for (var i = 0; i < 5; i++) {
-            data.shift();
-            data.push(randomData());
-          }
-          myChart.setOption({
-            series: [
-              {
-                data: data
-              }
-            ]
-          });
-        }, 1000);
+            get_status_of_gpu(function(arr){
+                if(60 < data.length) 
+                  data.shift();
+                data.push(randomData(arr));
+                myChart.setOption({
+                series: [
+                  {
+                    data: data
+                  }
+                ]
+              });
+            });
+        }, 2000);
 
         option && myChart.setOption(option);
       },
-
+      //获取cpu状态:每2秒请求一次
       get_cpu_status(){
         var chartDom = document.getElementById('cpu_status');
         var myChart = echarts.init(chartDom);
         var option;
-
-        function randomData() {
-          now = new Date(+now + oneDay);
-          value = value + Math.random() * 21 - 10;
+        //请求cpu占用数据
+        function get_status_of_cpu(callback){
+          //axios请求
+          axios.post('/pythonApi/get_status_of_cpu',{
+          })
+          .then((response)=>{
+            if (response.status == 200) {
+              callback(response.data.data);
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        };
+        function random_30_data(i) {
+          var t=new Date();//你已知的时间
+          var t_s=t.getTime();//转化为时间戳毫秒数
+          var nt=new Date();//定义一个新时间
+          nt.setTime(t_s-1000*(i));//设置新时间比旧时间多一分钟
+          return {
+            name: nt.toString(),
+            value: [nt,0]
+          };
+        };
+        function randomData(cpuData) {
+          let now = new Date();
           return {
             name: now.toString(),
             value: [
-              [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
-              Math.round(value)
+              now,
+              cpuData
             ]
           };
-        }
+        };
         let data = [];
-        let now = new Date(1997, 9, 3);
-        let oneDay = 24 * 3600 * 1000;
-        let value = Math.random() * 1000;
-        for (var i = 0; i < 1000; i++) {
-          data.push(randomData());
-        }
+        for (var i = 60; i > 0; i -= 2) {
+          data.push(random_30_data(i));
+        };
         option = {
           title: {
-            text: 'CPU内存使用率',
+            text: 'CPU 内存使用率',
             textStyle:{
               lineHeight:50,
               line:50,
@@ -900,6 +1039,8 @@ p {
           },
           yAxis: {
             type: 'value',
+            min: 0,
+	          max: 100,
             boundaryGap: [0, '100%'],
             splitLine: {
               show: false
@@ -920,19 +1061,21 @@ p {
             }
           ]
         };
+        
         setInterval(function () {
-          for (var i = 0; i < 5; i++) {
-            data.shift();
-            data.push(randomData());
-          }
-          myChart.setOption({
-            series: [
-              {
-                data: data
-              }
-            ]
-          });
-        }, 1000);
+            get_status_of_cpu(function(arr){
+                if(60 < data.length) 
+                  data.shift();
+                data.push(randomData(arr));
+                myChart.setOption({
+                series: [
+                  {
+                    data: data
+                  }
+                ]
+              });
+            });
+        }, 2000);
 
         option && myChart.setOption(option);
       },
@@ -940,6 +1083,9 @@ p {
     mounted(){
       this.get_gpu_status()
       this.get_cpu_status()
+    },
+    created(){
+      this.get_saved_models_list();
     }
   }
 </script>
