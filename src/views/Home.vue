@@ -271,27 +271,27 @@
             <template slot="title">
               <i class="el-icon-thumb"></i>
               <span slot="title">系统管理</span>
-            </template>            
+            </template>
+            <router-link  to="/system_management/authority" class="routerlink">
             <el-menu-item index="6-1">
-              <router-link  to="/system_management/authority" class="routerlink">
                 <i class="el-icon-lock"></i>权限管理
-              </router-link>
             </el-menu-item>
-            <el-menu-item index="6-2">          
-              <router-link to="/system_management/role" class="routerlink">
-                <i class="el-icon-s-custom"></i>角色管理
-              </router-link>
-            </el-menu-item>
-            <el-menu-item index="6-3">  
-              <router-link to="/system_management/setting" class="routerlink">
+            </router-link>
+            <router-link to="/system_management/role" class="routerlink">
+              <el-menu-item index="6-2">
+                  <i class="el-icon-s-custom"></i>角色管理
+              </el-menu-item>
+            </router-link>
+            <router-link to="/system_management/setting" class="routerlink">
+            <el-menu-item index="6-3">
                 <i class="el-icon-setting"></i>设置
-              </router-link>
             </el-menu-item>
-            <el-menu-item index="6-4">  
-              <router-link to="/system_management/personal" class="routerlink">
-              <i class="el-icon-user"></i>个人中心  
-              </router-link>
-            </el-menu-item>
+            </router-link>
+            <router-link to="/system_management/personal" class="routerlink">
+              <el-menu-item index="6-4">
+                <i class="el-icon-user"></i>个人中心
+              </el-menu-item>
+            </router-link>
           </el-submenu>
         </el-menu>
       </el-aside>
