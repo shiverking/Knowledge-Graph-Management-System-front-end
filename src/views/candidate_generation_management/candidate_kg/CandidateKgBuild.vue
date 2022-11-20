@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange">
       <el-tab-pane label="三元组" name="first">
         <el-table
-            :data="candidateTriplePageList"
+            :data="allTriplePageList"
             border
             style="width: 100%; margin-top:10px"
             >
@@ -15,7 +15,6 @@
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.head }}
-                <el-tag size="small" type="info">{{ scope.row.headCategory }}</el-tag>
               </div>
             </template>
           </el-table-column>
@@ -24,7 +23,7 @@
               width>
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
+                <el-tag size="medium" type="warning">{{ scope.row.relation}}</el-tag>
               </div>
             </template>
           </el-table-column>
@@ -34,19 +33,24 @@
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.tail }}
-                <el-tag size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
+                <el-tag size="medium" type="info">{{ scope.row.tail}}</el-tag>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="状态">
             <template slot-scope="scope">
-              <el-tag size="medium" type="danger">{{ scope.row.status }}</el-tag>
+              <el-tag size="medium" type="success">{{ scope.row.status}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="到来时间">
+          <el-table-column label="创建时间">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{ scope.row.time}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="所属候选图谱">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.candidateId}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -63,13 +67,13 @@
           </el-table-column>
         </el-table>
         <el-pagination
-            @size-change="candidateTripleHandleSizeChange"
-            @current-change="candidateTripleHandleCurrentChange"
-            :current-page="candidateTripleCurrentPage"
-            :page-sizes="candidateTriplePageSizes"
-            :page-size="candidateTriplePageSize"
+            @size-change="allTripleHandleSizeChange"
+            @current-change="allTripleHandleCurrentChange"
+            :current-page="allTripleCurrentPage"
+            :page-sizes="allTriplePageSizes"
+            :page-size="allTriplePageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="candidateTripleTotal"
+            :total="allTripleTotal"
             key="1">
         </el-pagination>
       </el-tab-pane>
@@ -164,10 +168,13 @@
       </el-tab-pane>
       <el-tab-pane label="已选择" name="third">
         <el-dialog
-          title="确认"
+          title="生成确认"
           :visible.sync="kgDialogVisible"
           width="30%">
-          <el-input placeholder="请输入候选图谱名称"></el-input>
+          <div>
+            <el-input placeholder="请输入候选图谱名称" v-model="kgName" ></el-input>
+            <el-input placeholder="为该候选图谱备注(可选)" style="display: grid;margin-top: 10px;" v-model="kgComment" ></el-input>
+          </div>
           <span slot="footer" class="dialog-footer">
           <el-button @click="kgDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="kgDialogVisible = false;generateNewKG()">确 定</el-button>
@@ -189,8 +196,6 @@
             border
             style="width: 100%; margin-top:10px"
            >
-          <el-table-column type="selection">
-          </el-table-column>
           <el-table-column
               label="头实体"
               width>
@@ -289,7 +294,15 @@
           }]
         },
         value1: [new Date().getTime() - 3600 * 1000 * 24 * 1, new Date()],
-        tableListData: [], // 列表数据
+
+        //已选择三元组列表
+        allTriplePageList:[],
+        //已选三元组分页
+        allTripleCurrentPage: 1,
+        allTripleTotal: 0,
+        allTriplePageSize: 10,
+        allTriplePageSizes: [10, 50, 100, 200],
+        
         // 分页列表数据
         candidateTriplePageList: [],
         //候选三元组分页
@@ -315,14 +328,44 @@
         selectedTripleTotal: 0,
         selectedTriplePageSize: 10,
         selectedTriplePageSizes: [10, 50, 100, 200],
+        //生成候选图谱所需数据
+        kgName:'',
+        kgComment:''
       }
     },
     methods: {
+      //处理所有三元组分页事件
+      allTripleHandleSizeChange(val) {
+        //修改当前分页大小
+        this.allTriplePageSize = val;
+        //重新请求数据
+        this.get_triples(this.allTripleCurrentPage,val)
+      },
+      //翻页动作
+      allTripleHandleCurrentChange(val) {
+        this.get_triples(val,this.allTriplePageSize)
+      },
+      //向后端请求所有三元组数据
+      get_triples(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/triples/getAllTriplesByPage',
+          params:{page:num,limit:limit}
+        })
+            .then((response) => {
+              if (response.status == 200) {
+                //修改数据
+                this.allTriplePageList = response.data.data
+                this.allTripleTotal = response.data.count
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      },
       //处理tab页点击事件
       handleTabChange(tab, event) {
-        // if(tab.name=="second"){
-        //   this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
-        // }
       },
       //处理候选三元组分页事件
       candidateTripleHandleSizeChange(val) {
@@ -402,11 +445,71 @@
       },
       //生成新的候选图谱
       generateNewKG(){
-        this.$message({
-          showClose: true,
-          message: '新候选图谱添加成功!',
-          type: 'success'
-        });
+        //axios请求
+        axios.post('/api/candidateKg/new',{
+          name: this.kgName,
+          comment: this.kgComment
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.$message({
+                showClose: true,
+                message: '新候选图谱添加成功!',
+                type: 'success'
+              });
+              this.insertCandidateTriplesIntoTriples(response.data.count);
+              //将该置空的置空
+              this.kgName = ''
+              this.kgComment= ''
+              this.selectedTriplePageList = []
+              this.selectedTripleList = []
+              this.candidateTriplePageList = []
+              //重新请求页面
+              this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+              this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+            }
+            else{
+              this.$message({
+                showClose: true,
+                message: '新候选图谱添加失败!',
+                type: 'error'
+              });
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      //将候选三元组加入所有三元组中
+      insertCandidateTriplesIntoTriples(candidateId){
+        //axios请求
+        axios.post('/api/triples/insertTriples',{
+          id: candidateId,
+          triples: this.selectedTripleList
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.$notify({
+                title: '成功',
+                message: '三元组移动成功!',
+                type: 'success'
+              });
+            }
+            else{
+              this.$notify({
+                title: '失败',
+                message: '三元组移动失败!',
+                type: 'error'
+              });
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
       // del_all() {
       //   for (var i = 0; i < this.multipleSelection.length; i++) {
@@ -448,6 +551,7 @@
       // },
     },
     mounted() {
+      this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
       this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
     }
   }
