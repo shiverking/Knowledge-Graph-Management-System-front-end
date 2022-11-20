@@ -1,98 +1,114 @@
 <template>
-  <div id="main">
-    <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        label="数据库url"
-        prop="url"
-        width="300px">
-      </el-table-column>
-      <el-table-column
-        label="数据库"
-        prop="database"
-        width="300px">
-      </el-table-column>
-      <el-table-column
-        label="选择数据表"
-        prop="table"
-        width="600px">
-      </el-table-column>
-    </el-table>
-    <div style="margin-top: 20px">
-      <el-button type="primary" @click="startCreateCandidateOntology()">开始构建候选本体</el-button>
-      <el-button type="primary" @click="toggleSelection()">取消选择</el-button>
-    </div>
-  </div>
+  <body>
+    <el-card style="width: 500px;float: left">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="本体分类名称" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="父节点" prop="region">
+          <el-select v-model="ruleForm.region" placeholder="请选择父节点">
+            <el-option label="父节点一" value="shanghai"></el-option>
+            <el-option label="父节点二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="注释信息" prop="desc">
+          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-card style="width: 500px;float: right">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="关系名称" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="头节点" prop="region">
+          <el-select v-model="ruleForm.region" placeholder="请选择头节点">
+            <el-option label="头节点一" value="shanghai"></el-option>
+            <el-option label="头节点二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="尾节点" prop="region">
+          <el-select v-model="ruleForm.region" placeholder="请选择尾节点">
+            <el-option label="尾节点一" value="shanghai"></el-option>
+            <el-option label="尾节点二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="注释信息" prop="desc">
+          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </body>
+
 </template>
 
 <script>
 export default {
-  name: "StructuredDataToOntology",
+  name: 'CandidateOntologyBuild',
   data() {
     return {
-      tableData: [{
-        url: 'http://localhost:8080',
-        database: 'fkfd',
-        table: 't_new_country'
-      }, {
-        url: 'http://localhost:8080',
-        database: 'fkfd',
-        table: 't_new_task'
-      }, {
-        url: 'http://localhost:8080',
-        database: 'new_fkfd',
-        table: 't_gis'
-      }, {
-        url: 'http://localhost:8080',
-        database: 'new_fkfd',
-        table: 't_person'
-      }, {
-        url: 'http://localhost:8080',
-        database: 'new_fkfd',
-        table: 't_company'
-      }, {
-        url: 'http://localhost:8080',
-        database: 'new_fkfd',
-        table: 't_school'
-      }, {
-        url: 'http://localhost:8080',
-        database: 'fkfd',
-        table: 't_new_bomb'
-      }],
-      multipleSelection: []
-    }
+      ruleForm: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        region: [
+          { required: true, message: '请选择活动区域', trigger: 'change' }
+        ],
+        date1: [
+          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        date2: [
+          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        ],
+        type: [
+          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+        ],
+        resource: [
+          { required: true, message: '请选择活动资源', trigger: 'change' }
+        ],
+        desc: [
+          { required: true, message: '请填写活动形式', trigger: 'blur' }
+        ]
+      }
+    };
   },
   methods: {
-    startCreateCandidateOntology(){
-      this.$alert('是否确认开始构建', '确认构建', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'success',
-            message: '构建成功'
-          });
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
         }
       });
     },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>
