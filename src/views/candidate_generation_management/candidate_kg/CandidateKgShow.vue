@@ -1,9 +1,8 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-      <el-tab-pane label="候选图谱"  name="overview">
+      <el-tab-pane label="候选图谱列表"  name="overview">
         <el-card class="box-card" shadow="never">
-          <p><b>候选图谱列表</b></p>
           <div class="block">
             <!--时间选择器-->
             <el-date-picker
@@ -23,89 +22,69 @@
                   :value="item.value">
               </el-option>
             </el-select>
-            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">读取数据</el-button>
+            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">查询</el-button>
           </div>
           <el-table
-              :data="pageList"
+              :data="candidateKgPageList"
               border
               style="width: 100%; margin-top:10px"
               @selection-change="handleSelectionChange">
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column label="名称(最新版本)" >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="创建者" >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.creator }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
-                type="selection"
-                width="55">
-            </el-table-column>
-            <el-table-column label="头实体" width>
-            </el-table-column>
-            <el-table-column label="关系" width>
-            </el-table-column>
-            <el-table-column label="尾实体" width>
-            </el-table-column>
-            <el-table-column
-                label="创建时间"
-                width="200">
+                label="创建时间">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.createTime}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="最后修改时间" width>
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.changeTime}}</span>
               </template>
             </el-table-column>
             <el-table-column
-                label="状态"
-                width="180">
+                label="操作">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="存储方式"
-                width="180">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                width="180">
-              <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">详情
-                </el-button>
-                <el-button
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">详情
-                </el-button>
-                <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除
-                </el-button>
+                <el-button type="primary" @click="addTab(scope.row.id,scope.row.name)">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>
           <el-pagination
-              background
-              @current-change="current_change"
-              :current-page="currentPage1"
-              :page-size="pageSize"
-              layout="prev, pager, next"
-              style="margin-top:10px"
-              :total="total">
+              @size-change="candidateKgHandleSizeChange"
+              @current-change="candidateKgHandleCurrentChange"
+              :current-page="candidateKgCurrentPage"
+              :page-sizes="candidateKgPageSizes"
+              :page-size="candidateKgPageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="candidateKgTotal">
           </el-pagination>
         </el-card>
       </el-tab-pane>
       <el-tab-pane
           v-for="(item, index) in editableTabs"
-          :key="item.name"
+          :key="item.candidateId"
           :label="item.title"
           :name="item.name"
           :closable="item.close"
       >
         <keep-alive>
-            <component :is="item.content" :containerId="item.name"></component>
+            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId"></component>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
-    <el-button type="primary" @click="addTab(editableTabsValue)">查看候选图谱</el-button>
+    <!--<el-button type="primary" @click="addTab(editableTabsValue)">查看候选图谱</el-button>-->
   </div>
 </template>
 <script>
@@ -127,18 +106,20 @@ export default {
       //可变分页结构
       editableTabsValue: 'overview',
       editableTabs: [],
-      // editableTabs: [{
-      //   title: '图谱详情',
-      //   name: this.tabIndex,
-      //   content: Detail,
-      //   close: true
-      // }],
+      //存储打开的tab页的candidateId和tabName的关系
+      openedTabsId: new Map,
       tabIndex: 0,
+      //展示候选图谱的分页
+      candidateKgPageList:[],
+      candidateKgCurrentPage: 1,
+      candidateKgTotal: 0,
+      candidateKgPageSize: 10,
+      candidateKgPageSizes: [10, 50, 100, 200],
     }
   },
   methods: {
     //动态增加删除tab页
-    addTab(targetName) {
+    addTab(candidateId,targetName) {
       if (this.editableTabs.length > 5) {
         this.$message({
           message: "最多同时查看6个候选图谱!",
@@ -146,16 +127,31 @@ export default {
         });
         return;
       }
-      let newTabName = ++this.tabIndex + '';
-      this.editableTabs.push({
-        title: "图谱测试", //标签名
-        name: newTabName,
-        content: Detail, //对应组件名称
-        close: true
-      });
-      this.editableTabsValue = newTabName;
+      //判断是否已经打开过，如已经打开过则跳转到打开的界面
+      if(this.openedTabsId.has(candidateId)){
+        this.editableTabsValue =this.openedTabsId.get(candidateId);
+      }
+      else{
+        let newTabName = ++this.tabIndex + '';
+        this.editableTabs.push({
+          title: targetName, //标签名
+          name: newTabName,
+          content: Detail, //对应组件名称
+          candidateId:candidateId,//候选图铺的Id
+          close: true
+        });
+        this.editableTabsValue = newTabName;
+        this.openedTabsId.set(candidateId,newTabName);
+      }
     },
     removeTab(targetName) {
+      //删除对应关系
+      for(var i of this.openedTabsId.keys()) {
+        if(this.openedTabsId.get(i)==targetName){
+          this.openedTabsId.delete(i);
+          break;
+        }
+      }
       let tabs = this.editableTabs;
       let activeName = this.editableTabsValue;
       if (activeName === targetName) {
@@ -170,6 +166,10 @@ export default {
       }
       this.editableTabsValue = activeName;
       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+      //如果所有标签页都被关闭，则打开最初的候选图谱列表tab
+      if(this.editableTabs.length==0){
+        this.editableTabsValue = "overview";
+      }
     },
     handleEdit(index, row) {
       console.log(index, row);
@@ -207,12 +207,12 @@ export default {
       return time;
     }
     ,
-//小于10的拼接上0字符串
+    //小于10的拼接上0字符串
     addZero(s) {
       return s < 10 ? ('0' + s) : s;
     }
     ,
-//选择多行数据
+    //选择多行数据
     handleSelectionChange(val) {
       this.multipleSelection = val;
     }
@@ -251,8 +251,39 @@ export default {
       });
     }
     ,
-    mounted() {
+    //处理候选图谱分页事件
+    candidateKgHandleSizeChange(val) {
+      //修改当前分页大小
+      this.candidateKgPageSize= val;
+      //重新请求数据
+      this.get_candidate_kgs(this.candidateKgCurrentPage,val)
     },
+    //翻页动作
+    candidateKgHandleCurrentChange(val) {
+      this.get_candidate_kgs(val,this.candidateKgPageSize)
+    },
+    //向后端请求候选三元组数据
+    get_candidate_kgs(num, limit) {
+      //axios请求
+      axios.request({
+        method:"POST",
+        url:'/api/candidateKg/getAllCandidateKg',
+        params:{page:num,limit:limit}
+      })
+          .then((response) => {
+            if (response.status == 200) {
+              //修改数据
+              this.candidateKgPageList = response.data.data
+              this.candidateKgTotal = response.data.count
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+    },
+  },
+  mounted() {
+    this.get_candidate_kgs(this.candidateKgCurrentPage,this.candidateKgPageSize);
   },
 }
 </script>

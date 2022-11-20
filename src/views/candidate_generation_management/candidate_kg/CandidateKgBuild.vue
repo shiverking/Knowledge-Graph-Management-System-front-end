@@ -1,95 +1,255 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-card class="box-card" shadow="never">
-      <p><b>结构化增量数据</b></p>
-      <div class="block">
-        <el-date-picker
-          v-model="value1"
-          type="datetimerange"
-          :picker-options="pickerOptions"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          align="right">
-        </el-date-picker>
-        <el-button type="primary" style="margin-top: 10px;" @click="load_all()">读取数据</el-button>
-      </div>
-      <el-table
-        :data="pageList"
-        border
-        style="width: 100%; margin-top:10px"
-        @selection-change="handleSelectionChange">
-        <el-table-column
-        type="selection"
-        width="55">
-        </el-table-column>
-        <el-table-column
-        label="日期"
-        width="200">
-        <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
-        width>
-        <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-            <p>头实体: {{ scope.row.head }}</p>
-            <p>头实体类型: {{ scope.row.head_typ }}</p>
-            <p>尾实体: {{ scope.row.tail }}</p>
-            <p>尾实体类型: {{ scope.row.tail_typ }}</p>
-            <p>关系: {{ scope.row.rel }}</p>
-            <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.head }}</el-tag>
-                <el-tag size="medium">{{ scope.row.head_typ }}</el-tag>
-                <el-tag size="medium">{{ scope.row.tail }}</el-tag>
-                <el-tag size="medium">{{ scope.row.tail_typ }}</el-tag>
-                <el-tag size="medium">{{ scope.row.rel }}</el-tag>
-            </div>
-            </el-popover>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="类别"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.conflict_typ }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column
-        label="存储方式"
-        width="180">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.storage_mode }}</span>
-        </template>
-        </el-table-column>
-        <el-table-column 
-        label="操作"
-        width="180">
-        <template slot-scope="scope">
-            <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        background
-        @current-change="current_change"
-        :current-page="currentPage1"
-        :page-size="pageSize"
-        layout="prev, pager, next"
-        style="margin-top:10px"
-        :total="total">
-      </el-pagination>
-      <el-button type="primary" style="margin-top: 10px;" @click="open">生成候选数据集</el-button>
-    </el-card>
+    <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange">
+      <el-tab-pane label="三元组" name="first">
+        <el-table
+            :data="allTriplePageList"
+            border
+            style="width: 100%; margin-top:10px"
+            >
+          <el-table-column type="selection">
+          </el-table-column>
+          <el-table-column
+              label="头实体"
+              width>
+            <template slot-scope="scope">
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.head }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="关系"
+              width>
+            <template slot-scope="scope">
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium" type="warning">{{ scope.row.relation}}</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="尾实体"
+              width>
+            <template slot-scope="scope">
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.tail }}
+                <el-tag size="medium" type="info">{{ scope.row.tail}}</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态">
+            <template slot-scope="scope">
+              <el-tag size="medium" type="success">{{ scope.row.status}}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="创建时间">
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span style="margin-left: 10px">{{ scope.row.time}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="所属候选图谱">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.candidateId}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="操作">
+            <template slot-scope="scope">
+              <el-button
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="allTripleHandleSizeChange"
+            @current-change="allTripleHandleCurrentChange"
+            :current-page="allTripleCurrentPage"
+            :page-sizes="allTriplePageSizes"
+            :page-size="allTriplePageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="allTripleTotal"
+            key="1">
+        </el-pagination>
+      </el-tab-pane>
+      <el-tab-pane label="三元组(未归类)" name="second">
+        <div class="block">
+            <el-date-picker
+                v-model="value1"
+                type="datetimerange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
+            </el-date-picker>
+            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">筛选</el-button>
+          </div>
+        <keep-alive>
+          <el-table
+              ref="candiateMultipleTable"
+              :data="candidateTriplePageList"
+              border
+              style="width: 100%; margin-top:10px"
+              @select='onTableSelect'
+              @selection-change="handleSelectionChange"
+              :row-key="getRowKeys"
+              key="2">
+            <el-table-column type="selection" :reserve-selection="true">
+            </el-table-column>
+            <el-table-column
+                label="头实体"
+                width>
+              <template slot-scope="scope">
+                  <div slot="reference" class="name-wrapper">
+                    {{ scope.row.head }}
+                    <el-tag size="small" type="info">{{ scope.row.headCategory }}</el-tag>
+                  </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="关系"
+                width>
+              <template slot-scope="scope">
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
+                  </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="尾实体"
+                width>
+              <template slot-scope="scope">
+                  <div slot="reference" class="name-wrapper">
+                   {{ scope.row.tail }}
+                    <el-tag size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
+                  </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态">
+              <template slot-scope="scope">
+                <el-tag size="medium" type="danger">{{ scope.row.status }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="到来时间">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.time}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="操作">
+              <template slot-scope="scope">
+                <el-button
+                    size="warning" icon="el-icon-edit" circle
+                    @click="handleEdit(scope.$index, scope.row)"></el-button>
+                <el-button
+                    type="danger" icon="el-icon-delete" circle
+                    @click="handleDelete(scope.$index, scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </keep-alive>
+          <el-pagination
+              @size-change="candidateTripleHandleSizeChange"
+              @current-change="candidateTripleHandleCurrentChange"
+              :current-page="candidateTripleCurrentPage"
+              :page-sizes="candidateTriplePageSizes"
+              :page-size="candidateTriplePageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="candidateTripleTotal"
+              key="2">
+          </el-pagination>
+      </el-tab-pane>
+      <el-tab-pane label="已选择" name="third">
+        <el-dialog
+          title="生成确认"
+          :visible.sync="kgDialogVisible"
+          width="30%">
+          <div>
+            <el-input placeholder="请输入候选图谱名称" v-model="kgName" ></el-input>
+            <el-input placeholder="为该候选图谱备注(可选)" style="display: grid;margin-top: 10px;" v-model="kgComment" ></el-input>
+          </div>
+          <span slot="footer" class="dialog-footer">
+          <el-button @click="kgDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="kgDialogVisible = false;generateNewKG()">确 定</el-button>
+        </span>
+        </el-dialog>
+        <el-popover
+            placement="top"
+            width="250"
+            v-model="popoverVisible">
+          <p>确定将这{{selectedTripleTotal}}条三元组生成候选图谱吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="checkTriplesNum()">确定</el-button>
+          </div>
+          <el-button type="primary" slot="reference" >生成候选图谱</el-button>
+        </el-popover>
+        <el-table
+            :data="selectedTriplePageList"
+            border
+            style="width: 100%; margin-top:10px"
+           >
+          <el-table-column
+              label="头实体"
+              width>
+            <template slot-scope="scope">
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.head }}
+                <el-tag size="small" type="info">{{ scope.row.headCategory }}</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="关系"
+              width>
+            <template slot-scope="scope">
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="尾实体"
+              width>
+            <template slot-scope="scope">
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.tail }}
+                <el-tag size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="操作">
+            <template slot-scope="scope">
+              <el-button
+                  size="warning" icon="el-icon-edit" circle
+                  @click="handleEdit(scope.$index, scope.row)"></el-button>
+              <el-tooltip class="item" effect="dark" content="撤销该三元组" placement="top-start">
+              <el-button
+                  type="danger" icon="el-icon-refresh-left" circle
+                  @click="handleDelete(scope.$index, scope.row)"></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="selectedTripleHandleSizeChange"
+            @current-change="selectedTripleHandleCurrentChange"
+            :current-page="selectedTripleCurrentPage"
+            :page-sizes="selectedTriplePageSizes"
+            :page-size="selectedTriplePageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="selectedTripleTotal">
+        </el-pagination>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
@@ -98,268 +258,6 @@
       return {
         multipleSelection: [],
         activeName: 'first',
-        tableData: [{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·保罗·琼斯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '普林斯顿号导弹巡洋舰',
-          head_typ: '巡洋舰',
-          tail: '英格尔斯造船',
-          tail_typ: '制造厂',
-          rel: '制造厂',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '约书亚·温克',
-          head_typ: 'Per',
-          tail: '尼米兹号航空母舰',
-          tail_typ: '航空母舰',
-          rel: '指挥军舰',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '安东尼·梅西',
-          head_typ: 'Per',
-          tail: '古巴关塔那摩湾',
-          tail_typ: 'Loc',
-          rel: '家庭信息',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '本杰明·华盛顿',
-          head_typ: 'Per',
-          tail: '纽约罗切斯特',
-          tail_typ: 'Loc',
-          rel: '家庭信息',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '柯蒂斯·威尔伯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '道尔顿·特劳特',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '克里斯托弗·斯威尼',
-          head_typ: 'Per',
-          tail: '杰森威尔斯',
-          tail_typ: 'Per',
-          rel: '同事',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '尼米兹号航空母舰',
-          head_typ: '航空母舰',
-          tail: '克里斯托弗·莱尔斯',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '斯特雷特号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '克里斯托弗·德斯科维奇',
-          tail_typ: 'Per',
-          rel: '指挥官',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '伊利湖号导弹巡洋舰',
-          head_typ: '巡洋舰',
-          tail: '卡尔·P·坡',
-          tail_typ: 'Per',
-          rel: '执行官',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '安东尼·梅西',
-          head_typ: 'Per',
-          tail: '海军部门',
-          tail_typ: '部门',
-          rel: '部门',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '安东尼·梅西',
-          head_typ: 'Per',
-          tail: '美国海军柯蒂斯·威尔伯号驱逐舰',
-          tail_typ: '单位',
-          rel: '任职单位',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '电子攻击中队139',
-          head_typ: '队伍',
-          tail: '莫里斯·杰森',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '第十一航母打击群',
-          head_typ: '打击群',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '克里斯托弗·J·格林',
-          head_typ: 'Per',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '国家',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '育空号补给舰',
-          head_typ: '补给舰',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '拉尔夫·约翰逊号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '2015.12.12',
-          tail_typ: 'string',
-          rel: '下水时间',
-          conflict_typ: '装备图谱',
-          storage_mode: 'mysql'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '约书亚·温克',
-          head_typ: 'Per',
-          tail: '2018.06',
-          tail_typ: 'string',
-          rel: '任职时间',
-          conflict_typ: '人员图谱',
-          storage_mode: 'mysql'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '丹·科尔贝克',
-          head_typ: 'Per',
-          tail: 'Dan Kohlbeck',
-          tail_typ: 'string',
-          rel: '英文姓名',
-          conflict_typ: '人员图谱',
-          storage_mode: 'mysql'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '第十一航母打击群',
-          head_typ: '打击群',
-          tail: '第17舰载机联队',
-          tail_typ: '舰载机',
-          rel: '舰载机',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '道尔顿·特劳斯',
-          head_typ: 'Per',
-          tail: '军士长',
-          tail_typ: '军衔',
-          rel: '军衔',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '克里斯托弗·J·格林',
-          head_typ: 'Per',
-          tail: '中校',
-          tail_typ: '军衔',
-          rel: '军衔',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '第十一航母打击群',
-          head_typ: '打击群',
-          tail: '普林斯顿号导弹巡洋舰',
-          tail_typ: '巡洋舰',
-          rel: '巡洋舰',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '安东尼·梅西',
-          head_typ: 'Per',
-          tail: '柯蒂斯·威尔伯号驱逐舰',
-          tail_typ: '驱逐舰',
-          rel: '指挥',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '柯蒂斯·威尔伯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '巴斯钢铁造船厂',
-          tail_typ: '制造厂',
-          rel: '制造厂',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '尼米兹号航空母舰',
-          head_typ: '航空母舰',
-          tail: '纽波特纽斯造船及船坞公司',
-          tail_typ: '制造厂',
-          rel: '制造厂',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '斯特雷特号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '巴斯钢铁造船厂',
-          tail_typ: '制造厂',
-          rel: '制造厂',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '第十一航母打击群',
-          head_typ: '打击群',
-          tail: '第17舰载机联队',
-          tail_typ: '舰载机',
-          rel: '舰载机',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '斯特雷特号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '9200吨',
-          tail_typ: 'string',
-          rel: '满载排水量',
-          conflict_typ: '装备图谱',
-          storage_mode: 'mysql'
-        }],
         pickerOptions: {
           shortcuts: [{
             text: '最近一天',
@@ -369,7 +267,7 @@
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
               picker.$emit('pick', [start, end]);
             }
-          },{
+          }, {
             text: '最近一周',
             onClick(picker) {
               const end = new Date();
@@ -396,189 +294,265 @@
           }]
         },
         value1: [new Date().getTime() - 3600 * 1000 * 24 * 1, new Date()],
-        tableListData: [], // 列表数据
-        pageList: [{
-          date: '2022-11-1-14:26:23',
-          head: '约翰·保罗·琼斯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '美国',
-          tail_typ: '国家',
-          rel: '产国',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '普林斯顿号导弹巡洋舰',
-          head_typ: '巡洋舰',
-          tail: '英格尔斯造船',
-          tail_typ: '制造厂',
-          rel: '制造厂',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        }, {
-          date: '2022-11-1-14:26:23',
-          head: '约书亚·温克',
-          head_typ: 'Per',
-          tail: '尼米兹号航空母舰',
-          tail_typ: '航空母舰',
-          rel: '指挥军舰',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '安东尼·梅西',
-          head_typ: 'Per',
-          tail: '古巴关塔那摩湾',
-          tail_typ: 'Loc',
-          rel: '家庭信息',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '本杰明·华盛顿',
-          head_typ: 'Per',
-          tail: '纽约罗切斯特',
-          tail_typ: 'Loc',
-          rel: '家庭信息',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '柯蒂斯·威尔伯号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '道尔顿·特劳特',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '克里斯托弗·斯威尼',
-          head_typ: 'Per',
-          tail: '杰森威尔斯',
-          tail_typ: 'Per',
-          rel: '同事',
-          conflict_typ: '人员图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '尼米兹号航空母舰',
-          head_typ: '航空母舰',
-          tail: '克里斯托弗·莱尔斯',
-          tail_typ: 'Per',
-          rel: '指挥军士长',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '斯特雷特号导弹驱逐舰',
-          head_typ: '驱逐舰',
-          tail: '克里斯托弗·德斯科维奇',
-          tail_typ: 'Per',
-          rel: '指挥官',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        },{
-          date: '2022-11-1-14:26:23',
-          head: '伊利湖号导弹巡洋舰',
-          head_typ: '巡洋舰',
-          tail: '卡尔·P·坡',
-          tail_typ: 'Per',
-          rel: '执行官',
-          conflict_typ: '装备图谱',
-          storage_mode: 'neo4j'
-        }], // 分页列表数据
-        pageSize: 10, // 每页多少条
-        currentPage1: 1, // 当前页
-        total: 29, // 总数据条数
+
+        //已选择三元组列表
+        allTriplePageList:[],
+        //已选三元组分页
+        allTripleCurrentPage: 1,
+        allTripleTotal: 0,
+        allTriplePageSize: 10,
+        allTriplePageSizes: [10, 50, 100, 200],
+        
+        // 分页列表数据
+        candidateTriplePageList: [],
+        //候选三元组分页
+        candidateTripleCurrentPage: 1,
+        candidateTripleTotal: 1,
+        candidateTriplePageSize: 10,
+        candidateTriplePageSizes: [10, 50, 100, 200],
+        //确认是否生成候选图谱
+        kgDialogVisible:false,
+        popoverVisible:false,
+        //确认生成候选图谱对话框
+        labelPosition:"left",
+        formLabelAlign: {
+          name: '',
+          region: '',
+          type: ''
+        },
+        //已选择三元组列表
+        selectedTripleList: [],
+        selectedTriplePageList:[],
+        //已选三元组分页
+        selectedTripleCurrentPage: 1,
+        selectedTripleTotal: 0,
+        selectedTriplePageSize: 10,
+        selectedTriplePageSizes: [10, 50, 100, 200],
+        //生成候选图谱所需数据
+        kgName:'',
+        kgComment:''
       }
     },
     methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
+      //处理所有三元组分页事件
+      allTripleHandleSizeChange(val) {
+        //修改当前分页大小
+        this.allTriplePageSize = val;
+        //重新请求数据
+        this.get_triples(this.allTripleCurrentPage,val)
       },
-      handleDelete(index, row) {
-        console.log(index, row);
+      //翻页动作
+      allTripleHandleCurrentChange(val) {
+        this.get_triples(val,this.allTriplePageSize)
       },
-      del_all(){
-        for (var i = 0; i < this.multipleSelection.length; i ++){
-          for (var j = 0; j < this.tableData.length; j ++){
-            if (this.tableData[j] == this.multipleSelection[i])
-              this.tableData.splice(j, 1)
+      //向后端请求所有三元组数据
+      get_triples(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/triples/getAllTriplesByPage',
+          params:{page:num,limit:limit}
+        })
+            .then((response) => {
+              if (response.status == 200) {
+                //修改数据
+                this.allTriplePageList = response.data.data
+                this.allTripleTotal = response.data.count
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      },
+      //处理tab页点击事件
+      handleTabChange(tab, event) {
+      },
+      //处理候选三元组分页事件
+      candidateTripleHandleSizeChange(val) {
+        //修改当前分页大小
+        this.candidateTriplePageSize = val;
+        //重新请求数据
+        this.get_candidate_triples(this.candidateTripleCurrentPage,val)
+      },
+      //翻页动作
+      candidateTripleHandleCurrentChange(val) {
+        this.get_candidate_triples(val,this.candidateTriplePageSize)
+      },
+      //向后端请求候选三元组数据
+      get_candidate_triples(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/triples/getAllCandidateTriples',
+          params:{page:num,limit:limit}
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            //修改数据
+            this.candidateTriplePageList = response.data.data
+            this.candidateTripleTotal = response.data.count
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      onTableSelect(rows, row) {
+        let selected = rows.length && rows.indexOf(row) !== -1
+        //如果选中
+        if(selected){
+          this.selectedTripleList.push(row);
+          this.selectedTripleTotal = this.selectedTripleList.length;
+          if(this.selectedTripleTotal<this.selectedTriplePageSize){
+            this.selectedTriplePageList.push(row);
           }
         }
-      },
-      getNowTime(){
-        var date = new Date();
-        //年 getFullYear()：四位数字返回年份
-        var year = date.getFullYear(); //getFullYear()代替getYear()
-        //月 getMonth()：0 ~ 11
-        var month = date.getMonth() + 1;
-        //日 getDate()：(1 ~ 31)
-        var day = date.getDate();
-        //时 getHours()：(0 ~ 23)
-        var hour = date.getHours();
-        //分 getMinutes()： (0 ~ 59)
-        var minute = date.getMinutes();
-        //秒 getSeconds()：(0 ~ 59)
-        var second = date.getSeconds();
-        var time = year + '-' + this.addZero(month) + '-' + this.addZero(day) + '-' + this.addZero(hour) + ':' + this.addZero(minute) + ':' + this.addZero(second);
-        console.log(time)
-        return time;
-      },
-      //小于10的拼接上0字符串
-      addZero(s) {
-        return s < 10 ? ('0' + s) : s;
-      },
-      //选择多行数据
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
-      current_change (currentPage) { // 当前是第几页
-        this.currentPage1 = currentPage
-        this.currentChangePage(this.tableData, currentPage)
-      },
-      currentChangePage (list, currentPage) { // 分页方法(重点)
-        let from = (currentPage - 1) * this.pageSize
-        let to = currentPage * this.pageSize
-        this.pageList = []
-        for (; from < to; from++) {
-          if (list[from]) {
-            this.pageList.push(list[from])
-          }
+        else {
+          this.selectedTripleList = this.selectedTripleList.filter(function (item) {
+                return item != row;
+              });
+          //重新计算分页
+          this.selectedTriplePageList = this.selectedTripleList.slice(
+              (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
+              this.selectedTripleCurrentPage * this.selectedTriplePageSize
+          );
+          this.selectedTripleTotal-=1;
         }
       },
-      open() {
-        this.$confirm('已选中的数据将生成候选数据集！', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+      getRowKeys(row) {
+        return row.id
+      },
+      selectedTripleHandleCurrentChange(val){
+        this.selectedTripleCurrentPage = val 
+        //allData为全部数据
+        this.selectedTriplePageList = this.selectedTripleList.slice(
+            (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
+            this.selectedTripleCurrentPage * this.selectedTriplePageSize
+        );
+      },
+      checkTriplesNum(){
+        this.popoverVisible = false;
+        if(this.selectedTripleTotal==0){
           this.$message({
-            type: 'success',
-            message: '生成候选数据集成功!'
+            showClose: true,
+            message: '请至少包含1条三元组',
+            type: 'error'
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });          
-        });
+        }
+        else{
+          this.kgDialogVisible = true;
+        }
       },
-      handleEdit(index, row) {
-        console.log(index, row);
+      //生成新的候选图谱
+      generateNewKG(){
+        //axios请求
+        axios.post('/api/candidateKg/new',{
+          name: this.kgName,
+          comment: this.kgComment
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.$message({
+                showClose: true,
+                message: '新候选图谱添加成功!',
+                type: 'success'
+              });
+              this.insertCandidateTriplesIntoTriples(response.data.count);
+              //将该置空的置空
+              this.kgName = ''
+              this.kgComment= ''
+              this.selectedTriplePageList = []
+              this.selectedTripleList = []
+              this.candidateTriplePageList = []
+              //重新请求页面
+              this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+              this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+            }
+            else{
+              this.$message({
+                showClose: true,
+                message: '新候选图谱添加失败!',
+                type: 'error'
+              });
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       },
-      handleDelete(index, row) {
-        console.log(index, row);
-        row.splice(index, 1);
+      //将候选三元组加入所有三元组中
+      insertCandidateTriplesIntoTriples(candidateId){
+        //axios请求
+        axios.post('/api/triples/insertTriples',{
+          id: candidateId,
+          triples: this.selectedTripleList
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.$notify({
+                title: '成功',
+                message: '三元组移动成功!',
+                type: 'success'
+              });
+            }
+            else{
+              this.$notify({
+                title: '失败',
+                message: '三元组移动失败!',
+                type: 'error'
+              });
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
+      // del_all() {
+      //   for (var i = 0; i < this.multipleSelection.length; i++) {
+      //     for (var j = 0; j < this.tableData.length; j++) {
+      //       if (this.tableData[j] == this.multipleSelection[i])
+      //         this.tableData.splice(j, 1)
+      //     }
+      //   }
+      // },
+      // getNowTime() {
+      //   var date = new Date();
+      //   //年 getFullYear()：四位数字返回年份
+      //   var year = date.getFullYear(); //getFullYear()代替getYear()
+      //   //月 getMonth()：0 ~ 11
+      //   var month = date.getMonth() + 1;
+      //   //日 getDate()：(1 ~ 31)
+      //   var day = date.getDate();
+      //   //时 getHours()：(0 ~ 23)
+      //   var hour = date.getHours();
+      //   //分 getMinutes()： (0 ~ 59)
+      //   var minute = date.getMinutes();
+      //   //秒 getSeconds()：(0 ~ 59)
+      //   var second = date.getSeconds();
+      //   var time = year + '-' + this.addZero(month) + '-' + this.addZero(day) + '-' + this.addZero(hour) + ':' + this.addZero(minute) + ':' + this.addZero(second);
+      //   console.log(time)
+      //   return time;
+      // },
+      // //小于10的拼接上0字符串
+      // addZero(s) {
+      //   return s < 10 ? ('0' + s) : s;
+      // },
+      //
+      // handleEdit(index, row) {
+      //   console.log(index, row);
+      // },
+      // handleDelete(index, row) {
+      //   console.log(index, row);
+      //   row.splice(index, 1);
+      // },
     },
-
-    // mounted(){
-    //   for (var i = 0; i < this.tableData.length; i ++){
-    //     this.$data.tableData[i].date = this.getNowTime();
-    //     this.$data.tableData[i].date = this.getNowTime();
-    //   }
-    // }
+    mounted() {
+      this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+      this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+    }
   }
 </script>

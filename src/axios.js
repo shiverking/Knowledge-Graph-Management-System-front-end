@@ -22,6 +22,7 @@ axios.interceptors.response.use((response) =>{
         return response
     },
     function(error){
+        //注释掉接口请求失败就不会返回登录了
         // if (error) {
         //     store.commit('logout')
         //     router.replace('/login')

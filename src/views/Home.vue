@@ -48,12 +48,6 @@
                 <i class="el-icon-rank"></i>
                 非结构化数据管理
               </template>
-              <router-link to="/data/unstructure/ner" class="routerlink">
-                <el-menu-item index="1-1-1"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
-              </router-link>
-              <router-link to="/data/unstructure/triplesExtraction" class="routerlink">
-                <el-menu-item index="1-1-2"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
-              </router-link>
             </el-submenu>
             <el-submenu index="1-2">
               <template slot="title">
@@ -105,9 +99,6 @@
                   <el-menu-item index="1-3-4-1">作战计划</el-menu-item>
                 </router-link>
               </el-submenu>
-              <router-link to="/data/structure/triples" class="routerlink">
-                <el-menu-item index="1-3-5">三元组管理</el-menu-item>
-              </router-link>
             </el-submenu>
           </el-submenu>
           <el-submenu index="2" class="parent_submenu">
@@ -122,6 +113,12 @@
               </router-link>
               <router-link to="/candidate/kg/build" class="routerlink">
                 <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/kg/ner" class="routerlink">
+                <el-menu-item index="2-1-3"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/kg/triplesExtraction" class="routerlink">
+                <el-menu-item index="2-1-4"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="2-2">
@@ -274,27 +271,27 @@
             <template slot="title">
               <i class="el-icon-thumb"></i>
               <span slot="title">系统管理</span>
-            </template>            
+            </template>
+            <router-link  to="/system_management/authority" class="routerlink">
             <el-menu-item index="6-1">
-              <router-link  to="/system_management/authority" class="routerlink">
                 <i class="el-icon-lock"></i>权限管理
-              </router-link>
             </el-menu-item>
-            <el-menu-item index="6-2">          
-              <router-link to="/system_management/role" class="routerlink">
-                <i class="el-icon-s-custom"></i>角色管理
-              </router-link>
-            </el-menu-item>
-            <el-menu-item index="6-3">  
-              <router-link to="/system_management/setting" class="routerlink">
+            </router-link>
+            <router-link to="/system_management/role" class="routerlink">
+              <el-menu-item index="6-2">
+                  <i class="el-icon-s-custom"></i>角色管理
+              </el-menu-item>
+            </router-link>
+            <router-link to="/system_management/setting" class="routerlink">
+            <el-menu-item index="6-3">
                 <i class="el-icon-setting"></i>设置
-              </router-link>
             </el-menu-item>
-            <el-menu-item index="6-4">  
-              <router-link to="/system_management/personal" class="routerlink">
-              <i class="el-icon-user"></i>个人中心  
-              </router-link>
-            </el-menu-item>
+            </router-link>
+            <router-link to="/system_management/personal" class="routerlink">
+              <el-menu-item index="6-4">
+                <i class="el-icon-user"></i>个人中心
+              </el-menu-item>
+            </router-link>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -365,7 +362,7 @@
 .is_fixed {
   position: fixed;
   top: 0px;
-  z-index: 9999;
+  z-index: 999;
   width: 100%;
 }
 
@@ -507,12 +504,11 @@ export default {
       return [
         {"value": "主页", "location":"/"},
         {"value": "/数据管理/结构化数据管理/数据分析", "location":"/data/structure/analysis"},
-        {"value": "/数据管理/结构化数据管理/三元组管理", "location":"/merge/kg/merge"},
         {"value": "/数据管理/半结构化数据管理", "location":"/data/semistructure"},
-        {"value": "/数据管理/非结构化数据管理/实体抽取", "location":"/data/unstructure/ner"},
-        {"value": "/数据管理/非结构化数据管理/三元组抽取", "location":"/data/unstructure/triplesExtraction"},
         {"value": "/候选生成管理/图谱融合/候选图谱展示", "location":"/candidate/kg/show"},
-        {"value": "/候选生成管理/图谱融合/候选图谱构建示", "location":"/candidate/kg/build"},
+        {"value": "/候选生成管理/图谱融合/候选图谱构建", "location":"/candidate/kg/build"},
+        {"value": "/候选生成管理/图谱融合/实体抽取", "location":"/candidate/kg/ner"},
+        {"value": "/候选生成管理/图谱融合/三元组抽取", "location":"/candidate/kg/triplesExtraction"},
         {"value": "/候选生成管理/本体融合/候选本体展示", "location":"/candidate/ontology/show"},
         {"value": "/候选生成管理/本体融合/候选本体构建", "location":"/candidate/ontology/build"},
         {"value": "/融合管理/图谱融合/融合", "location":"/merge/kg/merge"},

@@ -9,7 +9,7 @@
             :data="gridData"
             tooltip-effect="dark"
             border
-            style="width; margin-top: 10px;"
+            style=" margin-top: 10px;"
             @selection-change="handleSelectionChange">
             <el-table-column
               type="selection"
@@ -102,7 +102,7 @@
         </el-pagination>
         <el-button type="primary" @click="dialogOfModelSelection = true; get_saved_models_list();" style="margin-top:10px;">开始检测</el-button>
         <el-dialog title="选择补全模型" :visible.sync="dialogOfModelSelection">
-          <span style="margin-top; margin-right:10px"><font size="3">当前补全模型为<b>{{model_name}}</b></font></span>
+          <span style=" margin-right:10px"><font size="3">当前补全模型为<b>{{model_name}}</b></font></span>
           <el-table
             border
             ref="singleTable"
@@ -310,7 +310,7 @@
       <el-tab-pane label="模型管理">
         <el-table
           :data="tableData4"
-          style="width: 100%; margin-top:;"
+          style="width: 100%; "
           border
           max-height="350">
           <el-table-column

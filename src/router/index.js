@@ -37,8 +37,6 @@ import Analysis from "../views/data_management/structured_data_management/Analys
 import StructuredData from "../views/data_management/structured_data_management/StructuredData";
 import UnstructuredData from "../views/data_management/unstructured_data_management/UnstructuredData";
 import SemiStructuredData from "../views/data_management/semi_structured_data_management/SemiStructuredData";
-import NamedEntityRecognition from "../views/data_management/unstructured_data_management/NamedEntityRecognition"
-import TriplesExtraction from "../views/data_management/unstructured_data_management/TriplesExtraction"
 //第二部分,候选生成管理部分组件
 import CandidateKg from "../views/candidate_generation_management/candidate_kg/CandidateKg";
 import CandidateKgBuild from "../views/candidate_generation_management/candidate_kg/CandidateKgBuild";
@@ -46,6 +44,8 @@ import CandidateKgShow from "../views/candidate_generation_management/candidate_
 import CandidateOntology from "../views/candidate_generation_management/candidate_ontology/CandidateOntology";
 import CandidateOntologyShow from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyShow";
 import CandidateOntologyBuild from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyBuild";
+import NamedEntityRecognition from "../views/candidate_generation_management/candidate_kg/NamedEntityRecognition"
+import TriplesExtraction from "../views/candidate_generation_management/candidate_kg/TriplesExtraction"
 // 第三部分,融合管理部分组件
 import KgMergeHome from "../views/merge_management/kg_merge/KgMergeHome";
 import KgMerge from "../views/merge_management/kg_merge/KgMerge"
@@ -82,7 +82,6 @@ import Evaluation from "../views/user_application_management/decision/Evaluation
 import Map from "../views/user_application_management/decision/Map";
 import SituationAnalysis from "../views/user_application_management/decision/SituationAnalysis";
 import CognitiveDecision from "../views/user_application_management/decision/CognitiveDecision";
-import TotalTriples from "../views/data_management/structured_data_management/TotalTriples";
 // 第六部分,系统管理
 import Personal from "../views/system_management/Personal";
 import Setting from "../views/system_management/Setting";
@@ -131,12 +130,6 @@ export default new Router({
               path:'/data/structure/analysis',
               name:'数据分析',
               component:Analysis,
-              show:true
-            },
-            {
-              path:'/data/structure/triples',
-              name:'三元组管理',
-              component:TotalTriples,
               show:true
             },
             {
@@ -303,18 +296,6 @@ export default new Router({
           component: UnstructuredData,
           show: true,
           children: [
-            {
-              path:'/data/unstructure/ner',
-              name:'实体抽取',
-              component:NamedEntityRecognition,
-              show:true
-            },
-            {
-              path:'/data/unstructure/triplesExtraction',
-              name:'三元组抽取',
-              component:TriplesExtraction,
-              show: true
-            }
           ]
         },
       ]
@@ -342,6 +323,18 @@ export default new Router({
               path:'/candidate/kg/build',
               name:'候选图谱构建',
               component:CandidateKgBuild,
+              show: true
+            },
+            {
+              path:'/candidate/kg/ner',
+              name:'实体抽取',
+              component:NamedEntityRecognition,
+              show:true
+            },
+            {
+              path:'/candidate/kg/triplesExtraction',
+              name:'三元组抽取',
+              component:TriplesExtraction,
               show: true
             }
           ]
