@@ -48,12 +48,6 @@
                 <i class="el-icon-rank"></i>
                 非结构化数据管理
               </template>
-              <router-link to="/data/unstructure/ner" class="routerlink">
-                <el-menu-item index="1-1-1"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
-              </router-link>
-              <router-link to="/data/unstructure/triplesExtraction" class="routerlink">
-                <el-menu-item index="1-1-2"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
-              </router-link>
             </el-submenu>
             <el-submenu index="1-2">
               <template slot="title">
@@ -119,6 +113,12 @@
               </router-link>
               <router-link to="/candidate/kg/build" class="routerlink">
                 <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/kg/ner" class="routerlink">
+                <el-menu-item index="2-1-3"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/kg/triplesExtraction" class="routerlink">
+                <el-menu-item index="2-1-4"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="2-2">
@@ -505,10 +505,10 @@ export default {
         {"value": "主页", "location":"/"},
         {"value": "/数据管理/结构化数据管理/数据分析", "location":"/data/structure/analysis"},
         {"value": "/数据管理/半结构化数据管理", "location":"/data/semistructure"},
-        {"value": "/数据管理/非结构化数据管理/实体抽取", "location":"/data/unstructure/ner"},
-        {"value": "/数据管理/非结构化数据管理/三元组抽取", "location":"/data/unstructure/triplesExtraction"},
         {"value": "/候选生成管理/图谱融合/候选图谱展示", "location":"/candidate/kg/show"},
         {"value": "/候选生成管理/图谱融合/候选图谱构建", "location":"/candidate/kg/build"},
+        {"value": "/候选生成管理/图谱融合/实体抽取", "location":"/candidate/kg/ner"},
+        {"value": "/候选生成管理/图谱融合/三元组抽取", "location":"/candidate/kg/triplesExtraction"},
         {"value": "/候选生成管理/本体融合/候选本体展示", "location":"/candidate/ontology/show"},
         {"value": "/候选生成管理/本体融合/候选本体构建", "location":"/candidate/ontology/build"},
         {"value": "/融合管理/图谱融合/融合", "location":"/merge/kg/merge"},
