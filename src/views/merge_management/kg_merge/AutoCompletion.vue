@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-tabs type="card" v-loading="loading">
+    <el-tabs type="card" v-loading="loading" @tab-click="handleTabChange">
       <el-tab-pane label="选择候选图谱">
         <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_kgs(candidateKgCurrentPage,candidateKgPageSize);">读取候选图谱</el-button>
         <el-dialog title="读取候选图谱" :visible.sync="dialogTableVisible">
@@ -25,13 +25,13 @@
                 label="创建时间">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.createTime}}</span>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.createTime)}}</span>
               </template>
             </el-table-column>
             <el-table-column label="最后修改时间" width>
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.changeTime}}</span>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.changeTime)}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -58,7 +58,7 @@
           label="创建时间"
           prop="date">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.time }}</span>
+          <span style="margin-left: 10px">{{ dateFormat(scope.row.time) }}</span>
         </template>
       </el-table-column>         
         <el-table-column
@@ -166,7 +166,7 @@
           <el-table-column
             label="创建时间"
             width="230">
-            <template slot-scope="scope">{{ scope.row.time }}</template>
+            <template slot-scope="scope">{{ dateFormat(scope.row.time) }}</template>
           </el-table-column>
           <el-table-column
           label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
@@ -435,6 +435,7 @@ p {
 </style>
 <script>
   import * as echarts from 'echarts';
+  import moment from "moment";
   export default {
     data() {
       return {
@@ -504,6 +505,9 @@ p {
       }
     },
     methods: {
+      dateFormat(data) {
+        return moment(new Date(data).getTime()).format('YYYY-MM-DD');
+      },
       //处理页容量改变事件
       triplesHandleSizeChange(val) {
         //修改当前分页大小
