@@ -635,7 +635,15 @@ p {
               //修改数据
               this.triplesPageList = response.data.data
               this.triplesTotal = response.data.count
-            }
+              const h = this.$createElement;
+              this.$notify({
+                title: '添加完毕',
+                message: h('i', { style: 'color: teal'}, '已选数据集中的三元组加载完毕！'),
+                offset: 100
+              });
+              //赋值给表格
+              this.loading = false;
+              }
           })
           .catch(function (error) {
             console.log(error)
@@ -1111,10 +1119,17 @@ p {
 
         option && myChart.setOption(option);
       },
+      //处理tab页展开事件
+      handleTabChange(tab, event) {
+        if(tab.label=="模型管理"){
+          this.get_gpu_status()
+          this.get_cpu_status()
+        }
+      },
     },
     mounted(){
-      this.get_gpu_status()
-      this.get_cpu_status()
+      console.log(this.loading)
+      // this.get_saved_models_list();
     },
     created(){
       // this.get_saved_models_list();

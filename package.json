@@ -10,21 +10,21 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "3d-force-graph": "^1.67.6",
     "@antv/g6": "^4.7.4",
     "@panzoom/panzoom": "^4.5.1",
+    "3d-force-graph": "^1.67.6",
     "axios": "^0.27.2",
     "core-js": "^3.6.5",
     "d3": "^6.2.0",
     "d3-context-menu": "^1.1.2",
     "echarts": "^4.9.0",
     "element-ui": "^2.15.9",
+    "moment": "^2.29.4",
     "three-spritetext": "^1.5.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^4.0.2",
     "xlsx": "^0.18.5"
-
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
