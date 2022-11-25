@@ -19,10 +19,10 @@
             <span style="color: azure;font-size: large;vertical-align:middle;">{{ username }}</span>
             <i class="el-icon-arrow-down" style="color: #000000;font-size: large;vertical-align:middle;"></i>
             <el-dropdown-menu>
-              <router-link to="/personal" class="routerlink">
+              <router-link to="/system_management/personal" class="routerlink">
                 <el-dropdown-item>个人中心</el-dropdown-item>
               </router-link>
-              <router-link to="/setting" class="routerlink">
+              <router-link to="/system_management/setting" class="routerlink">
                 <el-dropdown-item>设置</el-dropdown-item>
               </router-link>
               <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
