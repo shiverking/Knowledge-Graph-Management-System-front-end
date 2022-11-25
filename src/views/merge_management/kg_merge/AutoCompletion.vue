@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-tabs type="border-card" v-loading="loading">
-      <el-tab-pane label="选择候选图谱">
+    <el-tabs type="border-card"  v-loading="loading"  @tab-click="handleTabChange">
+      <el-tab-pane label="选择候选图谱" >
         <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_datasets()">读取候选图谱</el-button>
         <el-dialog title="读取候选图谱" :visible.sync="dialogTableVisible">
           <el-table
@@ -601,7 +601,6 @@ p {
               //赋值给表格
               this.allTriplesBeforeCheck = response.data.data;
               this.getTableData();
-              console.log(this.allTriplesBeforeCheck)
               this.loading = false;
               }
           })
@@ -1079,13 +1078,20 @@ p {
 
         option && myChart.setOption(option);
       },
+      //处理tab页展开事件
+      handleTabChange(tab, event) {
+        if(tab.label=="模型管理"){
+          this.get_gpu_status()
+          this.get_cpu_status()
+        }
+      },
     },
     mounted(){
-      this.get_gpu_status()
-      this.get_cpu_status()
+      console.log(this.loading)
+      // this.get_saved_models_list();
     },
     created(){
-      this.get_saved_models_list();
+
     }
   }
 </script>

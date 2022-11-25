@@ -37,21 +37,26 @@
               </template>
             </el-table-column>
             <el-table-column label="创建者" >
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.creator }}</span>
+            </template>
+            </el-table-column>
+            <el-table-column label="备注" >
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.creator }}</span>
+                <span style="margin-left: 10px">{{ scope.row.comment}}</span>
               </template>
             </el-table-column>
             <el-table-column
                 label="创建时间">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.createTime}}</span>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.createTime)}}</span>
               </template>
             </el-table-column>
             <el-table-column label="最后修改时间" width>
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.changeTime}}</span>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.changeTime)}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -92,6 +97,7 @@ import Detail from "../../../components/candidate_kg/Detail";
 import DataSource from "../../../components/data_source/DataSource";
 import Vue from 'vue'
 import {create} from "http-proxy-middleware/lib/path-rewriter";
+import moment from "moment";
 export default {
   components: {
     Detail,
@@ -233,24 +239,6 @@ export default {
       }
     }
     ,
-    open() {
-      this.$confirm('已选中的数据将生成候选数据集！', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '生成候选数据集成功!'
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        });
-      });
-    }
-    ,
     //处理候选图谱分页事件
     candidateKgHandleSizeChange(val) {
       //修改当前分页大小
@@ -281,6 +269,11 @@ export default {
             console.log(error)
           })
     },
+    //时间格式化
+    dateFormat(data) {
+      return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
+
+    }
   },
   mounted() {
     this.get_candidate_kgs(this.candidateKgCurrentPage,this.candidateKgPageSize);

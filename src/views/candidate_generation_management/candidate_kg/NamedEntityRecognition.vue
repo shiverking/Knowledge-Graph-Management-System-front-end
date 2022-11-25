@@ -1,66 +1,5 @@
 <template>
   <div style="margin-top: 20px;">
-<!--    <el-dialog>-->
-<!--      <el-card class="box-card" shadow="never">-->
-<!--        <p><b>文件导入</b></p>-->
-<!--        <el-upload-->
-<!--            class="upload-demo"-->
-<!--            ref="upload"-->
-<!--            action="https://jsonplaceholder.typicode.com/posts/"-->
-<!--            :on-preview="handlePreview"-->
-<!--            :on-remove="handleRemove"-->
-<!--            :file-list="fileList"-->
-<!--            :auto-upload="false">-->
-<!--          <el-button slot="trigger"  type="primary">选取文件</el-button>-->
-<!--          <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>-->
-<!--          <div slot="tip" class="el-upload__tip">格式要求：文本信息，只接受.txt文件</div>-->
-<!--        </el-upload>-->
-<!--        <el-button style="margin-top:10px" type="primary" @click="open3">读取文本信息</el-button>-->
-<!--        <el-table-->
-<!--            :data="tableData"-->
-<!--            border-->
-<!--            style="width: 100%; margin-top: 20px;">-->
-<!--          <el-table-column-->
-<!--              type="selection"-->
-<!--              width="55">-->
-<!--          </el-table-column>-->
-<!--          <el-table-column-->
-<!--              label="日期"-->
-<!--              width="200">-->
-<!--            <template slot-scope="scope">-->
-<!--              <i class="el-icon-time"></i>-->
-<!--              <span style="margin-left: 10px">{{ scope.row.date }}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column-->
-<!--              label="待抽取句子"-->
-<!--              width>-->
-<!--            <template slot-scope="scope">-->
-<!--              <span style="margin-left: 10px">{{ scope.row.sentence }}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column-->
-<!--              label="操作"-->
-<!--              width="180">-->
-<!--            <template slot-scope="scope">-->
-<!--              <el-button-->
-<!--                  size="mini"-->
-<!--                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-<!--              <el-button-->
-<!--                  size="mini"-->
-<!--                  type="danger"-->
-<!--                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-<!--        <el-pagination-->
-<!--            background-->
-<!--            layout="prev, pager, next"-->
-<!--            style="margin-top:10px"-->
-<!--            :total="1">-->
-<!--        </el-pagination>-->
-<!--      </el-card>-->
-<!--    </el-dialog>-->
     <el-button type="primary"  @click="open1">文件导入</el-button>
     <el-button type="primary" @click="named_entity_extraction" style="margin: 0px;">开始识别</el-button>
     <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
@@ -72,6 +11,9 @@
           :value="item.value">
       </el-option>
     </el-select>
+    <el-tooltip class="item" effect="dark" content="导出到实体库" placement="top">
+      <el-button type="primary" @click="" style="margin: 0px;">导出</el-button>
+    </el-tooltip>
     <el-input
     style="display: block;margin-top:10px;"
     type="textarea"
