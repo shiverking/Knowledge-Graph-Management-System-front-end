@@ -20,11 +20,13 @@
             <el-table-column
                 prop="name"
                 label="实体名称"
+                :show-overflow-tooltip="true"
                 >
             </el-table-column>
             <el-table-column
                 prop="category"
                 label="类别"
+                :show-overflow-tooltip="true"
             >
             </el-table-column>
             <el-table-column
@@ -61,6 +63,7 @@
             <el-table-column
                 prop="name"
                 label="关系名称"
+                :show-overflow-tooltip="true"
             >
             </el-table-column>
             <el-table-column
@@ -94,7 +97,8 @@
             </el-table-column>
             <el-table-column
                 label="头实体"
-                width>
+                :show-overflow-tooltip="true"
+                >
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
                   {{ scope.row.head }}
@@ -103,7 +107,7 @@
             </el-table-column>
             <el-table-column
                 label="关系"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium" type="warning">{{ scope.row.relation}}</el-tag>
@@ -112,11 +116,10 @@
             </el-table-column>
             <el-table-column
                 label="尾实体"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
                   {{ scope.row.tail }}
-                  <el-tag size="medium" type="info">{{ scope.row.tail}}</el-tag>
                 </div>
               </template>
             </el-table-column>
@@ -160,6 +163,7 @@
               key="1">
           </el-pagination>
         </div>
+
       </el-tab-pane>
       <el-tab-pane label="三元组(未归类)" name="second">
         <div class="block">
@@ -188,7 +192,7 @@
             </el-table-column>
             <el-table-column
                 label="头实体"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     {{ scope.row.head }}
@@ -198,7 +202,7 @@
             </el-table-column>
             <el-table-column
                 label="关系"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
@@ -207,7 +211,7 @@
             </el-table-column>
             <el-table-column
                 label="尾实体"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                    {{ scope.row.tail }}
@@ -266,9 +270,8 @@
         </el-dialog>
         <el-popover
             placement="top"
-            width="250"
             v-model="popoverVisible">
-          <p>确定将这{{selectedTripleTotal}}条三元组生成候选图谱吗？</p>
+          <div style="margin-top: 10px;margin-bottom: 10px;">确定将这{{selectedTripleTotal}}条三元组生成候选图谱吗？</div>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="checkTriplesNum()">确定</el-button>
@@ -282,7 +285,7 @@
            >
           <el-table-column
               label="头实体"
-              width>
+              :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.head }}
@@ -292,7 +295,7 @@
           </el-table-column>
           <el-table-column
               label="关系"
-              width>
+              :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
@@ -301,7 +304,7 @@
           </el-table-column>
           <el-table-column
               label="尾实体"
-              width>
+              :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.tail }}
@@ -465,6 +468,14 @@
       },
       //处理tab页点击事件
       handleTabChange(tab, event) {
+        if(tab.name == "仓库"){
+          this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+          this.get_entities(this.entityCurrentPage,this.entityPageSize)
+          this.get_relations(this.relationCurrentPage,this.relationPageSize)
+        }
+        else{
+          this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+        }
       },
       //处理候选三元组分页事件
       candidateTripleHandleSizeChange(val) {
@@ -615,16 +626,19 @@
       //radio输入改变动作
       handelInputChange(label){
         if(label == "实体库"){
+          this.get_entities(this.entityCurrentPage,this.entityPageSize)
           $("#entityWarehouse").show();
           $("#relationWarehouse").hide();
           $("#triplesWarehouse").hide();
         }
         else if(label == "关系库"){
+          this.get_relations(this.relationCurrentPage,this.relationPageSize)
           $("#entityWarehouse").hide();
           $("#relationWarehouse").show();
           $("#triplesWarehouse").hide();
         }
         else if(label == "三元组库"){
+          this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
           $("#entityWarehouse").hide();
           $("#relationWarehouse").hide();
           $("#triplesWarehouse").show();
@@ -633,7 +647,6 @@
       //时间格式化
       dateFormat(data) {
         return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
-
       },
       //请求所有实体数据
       //向后端请求所有实体数据
@@ -698,10 +711,10 @@
       },
     },
     mounted() {
-      this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+      // this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
       this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
       this.get_entities(this.entityCurrentPage,this.entityPageSize)
-      this.get_relations(this.relationCurrentPage,this.relationPageSize)
+      // this.get_relations(this.relationCurrentPage,this.relationPageSize)
       $("#entityWarehouse").show();
       $("#relationWarehouse").hide();
       $("#triplesWarehouse").hide();

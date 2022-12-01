@@ -12,8 +12,8 @@
       <el-row :gutter="12">
         <el-col :span="11">
           <el-card class="box-card" shadow="never" style="display:block;margin-bottom:10px;">
-            融合图谱:
-            <span>{{currentRowName}}</span>
+            目标图谱:
+            <span v-if="currentRowName!=''"><el-tag type="success">{{currentRowName}}</el-tag></span>
           </el-card>
           <!-- 显示要被融合的图谱-->
           <el-table
@@ -25,38 +25,42 @@
             <el-table-column
                 prop="head"
                 label="头实体"
-                width="180">
+                width="180"
+                :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="relation"
                 label="关系"
-                width="180">
+                width="180"
+                :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="tail"
-                label="尾实体">
+                label="尾实体"
+                :show-overflow-tooltip="true">
             </el-table-column>
           </el-table>
           <el-pagination
+              @size-change="toKgHandleSizeChange"
               @current-change="toKgHandleCurrentChange"
               :current-page.sync="toKgCurrentPage"
+              :page-sizes="toKgPageSizes"
               :page-size="toKgPageSize"
-              layout="total, prev, pager, next"
+              layout="total,sizes, prev, pager, next,jumper"
               :total="toKgTotal">
           </el-pagination>
         </el-col>
         <el-col :span="1">
           <el-image
               style="width: auto; height: auto;position: relative;top: 10px;"
-              src='../../../static/icon/left-arrow.jpeg'
-              :fit="cover"></el-image>
+              src='../../../static/icon/left-arrow.png'
+              ></el-image>
         </el-col>
         <el-col :span="12">
           <el-card class="box-card" shadow="never" style="display:block;margin-bottom:10px;">
             候选图谱:
-            <span>{{multipleSelectionName}}</span>
+            <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
           </el-card>
-
           <!--显示要融合的图谱-->
           <el-table
               :data="fromKgTablePageData"
@@ -66,16 +70,19 @@
             <el-table-column
                 prop="head"
                 label="头实体"
-                width="180">
+                width="180"
+                :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="relation"
                 label="关系"
-                width="180">
+                width="180"
+                :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="tail"
-                label="尾实体">
+                label="尾实体"
+                :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="candidateId"
@@ -84,9 +91,11 @@
           </el-table>
           <el-pagination
               @current-change="fromKgHandleCurrentChange"
+              @size-change="fromKgHandleSizeChange"
               :current-page.sync="fromKgCurrentPage"
               :page-size="fromKgPageSize"
-              layout="total, prev, pager, next"
+              :page-sizes="fromKgPageSizes"
+              layout="total,sizes, prev, pager, next,jumper"
               :total="fromKgTotal">
           </el-pagination>
         </el-col>
@@ -94,11 +103,28 @@
       <!--选择图谱对话框-->
       <el-dialog :visible.sync="dialogAllKGVisible"  :show-close='false'>
         <el-steps :active="select_kg_active" finish-status="success" simple>
-          <el-step title="选择融合图谱"></el-step>
+          <el-step title="选择目标图谱"></el-step>
           <el-step title="选择候选图谱"></el-step>
         </el-steps>
-        <!--选择融合图谱-->
+        <!--选择目标图谱-->
         <div style="text-align: center;">
+          <el-switch
+              v-if="this.select_kg_active==0"
+              style="float: left;margin-top: 5px;margin-bottom: 5px"
+              v-model="kgType"
+              active-text="候选图谱"
+              inactive-text="核心图谱">
+          </el-switch>
+          <el-popover
+              v-if="this.select_kg_active==0"
+              placement="top-start"
+              title="选择目标图谱"
+              trigger="hover"
+              style="float: left;margin: 5px;"
+          >
+            <div>切换要融合的目标图谱类型</div>
+            <i class="el-icon-warning-outline" slot="reference"></i>
+          </el-popover>
         <el-table
             v-if="this.select_kg_active==0"
             ref="selectMergeKgTable"
@@ -108,7 +134,7 @@
             style="width: 100%"
             key="1"
             >
-          <el-table-column label="名称">
+          <el-table-column label="名称" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.name }}</span>
             </template>
@@ -120,7 +146,7 @@
             </template>
           </el-table-column>
           <el-table-column
-              label="备注">
+              label="备注" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.comment }}</span>
             </template>
@@ -133,13 +159,15 @@
           </el-table-column>
         </el-table>
         <el-pagination
+            class="choose_targetKg_pagination"
             v-if="this.select_kg_active==0"
             background
-            layout="prev, pager, next"
+            layout="total ,prev, pager, next"
             @current-change="candidateKgHandleCurrentChange"
             :current-page="candidateKgCurrentPage"
             :page-size="candidateKgPageSize"
-            :total="candidateKgTotal">
+            :total="candidateKgTotal"
+        >
         </el-pagination>
         <el-table
             v-if="this.select_kg_active==1"
@@ -149,15 +177,18 @@
             border
             style="width: 100%"
             @selection-change="multipleCandidateKgHandleSelectionChange"
+            :row-key="getRowKeys"
             key="2"
             >
           <el-table-column
               type="selection"
+              :reserve-selection="true"
+              :selectable="selectable"
               width="55">
           </el-table-column>
 <!--          <el-table-column type="selection"  width="55px" :reserve-selection="true">-->
 <!--          </el-table-column>-->
-          <el-table-column label="名称">
+          <el-table-column label="名称" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.name }}</span>
             </template>
@@ -169,7 +200,7 @@
             </template>
           </el-table-column>
           <el-table-column
-              label="备注">
+              label="备注" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.comment }}</span>
             </template>
@@ -181,10 +212,11 @@
             </template>
           </el-table-column>
           </el-table>
-          <el-pagination
+        <el-pagination
+              class="choose_targetKg_pagination"
               v-if="this.select_kg_active==1"
               background
-              layout="prev, pager, next"
+              layout="total ,prev, pager, next"
               @current-change="multipleCandidateKgHandleCurrentChange"
               :current-page="multipleCandidateKgCurrentPage"
               :page-size="multipleCandidateKgPageSize"
@@ -199,7 +231,7 @@
     </el-dialog>
     </div>
     <div v-if="this.active==1">
-      <el-select v-model="value" placeholder="请选择算法">
+      <el-select v-model="algorithm" placeholder="请选择算法">
         <el-option
             v-for="item in options"
             :key="item.value"
@@ -207,36 +239,102 @@
             :value="item.value">
         </el-option>
       </el-select>
-      <el-input
-          placeholder="请输入阈值(0-1)"
-          v-model="input"
-          style="width: inherit;"
-          clearable>
-      </el-input>
+      <el-input-number v-model="threshold" :step="0.01" :min=0.1 :max="1"></el-input-number>
+      <el-popover
+          placement="top-start"
+          title="请调节阈值"
+          trigger="hover"
+         >
+        <div>范围为0-1,越接近1表示两个实体越相同,反之亦然，算法计算结果仅供参考(点击以选择要保留的实体，不选择默认同时保留)</div>
+        <i class="el-icon-warning-outline" slot="reference"></i>
+      </el-popover>
       <el-button style="margin-top: 12px;" @click="calculate">开始计算</el-button>
-      <div style="margin-top: 20px;margin-bottom: 10px;">
-        <el-button @click="toggleSelection()">取消选择</el-button>
-      </div>
-      <el-dialog title="确认列表" :visible.sync="dialogTableVisible">
-        <el-table :data="gridData">
-          <el-table-column property="date" label="实体" width="150"></el-table-column>
-          <el-table-column property="name" label="属性" width="200"></el-table-column>
-          <el-table-column property="address" label="实体"></el-table-column>
+      <el-tooltip class="item" effect="dark" content="取消所有对齐选择" placement="top-start">
+        <el-button type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
+      </el-tooltip>
+      <el-button style="margin-top: 12px;" @click="mergeConfirmTableVisible = true">筛选确认</el-button>
+      <el-card shadow="never" v-loading="simLoading" element-loading-text="正在计算相似度,请稍后...">
+        <el-table
+            :data="simTableData"
+            tooltip-effect="dark"
+            style="width: 100%"
+            border
+            @cell-click="handleCellClick">
+          <el-table-column
+              label="实体(目标图谱)" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <div>{{ scope.row.to }}
+              <el-image
+                style="display:none;top:3px;width: 20px;height:20px"
+                src="../../../static/icon/right.png"
+                ></el-image>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="实体(候选图谱)" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <div>{{ scope.row.from}}
+                <el-image
+                    style="display:none;top:3px;width: 20px;height:20px"
+                    src="../../../static/icon/right.png"
+                    ></el-image>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              prop="sim"
+              label="相似度">
+          </el-table-column>
         </el-table>
-        <el-button style="margin-top: 12px;" @click="dialogTableVisible = false">确认</el-button>
+        <el-pagination
+            @current-change="simKgHandleCurrentChange"
+            @size-change="simKgHandleSizeChange"
+            :current-page.sync="simKgCurrentPage"
+            :page-size="simKgPageSize"
+            :page-sizes="simKgPageSizes"
+            layout="total,sizes, prev, pager, next,jumper"
+            :total="simKgTotal">
+        </el-pagination>
+      </el-card>
+      <el-dialog title="融合确认列表" :visible.sync="mergeConfirmTableVisible">
+        <el-table :data="mergeTable">
+          <el-table-column property="to" label="实体(目标图谱)" :show-overflow-tooltip="true" ></el-table-column>
+          <el-table-column property="direction" width="50px">
+            <template slot-scope="scope">
+            <el-image
+                style="top:3px;width: 20px;height:20px"
+                src="../../../static/icon/right-arrow.png"
+                v-if="scope.row.direction=='right'"
+            ></el-image>
+            <el-image
+                style="top:3px;width: 20px;height:20px"
+                src="../../../static/icon/left-arrow2.png"
+                v-if="scope.row.direction=='left'"
+            ></el-image>
+            </template>
+          </el-table-column>
+          <el-table-column property="from" label="实体(候选图谱)" :show-overflow-tooltip="true"></el-table-column>
+        </el-table>
+        <el-pagination
+            v-if="this.select_kg_active==1"
+            background
+            layout="total,prev, pager, next"
+            @current-change="multipleCandidateKgHandleCurrentChange"
+            :current-page="multipleCandidateKgCurrentPage"
+            :page-size="multipleCandidateKgPageSize"
+            :total="multipleCandidateKgTotal">
+        </el-pagination>
       </el-dialog>
-      <el-button style="margin-top: 12px;" @click="dialogTableVisible = true">筛选确认</el-button>
     </div>
     <div v-if="this.active==2">
       <el-descriptions title="融合信息确认" border>
-        <el-descriptions-item label="原图谱实体数">1842</el-descriptions-item>
-        <el-descriptions-item label="待融合实体数量">1321</el-descriptions-item>
-        <el-descriptions-item label="原图谱列表"><a>点击查看</a></el-descriptions-item>
-        <el-descriptions-item label="待融合实体列表"><a>点击查看</a></el-descriptions-item>
-        <el-descriptions-item label="备注">
-          <el-tag size="small">装备</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="操作时间">2022-10-01</el-descriptions-item>
+        <el-descriptions-item label="目标图谱名称">{{ currentRowName }}</el-descriptions-item>
+        <el-descriptions-item label="目标图谱三元组数">{{ toKgTotal }}</el-descriptions-item>
+        <el-descriptions-item label="待融合图谱个数">{{ this.multipleSelectionName.length }}</el-descriptions-item>
+        <el-descriptions-item label="待融合三元组">{{ fromKgTotal }}</el-descriptions-item>
+        <el-descriptions-item label="实体对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
+        <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
       </el-descriptions>
       <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略" style="width: 330px;">
         <el-option
@@ -246,15 +344,42 @@
             :value="item.value">
         </el-option>
       </el-select>
-      <el-button style="margin-top: 12px;" >开始融合</el-button>
-      <el-progress :text-inside="false" :stroke-width="15" :percentage="70" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
-      <el-result icon="success" title="融合成功">
-        <template slot="extra">
-          <el-button type="primary" size="medium">查看结果</el-button>
-        </template>
-      </el-result>
+      <el-input
+          v-if="selectedMergeStrategy==2"
+          placeholder="请输入新图谱名称"
+          v-model="newKgName"
+          style="width: 20%"
+          clearable>
+      </el-input>
+      <el-input
+          v-if="selectedMergeStrategy==2"
+          placeholder="请输入新图谱备注(可选)"
+          v-model="newKgComment"
+          style="width: 20%"
+          clearable>
+      </el-input>
+      <el-popover
+          :key="2"
+          placement="top"
+          v-model="comfirmMergeVisible"
+          trigger="manual">
+        <p>融合开始之后不可撤销，是否继续？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="comfirmMergeVisible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="comfirmMergeVisible = false;startMerge()">确定</el-button>
+        </div>
+        <el-button type="primary" style="margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">开始融合</el-button>
+      </el-popover>
+      <el-progress :text-inside="false" :stroke-width="15" :percentage="processPercentage" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
+      <transition name="el-fade-in-linear">
+        <el-result icon="success" title="融合成功" v-show="successShow" class="transition-box">
+          <template slot="extra">
+          </template>
+        </el-result>
+      </transition>
     </div>
     <div style="text-align: right;">
+      <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
       <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
     </div>
   </div>
@@ -267,7 +392,6 @@
 .item {
   margin-bottom: 18px;
 }
-
 .clearfix:before,
 .clearfix:after {
   display: table;
@@ -276,8 +400,6 @@
 .clearfix:after {
   clear: both
 }
-
-
 .el-dialog__header {
   /*display: none;*/
   padding: 10px;
@@ -299,6 +421,9 @@
   margin-right: 10px;
   margin-bottom: 10px;
 }
+.choose_targetKg_pagination{
+  margin-top: 10px;
+}
 </style>
 <script>
 import moment from 'moment';
@@ -307,62 +432,48 @@ export default {
   data() {
     return {
       active: 0,
+      //融合时主图谱和候选图谱切换
+      kgType:"",
       options: [{
-        value: '选项1',
+        value: '最小编辑距离',
         label: '最小编辑距离'
       }, {
-        value: '选项2',
+        value: '余弦相似度',
         label: '余弦相似度'
       }, {
-        value: '选项3',
+        value: 'Difflib',
         label: 'Difflib'
       }, {
-        value: '选项4',
+        value: 'Fuzzywuzzy',
         label: 'Fuzzywuzzy'
       }, {
-        value: '选项5',
+        value: '加权混合',
         label: '加权混合'
       }],
-      strategy: [{
-        value: '选项1',
-        label: '保留原图谱实体'
-      }, {
-        value: '选项2',
-        label: '保留新图谱实体'
-      }, {
-        value: '选项3',
-        label: '同时保留'
-      },],
+      algorithm:"",
+      threshold:0.5,
+      simLoading:false,
       //融合策略选择
-      mergeStrategyOptions: [{
-        value: '选项1',
-        label: '融合进原图谱(保留候选图谱)'
+      mergeStrategyOptions: [
+      {
+        value: '1',
+        label: '融合进目标图谱(不保留候选图谱)'
       }, {
-        value: '选项2',
-        label: '融合进原图谱(不保留候选图谱)'
-      }, {
-        value: '选项3',
+        value: '2',
         label: '融合成新图谱(保留原图谱，保留候选图谱)'
-      }, {
-        value: '选项4',
-        label: '融合成新图谱(不保留原图谱，保留候选图谱)'
-      },{
-        value: '选项5',
-        label: '融合成新图谱(保留原图谱，不保留候选图谱)'
-      }, {
-        value: '选项6',
-        label: '融合成新图谱(不保留原图谱，不保留候选图谱)'
       }],
       selectedMergeStrategy: '',
+      newKgName:'',
+      newKgComment:"",
       //选择图谱可视化
       dialogAllKGVisible:false,
-      //融合图谱分页数据
+      //目标图谱分页数据
       candidateKgPageSize:10,
       candidateKgTotal:'',
       candidateKgCurrentPage:1,
-      //融合图谱数据表
+      //目标图谱数据表
       mergeKgTable:[],
-      //融合图谱的选中行
+      //目标图谱的选中行
       currentRowName:'',
       currentRowId:'',
       //多选候选图谱表格
@@ -374,20 +485,39 @@ export default {
       multipleSelectionName: [],
       
       //要被融合的图谱分页信息
+      toKgTableTotalData:[],
       toKgTableData:[],
       toKgCurrentPage:1,
-      toKgPageSize:20,
+      toKgPageSize:10,
+      toKgPageSizes:[10,20,50,80,100],
       toKgTotal:0,
       toKgLoading:false,
       //待融合融合的图谱分页信息
       fromKgTableData:[],
       fromKgTablePageData:[],
       fromKgCurrentPage:1,
-      fromKgPageSize:20,
+      fromKgPageSize:10,
+      fromKgPageSizes:[10,20,50,80,100],
       fromKgTotal:0,
       fromKgLoading:false,
       //选择图谱切换步骤条
       select_kg_active:0,
+      //相似度信息
+      simTableData:[],
+      simKgTablePageData:[],
+      simKgCurrentPage:1,
+      simKgPageSize:10,
+      simKgPageSizes:[10,20,50,80,100],
+      simKgTotal:0,
+      simKgLoading:false,
+      //融合图谱部分
+      mergeTable:[],
+      mergeTableWithDirection:[],
+      mergeConfirmTableVisible:false,
+      //开始融合确认
+      comfirmMergeVisible:false,
+      processPercentage:0,
+      successShow:false,
 
     };
   },
@@ -395,11 +525,16 @@ export default {
   methods: {
     //总体的下一步
     next() {
-      console.log("active: "+this.active);
       if(this.active == 0){
         if(this.currentRowName==""||this.multipleSelectionName.length==0){
           this.$message({
-            message: '请选择必要数据',
+            message: '请选择必要数据!',
+            type: 'warning'
+          });
+        }
+        else if(this.toKgTableData.length==0||this.fromKgTableData.length==0){
+          this.$message({
+            message: '请先导入数据!',
             type: 'warning'
           });
         }
@@ -413,6 +548,9 @@ export default {
       else if (this.active==2) {
         this.active = 0;
       }
+    },
+    previous() {
+      this.active--;
     },
     //跳转到上一步
     previousStep(){
@@ -448,12 +586,53 @@ export default {
       //将信息还原
       $("#nextStep").text("下一步");
       this.select_kg_active = 0;
-      this.multipleSelectionName = [];
-      this.currentRowName ="";
-      this.currentRowId="";
+      // this.multipleSelectionName = [];
+      // this.currentRowName ="";
+      // this.currentRowId="";
     },
     calculate(){
-      console.log("开始计算")
+      if(this.algorithm==""){
+        this.$message({
+          showClose: true,
+          message: '请选择一个相似度算法!',
+          type: 'warning'
+        });
+      }
+      else{
+        this.simLoading=true
+        axios.post('/pythonApi/calculateEntitySimilarity',{
+          firstEntity : this.toKgTableTotalData,
+          secondEntity : this.fromKgTableData,
+          threshold :this.threshold,
+          algorithm:this.algorithm
+        })
+        .then((response) => {
+          //先置空
+          this.simTableData=[]
+          if (response.status == 200) {
+            this.simLoading=false
+            if(response.data.msg=="success"){
+              this.simTableData= response.data.data
+              this.simKgTotal = response.data.count
+              this.$message({
+                showClose: true,
+                message: '相似度计算完成!',
+                type: 'success'
+              });
+            }
+            else{
+              this.$message({
+                showClose: true,
+                message: '无相似度信息,可以直接融合!',
+                type: 'success'
+              });
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      }
     },
     //加载原图谱数据
     loadCandidateData(num,limit){
@@ -534,7 +713,6 @@ export default {
     },
     //去服务器请求所有候选图谱的数据
     async fetchFromKgData(candidateId){
-      console.log("进入了")
       await axios.request({
         method:"POST",
         url:'/api/triples/getTriplesFromSameKgNotByPage',
@@ -581,8 +759,6 @@ export default {
             this.toKgLoading = false;
             this.fromKgLoading = true;
             for (const item of this.multipleSelection) {
-              console.log("id: "+item.id);
-              console.log(item);
               await axios.request({
                 method:"POST",
                 url:'/api/triples/getTriplesFromSameKgNotByPage',
@@ -595,7 +771,6 @@ export default {
                       //向表中加载数据
                       this.fromKgTableData.push(triple);
                   }
-                  console.log(this.fromKgTableData);
                 }
               })
               .catch(function (error) {
@@ -607,11 +782,26 @@ export default {
             this.getFromKgTableData(),
             this.fromKgLoading = false;
             this.$notify({
-              title: '成功',
-              message: '导入信息成功!',
+              title:'成功',
+              message:'导入信息成功!',
               type: 'success'
             })
-            //   //第一个表格是后端分页,第二个表格是前端分页
+            // 第一个表格是后端分页,第二个表格是前端分页
+            //都处理完后请求第一个表的全量数据
+            axios.request({
+              method:"POST",
+              url:'/api/triples/getTriplesFromSameKgNotByPage',
+              params:{id:this.currentRowId}
+            })
+            .then((response) => {
+              if (response.status == 200) {
+                var list = response.data.data;
+                for(var triple of list){
+                  //向表中加载数据
+                  this.toKgTableTotalData.push(triple);
+                }
+              }
+            })
           }
         })
         .catch(function (error) {
@@ -619,13 +809,12 @@ export default {
         })
       }
     },
-
-    // // toKgTable分页改变动作
-    toKgHandleCurrentChange(val){
+    //获取toKgTableData
+    get_toKg(page,limit,currentRowId){
       axios.request({
         method:"POST",
         url:'/api/triples/getTriplesFromSameKg',
-        params:{page:val,limit:this.toKgPageSize,id:this.currentRowId}
+        params:{page:page,limit:limit,id:currentRowId}
       })
           .then((response) => {
             if (response.status == 200) {
@@ -637,6 +826,17 @@ export default {
             console.log(error)
           })
     },
+    //toKgTable的PageSzie改变动作
+    toKgHandleSizeChange(val){
+      //修改当前分页大小
+      this.toKgPageSize = val;
+      //重新请求数据
+      this.get_toKg(this.toKgCurrentPage,val,this.currentRowId)
+    },
+    //toKgTable分页改变动作
+    toKgHandleCurrentChange(val){
+      this.get_toKg(this.toKgCurrentPage,this.toKgPageSize,this.currentRowId)
+    },
     //fromKgTable的前端分页
     getFromKgTableData(){
       this.fromKgTotal = this.fromKgTableData.length;
@@ -644,11 +844,15 @@ export default {
           (this.fromKgCurrentPage - 1) * this.fromKgPageSize,
           this.fromKgCurrentPage * this.fromKgPageSize
       );
-      this.tableData1_total = this.allTriplesBeforeCheck.length
     },
     // fromKgTable的前端分页改变动作
     fromKgHandleCurrentChange(val){
       this.fromKgCurrentPage = val
+      this.getFromKgTableData()
+    },
+    // fromKgTable的前端Size页改变动作
+    fromKgHandleSizeChange(val){
+      this.fromKgPageSize = val
       this.getFromKgTableData()
     },
     //清空
@@ -660,7 +864,145 @@ export default {
       this.multipleSelectionName=[];
       this.currentRowName='';
       this.currentRowId='';
-    }
+    },
+    getRowKeys(row) {
+      return row.id;   //指定row-key的一个标识
+    },
+    //禁用多选框
+    selectable(row, index) {
+      if(this.currentRowId==row.id){
+        return false;
+      }
+      else {
+        return true;
+      }
+    },
+    //处理cell点击事件
+    handleCellClick(row, column, cell, event){
+      //无显示
+      if($(cell).find(".el-image").css('display') === 'none'){
+        //隔壁有显示
+        if($(cell).siblings().find(".el-image").css('display') != 'none'){
+          //箭头转向
+          if(column.label=="实体(目标图谱)"){
+            this.mergeTable.forEach(function(element) {
+              if(element['to']==row.to&&element['from']==row.from){
+                  element['direction']="left";
+              }
+            });
+          }
+          else if(column.label=="实体(候选图谱)"){
+            this.mergeTable.forEach(function(element) {
+              if(element['to']==row.to&&element['from']==row.from){
+                element['direction']="right";
+              }
+            });
+          }
+          $(cell).find(".el-image").show()
+          $(cell).siblings().find(".el-image").hide()
+        }
+        //隔壁无显示
+        else if($(cell).siblings().find(".el-image").css('display') === 'none'){
+          //新增
+          if(column.label=="实体(目标图谱)"){
+            row['direction']="left"
+          }
+          else if(column.label=="实体(候选图谱)"){
+            row['direction']="right"
+          }
+          //新增
+          this.mergeTable.push(row)
+          $(cell).find(".el-image").show()
+        }
+      }
+      //有显示
+      else if($(cell).find(".el-image").css('display') != 'none'){
+        //删除该条记录
+        this.mergeTable = this.mergeTable.filter(item=>{
+          if(item['to']!=row.to&&item['from']!=row.from){
+           return item
+          }
+        })
+        $(cell).find(".el-image").hide()
+      }
+    },
+    //simKgTable的前端分页
+    getSimKgTableData(){
+      this.simKgTotal = this.simTableData.length;
+      this.simKgTablePageData = this.simTableData.slice(
+          (this.simKgCurrentPage - 1) * this.simKgPageSize,
+          this.simKgCurrentPage * this.simKgPageSize
+      );
+    },
+    // simKgTable的前端分页改变动作
+    simKgHandleCurrentChange(val){
+      this.simKgCurrentPage = val
+      this.getSimKgTableData()
+    },
+    // simKgTable的前端Size页改变动作
+    simKgHandleSizeChange(val){
+      this.simKgPageSize = val
+      this.getSimKgTableData()
+    },
+    //
+    clearAllAlignSelection(){
+      //置空表
+      this.mergeTable = [];
+      //取消所有箭头显示
+    },
+    checkNecessaryInfo(){
+      if(this.selectedMergeStrategy==2&&this.newKgName==""){
+        this.comfirmMergeVisible = false;
+        this.$message({
+          message: '请输入新图谱名称!',
+          type: 'warning'
+        });
+      }
+      else{
+        this.comfirmMergeVisible = true;
+      }
+    },
+    //开始融合
+    startMerge(){
+        this.processPercentage =0;
+        this.successShow= false;
+        var flag = false;
+        var timerId = setInterval(() => {
+          this.processPercentage++;
+          //发现返回直接退出
+          if(flag==true){
+            this.processPercentage= 100;
+            this.successShow= true;
+            clearInterval(timerId);
+            return;
+          }
+          if(this.processPercentage==99 && flag==false){
+              this.processPercentage = 99;
+          }
+          else if(this.processPercentage<99 && flag==false){
+            this.processPercentage++;
+          }
+        },200)
+        //axios请求
+        axios.post('/api/triples/mergeKg',{
+          strategy:this.selectedMergeStrategy,
+          alignmentEntities:this.mergeTable,
+          targetKg:this.toKgTableTotalData,
+          fromKg:this.fromKgTableData,
+          newKgName:this.newKgName,
+          newKgComment:this.newKgComment,
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              flag = true;
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      }
   }
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({
