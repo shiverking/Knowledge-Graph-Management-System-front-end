@@ -31,8 +31,8 @@
               @selection-change="handleSelectionChange">
             <el-table-column type="selection">
             </el-table-column>
-            <el-table-column label="名称(最新版本)" >
-              <template slot-scope="scope">
+            <el-table-column label="名称(最新版本)" :show-overflow-tooltip="true">
+              <template slot-scope="scope" >
                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
               </template>
             </el-table-column>
@@ -41,7 +41,7 @@
               <span style="margin-left: 10px">{{ scope.row.creator }}</span>
             </template>
             </el-table-column>
-            <el-table-column label="备注" >
+            <el-table-column label="备注" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.comment}}</span>
               </template>
