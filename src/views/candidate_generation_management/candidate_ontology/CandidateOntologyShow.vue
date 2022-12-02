@@ -37,42 +37,10 @@
                 label="查看"
                 width="150">
               <el-button
-                  @click="drawer = true"
+                  @click="showCandidateOntology()"
                   type="primary"
                   icon="el-icon-search">
               </el-button>
-              <el-drawer
-                  class="candidate-ontology-drawer"
-                  title="我是标题"
-                  :visible.sync="drawer"
-                  :with-header="false"
-                  size="95%">
-                <!--
-                  需要在 HTML 中创建一个用于容纳 G6 绘制的图的容器，通常为 div  标签。
-                  G6 在绘制时会在该容器下追加 canvas 标签，然后将图绘制在其中。
-                -->
-                <div id="candidate-ontology-show"></div>
-                <div class="search-ontology-class">
-                  <el-input placeholder="请输入要查找的节点" v-model="search">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                  </el-input>
-                  <el-button type="primary" icon="el-icon-search">搜索</el-button>
-                </div>
-                <el-table class="show-ontology-table">
-                  <el-table-column
-                      label="头节点"
-                      prop="date">
-                  </el-table-column>
-                  <el-table-column
-                      label="关系"
-                      prop="name">
-                  </el-table-column>
-                  <el-table-column
-                      label="尾节点"
-                      prop="name">
-                  </el-table-column>
-                </el-table>
-              </el-drawer>
             </el-table-column>
             <el-table-column
                 label="删除"
@@ -85,43 +53,54 @@
               </el-button>
             </el-table-column>
           </el-table>
+          <!--  :before-close="this.clearGraph 抽屉关闭前的回调，会暂停抽屉的关闭，done用于关闭抽屉  -->
+          <el-drawer
+              id="candidate-ontology-drawer-id"
+              class="candidate-ontology-drawer"
+              title="我是标题"
+              :visible.sync="drawer"
+              :with-header="false"
+              size="95%"
+              :before-close="this.clearGraph"
+          >
+            <!--
+              需要在 HTML 中创建一个用于容纳 G6 绘制的图的容器，通常为 div  标签。
+              G6 在绘制时会在该容器下追加 canvas 标签，然后将图绘制在其中。
+            -->
+            <div id="candidate-ontology-show-test" style="width: 700px;height: 600px;float: left;margin-top: 30px"></div>
+            <div class="search-ontology-class" style="margin-top: 30px">
+              <el-input placeholder="请输入要查找的节点" v-model="search">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              </el-input>
+              <el-button type="primary" icon="el-icon-search">搜索</el-button>
+            </div>
+            <el-table class="show-ontology-table" style="margin-top: 30px">
+              <el-table-column
+                  label="头节点"
+                  prop="date">
+              </el-table-column>
+              <el-table-column
+                  label="关系"
+                  prop="name">
+              </el-table-column>
+              <el-table-column
+                  label="尾节点"
+                  prop="name">
+              </el-table-column>
+            </el-table>
+          </el-drawer>
           <div style="margin-top: 20px">
             <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
             <el-button @click="toggleSelection()">取消选择</el-button>
           </div>
         </el-card>
-
-        <br>
-        <!--
-          需要在 HTML 中创建一个用于容纳 G6 绘制的图的容器，通常为 div  标签。
-          G6 在绘制时会在该容器下追加 canvas 标签，然后将图绘制在其中。
-        -->
-        <div id="candidate-ontology-show"></div>
-        <div class="search-ontology-class">
-          <el-input placeholder="请输入要查找的节点" v-model="search">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
-        </div>
-        <el-table class="show-ontology-table">
-          <el-table-column
-              label="头节点"
-              prop="date">
-          </el-table-column>
-          <el-table-column
-              label="关系"
-              prop="name">
-          </el-table-column>
-          <el-table-column
-              label="尾节点"
-              prop="name">
-          </el-table-column>
-        </el-table>
   </body>
 </template>
 
 <script>
   import * as G6 from '../../../plugins/g6.min.js';
+  import $ from '../../../plugins/jquery.min.js';
+
   export default {
     name:'CandidateOntologyShow',
     data() {
@@ -216,13 +195,13 @@
         rows.splice(index, 1);
       },
       initGraph(){
-        const container = document.getElementById('candidate-ontology-show');
+        const container = document.getElementById('candidate-ontology-show-test');
+        console.log(container)
         const width = container.scrollWidth;
-
         const height = container.scrollHeight;
         const graph = new G6.Graph({
           // container为容器id
-          container: 'candidate-ontology-show',
+          container: 'candidate-ontology-show-test',
           width,
           height,
           layout: {
@@ -264,7 +243,7 @@
         // this.data
         const nodes = this.nodes;
         graph.data({
-          nodes,
+          nodes:this.nodes,
           edges: this.edges.map(function (edge, i) {
             edge.id = 'edge' + i;
             return Object.assign({}, edge);
@@ -296,6 +275,29 @@
           model.fx = e.x;
           model.fy = e.y;
         }
+        return graph;
+      },
+      //抽屉打开时绘图
+      showCandidateOntology(){
+        //显示抽屉
+        this.drawer = true;
+        //等抽屉加载完成开始绘图
+        this.$nextTick(()=>{
+          this.initGraph();
+        })
+      },
+      //抽屉关闭时销毁图
+      clearGraph(done){
+        //得到graph对象，然后清除这个对象
+        const graph = this.initGraph();
+        graph.clear();
+        //得到graph容器,将其删除，不然每次新打开抽屉div就会不断追加
+        var obj = document.getElementById('candidate-ontology-show-test');
+        obj.parentNode.removeChild(obj);
+        //上面删除了div，然后这里要新加一个div，作为后面第二次开启抽屉时的graph的容器
+        var newDiv = '<div id="candidate-ontology-show-test" style="width: 700px;height: 600px;float: left;margin-top: 30px"></div>';
+        $('.search-ontology-class').before(newDiv);
+        done();
       },
       handleClick(tab, event) {
         console.log(tab, event);
@@ -315,7 +317,7 @@
       }
     },
     mounted() {
-      this.initGraph()
+      // this.initGraph()
     }
   }
 </script>
