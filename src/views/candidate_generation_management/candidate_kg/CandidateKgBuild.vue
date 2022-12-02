@@ -1,81 +1,169 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange">
-      <el-tab-pane label="三元组" name="first">
-        <el-table
-            :data="allTriplePageList"
-            border
-            style="width: 100%; margin-top:10px"
+      <el-tab-pane label="仓库" name="first">
+        <el-radio-group v-model="tabSelection" @input="handelInputChange">
+          <el-radio-button label="实体库"></el-radio-button>
+          <el-radio-button label="关系库"></el-radio-button>
+          <el-radio-button label="三元组库"></el-radio-button>
+        </el-radio-group>
+        <div id="entityWarehouse">
+          <el-table
+              :data="entityTableData"
+              stripe
+              style="width: 100%">
+            <el-table-column
+                prop="id"
+                label="实体ID"
+                >
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="实体名称"
+                :show-overflow-tooltip="true"
+                >
+            </el-table-column>
+            <el-table-column
+                prop="category"
+                label="类别"
+                :show-overflow-tooltip="true"
             >
-          <el-table-column type="selection">
-          </el-table-column>
-          <el-table-column
-              label="头实体"
-              width>
+            </el-table-column>
+            <el-table-column
+                label="操作"
+            >
+              <template slot-scope="scope">
+                <el-button
+                    type="danger" icon="el-icon-delete" circle
+                    @click="handleDelete(scope.$index, scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              @size-change="entityHandleSizeChange"
+              @current-change="entityHandleCurrentChange"
+              :current-page="entityCurrentPage"
+              :page-sizes="entityPageSizes"
+              :page-size="entityPageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="entityTotal"
+              key="0">
+          </el-pagination>
+        </div>
+        <div id="relationWarehouse">
+          <el-table
+              :data="relationTableData"
+              stripe
+              style="width: 100%">
+            <el-table-column
+                prop="id"
+                label="关系ID"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="关系名称"
+                :show-overflow-tooltip="true"
+            >
+            </el-table-column>
+            <el-table-column
+                label="操作"
+            >
             <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                {{ scope.row.head }}
-              </div>
+                <el-button
+                    type="danger" icon="el-icon-delete" circle
+                    @click="handleDelete(scope.$index, scope.row)"></el-button>
             </template>
-          </el-table-column>
-          <el-table-column
-              label="关系"
-              width>
-            <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium" type="warning">{{ scope.row.relation}}</el-tag>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-              label="尾实体"
-              width>
-            <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                {{ scope.row.tail }}
-                <el-tag size="medium" type="info">{{ scope.row.tail}}</el-tag>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="状态">
-            <template slot-scope="scope">
-              <el-tag size="medium" type="success">{{ scope.row.status}}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.time}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="所属候选图谱">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.candidateId}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-              label="操作">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-            @size-change="allTripleHandleSizeChange"
-            @current-change="allTripleHandleCurrentChange"
-            :current-page="allTripleCurrentPage"
-            :page-sizes="allTriplePageSizes"
-            :page-size="allTriplePageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="allTripleTotal"
-            key="1">
-        </el-pagination>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              @size-change="relationHandleSizeChange"
+              @current-change="relationHandleCurrentChange"
+              :current-page="relationCurrentPage"
+              :page-sizes="relationPageSizes"
+              :page-size="relationPageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="relationTotal"
+              key="0">
+          </el-pagination>
+        </div>
+        <div id="triplesWarehouse">
+          <el-table
+              :data="allTriplePageList"
+              border
+              style="width: 100%; margin-top:10px"
+          >
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column
+                label="头实体"
+                :show-overflow-tooltip="true"
+                >
+              <template slot-scope="scope">
+                <div slot="reference" class="name-wrapper">
+                  {{ scope.row.head }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="关系"
+                :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium" type="warning">{{ scope.row.relation}}</el-tag>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="尾实体"
+                :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                <div slot="reference" class="name-wrapper">
+                  {{ scope.row.tail }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态">
+              <template slot-scope="scope">
+                <el-tag size="medium" type="success">{{ scope.row.status}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="创建时间">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.time)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="所属候选图谱">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.candidateId}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="操作">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              @size-change="allTripleHandleSizeChange"
+              @current-change="allTripleHandleCurrentChange"
+              :current-page="allTripleCurrentPage"
+              :page-sizes="allTriplePageSizes"
+              :page-size="allTriplePageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="allTripleTotal"
+              key="1">
+          </el-pagination>
+        </div>
+
       </el-tab-pane>
       <el-tab-pane label="三元组(未归类)" name="second">
         <div class="block">
@@ -104,7 +192,7 @@
             </el-table-column>
             <el-table-column
                 label="头实体"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     {{ scope.row.head }}
@@ -114,7 +202,7 @@
             </el-table-column>
             <el-table-column
                 label="关系"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
@@ -123,7 +211,7 @@
             </el-table-column>
             <el-table-column
                 label="尾实体"
-                width>
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                    {{ scope.row.tail }}
@@ -139,7 +227,7 @@
             <el-table-column label="到来时间">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.time}}</span>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.time)}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -168,12 +256,12 @@
       </el-tab-pane>
       <el-tab-pane label="已选择" name="third">
         <el-dialog
-          title="生成确认"
+          title="生成信息确认"
           :visible.sync="kgDialogVisible"
           width="30%">
           <div>
-            <el-input placeholder="请输入候选图谱名称" v-model="kgName" ></el-input>
-            <el-input placeholder="为该候选图谱备注(可选)" style="display: grid;margin-top: 10px;" v-model="kgComment" ></el-input>
+            <el-input placeholder="请输入候选图谱名称" v-model="kgName" required="true"></el-input>
+            <el-input placeholder="为该候选图谱添加备注(可选)" style="display: grid;margin-top: 10px;" v-model="kgComment" ></el-input>
           </div>
           <span slot="footer" class="dialog-footer">
           <el-button @click="kgDialogVisible = false">取 消</el-button>
@@ -182,9 +270,8 @@
         </el-dialog>
         <el-popover
             placement="top"
-            width="250"
             v-model="popoverVisible">
-          <p>确定将这{{selectedTripleTotal}}条三元组生成候选图谱吗？</p>
+          <div style="margin-top: 10px;margin-bottom: 10px;">确定将这{{selectedTripleTotal}}条三元组生成候选图谱吗？</div>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="checkTriplesNum()">确定</el-button>
@@ -198,7 +285,7 @@
            >
           <el-table-column
               label="头实体"
-              width>
+              :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.head }}
@@ -208,7 +295,7 @@
           </el-table-column>
           <el-table-column
               label="关系"
-              width>
+              :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 <el-tag size="medium" type="warning">{{ scope.row.relation }}</el-tag>
@@ -217,7 +304,7 @@
           </el-table-column>
           <el-table-column
               label="尾实体"
-              width>
+              :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.tail }}
@@ -253,11 +340,14 @@
   </div>
 </template>
 <script>
+  import $ from '../../../plugins/jquery.min.js';
+  import moment from "moment";
   export default {
     data() {
       return {
         multipleSelection: [],
         activeName: 'first',
+        tabSelection:'实体库',
         pickerOptions: {
           shortcuts: [{
             text: '最近一天',
@@ -330,7 +420,19 @@
         selectedTriplePageSizes: [10, 50, 100, 200],
         //生成候选图谱所需数据
         kgName:'',
-        kgComment:''
+        kgComment:'',
+        //实体库数据
+        entityTableData:[],
+        entityCurrentPage:1,
+        entityPageSize:10,
+        entityPageSizes: [10, 50, 100, 200],
+        entityTotal:0,
+        //关系库数据
+        relationTableData:[],
+        relationCurrentPage:1,
+        relationPageSize:10,
+        relationPageSizes: [10, 50, 100, 200],
+        relationTotal:0
       }
     },
     methods: {
@@ -366,6 +468,14 @@
       },
       //处理tab页点击事件
       handleTabChange(tab, event) {
+        if(tab.name == "仓库"){
+          this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+          this.get_entities(this.entityCurrentPage,this.entityPageSize)
+          this.get_relations(this.relationCurrentPage,this.relationPageSize)
+        }
+        else{
+          this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+        }
       },
       //处理候选三元组分页事件
       candidateTripleHandleSizeChange(val) {
@@ -465,9 +575,11 @@
               this.selectedTriplePageList = []
               this.selectedTripleList = []
               this.candidateTriplePageList = []
-              //重新请求页面
+              //重新请求数据
               this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
               this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+              this.get_entities(this.entityCurrentPage,this.entityPageSize)
+              this.get_relations(this.relationCurrentPage,this.relationPageSize)
             }
             else{
               this.$message({
@@ -510,49 +622,102 @@
         .catch(function (error) {
           console.log(error)
         })
-      }
-      // del_all() {
-      //   for (var i = 0; i < this.multipleSelection.length; i++) {
-      //     for (var j = 0; j < this.tableData.length; j++) {
-      //       if (this.tableData[j] == this.multipleSelection[i])
-      //         this.tableData.splice(j, 1)
-      //     }
-      //   }
-      // },
-      // getNowTime() {
-      //   var date = new Date();
-      //   //年 getFullYear()：四位数字返回年份
-      //   var year = date.getFullYear(); //getFullYear()代替getYear()
-      //   //月 getMonth()：0 ~ 11
-      //   var month = date.getMonth() + 1;
-      //   //日 getDate()：(1 ~ 31)
-      //   var day = date.getDate();
-      //   //时 getHours()：(0 ~ 23)
-      //   var hour = date.getHours();
-      //   //分 getMinutes()： (0 ~ 59)
-      //   var minute = date.getMinutes();
-      //   //秒 getSeconds()：(0 ~ 59)
-      //   var second = date.getSeconds();
-      //   var time = year + '-' + this.addZero(month) + '-' + this.addZero(day) + '-' + this.addZero(hour) + ':' + this.addZero(minute) + ':' + this.addZero(second);
-      //   console.log(time)
-      //   return time;
-      // },
-      // //小于10的拼接上0字符串
-      // addZero(s) {
-      //   return s < 10 ? ('0' + s) : s;
-      // },
-      //
-      // handleEdit(index, row) {
-      //   console.log(index, row);
-      // },
-      // handleDelete(index, row) {
-      //   console.log(index, row);
-      //   row.splice(index, 1);
-      // },
+      },
+      //radio输入改变动作
+      handelInputChange(label){
+        if(label == "实体库"){
+          this.get_entities(this.entityCurrentPage,this.entityPageSize)
+          $("#entityWarehouse").show();
+          $("#relationWarehouse").hide();
+          $("#triplesWarehouse").hide();
+        }
+        else if(label == "关系库"){
+          this.get_relations(this.relationCurrentPage,this.relationPageSize)
+          $("#entityWarehouse").hide();
+          $("#relationWarehouse").show();
+          $("#triplesWarehouse").hide();
+        }
+        else if(label == "三元组库"){
+          this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+          $("#entityWarehouse").hide();
+          $("#relationWarehouse").hide();
+          $("#triplesWarehouse").show();
+        }
+      },
+      //时间格式化
+      dateFormat(data) {
+        return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
+      },
+      //请求所有实体数据
+      //向后端请求所有实体数据
+      get_entities(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/entity/getAllEntity',
+          params:{page:num,limit:limit}
+        })
+            .then((response) => {
+              if (response.status == 200) {
+                //修改数据
+                this.entityTableData = response.data.data
+                this.entityTotal = response.data.count
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      },
+      //实体数据size改变动作
+      entityHandleSizeChange(val){
+        //修改当前分页大小
+        this.candidateTriplePageSize = val;
+        //重新请求数据
+        this.get_entities(this.entityCurrentPage,val)
+      },
+      //实体数据翻页动作
+      entityHandleCurrentChange(val){
+        this.get_entities(val,this.entityPageSize)
+      },
+      //向后端请求所有关系数据
+      get_relations(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/relation/getAllRelation',
+          params:{page:num,limit:limit}
+        })
+            .then((response) => {
+              if (response.status == 200) {
+                //修改数据
+                this.relationTableData = response.data.data
+                this.relationTotal = response.data.count
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      },
+      //关系数据size改变动作
+      relationHandleSizeChange(val){
+        //修改当前分页大小
+        this.candidateTriplePageSize = val;
+        //重新请求数据
+        this.get_relations(this.relationCurrentPage,val)
+      },
+      //关系数据翻页动作
+      relationHandleCurrentChange(val){
+        this.get_relations(val,this.relationPageSize)
+      },
     },
     mounted() {
-      this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
+      // this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
       this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+      this.get_entities(this.entityCurrentPage,this.entityPageSize)
+      // this.get_relations(this.relationCurrentPage,this.relationPageSize)
+      $("#entityWarehouse").show();
+      $("#relationWarehouse").hide();
+      $("#triplesWarehouse").hide();
     }
   }
 </script>

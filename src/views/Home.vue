@@ -19,10 +19,10 @@
             <span style="color: azure;font-size: large;vertical-align:middle;">{{ username }}</span>
             <i class="el-icon-arrow-down" style="color: #000000;font-size: large;vertical-align:middle;"></i>
             <el-dropdown-menu>
-              <router-link to="/personal" class="routerlink">
+              <router-link to="/system_management/personal" class="routerlink">
                 <el-dropdown-item>个人中心</el-dropdown-item>
               </router-link>
-              <router-link to="/setting" class="routerlink">
+              <router-link to="/system_management/setting" class="routerlink">
                 <el-dropdown-item>设置</el-dropdown-item>
               </router-link>
               <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
@@ -107,18 +107,18 @@
               <span slot="title">候选生成管理</span>
             </template>
             <el-submenu index="2-1">
-              <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
-              <router-link to="/candidate/kg/show" class="routerlink">
-                <el-menu-item index="2-1-1"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
-              </router-link>
-              <router-link to="/candidate/kg/build" class="routerlink">
-                <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
-              </router-link>
               <router-link to="/candidate/kg/ner" class="routerlink">
                 <el-menu-item index="2-1-3"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/triplesExtraction" class="routerlink">
                 <el-menu-item index="2-1-4"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/kg/build" class="routerlink">
+                <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
+              </router-link>
+              <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
+              <router-link to="/candidate/kg/show" class="routerlink">
+                <el-menu-item index="2-1-1"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="2-2">
@@ -269,7 +269,7 @@
           </el-submenu>
           <el-submenu index="6" class="parent_submenu">
             <template slot="title">
-              <i class="el-icon-thumb"></i>
+              <i class="el-icon-house"></i>
               <span slot="title">系统管理</span>
             </template>
             <router-link  to="/system_management/authority" class="routerlink">

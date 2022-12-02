@@ -1,105 +1,104 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-tabs type="border-card" v-loading="loading">
+    <el-tabs type="card" v-loading="loading" @tab-click="handleTabChange">
       <el-tab-pane label="选择候选图谱">
-        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_datasets()">读取候选图谱</el-button>
+        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_kgs(candidateKgCurrentPage,candidateKgPageSize);">读取候选图谱</el-button>
         <el-dialog title="读取候选图谱" :visible.sync="dialogTableVisible">
           <el-table
-            ref="multipleTable"
-            :data="gridData"
-            tooltip-effect="dark"
-            border
-            style=" margin-top: 10px;"
-            @selection-change="handleSelectionChange">
-            <el-table-column
-              type="selection"
-              width>
+              :data="candidateKgPageList"
+              border
+              style="width: 100%; margin-top:10px"
+              @selection-change="handleSelectionChange">
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column label="名称(最新版本)" >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="创建者" >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.creator }}</span>
+              </template>
             </el-table-column>
             <el-table-column
-              label="创建时间"
-              width>
-              <template slot-scope="scope">{{ scope.row.time }}</template>
+                label="创建时间">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.createTime)}}</span>
+              </template>
             </el-table-column>
-            <el-table-column
-              prop="stem"
-              label="数据集名称"
-              width>
-            </el-table-column>
-            <el-table-column
-              prop="num_of_triples"
-              label="三元组数目"
-              show-overflow-tooltip>
+            <el-table-column label="最后修改时间" width>
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ dateFormat(scope.row.changeTime)}}</span>
+              </template>
             </el-table-column>
           </el-table>
           <el-pagination
-            layout="prev, pager, next"
-            :total="50">
+              @size-change="candidateKgHandleSizeChange"
+              @current-change="candidateKgHandleCurrentChange"
+              :current-page="candidateKgCurrentPage"
+              :page-sizes="candidateKgPageSizes"
+              :page-size="candidateKgPageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="candidateKgTotal">
           </el-pagination>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogTableVisible = false">取消</el-button>
-            <el-button type="primary" @click="dialogTableVisible = false; readTriplesFromSelectedDataset()">确定</el-button>
+            <el-button type="primary" @click="dialogTableVisible = false; readTriplesFromSelectedDataset(triplesCurrentPage, triplesPageSize)">确定</el-button>
           </div>
         </el-dialog>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <!-- <el-button type="primary" style="margin: 0px;">读取文件</el-button>
         <el-button type="primary" style="margin: 0px;">读取数据库</el-button> -->
         <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
-        <el-table
-          :data="tableData1"
-          border
-          style="width: 100%; margin-top:10px">
-          <el-table-column
+        <el-table :data="triplesPageList">
+        <el-table-column
           label="创建时间"
-          width="250">
+          prop="date">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ dateFormat(scope.row.time) }}</span>
+        </template>
+      </el-table-column>         
+        <el-table-column
+            label="源实体"
+            prop="date">
           <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.time }}</span>
+            <span style="margin-left: 10px">{{ scope.row.head }}</span>
           </template>
-          </el-table-column>
-          <el-table-column
-          label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
-          width>
+        </el-table-column>
+        <el-table-column
+            label="关系"
+            prop="name">
           <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.h }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.h_typ }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.t }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.t_typ }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.r }}</el-tag>
-              </div>
+            <span style="margin-left: 10px">{{ scope.row.relation }}</span>
           </template>
-          </el-table-column>
-          <el-table-column
-          label="三元组来源"
-          width="180">
+        </el-table-column>
+        <el-table-column
+            label="目标实体"
+            prop="name">
           <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.from_where }}</span>
+            <span style="margin-left: 10px">{{ scope.row.tail }}</span>
           </template>
-          </el-table-column>
-          <el-table-column label="操作" width="150">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          @size-change="sizeChange"
-          @current-change="currentChange"
-          :current-page="tableData1_page"
-          :page-size="tableData1_size"
-          key="page1"
-          :page-sizes="pageSizes"
-          background
+        </el-table-column>
+        <el-table-column
+            label="操作"
+            prop="name">
+          <template slot-scope="scope">
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+          @size-change="triplesHandleSizeChange"
+          @current-change="triplesHandleCurrentChange"
+          :current-page="triplesCurrentPage"
+          :page-sizes="triplesPageSizes"
+          :page-size="triplesPageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData1_total"
-          style="margin-top: 10px;">
-        </el-pagination>
+          :total="triplesTotal">
+      </el-pagination>
         <el-button type="primary" @click="dialogOfModelSelection = true; get_saved_models_list();" style="margin-top:10px;">开始检测</el-button>
         <el-dialog title="选择补全模型" :visible.sync="dialogOfModelSelection">
           <span style=" margin-right:10px"><font size="3">当前补全模型为<b>{{model_name}}</b></font></span>
@@ -158,7 +157,6 @@
         </el-dialog>
       </el-tab-pane>
       <el-tab-pane label="置信检测">
-        <el-button type="primary"  @click="next">读取候选图谱</el-button>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
         <el-table
@@ -168,18 +166,18 @@
           <el-table-column
             label="创建时间"
             width="230">
-            <template slot-scope="scope">{{ scope.row.time }}</template>
+            <template slot-scope="scope">{{ dateFormat(scope.row.time) }}</template>
           </el-table-column>
           <el-table-column
           label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
           width= "600">
           <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.h }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.h_typ }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.t }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.t_typ }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.r }}</el-tag>
+                  <el-tag size="medium">{{ scope.row.head }}</el-tag>
+                  <!-- <el-tag size="medium">{{ scope.row.h_typ }}</el-tag> -->
+                  <el-tag size="medium">{{ scope.row.tail }}</el-tag>
+                  <!-- <el-tag size="medium">{{ scope.row.t_typ }}</el-tag> -->
+                  <el-tag size="medium">{{ scope.row.relation }}</el-tag>
               </div>
           </template>
           </el-table-column>
@@ -224,7 +222,6 @@
         <el-button type="primary" @click="insert_triples_to_neo4j();" style="margin-top:10px;">开始插入</el-button>
       </el-tab-pane>
       <el-tab-pane label="插入图谱">
-        <el-button type="primary"  @click="next">读取候选图谱</el-button>
         <el-button type="info" style="margin: 0px;">手动输入</el-button>
         <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
         <el-table
@@ -438,9 +435,16 @@ p {
 </style>
 <script>
   import * as echarts from 'echarts';
+  import moment from "moment";
   export default {
     data() {
       return {
+        // 右侧三元组显示
+        triplesPageList:[],
+        triplesCurrentPage: 1,
+        triplesTotal: 0,
+        triplesPageSize: 10,
+        triplesPageSizes: [10, 20, 30, 50],
         // 选中补全模型的表格，放置在dialog中
         modelSelectionTable: [],
         dialogOfModelSelection: false, // 设置补全模型dialog显示的boolean变量
@@ -448,6 +452,12 @@ p {
         loading :false,
         triplesBeforeInsert:[],
         resultAfterInsert:[],
+        //展示候选图谱的分页
+        candidateKgPageList:[],
+        candidateKgCurrentPage: 1,
+        candidateKgTotal: 0,
+        candidateKgPageSize: 10,
+        candidateKgPageSizes: [10, 50, 100, 200],
         //读取候选数据集后的分页
         tableData1_page: 1,
         tableData2_page: 1,
@@ -495,6 +505,50 @@ p {
       }
     },
     methods: {
+      dateFormat(data) {
+        return moment(new Date(data).getTime()).format('YYYY-MM-DD');
+      },
+      //处理页容量改变事件
+      triplesHandleSizeChange(val) {
+        //修改当前分页大小
+        this.triplesPageSize= val;
+        //重新请求数据
+        this.readTriplesFromSelectedDataset(this.triplesCurrentPage, val)
+      },
+      //翻页动作
+      triplesHandleCurrentChange(val) {
+        this.readTriplesFromSelectedDataset(val, this.triplesPageSize)
+      },
+      //处理候选图谱分页事件
+      candidateKgHandleSizeChange(val) {
+        //修改当前分页大小
+        this.candidateKgPageSize= val;
+        //重新请求数据
+        this.get_candidate_kgs(this.candidateKgCurrentPage,val)
+      },
+      //翻页动作
+      candidateKgHandleCurrentChange(val) {
+        this.get_candidate_kgs(val,this.candidateKgPageSize)
+      },
+      //向后端请求候选三元组数据
+      get_candidate_kgs(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/candidateKg/getAllCandidateKg',
+          params:{page:num,limit:limit}
+        })
+            .then((response) => {
+              if (response.status == 200) {
+                //修改数据
+                this.candidateKgPageList = response.data.data
+                this.candidateKgTotal = response.data.count
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      },
       //tableData1获取表格数据，自行分页
       getTableData(){
         //allData为全部数据
@@ -572,26 +626,19 @@ p {
         this.multipleSelection = val;
       }, 
       //读取候选三元组中的数据
-      readTriplesFromSelectedDataset(){
-        for (var j = 0; j < this.multipleSelection.length; j ++){
-          this.selectedDatasets.push(this.multipleSelection[j]['stem'])
-        }
-        let content = this.selectedDatasets;
-        //如果为空，提示
-        if(content==""){
-          this.$message({
-            type: 'warning',
-            message: '请输入信息'
-          });
-        }
-        else{
-          this.loading = true;
-          //axios请求
-          axios.post('/pythonApi/load_triples_from_candidate_datasets',{
-            data: this.selectedDatasets,
-          })
-          .then((response)=>{
+      readTriplesFromSelectedDataset(num, limit){
+        console.log('确实来这里了')
+        console.log(this.multipleSelection[0]['id'])
+        axios.request({
+          method:"POST",
+          url:'/api/triples/getTriplesFromSameKg',
+          params:{page:num,limit:limit,id:this.multipleSelection[0]['id']}
+        })
+          .then((response) => {
             if (response.status == 200) {
+              //修改数据
+              this.triplesPageList = response.data.data
+              this.triplesTotal = response.data.count
               const h = this.$createElement;
               this.$notify({
                 title: '添加完毕',
@@ -599,22 +646,18 @@ p {
                 offset: 100
               });
               //赋值给表格
-              this.allTriplesBeforeCheck = response.data.data;
-              this.getTableData();
-              console.log(this.allTriplesBeforeCheck)
               this.loading = false;
               }
           })
           .catch(function (error) {
             console.log(error)
           })
-        }
-        this.selectedDatasets = []
       },  
       //送给后端质检服务
       send_for_quality_inspection(){
         //如果为空，提示
-        if(this.allTriplesBeforeCheck.length == 0){
+        //triplesPageList
+        if(this.triplesPageList.length == 0){
           this.$message({
             type: 'warning',
             message: '请输入信息'
@@ -624,7 +667,8 @@ p {
           this.loading = true;
           //axios请求
           axios.post('/pythonApi/triple_classification',{
-            data: this.allTriplesBeforeCheck,
+            //triplesPageList
+            data: this.triplesPageList,
           })
           .then((response)=>{
             if (response.status == 200) {
@@ -1079,13 +1123,20 @@ p {
 
         option && myChart.setOption(option);
       },
+      //处理tab页展开事件
+      handleTabChange(tab, event) {
+        if(tab.label=="模型管理"){
+          this.get_gpu_status()
+          this.get_cpu_status()
+        }
+      },
     },
     mounted(){
-      this.get_gpu_status()
-      this.get_cpu_status()
+      console.log(this.loading)
+      // this.get_saved_models_list();
     },
     created(){
-      this.get_saved_models_list();
+      // this.get_saved_models_list();
     }
   }
 </script>

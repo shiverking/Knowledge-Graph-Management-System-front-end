@@ -33,14 +33,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://127.0.0.1:8081', // 需要跨域请求的地址或者IP
+        target: 'http://192.168.0.106:8081', // 需要跨域请求的地址或者IP
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {
           '^/api': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
         }
       },
       '/pythonApi': {
-        target: 'http://192.168.0.110:8089', // 需要跨域请求的地址或者IP
+        // target: 'http://192.168.0.112:8089', // 需要跨域请求的地址或者IP
+        target: 'http://127.0.0.1:8088',
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {
           '^/pythonApi': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
