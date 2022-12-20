@@ -1,292 +1,41 @@
 <template>
   <div style="margin-top: 20px;">
     <el-tabs type="card" v-loading="loading" @tab-click="handleTabChange">
-      <el-tab-pane label="选择候选图谱">
-        <el-button type="primary"  @click="dialogTableVisible = true; get_candidate_kgs(candidateKgCurrentPage,candidateKgPageSize);">读取候选图谱</el-button>
-        <el-dialog title="读取候选图谱" :visible.sync="dialogTableVisible">
-          <el-table
-              :data="candidateKgPageList"
-              border
-              style="width: 100%; margin-top:10px"
-              @selection-change="handleSelectionChange">
-            <el-table-column type="selection">
-            </el-table-column>
-            <el-table-column label="名称(最新版本)" >
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="创建者" >
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.creator }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="创建时间">
-              <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ dateFormat(scope.row.createTime)}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="最后修改时间" width>
-              <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ dateFormat(scope.row.changeTime)}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-pagination
-              @size-change="candidateKgHandleSizeChange"
-              @current-change="candidateKgHandleCurrentChange"
-              :current-page="candidateKgCurrentPage"
-              :page-sizes="candidateKgPageSizes"
-              :page-size="candidateKgPageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="candidateKgTotal">
-          </el-pagination>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogTableVisible = false">取消</el-button>
-            <el-button type="primary" @click="dialogTableVisible = false; readTriplesFromSelectedDataset(triplesCurrentPage, triplesPageSize)">确定</el-button>
-          </div>
-        </el-dialog>
-        <el-button type="info" style="margin: 0px;">手动输入</el-button>
-        <!-- <el-button type="primary" style="margin: 0px;">读取文件</el-button>
-        <el-button type="primary" style="margin: 0px;">读取数据库</el-button> -->
-        <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
-        <el-table :data="triplesPageList">
-        <el-table-column
-          label="创建时间"
-          prop="date">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ dateFormat(scope.row.time) }}</span>
-        </template>
-      </el-table-column>         
-        <el-table-column
-            label="源实体"
-            prop="date">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.head }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="关系"
-            prop="name">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.relation }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="目标实体"
-            prop="name">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.tail }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="操作"
-            prop="name">
-          <template slot-scope="scope">
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          @size-change="triplesHandleSizeChange"
-          @current-change="triplesHandleCurrentChange"
-          :current-page="triplesCurrentPage"
-          :page-sizes="triplesPageSizes"
-          :page-size="triplesPageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="triplesTotal">
-      </el-pagination>
-        <el-button type="primary" @click="dialogOfModelSelection = true; get_saved_models_list();" style="margin-top:10px;">开始检测</el-button>
-        <el-dialog title="选择补全模型" :visible.sync="dialogOfModelSelection">
-          <span style=" margin-right:10px"><font size="3">当前补全模型为<b>{{model_name}}</b></font></span>
-          <el-table
-            border
-            ref="singleTable"
-            :data="tableData4"
-            highlight-current-row
-            style="width: 100%; margin-top: 10px;">
-            <el-table-column
-              type="index"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              property="time"
-              label="创建时间"
-              width="250">
-            </el-table-column>
-            <el-table-column
-              property="stem"
-              label="模型名称"
-              width ="200">
-            </el-table-column>
-            <el-table-column
-              property="train_set"
-              label="训练集"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              property="Hits1"
-              label="Hits@1" width="100">
-            </el-table-column>
-            <el-table-column
-              property="Hits10"
-              label="Hits@10" width="100">
-            </el-table-column>
-            <el-table-column width="100"
-              property="MRR"
-              label="MRR">
-            </el-table-column>
-          </el-table>
-          <el-pagination
-            @size-change="sizeChange4"
-            @current-change="currentChange4"
-            :current-page="tableData4_page"
-            :page-size="tableData4_size"
-            :page-sizes="pageSizes"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="tableData4_total"
-            style="margin-top: 10px;">
-          </el-pagination>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogOfModelSelection = false;">取消</el-button>
-            <el-button type="primary" @click="dialogOfModelSelection = false; send_for_quality_inspection();">确定</el-button>
-          </div>
-        </el-dialog>
-      </el-tab-pane>
-      <el-tab-pane label="置信检测">
-        <el-button type="info" style="margin: 0px;">手动输入</el-button>
-        <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
-        <el-table
-          :data="tableData2"
-          border
-          style="width: 100%; margin-top:10px">
-          <el-table-column
-            label="创建时间"
-            width="230">
-            <template slot-scope="scope">{{ dateFormat(scope.row.time) }}</template>
-          </el-table-column>
-          <el-table-column
-          label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
-          width= "600">
-          <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.head }}</el-tag>
-                  <!-- <el-tag size="medium">{{ scope.row.h_typ }}</el-tag> -->
-                  <el-tag size="medium">{{ scope.row.tail }}</el-tag>
-                  <!-- <el-tag size="medium">{{ scope.row.t_typ }}</el-tag> -->
-                  <el-tag size="medium">{{ scope.row.relation }}</el-tag>
-              </div>
-          </template>
-          </el-table-column>
-          <el-table-column
-          label="三元组分类结果"
-          width="400">
-          <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.res}}</span>
-          </template>
-          </el-table-column>       
-          <el-table-column
-          label="三元组来源"
-          width="120">
-          <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.from_where }}</span>
-          </template>
-          </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          @size-change="sizeChange2"
-          @current-change="currentChange2"
-          :current-page="tableData2_page"
-          :page-size="tableData2_size"
-          :page-sizes="pageSizes"
-          key="page2"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData2_total"
-          style="margin-top: 10px;">
-        </el-pagination>
-        <el-button type="primary" @click="insert_triples_to_neo4j();" style="margin-top:10px;">开始插入</el-button>
-      </el-tab-pane>
-      <el-tab-pane label="插入图谱">
-        <el-button type="info" style="margin: 0px;">手动输入</el-button>
-        <el-button type="danger" @click="next" style="margin: 0px;">重置</el-button>
-        <el-table
-          :data="tableData3"
-          border
-          style="width: 100%; margin-top:10px">
-          <el-table-column
-          label="插入时间"
-          width="220">
-          <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.time }}</span>
-          </template>
-          </el-table-column>
-          <el-table-column
-          label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)"
-          width = "600">
-          <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.h }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.h_typ }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.t }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.t_typ }}</el-tag>
-                  <el-tag size="medium">{{ scope.row.r }}</el-tag>
-              </div>
-          </template>
-          </el-table-column>
-          <el-table-column
-          label="插入结果"
-          width="500">
-          <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.res }}</span>
-          </template>
-          </el-table-column>
-          <el-table-column
-          label="三元组来源"
-          width="120">
-          <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.from_where }}</span>
-          </template>
-          </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          @size-change="sizeChange3"
-          @current-change="currentChange3"
-          :current-page="tableData3_page"
-          :page-size="tableData3_size"
-          :page-sizes="pageSizes"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData3_total"
-          style="margin-top: 10px;">
-        </el-pagination>
-        <el-button type="warning" style="margin-top:10px">冲突处理</el-button>
+      <el-tab-pane label="概览">
+        <el-row :gutter="12" style="margin-bottom:10px">
+          <el-col :span="8">
+            <el-card shadow="hover">
+              结点数目
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
+              关系数目
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
+              实体类别数
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="8">
+            <el-card shadow="hover">
+              <div id="entity_type_bar" style="height:400px; width:500px; display:inline-block;"></div>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
+              <div id="relation_bar" style="height:400px; width:500px; display:inline-block;"></div>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
+              <div id="evaluation_lines" style="height:400px; width:500px; display:inline-block;"></div>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-tab-pane>
       <el-tab-pane label="链接预测">
         <el-button type="primary" @click="link_prediction" style="margin: 0px;">开始识别</el-button>
@@ -303,6 +52,46 @@
           <h4 class="ner_label">链接预测结果</h4>
           <span class="ner_result" id="ner_result" style="margin-top:10px">{{LinkPredictionResult}}</span>
         </el-card>      
+      </el-tab-pane>
+      <el-tab-pane label="待融合数据">
+        <el-table
+          :data="tableData"
+          border
+          style="width: 100%">
+          <el-table-column
+            label="日期"
+            width="180">
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="姓名"
+            width="180">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="top">
+                <p>姓名: {{ scope.row.name }}</p>
+                <p>住址: {{ scope.row.address }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-button plain style="margin-top:10px">提交融合</el-button>
       </el-tab-pane>
       <el-tab-pane label="模型管理">
         <el-table
@@ -364,9 +153,9 @@
           :total="tableData4_total"
           style="margin-top: 10px;">
         </el-pagination>
-        <el-card id="gpu_status" el-card shadow="always" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
-        <el-card id="cpu_status" el-card shadow="always" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
-        <el-card shadow="always" style="margin-top:10px; width:auto; height:360px;" v-loading="trainLoading" element-loading-text="拼命训练中">
+        <el-card id="gpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
+        <el-card id="cpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
+        <el-card shadow="hover" style="margin-top:10px; width:auto; height:360px;" v-loading="trainLoading" element-loading-text="拼命训练中">
           <el-form ref="form" :model="form" label-width="80px">
             <b>训练新模型</b>
             <el-form-item label="选择模型" style="margin-top:15px">
@@ -396,7 +185,7 @@
           </el-form>
           <el-button type="primary" @click="train_model();get_updating_train_log();">开始训练</el-button>
         </el-card>
-        <el-card shadow="always"  class="ner_card" v-loading="loading">
+        <el-card shadow="hover"  class="ner_card" v-loading="loading">
           <h4 class="ner_label">训练日志</h4>
             <el-input
               style="display: block;margin-top:10px;"
@@ -436,6 +225,7 @@ p {
 <script>
   import * as echarts from 'echarts';
   import moment from "moment";
+  import $ from '../../../plugins/jquery.min.js';
   export default {
     data() {
       return {
@@ -1130,10 +920,180 @@ p {
           this.get_cpu_status()
         }
       },
+      getRelationBar(){
+        var chartDom = document.getElementById('relation_bar');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+          title: {
+            text: '关系排行'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          // grid: {
+          //   left: '3%',
+          //   right: '4%',
+          //   bottom: '3%',
+          //   containLabel: true
+          // },
+          grid:{
+            top:60,
+            x:45,
+            x2:100,
+            y2:30,
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+          },
+          yAxis: {
+            type: 'category',
+            data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+          },
+          series: [
+            {
+              name: '2011',
+              type: 'bar',
+              color: 'orange',
+              data: [18203, 23489, 29034, 104970, 131744, 630230]
+            },
+          ]
+        };
+
+        option && myChart.setOption(option);
+      },
+      getEntityTypeBar(){
+        var chartDom = document.getElementById('entity_type_bar');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+          title: {
+            text: '实体类型对应的实例排行'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          // grid: {
+          //   left: '3%',
+          //   right: '4%',
+          //   bottom: '3%',
+          //   containLabel: true
+          // },
+          grid:{
+            top:60,
+            x:45,
+            x2:100,
+            y2:30,
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+          },
+          yAxis: {
+            type: 'category',
+            data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+          },
+          series: [
+ 
+            {
+              name: '2012',
+              type: 'bar',
+              color: 'black',
+              data: [19325, 23438, 31000, 121594, 134141, 281807]
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+      },
+      getBoxPlot(){
+        var chartDom = document.getElementById('evaluation_lines');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+          title: {
+            text: 'Stacked Line'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            top: "7%",
+            data: ['MRR', 'Hits@1', 'Hits@3', 'Hits@10']
+          },
+          // grid: {
+          //   left: '3%',
+          //   right: '4%',
+          //   bottom: '3%',
+          //   containLabel: true
+          // },
+          grid:{
+            top:60,
+            x:45,
+            x2:100,
+            y2:30,
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: 'MRR',
+              type: 'line',
+              stack: 'Total',
+              data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+              name: 'Hits@1',
+              type: 'line',
+              stack: 'Total',
+              data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+              name: 'Hits@3',
+              type: 'line',
+              stack: 'Total',
+              data: [150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+              name: 'Hits@10',
+              type: 'line',
+              stack: 'Total',
+              data: [320, 332, 301, 334, 390, 330, 320]
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+
+      }
     },
     mounted(){
       console.log(this.loading)
       // this.get_saved_models_list();
+      this.getRelationBar()
+      this.getEntityTypeBar()
+      this.getBoxPlot()
     },
     created(){
       // this.get_saved_models_list();
