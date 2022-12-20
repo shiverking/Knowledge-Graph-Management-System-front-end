@@ -161,6 +161,7 @@
 <script>
 import * as G6 from '../../plugins/g6.min.js';
 import $ from '../../plugins/jquery.min.js';
+import insertCss from 'insert-css';
 
 export default {
   name: "Detail",
@@ -249,12 +250,49 @@ export default {
               }
               let from = map.get(head)
               let to =map.get(tail)
-              this.edges.push({source:from, target:to,label:relation})
+              this.edges.push({source:from, target:to,name:relation})
           }
           var paneName = "pane-" + id;
           var container = document.getElementById(paneName).children[0].children[0];
           const width = container.scrollWidth;
           const height = container.offsetHeight;
+          //下面内容为设置相邻节点高亮
+          insertCss(`
+            .g6-component-tooltip {
+              border: 1px solid #e2e2e2;
+              border-radius: 4px;
+              font-size: 12px;
+              color: #000;
+              background-color: rgba(255, 255, 255, 0.9);
+              padding: 10px 8px;
+              box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+            }
+          `);
+          const tooltip = new G6.Tooltip({
+            offsetX: 10,
+            offsetY: 10,
+            fixToNode: [1, 0.5],
+            // the types of items that allow the tooltip show up
+            // 允许出现 tooltip 的 item 类型
+            itemTypes: ['node', 'edge'],
+            // custom the tooltip's content
+            // 自定义 tooltip 内容
+            getContent: (e) => {
+              const outDiv = document.createElement('div');
+              outDiv.style.width = 'fit-content';
+              outDiv.style.height = 'fit-content';
+              const model = e.item.getModel();
+              if (e.item.getType() === 'node') {
+                outDiv.innerHTML = `${model.label}`;
+              } else {
+                const source = e.item.getSource();
+                const target = e.item.getTarget();
+                console.log(e.item)
+                outDiv.innerHTML = `关系类型: ${model.name}<br/>头实体: ${source.getModel().label}<br/>尾实体: ${target.getModel().label}`;
+              }
+              return outDiv;
+            },
+          });
           // const minimap = new G6.Minimap({
           //   size: [200, 200],
           //   className: 'minimap',
@@ -268,10 +306,7 @@ export default {
               type: 'force',
               preventOverlap: true,
               linkDistance: (d) => {
-                if (d.source.id === 'node0') {
-                  return 300;
-                }
-                return 200;
+                return 300;
               },
               nodeStrength: (d) => {
                 if (d.isLeaf) {
@@ -280,36 +315,98 @@ export default {
                 return -10;
               },
               edgeStrength: (d) => {
-                if (d.source.id === 'node1' || d.source.id === 'node2' || d.source.id === 'node3') {
-                  return 0.7;
-                }
-                return 0.1;
+                return 0.2;
               },
             },
             defaultNode: {
-              color: '#5B8FF9',
+              size: [10, 10],
+              style: {
+                lineWidth: 1,
+                fill: '#DEE9FF',
+                stroke: '#5B8FF9',
+              },
             },
+            defaultEdge: {
+              size: 1,
+              style: {
+                stroke: '#e2e2e2',
+                lineAppendWidth: 2,
+              },
+            },
+            nodeStateStyles: {
+              highlight: {
+                opacity: 1,
+              },
+              dark: {
+                opacity: 0.2,
+              },
+            },
+            edgeStateStyles: {
+              highlight: {
+                stroke: '#999',
+              },
+            },
+            // defaultNode: {
+            //   color: '#5B8FF9',
+            // },
             // 允许拖拽画布、放缩画布、拖拽节点
             modes: {
-              default: ['drag-canvas','zoom-canvas', 'drag-node'],
+              default: ['drag-canvas','zoom-canvas', 'drag-node','activate-relations'],
             },
             //配置插件
-            // plugins: [minimap], // 将 minimap 实例配置到图上
+            plugins: [tooltip], // 将 minimap 实例配置到图上
           });
           const nodes = this.nodes;
-          graph.data({
-            nodes:this.nodes,
-            edges: this.edges,
+          //移入节点高亮
+          function clearAllStats() {
+            graph.setAutoPaint(false);
+            graph.getNodes().forEach(function (node) {
+              graph.clearItemStates(node);
+            });
+            graph.getEdges().forEach(function (edge) {
+              graph.clearItemStates(edge);
+            });
+            graph.paint();
+            graph.setAutoPaint(true);
+          }
+
+          graph.on('node:mouseenter', function (e) {
+            const item = e.item;
+            graph.setAutoPaint(false);
+            graph.getNodes().forEach(function (node) {
+              graph.clearItemStates(node);
+              graph.setItemState(node, 'dark', true);
+            });
+            graph.setItemState(item, 'dark', false);
+            graph.setItemState(item, 'highlight', true);
+            graph.getEdges().forEach(function (edge) {
+              if (edge.getSource() === item) {
+                graph.setItemState(edge.getTarget(), 'dark', false);
+                graph.setItemState(edge.getTarget(), 'highlight', true);
+                graph.setItemState(edge, 'highlight', true);
+                edge.toFront();
+              } else if (edge.getTarget() === item) {
+                graph.setItemState(edge.getSource(), 'dark', false);
+                graph.setItemState(edge.getSource(), 'highlight', true);
+                graph.setItemState(edge, 'highlight', true);
+                edge.toFront();
+              } else {
+                graph.setItemState(edge, 'highlight', false);
+              }
+            });
+            graph.paint();
+            graph.setAutoPaint(true);
           });
-          // graph.data({
-          //   nodes,
-          //   edges: this.edges.map(function (edge, i) {
-          //     edge.id = 'edge' + i;
-          //     return Object.assign({}, edge);
-          //   }),
-          // });
+          graph.on('node:mouseleave', clearAllStats);
+          graph.on('canvas:click', clearAllStats);
+          graph.data({
+            nodes,
+            edges: this.edges.map(function (edge, i) {
+              edge.id = 'edge' + i;
+              return Object.assign({}, edge);
+            }),
+          });
           graph.render();
-          console.log("渲染完成")
           graph.on('node:dragstart', function (e) {
             graph.layout();
             refreshDragedNodePosition(e);

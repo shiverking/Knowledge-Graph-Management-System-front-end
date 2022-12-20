@@ -56,7 +56,6 @@
 p {
   word-break: break-all;
   word-wrap: break-word;
-  text-indent: 2em;
 }
 .ner_result{
   word-break: normal;

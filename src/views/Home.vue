@@ -107,19 +107,23 @@
               <span slot="title">候选生成管理</span>
             </template>
             <el-submenu index="2-1">
+              <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
               <router-link to="/candidate/kg/ner" class="routerlink">
-                <el-menu-item index="2-1-3"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
+                <el-menu-item index="2-1-1"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/triplesExtraction" class="routerlink">
-                <el-menu-item index="2-1-4"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
+                <el-menu-item index="2-1-2"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/build" class="routerlink">
-                <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
+                <el-menu-item index="2-1-3"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
               </router-link>
-              <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
+              <router-link to="/candidate/kg/merge" class="routerlink">
+                <el-menu-item index="2-1-5"><i class="el-icon-document-add"></i>候选图谱融合</el-menu-item>
+              </router-link>
               <router-link to="/candidate/kg/show" class="routerlink">
-                <el-menu-item index="2-1-1"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
+                <el-menu-item index="2-1-4"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
               </router-link>
+
             </el-submenu>
             <el-submenu index="2-2">
               <template slot="title"><i class="el-icon-cloudy-and-sunny"></i>候选本体</template>
@@ -181,9 +185,6 @@
               <router-link to="/coredata/mainkg/display" class="routerlink">
                 <el-menu-item index="4-1-1"><i class="el-icon-view"></i>图谱展示</el-menu-item>
               </router-link>
-              <router-link to="/coredata/mainkg/version" class="routerlink">
-                <el-menu-item index="4-1-4"><i class="el-icon-tickets"></i>版本控制</el-menu-item>
-              </router-link>
               <router-link to="/coredata/mainkg/topic" class="routerlink">
                 <el-menu-item index="4-1-2"><i class="el-icon-brush"></i>主题图谱</el-menu-item>
               </router-link>
@@ -198,9 +199,6 @@
               </template>
               <router-link to="/coredata/mainontology/display" class="routerlink">
                 <el-menu-item index="4-2-1"><i class="el-icon-view"></i>本体展示</el-menu-item>
-              </router-link>
-              <router-link to="/coredata/mainontology/version" class="routerlink">
-                <el-menu-item index="4-2-2"><i class="el-icon-tickets"></i>版本控制</el-menu-item>
               </router-link>
             </el-submenu>
           </el-submenu>
@@ -505,12 +503,13 @@ export default {
         {"value": "主页", "location":"/"},
         {"value": "/数据管理/结构化数据管理/数据分析", "location":"/data/structure/analysis"},
         {"value": "/数据管理/半结构化数据管理", "location":"/data/semistructure"},
-        {"value": "/候选生成管理/图谱融合/候选图谱展示", "location":"/candidate/kg/show"},
-        {"value": "/候选生成管理/图谱融合/候选图谱构建", "location":"/candidate/kg/build"},
-        {"value": "/候选生成管理/图谱融合/实体抽取", "location":"/candidate/kg/ner"},
-        {"value": "/候选生成管理/图谱融合/三元组抽取", "location":"/candidate/kg/triplesExtraction"},
-        {"value": "/候选生成管理/本体融合/候选本体展示", "location":"/candidate/ontology/show"},
-        {"value": "/候选生成管理/本体融合/候选本体构建", "location":"/candidate/ontology/build"},
+        {"value": "/候选生成管理/候选图谱/候选图谱展示", "location":"/candidate/kg/show"},
+        {"value": "/候选生成管理/候选图谱/候选图谱构建", "location":"/candidate/kg/build"},
+        {"value": "/候选生成管理/候选图谱/候选融合", "location":"/candidate/kg/merge"},
+        {"value": "/候选生成管理/候选图谱/实体抽取", "location":"/candidate/kg/ner"},
+        {"value": "/候选生成管理/候选图谱/三元组抽取", "location":"/candidate/kg/triplesExtraction"},
+        {"value": "/候选生成管理/候选本体/候选本体展示", "location":"/candidate/ontology/show"},
+        {"value": "/候选生成管理/候选本体/候选本体构建", "location":"/candidate/ontology/build"},
         {"value": "/融合管理/图谱融合/融合", "location":"/merge/kg/merge"},
         {"value": "/融合管理/图谱融合/图谱补全", "location":"/merge/kg/completion"},
         {"value": "/融合管理/图谱融合/质量评估", "location":"/merge/kg/evaluation"},
@@ -521,9 +520,7 @@ export default {
         {"value": "/核心数仓管理/核心图谱/核心图谱展示", "location":"/coredata/mainkg/display"},
         {"value": "/核心数仓管理/核心图谱/主题图谱", "location":"/coredata/mainkg/topic"},
         {"value": "/核心数仓管理/核心图谱/态势认知图谱", "location":"/coredata/mainkg/situation"},
-        {"value": "/核心数仓管理/核心图谱/版本控制", "location":"/coredata/mainkg/version"},
         {"value": "/核心数仓管理/核心本体/核心本体展示", "location":"/coredata/mainontology/display"},
-        {"value": "/核心数仓管理/核心本体/版本控制", "location":"/coredata/mainontology/version"},
         {"value": "/系统管理/权限管理", "location":"/system_management/authority"},
         {"value": "/系统管理/角色管理", "location":"/system_management/role"},
         {"value": "/系统管理/设置", "location":"/system_management/setting"},
