@@ -1022,7 +1022,7 @@ p {
 
         option = {
           title: {
-            text: 'Stacked Line'
+            text: '图谱嵌入指标'
           },
           tooltip: {
             trigger: 'axis'
