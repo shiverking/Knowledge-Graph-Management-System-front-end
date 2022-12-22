@@ -6,16 +6,19 @@
           <el-col :span="8">
             <el-card shadow="hover">
               结点数目
+              <span style="fontSize:20px; color:blue">{{node_count}}</span>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
               关系数目
+              <span style="fontSize:20px; color:blue">{{edge_count}}</span>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
               实体类别数
+              <span style="fontSize:20px; color:blue">{{node_label_count}}</span>
             </el-card>
           </el-col>
         </el-row>
@@ -53,7 +56,7 @@
           <span class="ner_result" id="ner_result" style="margin-top:10px">{{LinkPredictionResult}}</span>
         </el-card>      
       </el-tab-pane>
-      <el-tab-pane label="待融合数据">
+      <el-tab-pane label="待提交数据">
         <el-table
           :data="tableData"
           border
@@ -91,7 +94,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-button plain style="margin-top:10px">提交融合</el-button>
+        <el-button plain style="margin-top:10px">提交</el-button>
       </el-tab-pane>
       <el-tab-pane label="模型管理">
         <el-table
@@ -292,6 +295,9 @@ p {
           epoch: '600'
         },
         formLabelWidth: '120px', //表单样式
+        node_count: 0,
+        edge_count: 0,
+        node_label_count: 0,
       }
     },
     methods: {
@@ -1086,14 +1092,30 @@ p {
 
         option && myChart.setOption(option);
 
-      }
+      },
+      get_overview_of_completion(){
+          //axios请求
+          axios.post('/pythonApi/get_overview_of_completion',{
+          })
+          .then((response)=>{
+            if (response.status == 200) {
+              console.log(response.data)
+              this.node_count = response.data['node_count']
+              this.edge_count = response.data['edge_count']
+              this.node_label_count = response.data['node_label_count']
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      },
     },
     mounted(){
-      console.log(this.loading)
       // this.get_saved_models_list();
       this.getRelationBar()
       this.getEntityTypeBar()
       this.getBoxPlot()
+      this.get_overview_of_completion()
     },
     created(){
       // this.get_saved_models_list();
