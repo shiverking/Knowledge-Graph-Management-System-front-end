@@ -17,7 +17,7 @@
           <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
         </span>
       </div>
-      <el-descriptions title="图谱信息">
+      <el-descriptions title="图谱信息" v-show="description">
         <el-descriptions-item label="编号">000001</el-descriptions-item>
         <el-descriptions-item label="三元组数量">1810</el-descriptions-item>
         <el-descriptions-item label="实体数量">2000</el-descriptions-item>
@@ -64,8 +64,19 @@
           layout="total,sizes, prev, pager, next,jumper"
           :total="fromKgTotal">
       </el-pagination>
-      <el-button type="primary">预览</el-button>
-      <div style="background-color: #FDF9FD; height:500px;width:100%;"></div>
+      <el-popover
+          placement="top"
+          v-model="displayPreviewView">
+        <p>是否要查看导入数据的预览？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="displayPreviewView = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="displayPreviewView = false;displayPreview()">确定</el-button>
+        </div>
+      <el-button type="primary" slot="reference" v-show="description">预览</el-button>
+      <el-button type="danger" slot="reference" v-show="closeDescription" @click="closeDisplayPreview">关闭预览</el-button>
+      </el-popover>
+      <!--展示预览的地方-->
+      <component :is="confirmPreview" :previewData="JSON.stringify(previewData)"></component>
       <!--选择图谱对话框-->
       <el-dialog :visible.sync="dialogAllKGVisible"  :show-close='false'>
         <h4>选择候选图谱</h4>
@@ -339,11 +350,6 @@
       <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" @click="next">确定融合</el-button>
       <el-button style="margin-top: 12px;" v-if="this.active<=2"@click="next">下一步</el-button>
     </div>
-    <template>
-      <el-tooltip class="item" effect="dark" content="撤销此前操作，删除暂存表中信息" placement="top-start">
-        <el-button type="danger" icon="el-icon-delete" class="undo" circle></el-button>
-      </el-tooltip>
-    </template>
   </div>
 </template>
 <style>
@@ -386,16 +392,15 @@
 .choose_targetKg_pagination{
   margin-top: 10px;
 }
-.undo{
-  position: fixed;
-  bottom: 0px;
-  right: 10px;
-}
 </style>
 <script>
+import KgPreview from "../../../components/merge_kg/KgPreview";
 import moment from 'moment';
 import $ from "../../../plugins/jquery.min"
 export default {
+  components:{
+    KgPreview
+  },
   data() {
     return {
       active:0,
@@ -482,7 +487,13 @@ export default {
       comfirmMergeVisible:false,
       processPercentage:0,
       successShow:false,
-
+      //时候展开详细信心
+      description:false,
+      closeDescription:false,
+      //预览部分的数据传递
+      displayPreviewView:false,
+      confirmPreview:"",
+      previewData:[]
     };
   },
 
@@ -490,13 +501,13 @@ export default {
     //总体的下一步
     next() {
       if(this.active == 0){
-        if(this.currentRowName==""||this.multipleSelectionName.length==0){
+        if(this.multipleSelectionName.length==0){
           this.$message({
             message: '请选择必要数据!',
             type: 'warning'
           });
         }
-        else if(this.toKgTableData.length==0||this.fromKgTableData.length==0){
+        else if(this.fromKgTableData.length==0){
           this.$message({
             message: '请先导入数据!',
             type: 'warning'
@@ -641,29 +652,31 @@ export default {
           })
     },
     //开始导入数据
-    importData(){
-      if(this.multipleSelection.length==0){
+    async importData() {
+      if (this.multipleSelection.length == 0) {
         this.$message({
           message: '请选择候选图谱!',
           type: 'warning'
         });
       }
       //去请求数据
-      else{
+      else {
         this.fromKgLoading = true;
+        this.fromKgTableData = [];
+        this.fromKgTablePageData = [];
+        this.fromKgCurrentPage = 1;
         for (const item of this.multipleSelection) {
-          console.log(item);
-          axios.request({
-            method:"POST",
-            url:'/api/triples/getTriplesFromSameKgNotByPage',
-            params:{id:item.id}
+          await axios.request({
+            method: "POST",
+            url: '/api/triples/getTriplesFromSameKgNotByPage',
+            params: {id: item.id}
           })
           .then((response) => {
             if (response.status == 200) {
               var list = response.data.data;
-              for(var triple of list){
-                  //向表中加载数据
-                  this.fromKgTableData.push(triple);
+              for (var triple of list) {
+                //向表中加载数据
+                this.fromKgTableData.push(triple);
               }
             }
           })
@@ -672,16 +685,21 @@ export default {
           })
           this.fromKgLoading = false;
         }
+        await Promise.all(this.fromKgTableData);
         //分页
-        this.getFromKgTableData(),
+        this.getFromKgTableData();
         this.fromKgLoading = false;
+        this.description = true;
         this.$notify({
-          title:'成功',
-          message:'导入信息成功!',
+          title: '成功',
+          message: '导入信息成功!',
           type: 'success',
         })
-        // 第一个表格是后端分页,第二个表格是前端分页
-        }
+      }
+      //将预览图置空
+      this.confirmPreview = "";
+      this.previewData = [];
+      this.closeDescription =false;
     },
     //获取toKgTableData
     get_toKg(page,limit,currentRowId){
@@ -736,8 +754,7 @@ export default {
       this.fromKgTablePageData=[];
       this.multipleSelection=[];
       this.multipleSelectionName=[];
-      this.currentRowName='';
-      this.currentRowId='';
+      this.description = false;
     },
     getRowKeys(row) {
       return row.id;   //指定row-key的一个标识
@@ -869,7 +886,19 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
-      }
+      },
+    //展示导入数据的预览
+    displayPreview(){
+      this.confirmPreview = KgPreview;
+      this.previewData = this.fromKgTableData;
+      this.closeDescription = true;
+    },
+    //关闭预览
+    closeDisplayPreview(){
+      //将预览图置空
+      this.confirmPreview = "";
+      this.closeDescription = false;
+    }
   }
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({

@@ -240,11 +240,16 @@
             <el-button plain style="margin-top:10px">提交融合</el-button>
         </el-tab-pane>
       </el-tabs>
+      <delete-cache></delete-cache>
     </div>
 </template>
 <script>
+  import deleteCache from "../../../components/merge_kg/Cache";
   import * as echarts from 'echarts';
   export default {
+    components:{
+      deleteCache
+    },
     data() {
       return {
         tableData: [{
