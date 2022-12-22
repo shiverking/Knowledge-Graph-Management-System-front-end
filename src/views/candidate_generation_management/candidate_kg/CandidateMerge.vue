@@ -3,86 +3,157 @@
     <el-steps :active="active" finish-status="success"  simple>
       <el-step title="选择图谱" ></el-step>
       <el-step title="实体对齐" ></el-step>
-      <el-step title="置信检测" ></el-step>
       <el-step title="图谱融合" ></el-step>
     </el-steps>
     <div v-if="this.active==0">
-      <div>
-        <!-- 加载所有候选图谱-->
-        <el-button  @click="dialogAllKGVisible = true;loadMultipleSelectCandidateData(multipleCandidateKgCurrentPage,multipleCandidateKgPageSize)" class="operation_button" type="primary">选择图谱</el-button>
-        <el-button  class="operation_button" type="danger" @click="allClear">全部清空</el-button>
-        <el-button  class="operation_button" type="primary" @click="importData">开始导入</el-button>
-        <span>
-          已选择的候选图谱:
-          <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
-        </span>
-      </div>
-      <el-descriptions title="图谱信息" v-show="description">
-        <el-descriptions-item label="编号">000001</el-descriptions-item>
-        <el-descriptions-item label="三元组数量">1810</el-descriptions-item>
-        <el-descriptions-item label="实体数量">2000</el-descriptions-item>
-        <el-descriptions-item label="关系数量">300</el-descriptions-item>
-        <el-descriptions-item label="来源">
-          <el-tag size="small">openkg</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="生成时间">2022/11/2</el-descriptions-item>
-      </el-descriptions>
-      <!--显示要融合的图谱-->
-      <el-table
-          :data="fromKgTablePageData"
-          border
-          style="width: 100%"
-          v-loading="fromKgLoading">
-        <el-table-column
-            prop="head"
-            label="头实体"
-            width="180"
-            :show-overflow-tooltip="true">
-        </el-table-column>
-        <el-table-column
-            prop="relation"
-            label="关系"
-            width="180"
-            :show-overflow-tooltip="true">
-        </el-table-column>
-        <el-table-column
-            prop="tail"
-            label="尾实体"
-            :show-overflow-tooltip="true">
-        </el-table-column>
-        <el-table-column
-            prop="candidateId"
-            label="所属图谱">
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          @current-change="fromKgHandleCurrentChange"
-          @size-change="fromKgHandleSizeChange"
-          :current-page.sync="fromKgCurrentPage"
-          :page-size="fromKgPageSize"
-          :page-sizes="fromKgPageSizes"
-          layout="total,sizes, prev, pager, next,jumper"
-          :total="fromKgTotal">
-      </el-pagination>
-      <el-popover
-          placement="top"
-          v-model="displayPreviewView">
-        <p>是否要查看导入数据的预览？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="displayPreviewView = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="displayPreviewView = false;displayPreview()">确定</el-button>
-        </div>
-      <el-button type="primary" slot="reference" v-show="description">预览</el-button>
-      <el-button type="danger" slot="reference" v-show="closeDescription" @click="closeDisplayPreview">关闭预览</el-button>
-      </el-popover>
-      <!--展示预览的地方-->
-      <component :is="confirmPreview" :previewData="JSON.stringify(previewData)"></component>
+      <el-button  @click="dialogAllKGVisible = true;loadCandidateData(candidateKgCurrentPage,candidateKgPageSize)" class="operation_button" type="primary">选择图谱</el-button>
+      <el-button  class="operation_button" type="danger" @click="allClear">全部清空</el-button>
+      <el-button  class="operation_button" type="primary" @click="importData">开始导入</el-button>
+      <el-row :gutter="12">
+        <el-col :span="11">
+          <el-card class="box-card" shadow="never" style="display:block;margin-bottom:10px;">
+            目标图谱:
+            <span v-if="currentRowName!=''"><el-tag type="success">{{currentRowName}}</el-tag></span>
+          </el-card>
+          <!-- 显示要被融合的图谱-->
+          <el-table
+              :data="toKgTableData"
+              border
+              style="width: 100%"
+              v-loading="toKgLoading"
+          >
+            <el-table-column
+                prop="head"
+                label="头实体"
+                width="180"
+                :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                prop="relation"
+                label="关系"
+                width="180"
+                :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                prop="tail"
+                label="尾实体"
+                :show-overflow-tooltip="true">
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              @size-change="toKgHandleSizeChange"
+              @current-change="toKgHandleCurrentChange"
+              :current-page.sync="toKgCurrentPage"
+              :page-sizes="toKgPageSizes"
+              :page-size="toKgPageSize"
+              layout="total,sizes, prev, pager, next,jumper"
+              :total="toKgTotal">
+          </el-pagination>
+        </el-col>
+        <el-col :span="1">
+          <el-image
+              style="width: auto; height: auto;position: relative;top: 10px;"
+              src='../../../static/icon/left-arrow.png'
+              ></el-image>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="never" style="display:block;margin-bottom:10px;">
+            候选图谱:
+            <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
+          </el-card>
+          <!--显示要融合的图谱-->
+          <el-table
+              :data="fromKgTablePageData"
+              border
+              style="width: 100%"
+              v-loading="toKgLoading">
+            <el-table-column
+                prop="head"
+                label="头实体"
+                width="180"
+                :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                prop="relation"
+                label="关系"
+                width="180"
+                :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                prop="tail"
+                label="尾实体"
+                :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                prop="candidateId"
+                label="所属图谱">
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              @current-change="fromKgHandleCurrentChange"
+              @size-change="fromKgHandleSizeChange"
+              :current-page.sync="fromKgCurrentPage"
+              :page-size="fromKgPageSize"
+              :page-sizes="fromKgPageSizes"
+              layout="total,sizes, prev, pager, next,jumper"
+              :total="fromKgTotal">
+          </el-pagination>
+        </el-col>
+      </el-row>
       <!--选择图谱对话框-->
       <el-dialog :visible.sync="dialogAllKGVisible"  :show-close='false'>
-        <h4>选择候选图谱</h4>
+        <el-steps :active="select_kg_active" finish-status="success" simple>
+          <el-step title="选择目标图谱"></el-step>
+          <el-step title="选择候选图谱"></el-step>
+        </el-steps>
         <!--选择目标图谱-->
         <div style="text-align: center;">
         <el-table
+            v-if="this.select_kg_active==0"
+            ref="selectMergeKgTable"
+            :data="mergeKgTable"
+            highlight-current-row
+            @current-change="handleSelectCurrentChange"
+            style="width: 100%"
+            key="1"
+            >
+          <el-table-column label="名称" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="创建者">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.creator }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="备注" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.comment }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              label="最后修改时间">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{dateFormat(scope.row.changeTime)}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+            class="choose_targetKg_pagination"
+            v-if="this.select_kg_active==0"
+            background
+            layout="total ,prev, pager, next"
+            @current-change="candidateKgHandleCurrentChange"
+            :current-page="candidateKgCurrentPage"
+            :page-size="candidateKgPageSize"
+            :total="candidateKgTotal"
+        >
+        </el-pagination>
+        <el-table
+            v-if="this.select_kg_active==1"
             ref="multipleCandidateKgTable"
             :data="multipleMergeKgTable"
             tooltip-effect="dark"
@@ -94,8 +165,12 @@
             >
           <el-table-column
               type="selection"
+              :reserve-selection="true"
+              :selectable="selectable"
               width="55">
           </el-table-column>
+<!--          <el-table-column type="selection"  width="55px" :reserve-selection="true">-->
+<!--          </el-table-column>-->
           <el-table-column label="名称" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.name }}</span>
@@ -122,6 +197,7 @@
           </el-table>
         <el-pagination
               class="choose_targetKg_pagination"
+              v-if="this.select_kg_active==1"
               background
               layout="total ,prev, pager, next"
               @current-change="multipleCandidateKgHandleCurrentChange"
@@ -132,7 +208,8 @@
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button type="danger" @click="handleSelectKgClose">取消</el-button>
-          <el-button id="nextStep" type="primary" @click="dialogAllKGVisible = false">完成</el-button>
+          <el-button type="primary" v-if="this.select_kg_active==1" @click="previousStep">上一步</el-button>
+          <el-button id="nextStep" type="primary" @click="select_kg_next()">下一步</el-button>
         </div>
     </el-dialog>
     </div>
@@ -234,74 +311,13 @@
       </el-dialog>
     </div>
     <div v-if="this.active==2">
-      <el-table
-          :data="tableData2"
-          border
-          style="width: 100%; margin-top:10px">
-        <el-table-column label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)">
-          <template slot-scope="scope">
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.h }}</el-tag>
-              <el-tag size="medium">{{ scope.row.h_typ }}</el-tag>
-              <el-tag size="medium">{{ scope.row.t }}</el-tag>
-              <el-tag size="medium">{{ scope.row.t_typ }}</el-tag>
-              <el-tag size="medium">{{ scope.row.r }}</el-tag>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="三元组分类结果">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.res}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="三元组来源">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.from_where }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="创建时间">
-          <template slot-scope="scope">{{ scope.row.time }}</template>
-        </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
-          <template slot-scope="scope">
-            <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          @size-change="sizeChange2"
-          @current-change="currentChange2"
-          :current-page="tableData2_page"
-          :page-size="tableData2_size"
-          :page-sizes="pageSizes"
-          key="page2"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData2_total"
-          style="margin-top: 10px;">
-      </el-pagination>
-    </div>
-    <div v-if="this.active==3">
       <el-descriptions title="融合信息确认" border>
-        <el-descriptions-item label="目标图谱名称">核心图谱</el-descriptions-item>
+        <el-descriptions-item label="目标图谱名称">{{ currentRowName }}</el-descriptions-item>
         <el-descriptions-item label="目标图谱三元组数">{{ toKgTotal }}</el-descriptions-item>
         <el-descriptions-item label="待融合图谱个数">{{ this.multipleSelectionName.length }}</el-descriptions-item>
-        <el-descriptions-item label="三元组变化"></el-descriptions-item>
-        <el-descriptions-item label="实体变化"></el-descriptions-item>
-        <el-descriptions-item label="关系变化"></el-descriptions-item>
-        <el-descriptions-item label="候选占比"></el-descriptions-item>
-        <el-descriptions-item label="对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
+        <el-descriptions-item label="待融合三元组">{{ fromKgTotal }}</el-descriptions-item>
+        <el-descriptions-item label="实体对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
         <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
-        <el-descriptions-item label="操作人员"></el-descriptions-item>
       </el-descriptions>
       <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略" style="width: 330px;">
         <el-option
@@ -347,8 +363,7 @@
     </div>
     <div style="text-align: right;">
       <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
-      <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" @click="next">确定融合</el-button>
-      <el-button style="margin-top: 12px;" v-if="this.active<=2"@click="next">下一步</el-button>
+      <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
     </div>
   </div>
 </template>
@@ -394,16 +409,12 @@
 }
 </style>
 <script>
-import KgPreview from "../../../components/merge_kg/KgPreview";
 import moment from 'moment';
 import $ from "../../../plugins/jquery.min"
 export default {
-  components:{
-    KgPreview
-  },
   data() {
     return {
-      active:0,
+      active: 0,
       //融合时主图谱和候选图谱切换
       kgType:"",
       options: [{
@@ -445,6 +456,9 @@ export default {
       candidateKgCurrentPage:1,
       //目标图谱数据表
       mergeKgTable:[],
+      //目标图谱的选中行
+      currentRowName:'',
+      currentRowId:'',
       //多选候选图谱表格
       multipleMergeKgTable:[],
       multipleCandidateKgPageSize:10,
@@ -452,7 +466,7 @@ export default {
       multipleCandidateKgCurrentPage:1,
       multipleSelection: [],
       multipleSelectionName: [],
-
+      
       //要被融合的图谱分页信息
       toKgTableTotalData:[],
       toKgTableData:[],
@@ -487,13 +501,7 @@ export default {
       comfirmMergeVisible:false,
       processPercentage:0,
       successShow:false,
-      //时候展开详细信心
-      description:false,
-      closeDescription:false,
-      //预览部分的数据传递
-      displayPreviewView:false,
-      confirmPreview:"",
-      previewData:[]
+
     };
   },
 
@@ -501,13 +509,13 @@ export default {
     //总体的下一步
     next() {
       if(this.active == 0){
-        if(this.multipleSelectionName.length==0){
+        if(this.currentRowName==""||this.multipleSelectionName.length==0){
           this.$message({
             message: '请选择必要数据!',
             type: 'warning'
           });
         }
-        else if(this.fromKgTableData.length==0){
+        else if(this.toKgTableData.length==0||this.fromKgTableData.length==0){
           this.$message({
             message: '请先导入数据!',
             type: 'warning'
@@ -527,10 +535,43 @@ export default {
     previous() {
       this.active--;
     },
+    //跳转到上一步
+    previousStep(){
+      this.select_kg_active =0;
+      $("#nextStep").text("下一步")
+    },
+    //跳转到下一步
+    select_kg_next(){
+      if(this.select_kg_active == 1){
+        //先关闭对话框
+        this.dialogAllKGVisible = false;
+        //将值置为0
+        this.select_kg_active = 0;
+        $("#nextStep").text("下一步")
+      }
+      else if(this.select_kg_active == 0){
+        if(this.currentRowName==""){
+          this.$message({
+            message: '请选择一个融合图谱',
+            type: 'warning'
+          });
+        }
+        else{
+          this.loadMultipleSelectCandidateData(this.multipleCandidateKgCurrentPage,this.multipleCandidateKgPageSize);
+          this.select_kg_active++;
+          $("#nextStep").text("完成")
+        }
+      }
+    },
     //关闭前动作
     handleSelectKgClose(){
       this.dialogAllKGVisible = false;
-      this.multipleSelectionName = [];
+      //将信息还原
+      $("#nextStep").text("下一步");
+      this.select_kg_active = 0;
+      // this.multipleSelectionName = [];
+      // this.currentRowName ="";
+      // this.currentRowId="";
     },
     calculate(){
       if(this.algorithm==""){
@@ -575,6 +616,25 @@ export default {
           console.log(error)
         })
       }
+    },
+    //加载原图谱数据
+    loadCandidateData(num,limit){
+      //axios请求
+      axios.request({
+        method:"POST",
+        url:'/api/candidateKg/getAllCandidateKg',
+        params:{page:num,limit:limit}
+      })
+          .then((response) => {
+            if (response.status == 200) {
+              //修改数据
+              this.mergeKgTable = response.data.data
+              this.candidateKgTotal = response.data.count
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
     },
     //换页时动作
     candidateKgHandleCurrentChange(val){
@@ -652,54 +712,85 @@ export default {
           })
     },
     //开始导入数据
-    async importData() {
-      if (this.multipleSelection.length == 0) {
+    importData(){
+      if(this.currentRowId==""){
+        this.$message({
+          message: '请选择融合图谱!',
+          type: 'warning'
+        });
+      }
+      else if(this.multipleSelection.length==0){
         this.$message({
           message: '请选择候选图谱!',
           type: 'warning'
         });
       }
       //去请求数据
-      else {
-        this.fromKgLoading = true;
-        this.fromKgTableData = [];
-        this.fromKgTablePageData = [];
-        this.fromKgCurrentPage = 1;
-        for (const item of this.multipleSelection) {
-          await axios.request({
-            method: "POST",
-            url: '/api/triples/getTriplesFromSameKgNotByPage',
-            params: {id: item.id}
-          })
-          .then((response) => {
-            if (response.status == 200) {
-              var list = response.data.data;
-              for (var triple of list) {
-                //向表中加载数据
-                this.fromKgTableData.push(triple);
-              }
+      else{
+        this.toKgLoading = true;
+        //加载toKgTable数据
+        axios.request({
+          method:"POST",
+          url:'/api/triples/getTriplesFromSameKg',
+          params:{page:this.toKgCurrentPage,limit:this.toKgPageSize,id:this.currentRowId}
+        })
+        .then(async (response) => {
+          if (response.status == 200) {
+            //向表中加载数据
+            this.toKgTableData = response.data.data
+            this.toKgTotal = response.data.count
+            this.toKgLoading = false;
+            this.fromKgLoading = true;
+            for (const item of this.multipleSelection) {
+              await axios.request({
+                method:"POST",
+                url:'/api/triples/getTriplesFromSameKgNotByPage',
+                params:{id:item.id}
+              })
+              .then((response) => {
+                if (response.status == 200) {
+                  var list = response.data.data;
+                  for(var triple of list){
+                      //向表中加载数据
+                      this.fromKgTableData.push(triple);
+                  }
+                }
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
             }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-          this.fromKgLoading = false;
-        }
-        await Promise.all(this.fromKgTableData);
-        //分页
-        this.getFromKgTableData();
-        this.fromKgLoading = false;
-        this.description = true;
-        this.$notify({
-          title: '成功',
-          message: '导入信息成功!',
-          type: 'success',
+            await Promise.all(this.fromKgTableData);
+            //分页
+            this.getFromKgTableData(),
+            this.fromKgLoading = false;
+            this.$notify({
+              title:'成功',
+              message:'导入信息成功!',
+              type: 'success'
+            })
+            // 第一个表格是后端分页,第二个表格是前端分页
+            //都处理完后请求第一个表的全量数据
+            axios.request({
+              method:"POST",
+              url:'/api/triples/getTriplesFromSameKgNotByPage',
+              params:{id:this.currentRowId}
+            })
+            .then((response) => {
+              if (response.status == 200) {
+                var list = response.data.data;
+                for(var triple of list){
+                  //向表中加载数据
+                  this.toKgTableTotalData.push(triple);
+                }
+              }
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
         })
       }
-      //将预览图置空
-      this.confirmPreview = "";
-      this.previewData = [];
-      this.closeDescription =false;
     },
     //获取toKgTableData
     get_toKg(page,limit,currentRowId){
@@ -754,10 +845,20 @@ export default {
       this.fromKgTablePageData=[];
       this.multipleSelection=[];
       this.multipleSelectionName=[];
-      this.description = false;
+      this.currentRowName='';
+      this.currentRowId='';
     },
     getRowKeys(row) {
       return row.id;   //指定row-key的一个标识
+    },
+    //禁用多选框
+    selectable(row, index) {
+      if(this.currentRowId==row.id){
+        return false;
+      }
+      else {
+        return true;
+      }
     },
     //处理cell点击事件
     handleCellClick(row, column, cell, event){
@@ -886,19 +987,7 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
-      },
-    //展示导入数据的预览
-    displayPreview(){
-      this.confirmPreview = KgPreview;
-      this.previewData = this.fromKgTableData;
-      this.closeDescription = true;
-    },
-    //关闭预览
-    closeDisplayPreview(){
-      //将预览图置空
-      this.confirmPreview = "";
-      this.closeDescription = false;
-    }
+      }
   }
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({

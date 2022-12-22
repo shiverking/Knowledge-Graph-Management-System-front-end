@@ -197,7 +197,8 @@
             </el-input>
         </el-card>
       </el-tab-pane>
-    </el-tabs> 
+    </el-tabs>
+    <delete-cache></delete-cache>
   </div>
 </template>
 <style>
@@ -212,7 +213,6 @@
 p {
   word-break: break-all;
   word-wrap: break-word;
-  text-indent: 2em;
 }
 .ner_result{
   word-break: normal;
@@ -223,10 +223,14 @@ p {
 }
 </style>
 <script>
+  import deleteCache from "../../../components/merge_kg/Cache";
   import * as echarts from 'echarts';
   import moment from "moment";
   import $ from '../../../plugins/jquery.min.js';
   export default {
+    components:{
+      deleteCache,
+    },
     data() {
       return {
         // 右侧三元组显示
@@ -1089,7 +1093,6 @@ p {
       }
     },
     mounted(){
-      console.log(this.loading)
       // this.get_saved_models_list();
       this.getRelationBar()
       this.getEntityTypeBar()
