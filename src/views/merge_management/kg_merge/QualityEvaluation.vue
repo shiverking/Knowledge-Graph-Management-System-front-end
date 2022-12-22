@@ -190,7 +190,7 @@
             style="margin-top:10px">
           </el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="待融合数据">
+        <el-tab-pane label="待提交数据">
           <el-table
             :data="tableData"
             border
@@ -237,7 +237,7 @@
               :total="1000"
               style="margin-top:10px">
             </el-pagination>
-            <el-button plain style="margin-top:10px">提交融合</el-button>
+            <el-button plain style="margin-top:10px">提交</el-button>
         </el-tab-pane>
       </el-tabs>
       <delete-cache></delete-cache>
