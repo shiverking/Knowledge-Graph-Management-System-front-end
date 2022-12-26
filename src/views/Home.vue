@@ -293,6 +293,27 @@
               </el-menu-item>
             </router-link>
           </el-submenu>
+          <el-submenu index="7" class="parent_submenu">
+            <template slot="title">
+              <i class="el-icon-cpu"></i>
+              <span slot="title">爬虫管理</span>
+            </template>
+            <router-link  to="/crawler_management/CrawlerMonitor" class="routerlink">
+              <el-menu-item index="7-1">
+                <i class="el-icon-view"></i>爬虫监控
+              </el-menu-item>
+            </router-link>
+            <router-link to="/crawler_management/CrawlerList" class="routerlink">
+              <el-menu-item index="7-2">
+                <i class="el-icon-notebook-2"></i>爬虫列表
+              </el-menu-item>
+            </router-link>
+            <router-link to="/crawler_management/CrawlerInfo" class="routerlink">
+              <el-menu-item index="7-3">
+                <i class="el-icon-document"></i>爬虫信息
+              </el-menu-item>
+            </router-link>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main class="main_area">
@@ -541,6 +562,9 @@ export default {
         {"value": "/场景应用管理/态势认知构建/态势要图展示", "location":"/applicationmanagement/decision/map"},
         {"value": "/场景应用管理/态势认知构建/态势评估", "location":"/applicationmanagement/decision/evaluation"},
         {"value": "/场景应用管理/态势认知构建/认知决策验证", "location":"/applicationmanagement/decision/cognitiveDecision"},
+        {"value": "/爬虫管理/爬虫监控", "location":"/crawler_management/CrawlerMonitor"},
+        {"value": "/爬虫管理/爬虫列表", "location":"/crawler_management/CrawlerList"},
+        {"value": "/爬虫管理/任务列表", "location":"/crawler_management/TaskList"},
       ];
     },
     querySearch(queryString, cb) {
