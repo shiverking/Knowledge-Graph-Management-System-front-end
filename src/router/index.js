@@ -86,6 +86,10 @@ import Personal from "../views/system_management/Personal";
 import Setting from "../views/system_management/Setting";
 import Authority from "../views/system_management/Authority";
 import Role from "../views/system_management/Role";
+// 第七部分,爬虫管理
+import CrawlerList from "../views/crawler_management/CrawlerList";
+import CrawlerMonitor from "../views/crawler_management/CrawlerMonitor";
+import CrawlerInfo from "../views/crawler_management/CrawlerInfo";
 Vue.use(Router)
 
 export default new Router({
@@ -623,6 +627,33 @@ export default new Router({
           name:'个人中心',
           component:Personal,
           show: true
+        },
+      ]
+    },
+    //第六部分,爬虫管理
+    {
+      path: '/crawler_management',
+      name: '爬虫管理',
+      component: Home,
+      show: true,
+      children: [
+        {
+          path:'/crawler_management/CrawlerMonitor',
+          name:'爬虫监控',
+          component:CrawlerMonitor,
+          show:true
+        },
+        {
+          path:'/crawler_management/CrawlerList',
+          name:'爬虫列表',
+          component:CrawlerList,
+          show: true
+        },
+        {
+          path:'/crawler_management/CrawlerInfo',
+          name:'爬虫信息',
+          component:CrawlerInfo,
+          show:true
         },
       ]
     },
