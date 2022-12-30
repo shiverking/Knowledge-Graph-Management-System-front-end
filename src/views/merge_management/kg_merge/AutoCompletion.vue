@@ -230,6 +230,7 @@ p {
   import * as echarts from 'echarts';
   import moment from "moment";
   import $ from '../../../plugins/jquery.min.js';
+  import dataTool from "echarts/extension/dataTool";
   export default {
     components:{
       deleteCache,
@@ -302,6 +303,8 @@ p {
         node_count: 0,
         edge_count: 0,
         node_label_count: 0,
+        node_label_list: [],
+        relation_label_count_list: []
       }
     },
     methods: {
@@ -953,8 +956,8 @@ p {
           // },
           grid:{
             top:60,
-            x:45,
-            x2:100,
+            x:80,
+            x2:50,
             y2:30,
           },
           xAxis: {
@@ -963,14 +966,14 @@ p {
           },
           yAxis: {
             type: 'category',
-            data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+            data: this.relation_label_count_list[0]
           },
           series: [
             {
-              name: '2011',
+              name: '关系数量',
               type: 'bar',
               color: 'orange',
-              data: [18203, 23489, 29034, 104970, 131744, 630230]
+              data: this.relation_label_count_list[1]
             },
           ]
         };
@@ -981,6 +984,19 @@ p {
         var chartDom = document.getElementById('entity_type_bar');
         var myChart = echarts.init(chartDom);
         var option;
+        // axios.post('/pythonApi/get_overview_of_completion',{
+        //   })
+        //   .then((response)=>{
+        //     if (response.status == 200) {
+        //       console.log(response.data)
+        //       this.node_label_list = response.data['node_label_list']
+        //       }
+        //     console.log('我在这呢')
+        //     console.log(this.node_label_list[0])
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error)
+        //   })
 
         option = {
           title: {
@@ -1000,8 +1016,8 @@ p {
           // },
           grid:{
             top:60,
-            x:45,
-            x2:100,
+            x:80,
+            x2:50,
             y2:30,
           },
           xAxis: {
@@ -1010,15 +1026,15 @@ p {
           },
           yAxis: {
             type: 'category',
-            data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+            data: this.node_label_list[0]
           },
           series: [
  
             {
-              name: '2012',
+              name: '实例数量',
               type: 'bar',
               color: 'black',
-              data: [19325, 23438, 31000, 121594, 134141, 281807]
+              data: this.node_label_list[1]
             }
           ]
         };
@@ -1050,7 +1066,7 @@ p {
           grid:{
             top:60,
             x:45,
-            x2:100,
+            x2:50,
             y2:30,
           },
           toolbox: {
@@ -1107,6 +1123,11 @@ p {
               this.node_count = response.data['node_count']
               this.edge_count = response.data['edge_count']
               this.node_label_count = response.data['node_label_count']
+              this.relation_label_count_list = response.data['relation_label_count_list']
+              this.node_label_list = response.data['node_label_list']
+              this.getRelationBar()
+              this.getEntityTypeBar()
+              this.getBoxPlot()
               }
           })
           .catch(function (error) {
@@ -1116,9 +1137,6 @@ p {
     },
     mounted(){
       // this.get_saved_models_list();
-      this.getRelationBar()
-      this.getEntityTypeBar()
-      this.getBoxPlot()
       this.get_overview_of_completion()
     },
     created(){
