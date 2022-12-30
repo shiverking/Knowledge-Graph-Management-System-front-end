@@ -10,7 +10,7 @@
           </div>
           <el-button class="search_button" type="primary">查询</el-button>
           <el-button class="search_button" type="danger" @click="showDetail = !showDetail">测试按钮</el-button>
-          <el-button class="search_button" type="success">新版本</el-button>
+          <el-button class="search_button" type="success">发布</el-button>
         <!--概况-->
         <el-table
           :data="tableData"

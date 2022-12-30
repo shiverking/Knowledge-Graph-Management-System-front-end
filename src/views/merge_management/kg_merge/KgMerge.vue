@@ -17,7 +17,7 @@
           <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
         </span>
       </div>
-      <el-descriptions title="图谱信息" v-show="description">
+      <el-descriptions title="导入图谱信息" v-show="description">
         <el-descriptions-item label="编号">000001</el-descriptions-item>
         <el-descriptions-item label="三元组数量">1810</el-descriptions-item>
         <el-descriptions-item label="实体数量">2000</el-descriptions-item>
@@ -234,59 +234,91 @@
       </el-dialog>
     </div>
     <div v-if="this.active==2">
+      <el-button @click="confidenceDectection">开始检测</el-button>
+      <el-popover
+          placement="top"
+          v-model="confidenceDectectionApplicationVisible">
+        <p>确定应用该检测结果吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="confidenceDectectionApplicationVisible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="confidenceDectectionApplicationVisible = false;confirmConfidenceDectection()">确定</el-button>
+        </div>
+        <el-button type="primary" slot="reference" @click="confidenceDectectionApplicationVisible = true">应用</el-button>
+      </el-popover>
+      <el-button type="danger" @click="cancelConfidenceDectection()">取消应用</el-button>
       <el-table
-          :data="tableData2"
+          v-loading = "confidenceLoading"
+          :data="confidenceDectectionTablePageData"
           border
           style="width: 100%; margin-top:10px">
-        <el-table-column label="三元组 (头实体,头实体类型,尾实体,尾实体类型,关系)">
+        <el-table-column label="头实体">
           <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.h }}</el-tag>
-              <el-tag size="medium">{{ scope.row.h_typ }}</el-tag>
-              <el-tag size="medium">{{ scope.row.t }}</el-tag>
-              <el-tag size="medium">{{ scope.row.t_typ }}</el-tag>
-              <el-tag size="medium">{{ scope.row.r }}</el-tag>
+              {{ scope.row.head}}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="关系">
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper">
+              {{ scope.row.relation}}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="尾实体">
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper">
+              {{ scope.row.tail }}
             </div>
           </template>
         </el-table-column>
         <el-table-column
-            label="三元组分类结果">
+            :filters="[{ text: '通过', value: '检测通过' }, { text: '不通过', value: '检测不通过' }]"
+            :filter-method="filterRes"
+            filter-placement="bottom-end"
+            label="检测结果">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.res}}</span>
+            <span style="margin-left: 10px">
+              <el-tag type="success" v-if="scope.row.res=='检测通过'">{{ scope.row.res}}</el-tag>
+              <el-tag type="danger" v-if="scope.row.res=='检测不通过'">{{ scope.row.res}}</el-tag>
+            </span>
           </template>
         </el-table-column>
         <el-table-column
-            label="三元组来源">
+            label="检测得分">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.from_where }}</span>
+            <span style="margin-left: 10px">{{ scope.row.score}}</span>
+            <span style="margin-left: 10px" v-if="scope.row.score==null">暂无</span>
           </template>
         </el-table-column>
         <el-table-column
-            label="创建时间">
-          <template slot-scope="scope">{{ scope.row.time }}</template>
+            label="检测时间">
+          <template slot-scope="scope">{{ scope.row.detect_time}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column label="操作" width="100" fixed="right" >
           <template slot-scope="scope">
-            <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-dropdown @command="handleCommand">
+            <span>
+              标记为<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :command="composeValue(scope.$index, scope.row,1)" >通过</el-dropdown-item>
+              <el-dropdown-item :command="composeValue(scope.$index, scope.row,0)">不通过</el-dropdown-item>
+            </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
-          @size-change="sizeChange2"
-          @current-change="currentChange2"
-          :current-page="tableData2_page"
-          :page-size="tableData2_size"
-          :page-sizes="pageSizes"
+          @size-change="confidenceDectectionHandleSizeChange"
+          @current-change="confidenceDectectionHandleCurrentChange"
+          :current-page="confidenceDectectionCurrentPage"
+          :page-size="confidenceDectectionPageSize"
+          :page-sizes="confidenceDectectionPageSizes"
           key="page2"
           background
           layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData2_total"
+          :total="confidenceDectectionTotal"
           style="margin-top: 10px;">
       </el-pagination>
     </div>
@@ -303,39 +335,25 @@
         <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
         <el-descriptions-item label="操作人员"></el-descriptions-item>
       </el-descriptions>
-      <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略" style="width: 330px;">
+      <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略">
         <el-option
-            v-for="item in mergeStrategyOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-        </el-option>
-      </el-select>
-      <el-input
-          v-if="selectedMergeStrategy==2"
-          placeholder="请输入新图谱名称"
-          v-model="newKgName"
-          style="width: 20%"
-          clearable>
-      </el-input>
-      <el-input
-          v-if="selectedMergeStrategy==2"
-          placeholder="请输入新图谱备注(可选)"
-          v-model="newKgComment"
-          style="width: 20%"
-          clearable>
-      </el-input>
-      <el-popover
-          :key="2"
-          placement="top"
-          v-model="comfirmMergeVisible"
-          trigger="manual">
-        <p>融合开始之后不可撤销，是否继续？</p>
+          v-for="item in mergeStrategyOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+          </el-option>
+          </el-select>
+          <el-popover
+              :key="2"
+              placement="top"
+              v-model="comfirmMergeVisible"
+              trigger="manual">
+        <p>融合开始之后不可撤销,且融合后结果被提交至缓存,是否继续？</p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="comfirmMergeVisible = false">取消</el-button>
           <el-button type="primary" size="mini" @click="comfirmMergeVisible = false;startMerge()">确定</el-button>
         </div>
-        <el-button type="primary" style="margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">开始融合</el-button>
+        <el-button type="primary" style="margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">融合并提交</el-button>
       </el-popover>
       <el-progress :text-inside="false" :stroke-width="15" :percentage="processPercentage" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
       <transition name="el-fade-in-linear">
@@ -347,8 +365,8 @@
     </div>
     <div style="text-align: right;">
       <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
-      <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" @click="next">确定融合</el-button>
-      <el-button style="margin-top: 12px;" v-if="this.active<=2"@click="next">下一步</el-button>
+      <el-button type="primary" style="margin-top: 12px;" v-if="this.active<=2"@click="next">下一步</el-button>
+      <el-button type="primary" style="margin-top: 12px;" v-if="this.active==3"@click="jumpToNext">下一步</el-button>
     </div>
   </div>
 </template>
@@ -429,13 +447,12 @@ export default {
       mergeStrategyOptions: [
       {
         value: '1',
-        label: '融合进目标图谱(不保留候选图谱)'
+        label: '不保留候选图谱'
       }, {
         value: '2',
-        label: '融合成新图谱(保留原图谱，保留候选图谱)'
+        label: '保留候选图谱'
       }],
       selectedMergeStrategy: '',
-      newKgName:'',
       newKgComment:"",
       //选择图谱可视化
       dialogAllKGVisible:false,
@@ -452,15 +469,6 @@ export default {
       multipleCandidateKgCurrentPage:1,
       multipleSelection: [],
       multipleSelectionName: [],
-
-      //要被融合的图谱分页信息
-      toKgTableTotalData:[],
-      toKgTableData:[],
-      toKgCurrentPage:1,
-      toKgPageSize:10,
-      toKgPageSizes:[10,20,50,80,100],
-      toKgTotal:0,
-      toKgLoading:false,
       //待融合融合的图谱分页信息
       fromKgTableData:[],
       fromKgTablePageData:[],
@@ -487,16 +495,29 @@ export default {
       comfirmMergeVisible:false,
       processPercentage:0,
       successShow:false,
-      //时候展开详细信心
+      //展开详细信息
       description:false,
       closeDescription:false,
       //预览部分的数据传递
       displayPreviewView:false,
       confirmPreview:"",
-      previewData:[]
+      previewData:[],
+      nextStepVisible:false,
+      //置信检测部分
+      confidenceDetectionData:[],
+      confidenceDectectionTablePageData:[],
+      confidenceDectectionCurrentPage:1,
+      confidenceDectectionPageSize:10,
+      confidenceDectectionPageSizes:[10,20,50,80,100],
+      confidenceDectectionTotal:0,
+      confidenceDectectionLoading:false,
+      confidenceLoading:false,
+      //置信检测的结果应用
+      confidenceDectectionApplicationVisible:false,
+      //是否应用置信度检测结果
+      ifApplyConfidence:false,
     };
   },
-
   methods: {
     //总体的下一步
     next() {
@@ -517,10 +538,10 @@ export default {
           this.active++;
         }
       }
-      else if(this.active==1){
+      else if(this.active==1||this.active==2){
         this.active++;
       }
-      else if (this.active==2) {
+      else if (this.active==3) {
         this.active = 0;
       }
     },
@@ -833,59 +854,67 @@ export default {
       //取消所有箭头显示
     },
     checkNecessaryInfo(){
-      if(this.selectedMergeStrategy==2&&this.newKgName==""){
-        this.comfirmMergeVisible = false;
-        this.$message({
-          message: '请输入新图谱名称!',
-          type: 'warning'
-        });
-      }
-      else{
-        this.comfirmMergeVisible = true;
-      }
+      this.comfirmMergeVisible = true;
     },
     //开始融合
     startMerge(){
         this.processPercentage =0;
         this.successShow= false;
         var flag = false;
-        var timerId = setInterval(() => {
-          this.processPercentage++;
-          //发现返回直接退出
-          if(flag==true){
-            this.processPercentage= 100;
-            this.successShow= true;
-            clearInterval(timerId);
-            return;
-          }
-          if(this.processPercentage>=99 && flag==false){
-              this.processPercentage = 99;
-          }
-          else if(this.processPercentage<99 && flag==false){
-            this.processPercentage++;
-          }
-        },200)
+      //如果进行了置信度检测,则发送请求1
+      if(this.ifApplyConfidence==true){
         //axios请求
-        axios.post('/api/triples/mergeKg',{
+        axios.post('/api/triples/mergeCoreKg',{
           strategy:this.selectedMergeStrategy,
-          alignmentEntities:this.mergeTable,
-          targetKg:this.toKgTableTotalData,
-          oldKgId:this.currentRowId,
-          fromKg:this.fromKgTableData,
-          //选择策略2时才使用
-          newKgName:this.newKgName,
-          newKgComment:this.newKgComment,
+          oldKgId:this.multipleSelection,
+          kg:this.confidenceDetectionData,
         })
-        .then((response) => {
-          if (response.status == 200) {
-            if(response.data.msg=="success"){
-              flag = true;
-            }
-          }
+            .then((response) => {
+              if (response.status == 200) {
+                if(response.data.msg=="success"){
+                  flag = true;
+                }
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      }
+      //如果没有进行了置信度检测,则发送请求2
+      else{
+        //axios请求
+        axios.post('/api/triples/mergeCoreKg',{
+          strategy:this.selectedMergeStrategy,
+          oldKgId:this.multipleSelection,
+          kg:this.fromKgTableData,
         })
-        .catch(function (error) {
-          console.log(error)
-        })
+            .then((response) => {
+              if (response.status == 200) {
+                if(response.data.msg=="success"){
+                  flag = true;
+                }
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      }
+      var timerId = setInterval(() => {
+        this.processPercentage++;
+        //发现返回直接退出
+        if(flag==true){
+          this.processPercentage= 100;
+          this.successShow= true;
+          clearInterval(timerId);
+          return;
+        }
+        if(this.processPercentage>=99 && flag==false){
+            this.processPercentage = 99;
+        }
+        else if(this.processPercentage<99 && flag==false){
+          this.processPercentage++;
+        }
+      },200)
       },
     //展示导入数据的预览
     displayPreview(){
@@ -898,6 +927,85 @@ export default {
       //将预览图置空
       this.confirmPreview = "";
       this.closeDescription = false;
+    },
+    //跳转到下一页上
+    jumpToNext(){
+      this.$router.push('/merge/kg/completion');
+    },
+    //置信度检测
+    confidenceDectection(){
+      this.confidenceLoading=true;
+      axios.post('/pythonApi/triple_classification',{
+        data:this.fromKgTableData
+      })
+      .then((response) => {
+        if(response.status==200){
+          this.confidenceLoading=false;
+          this.confidenceDetectionData = response.data.data;
+          //分页
+          this.getConfidenceDectectionTableData();
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    //fromKgTable的前端分页
+    getConfidenceDectectionTableData(){
+      this.confidenceDectectionTotal = this.confidenceDetectionData.length;
+      this.confidenceDectectionTablePageData = this.confidenceDetectionData.slice(
+          (this.confidenceDectectionCurrentPage - 1) * this.confidenceDectectionPageSize,
+          this.confidenceDectectionCurrentPage * this.confidenceDectectionPageSize
+      );
+    },
+    // confidenceDectectionTable的前端分页改变动作
+    confidenceDectectionHandleCurrentChange(val){
+      this.confidenceDectectionCurrentPage = val
+      this.getConfidenceDectectionTableData()
+    },
+    // confidenceDectectionTable的前端Size页改变动作
+    confidenceDectectionHandleSizeChange(val){
+      this.confidenceDectectionPageSize = val
+      this.getConfidenceDectectionTableData()
+    },
+    //检测结果过滤器
+    filterRes(value, row){
+      return row.res === value;
+    },
+    //自定义要返回的字段
+    composeValue(index, row,pass) {
+      return {
+        index: index, //key 是你自己想要的字段，值自己定义
+        row: row,
+        pass:pass
+      };
+    },
+    //处理下拉框改变的动作
+    handleCommand(command) {
+      if(command.pass==1){
+        command.row.res = "检测通过"
+      }
+      else if(command.pass==0){
+        command.row.res = "检测不通过"
+      }
+    },
+    //确认置信检测
+    confirmConfidenceDectection(){
+      this.ifApplyConfidence = true;
+      this.$notify({
+        title: '成功',
+        message: '应用检测结果成功!',
+        type: 'success'
+      });
+    },
+    //取消置信检测
+    cancelConfidenceDectection(){
+      this.ifApplyConfidence = false;
+      this.$notify({
+        title: '取消',
+        message: '已取消该应用结果!',
+        type: 'warning'
+      });
     }
   }
   // displayKgItems(){
