@@ -381,7 +381,7 @@ p {
         edge_count: 0,
         node_label_count: 0,
         node_label_list: [],
-        relation_label_count_list: []
+        relation_label_count_list: [],
 
         //概览可视化
         overviewVisible:false,
