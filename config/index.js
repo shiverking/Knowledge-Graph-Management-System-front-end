@@ -40,7 +40,7 @@ module.exports = {
         }
       },
       '/pythonApi': {
-        target: 'http://127.0.0.1:8089',
+        target: 'http://192.168.0.104:8089',
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {
           '^/pythonApi': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
