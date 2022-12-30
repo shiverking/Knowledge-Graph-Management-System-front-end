@@ -48,43 +48,53 @@
           </el-col>
         </el-row>
       </el-dialog>
-      <div v-if="this.active==0">
-          <b>潜在的实体错误</b>
-          <p>实体在图谱中没有与其他实体链接，或有极少的边与其他实体链接。</p>
+      <div v-if="this.active==0" style="margin-top: 10px;">
+          <b >实体类型错误</b>
           <el-table
-            :data="tableData"
+            :data="entity_error"
             border
-            style="width: 100%">
+            style="width: 100%; margin-top: 10px;">
             <el-table-column
-              label="日期"
+              label="检测时间"
               width="180">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="姓名"
+              label="实体"
               width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
+                <span style="margin-left: 10px">{{ scope.row.ent }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              label="实体类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.ent_typ }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="错误类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_typ }}</span>
+              </template>
+            </el-table-column>    
+            <el-table-column
+              label="错误状态"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_status }}</span>
+              </template>
+            </el-table-column>      
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -94,47 +104,64 @@
             :current-page.sync="currentPage1"
             :page-size="100"
             layout="total, prev, pager, next"
-            :total="1000"
+            :total="1"
             style="margin-top:10px">
           </el-pagination>
       </div>
-      <div v-if="this.active==1">
+      <div v-if="this.active==1" style="margin-top: 10px;">
           <b>链接错误</b>
-          <p>实体对之间链接的关系不合理。</p>
           <el-table
-            :data="tableData"
+            :data="relation_error"
             border
-            style="width: 100%">
+            style="width: 100%; margin-top: 10px;">
             <el-table-column
-              label="日期"
+              label="检测时间"
               width="180">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="姓名"
+              label="头实体"
               width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              label="关系"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="尾实体"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+              </template>
+            </el-table-column>    
+            <el-table-column
+              label="错误类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_typ }}</span>
+              </template>
+            </el-table-column>   
+            <el-table-column
+              label="错误状态"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_status }}</span>
+              </template>
+            </el-table-column>        
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -144,47 +171,64 @@
             :current-page.sync="currentPage1"
             :page-size="100"
             layout="total, prev, pager, next"
-            :total="1000"
+            :total="1"
             style="margin-top:10px">
           </el-pagination>
         </div>
-      <div v-if="this.active==2">
+      <div v-if="this.active==2" style="margin-top: 10px;">
           <b>属性值错误</b>
-          <p>实体的属性值格式错误或明显离群。</p>
           <el-table
-            :data="tableData"
+            :data="attribute_error"
             border
-            style="width: 100%">
+            style="width: 100%; margin-top: 10px;" >
             <el-table-column
-              label="日期"
+              label="检测时间"
               width="180">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="姓名"
+              label="实体"
               width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
+                <span style="margin-left: 10px">{{ scope.row.ent }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              label="属性"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.attribute }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="属性值"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.attribute_val }}</span>
+              </template>
+            </el-table-column>    
+            <el-table-column
+              label="错误类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_typ }}</span>
+              </template>
+            </el-table-column>   
+            <el-table-column
+              label="错误状态"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_status }}</span>
+              </template>
+            </el-table-column>        
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -192,47 +236,79 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage1"
-            :page-size="100"
+            :page-size="10"
             layout="total, prev, pager, next"
-            :total="1000"
+            :total="1"
             style="margin-top:10px">
           </el-pagination>
         </div>
-      <div v-if="this.active==3">
-          <el-table
-            :data="tableData"
+      <div v-if="this.active==3" style="margin-top: 10px;">
+        <el-table
+            :data="data_to_be_submitted"
             border
-            style="width: 100%">
+            style="width: 100%; margin-top: 10px;">
             <el-table-column
-              label="日期"
+              label="检测时间"
               width="180">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="姓名"
+              label="头实体（旧）"
               width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              label="关系（旧）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="尾实体（旧）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+              </template>
+            </el-table-column>    
+            <el-table-column
+              label="头实体（新）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="关系（新）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="尾实体（新）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+              </template>
+            </el-table-column>  
+            <el-table-column
+              label="错误类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.error_typ }}</span>
+              </template>
+            </el-table-column>         
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -272,23 +348,10 @@
     },
     data() {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        entity_error: [],
+        relation_error: [],
+        attribute_error: [],
+        data_to_be_submitted:[],
         active:0,
         qualiatyVisible:false,
         nextStepVisible:false
@@ -347,9 +410,55 @@
           ]
         };
         option && myChart.setOption(option);
-      }
+      },
+      get_entity_error_list(){
+          //axios请求
+          axios.post('/pythonApi/get_entity_error_list',{})
+          .then((response)=>{
+            if (response.status == 200) {
+              //赋值给表格
+              this.entity_error = response.data.data;
+              console.log(this.entity_error)
+               //设置文本高亮
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      },
+      get_relation_error_list(){
+          //axios请求
+          axios.post('/pythonApi/get_relation_error_list',{})
+          .then((response)=>{
+            if (response.status == 200) {
+              //赋值给表格
+              this.relation_error = response.data.data;
+               //设置文本高亮
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      },
+      get_attribute_error_list(){
+          //axios请求
+          axios.post('/pythonApi/get_attribute_error_list',{})
+          .then((response)=>{
+            if (response.status == 200) {
+              //赋值给表格
+              this.attribute_error = response.data.data;
+               //设置文本高亮
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      },
     },
     mounted(){
+      this.get_entity_error_list()
+      this.get_relation_error_list()
+      this.get_attribute_error_list()
     }
   }
 </script>
