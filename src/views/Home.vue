@@ -14,7 +14,7 @@
         </el-autocomplete>
         <el-dropdown class="dropdown">
           <div>
-            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            <el-avatar src="../../static/avatar/default2.png"
                        style="vertical-align:middle;margin: 10px"></el-avatar>
             <span style="color: azure;font-size: large;vertical-align:middle;">{{ username }}</span>
             <i class="el-icon-arrow-down" style="color: #000000;font-size: large;vertical-align:middle;"></i>
@@ -37,6 +37,7 @@
         <el-menu
             :default-active="$route.path"
             class="el-menu-vertical-demo"
+            active-text-color="#ffd04b"
         >
           <el-submenu index="1" class="parent_submenu">
             <template slot="title">
