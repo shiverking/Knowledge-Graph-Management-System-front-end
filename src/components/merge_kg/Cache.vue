@@ -47,7 +47,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="操作时间">
-              <template slot-scope="scope">{{ scope.row.time}}</template>
+              <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
             </el-table-column>
           </el-table>
           <el-pagination
@@ -72,20 +72,31 @@
             </div>
             <el-button type="danger" slot="reference">删除</el-button>
           </el-popover>
-          <el-table :data="gridData">
-            <el-table-column property="date" label="日期" width="150"></el-table-column>
-            <el-table-column property="name" label="姓名" width="200"></el-table-column>
-            <el-table-column property="address" label="地址"></el-table-column>
+          <el-table :data="completionCacheData">
+            <el-table-column property="id" label="id" ></el-table-column>
+            <el-table-column property="head" label="头实体"></el-table-column>
+            <el-table-column property="rel" label="关系" ></el-table-column>
+            <el-table-column property="tail" label="尾实体" ></el-table-column>
+            <el-table-column property="pred_prob" label="评分"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                  <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
+                  <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作时间">
+              <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+            </el-table-column>
           </el-table>
           <el-pagination
-              class="choose_targetKg_pagination"
-              background
-              layout="total ,prev, pager, next"
-              @current-change="multipleCandidateKgHandleCurrentChange"
-              :current-page="multipleCandidateKgCurrentPage"
-              :page-size="multipleCandidateKgPageSize"
-              :total="multipleCandidateKgTotal">
-          </el-pagination>
+            class="choose_targetKg_pagination"
+            background
+            layout="total ,prev, pager, next"
+            @current-change="completionCacheHandleCurrentChange"
+            :current-page="completionCacheCurrentPage"
+            :page-size="completionCachePageSize"
+            :total="completionCacheTotal">
+        </el-pagination>
         </el-tab-pane>
         <!--质量评估改动-->
         <el-tab-pane label="质量评估改动" name="third">
@@ -133,6 +144,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
   name: "DeleteCache",
    data(){
@@ -151,10 +163,15 @@ export default {
       mergeCacheCurrentPage:1,
       mergeCachePageSize:10,
       mergeCacheTotal:0,
+      //查询所有的completion的缓存数据
+      completionCacheData:[],
+      completionCacheCurrentPage:1,
+      completionCachePageSize:10,
+      completionCacheTotal:0,
     }
   },
   methods:{
-    //获取toKgTableData
+    //获取mergeCacheTableData
     get_merge_cache(page,limit){
       axios.request({
         method:"POST",
@@ -176,21 +193,58 @@ export default {
         console.log(error)
       })
     },
-    //toKgTable的PageSzie改变动作
+    //mergeCacheTable的PageSzie改变动作
     mergeCacheHandleSizeChange(val){
       //修改当前分页大小
       this.mergeCachePageSize = val;
       //重新请求数据
       this.get_merge_cache(this.mergeCachePageSize,val)
     },
-    //toKgTable分页改变动作
+    //mergeCacheTable分页改变动作
     mergeCacheHandleCurrentChange(val){
       this.get_merge_cache(val,this.mergeCachePageSize)
+    },
+    //获取completionCacheTableData
+    get_completion_cache(page,limit){
+      axios.request({
+        method:"POST",
+        url:'/api/triples/getCompletionCacheByPage',
+        params:{page:page,limit:limit}
+      })
+          .then((response) => {
+            if (response.status == 200) {
+              //向表中加载数据
+              this.completionCacheData= response.data.data
+              this.completionCacheTotal= response.data.count
+              //设置提示可见
+              if(this.completionCacheData.length>0){
+                this.completionUpdate = true;
+              }
+            }
+          })
+      .catch(function (error) {
+        console.log(error)
+      })
+      },
+    //completionCacheTable的PageSzie改变动作
+    completionCacheHandleSizeChange(val){
+      //修改当前分页大小
+      this.completionCachePageSize = val;
+      //重新请求数据
+      this.get_completion_cache(this.completionCachePageSize,val)
+    },
+    //completionCacheTable分页改变动作
+    completionCacheHandleCurrentChange(val){
+      this.get_completion_cache(val,this.completionCachePageSize)
+    },
+    //时间格式化
+    dateFormat(data) {
+      return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
     },
   },
   mounted() {
     this.get_merge_cache(this.mergeCacheCurrentPage,this.mergeCachePageSize);
-
+    this.get_completion_cache(this.completionCacheCurrentPage,this.completionCachePageSize);
   }
 }
 </script>
