@@ -1249,9 +1249,6 @@ p {
 
       },
       get_overview_of_completion(){
-        this.getRelationBar()
-        this.getEntityTypeBar()
-        this.getBoxPlot()
           //axios请求
           axios.post('/pythonApi/get_overview_of_completion',{
           })
