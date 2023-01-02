@@ -1,25 +1,25 @@
 <template>
   <div>
-  <el-form style="width: 80%" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+  <el-form style="width: 80%" :model="form.person" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
 
     <el-form-item label="中文名" prop="name_cn">
-      <el-input v-model="ruleForm.name_cn"></el-input>
+      <el-input v-model="form.person.name_cn"></el-input>
     </el-form-item>
 
     <el-form-item label="英文名" prop="name_en">
-      <el-input v-model="ruleForm.name_en"></el-input>
+      <el-input v-model="form.person.name_en"></el-input>
     </el-form-item>
 
     <el-form-item label="性别" prop="gender">
-      <el-input v-model="ruleForm.gender"></el-input>
+      <el-input v-model="form.person.gender"></el-input>
     </el-form-item>
     <el-form-item label="图片" prop="picture">
-      <el-input v-model="ruleForm.picture"></el-input>
+      <el-input v-model="form.person.picture"></el-input>
     </el-form-item>
 
     <el-form-item label="地址" prop="address">
-      <el-input v-model="ruleForm.address"></el-input>
+      <el-input v-model="form.person.address"></el-input>
     </el-form-item>
 <!--    <el-form-item label ="计划" prop = "plan_id">-->
 <!--      <el-select style="width:500px;" v-model="ruleForm.plan_id" @change="change1" placeholder="请选择">-->
@@ -43,7 +43,7 @@
       <h2>教育信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formeducation">
-      <div v-for="(item,index) in formeducation" :key="index">
+      <div v-for="(item,index) in form.education" :key="index">
         <div class="formOuterBox">
           <div class="formCotantBox">
 
@@ -93,7 +93,7 @@
       <h2>履历信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formresume">
-        <div v-for="(item,index) in formresume" :key="index">
+        <div v-for="(item,index) in form.resume" :key="index">
           <div class="formOuterBox">
             <div class="formCotantBox">
 
@@ -139,7 +139,7 @@
       </el-form>
     </div>
     <div>
-      <el-button type="primary" @click="submitForm1('ruleForm');submitForm2('ruleForm')" >提交</el-button>
+      <el-button type="primary" @click="submitForm1('ruleForm')" >提交</el-button>
     </div>
 
 <!--      <el-button type="primary" @click="submitForm1('ruleForm')" style='position: absolute;right:750px;'>提交</el-button>-->
@@ -154,21 +154,20 @@
 export default {
   data() {
     return {
-
-      formeducation: [
-        {
-        },
-      ],
-      formresume: [
-        {
-        },
-      ],
+      form:{
+        person:{},
+        education:[
+          {
+          },
+        ],
+        resume:[
+          {
+          },
+        ]
+      },
       options1:[],
       options2:[],
-      ruleForm: {
-        name: '',
-        author: ''
-      },
+
       rules: {
         name: [
           { required: true, message: '图书名称不能为空', trigger: 'blur' }
@@ -184,7 +183,7 @@ export default {
     addForm() {
       // 定义一个标识，通过标识判断是否能添加信息
 
-        this.formeducation.push({
+        this.form.education.push({
           start_time: "",
           finish_time: "",
           degree: "",
@@ -194,7 +193,7 @@ export default {
     },
     // 删除操作
     removeIdx(item, index) {
-      this.formeducation.splice(index, 1);
+      this.form.education.splice(index, 1);
       this.$message({
         message: "删除成功",
         type: "success",
@@ -202,7 +201,7 @@ export default {
     },
     addForm2() {
 
-        this.formresume.push({
+        this.form.resume.push({
           start_time: "",
           end_time: "",
           department: "",
@@ -211,7 +210,7 @@ export default {
     },
     // 删除操作
     removeIdx2(item, index) {
-      this.formresume.splice(index, 1);
+      this.form.resume.splice(index, 1);
       this.$message({
         message: "删除成功",
         type: "success",
@@ -227,8 +226,14 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('/api/person/save',this.ruleForm).then(function(resp){
-
+          axios.post('/api/person/save',this.form).then(function(resp){
+              console.log(_this.form)
+                _this.$alert('《' + _this.form.person.name_cn + '》添加成功！', '消息', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    _this.$router.push('/data/people/person')
+                  }
+                })
           })
         }
         else {
@@ -238,29 +243,29 @@ export default {
 
 
     },
-    submitForm2(formName) {
-      const _this = this
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          axios.post('/api/education/saves',this.formeducation).then(function(resp){
-          console.log(_this.formeducation)
-        })
-        }
-        else {
-          return false;
-        }
-      });
-      axios.post('/api/resume/saves',this.formresume).then(function(resp){
-        _this.$alert('《' + _this.ruleForm.name_cn + '》添加成功！', '消息', {
-          confirmButtonText: '确定',
-          callback: action => {
-            _this.$router.push('/person')
-          }
-        })
-      })
-
-
-    },
+    // submitForm2(formName) {
+    //   const _this = this
+    //   this.$refs[formName].validate((valid) => {
+    //     if (valid) {
+    //       axios.post('/api/education/save',this.formeducation).then(function(resp){
+    //       console.log(_this.formeducation)
+    //     })
+    //     }
+    //     else {
+    //       return false;
+    //     }
+    //   });
+    //   axios.post('/api/resume/save',this.formresume).then(function(resp){
+    //     _this.$alert('《' + _this.ruleForm.name_cn + '》添加成功！', '消息', {
+    //       confirmButtonText: '确定',
+    //       callback: action => {
+    //         _this.$router.push('/person')
+    //       }
+    //     })
+    //   })
+    //
+    //
+    // },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }

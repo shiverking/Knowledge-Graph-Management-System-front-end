@@ -6,7 +6,7 @@
           <div class="ele-admin-content-view">
             <div data-v-7b70ec21="" class="el-row" style="margin-left: -7.5px;margin-right: -7.5px;">
               <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow"><!----><div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag--large el-tag--light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >
-                {{ 21 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/plan/plan" style= "color:black;text-decoration:none">飞机数量</router-link></div></div></div>
+                {{ 21 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/arm/Aircraft" style= "color:black;text-decoration:none">飞机数量</router-link></div></div></div>
               </div>
               <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow"><!----><div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag--large el-tag--light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >
                 {{ 14 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/arm/ArmAnalysis" style= "color:black;text-decoration:none">舰船数量</router-link></div></div></div>
@@ -45,6 +45,18 @@
       <div id="myChart" :style="{width:'800px',height:'400px'}">
       </div>
     </div>
+      <el-row>
+        <el-col :span="8"><div class="grid-content bg-purple">
+      <div id="airlengthChart" :style="{width:'400px',height:'400px'}"></div>
+        </div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple">
+      <div id="airheightChart" :style="{width:'400px',height:'400px'}"></div>
+        </div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple">
+      <div id="airwinspanChart" :style="{width:'400px',height:'400px'}"></div>
+        </div></el-col>
+      </el-row>
+
   </div>
 </template>
 
@@ -71,8 +83,112 @@ export default {
     drawLine() {
       const _this = this
       // axios.get('/api/artillery/count').then(function (resp){
-
+      let airlengthChart = _this.$echarts.init(document.getElementById('airlengthChart'))
+      let airheightChart = _this.$echarts.init(document.getElementById('airheightChart'))
+      let airwinspanChart = _this.$echarts.init(document.getElementById('airwinspanChart'))
       let myChart = _this.$echarts.init(document.getElementById('myChart'))
+      var airheightoption = {
+        title: {
+          text: '飞机高度',
+          subtext: '单位（米）',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: '6米以上' },
+              { value: 735, name: '5-6米' },
+              { value: 580, name: '4-5米' },
+              { value: 484, name: '4米以下' },
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      var airwinspanoption = {
+        title: {
+          text: '飞机翼展',
+          subtext: '单位（米）',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: '30-40米' },
+              { value: 735, name: '20-30米' },
+              { value: 580, name: '20米以下' },
+              { value: 484, name: '40米以上' },
+
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      var airlengthoption = {
+        title: {
+          text: '飞机长度',
+          subtext: '单位（米）',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: '20米以上' },
+              { value: 735, name: '15-18米' },
+              { value: 580, name: '15米以下' },
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
       var option = {
         xAxis: {
           data: ['飞机', '舰船', '火炮','爆炸物','导弹']
@@ -201,7 +317,9 @@ export default {
         }
       });
       myChart.setOption(option);
-
+      airlengthChart.setOption(airlengthoption);
+      airheightChart.setOption(airheightoption);
+      airwinspanChart.setOption(airwinspanoption)
     }
   }
 }

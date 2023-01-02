@@ -1,26 +1,26 @@
 <template>
-  <el-form style="width: 80%" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+  <el-form style="width: 80%" :model="form.person" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
     <el-form-item label="人员编号">
-      <el-input v-model="ruleForm.id" readOnly></el-input>
+      <el-input v-model="form.person.id" readOnly></el-input>
     </el-form-item>
     <el-form-item label="中文名" prop="name_cn">
-      <el-input v-model="ruleForm.name_cn"></el-input>
+      <el-input v-model="form.person.name_cn"></el-input>
     </el-form-item>
 
     <el-form-item label="英文名" prop="name_en">
-      <el-input v-model="ruleForm.name_en"></el-input>
+      <el-input v-model="form.person.name_en"></el-input>
     </el-form-item>
 
     <el-form-item label="性别" prop="gender">
-      <el-input v-model="ruleForm.gender"></el-input>
+      <el-input v-model="form.person.gender"></el-input>
     </el-form-item>
     <el-form-item label="图片" prop="picture">
-      <el-input v-model="ruleForm.picture"></el-input>
+      <el-input v-model="form.person.picture"></el-input>
     </el-form-item>
 
     <el-form-item label="地址" prop="address" >
-      <el-input v-model="ruleForm.address"></el-input>
+      <el-input v-model="form.person.address"></el-input>
     </el-form-item>
 <!--    <el-form-item label ="计划" prop = "plan_id">-->
 <!--      <el-select style="width:500px;" v-model="ruleForm.plan_id" @change="change1" placeholder="请选择">-->
@@ -44,7 +44,7 @@
       <h2>教育信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formeducation">
-        <div v-for="(item,index) in formeducation" :key="index">
+        <div v-for="(item,index) in form.education" :key="index">
           <div class="formOuterBox">
             <div class="formCotantBox">
 
@@ -79,7 +79,7 @@
               </el-form-item>
               <el-col :span="6">
                 <el-form-item class="form-style" >
-                  <el-button @click="addForm(ruleForm)" type="success">+</el-button>
+                  <el-button @click="addForm(form.person)" type="success">+</el-button>
                   <el-button v-if="index!=0" @click="removeIdx(item, index)" type="danger">-</el-button>
                 </el-form-item>
               </el-col>
@@ -100,7 +100,7 @@
       <h2>履历信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formresume">
-        <div v-for="(item,index) in formresume" :key="index">
+        <div v-for="(item,index) in form.resume" :key="index">
           <div class="formOuterBox">
             <div class="formCotantBox">
 
@@ -135,7 +135,7 @@
               </el-form-item>
               <el-col :span="6">
                 <el-form-item class="form-style">
-                  <el-button @click="addForm2(ruleForm)" type="success">+</el-button>
+                  <el-button @click="addForm2(form.person)" type="success">+</el-button>
                   <el-button v-if="index!=0" @click="removeIdx2(item, index)" type="danger">-</el-button>
                 </el-form-item>
               </el-col>
@@ -167,28 +167,39 @@
 export default {
   data() {
     return {
-      formeducation: [
-        {
-
-        },
-      ],
-      formresume: [
-        {
-
-        },
-      ],
+      form:{
+        person:{},
+        education:[
+          {
+          },
+        ],
+        resume:[
+          {
+          },
+        ]
+      },
+      // formeducation: [
+      //   {
+      //
+      //   },
+      // ],
+      // formresume: [
+      //   {
+      //
+      //   },
+      // ],
       options1:[],
       options2:[],
-      ruleForm: {
-        id: '',
-        name_cn: '',
-        name_en: '',
-        gender:'',
-        picture:'',
-        address:'',
-        task_id:'',
-        plan_id:'',
-      },
+      // ruleForm: {
+      //   id: '',
+      //   name_cn: '',
+      //   name_en: '',
+      //   gender:'',
+      //   picture:'',
+      //   address:'',
+      //   task_id:'',
+      //   plan_id:'',
+      // },
       rules: {
         name: [
           { required: true, message: '飞机名称不能为空', trigger: 'blur' }
@@ -200,7 +211,7 @@ export default {
     addForm(ru) {
       // 定义一个标识，通过标识判断是否能添加信息
 
-      this.formeducation.push({
+      this.form.education.push({
         id:"",
         start_time: "",
         finish_time: "",
@@ -213,27 +224,27 @@ export default {
     // 删除操作
     removeIdx(item, index) {
       const _this = this
-      if(item.id==""){
-        _this.formeducation.splice(index, 1);
+      // if(item.id==""){
+        _this.form.education.splice(index, 1);
         _this.$message({
           message: "删除成功",
           type: "success",
         })
-      }
-      else {
-        axios.delete('/api/education/deleteById/' + item.id).then(function (resp) {
-
-          _this.formeducation.splice(index, 1);
-          _this.$message({
-            message: "删除成功",
-            type: "success",
-          })
-        })
-      }
+      // }
+      // else {
+      //   axios.delete('/api/education/deleteById/' + item.id).then(function (resp) {
+      //
+      //     _this.formeducation.splice(index, 1);
+      //     _this.$message({
+      //       message: "删除成功",
+      //       type: "success",
+      //     })
+      //   })
+      // }
     },
     addForm2(rule) {
 
-      this.formresume.push({
+      this.form.resume.push({
         id:"",
         start_time: "",
         end_time: "",
@@ -245,23 +256,22 @@ export default {
     // 删除操作
     removeIdx2(item, index) {
       const _this = this
-      if(item.id ==""){
-        _this.formresume.splice(index, 1);
+
+        _this.form.resume.splice(index, 1);
         _this.$message({
           message: "删除成功",
           type: "success",
         })
-      }
-      else {
-        axios.delete('/api/resume/deleteById/' + item.id).then(function (resp) {
-
-          _this.formresume.splice(index, 1);
-          _this.$message({
-            message: "删除成功",
-            type: "success",
-          })
-        })
-      }
+      // else {
+      //   axios.delete('/api/resume/deleteById/' + item.id).then(function (resp) {
+      //
+      //     _this.formresume.splice(index, 1);
+      //     _this.$message({
+      //       message: "删除成功",
+      //       type: "success",
+      //     })
+      //   })
+      // }
     },
     // submitForm(formName) {
     //   const _this = this
@@ -286,8 +296,13 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.put('/api/person/update',this.ruleForm).then(function(resp){
-
+          axios.put('/api/person/update',this.form).then(function(resp){
+                _this.$alert('《' + _this.form.person.name_cn + '》修改成功！', '消息', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    _this.$router.push('/data/people/person')
+                  }
+                })
           })
         }
         else {
@@ -295,29 +310,29 @@ export default {
         }
       });
     },
-    submitForm2(formName) {
-      const _this = this
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          axios.put('/api/education/update',this.formeducation).then(function(resp){
-            console.log(_this.formeducation)
-          })
-        }
-        else {
-          return false;
-        }
-      });
-      axios.put('/api/resume/update',this.formresume).then(function(resp){
-        _this.$alert('《' + _this.ruleForm.name_cn + '》修改成功！', '消息', {
-          confirmButtonText: '确定',
-          callback: action => {
-            _this.$router.push('/person')
-          }
-        })
-      })
-
-
-    },
+    // submitForm2(formName) {
+    //   const _this = this
+    //   this.$refs[formName].validate((valid) => {
+    //     if (valid) {
+    //       axios.put('/api/education/update',this.formeducation).then(function(resp){
+    //         console.log(_this.formeducation)
+    //       })
+    //     }
+    //     else {
+    //       return false;
+    //     }
+    //   });
+    //   axios.put('/api/resume/update',this.formresume).then(function(resp){
+    //     _this.$alert('《' + _this.ruleForm.name_cn + '》修改成功！', '消息', {
+    //       confirmButtonText: '确定',
+    //       callback: action => {
+    //         _this.$router.push('/person')
+    //       }
+    //     })
+    //   })
+    //
+    //
+    // },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }
@@ -325,15 +340,15 @@ export default {
   created() {
     const _this = this
     axios.get('/api/person/findById/'+this.$route.query.id).then(function(resp){
-
-      _this.ruleForm = resp.data[0]
+      console.log(resp)
+      _this.form.person = resp.data
     })
-    axios.get('/api/education/findById/'+this.$route.query.id).then(function(resp){
+    axios.get('/api/person/searchedu/'+this.$route.query.id).then(function(resp){
       console.log(resp.data)
-      _this.formeducation = resp.data
+      _this.form.education = resp.data
     })
-    axios.get('/api/resume/findById/'+this.$route.query.id).then(function(resp){
-      _this.formresume = resp.data
+    axios.get('/api/person/searchresu/'+this.$route.query.id).then(function(resp){
+      _this.form.resume = resp.data
     })
   }
 }

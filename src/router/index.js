@@ -22,6 +22,7 @@ import BombUpdate from '../views/data_management/structured_data_management/arm/
 import VesselUpdate from '../views/data_management/structured_data_management/arm/VesselUpdate'
 import AddPerson from '../views/data_management/structured_data_management/people/AddPerson'
 import Person from '../views/data_management/structured_data_management/people/Person'
+import PersonAnalysis from '../views/data_management/structured_data_management/people/PersonAnalysis'
 import PersonDetail from '../views/data_management/structured_data_management/people/PersonDetail'
 import PersonUpdate from '../views/data_management/structured_data_management/people/PersonUpdate'
 import Plan from '../views/data_management/structured_data_management/plan/Plan'
@@ -37,6 +38,12 @@ import Analysis from "../views/data_management/structured_data_management/Analys
 import StructuredData from "../views/data_management/structured_data_management/StructuredData";
 import UnstructuredData from "../views/data_management/unstructured_data_management/UnstructuredData";
 import SemiStructuredData from "../views/data_management/semi_structured_data_management/SemiStructuredData";
+import SemiStructureShow from "../views/data_management/semi_structured_data_management/SemiStructureShow";
+import SemiStructureDetail from "../views/data_management/semi_structured_data_management/SemiStructureDetail";
+import UnstructureText from "../views/data_management/unstructured_data_management/UnstructureText";
+import UnstructureTextDetail from "../views/data_management/unstructured_data_management/UnstructureTextDetail";
+import UnstructurePicture from "../views/data_management/unstructured_data_management/UnstructurePicture";
+import UnstructureAlbum from "../views/data_management/unstructured_data_management/UnstructureAlbum";
 //第二部分,候选生成管理部分组件
 import CandidateKg from "../views/candidate_generation_management/candidate_kg/CandidateKg";
 import CandidateKgBuild from "../views/candidate_generation_management/candidate_kg/CandidateKgBuild";
@@ -231,6 +238,11 @@ export default new Router({
               show: true,
               children: [
                 {
+                  path: "/data/structure/people/PersonAnalysis",
+                  name: "人员分析",
+                  component: PersonAnalysis
+                },
+                {
                   path: "/data/structure/people/person",
                   name: "人员信息",
                   component: Person
@@ -292,6 +304,18 @@ export default new Router({
           name: '半结构化数据管理',
           component: SemiStructuredData,
           show: true,
+          children: [
+            {
+              path: '/data/semistructure/SemiStructureShow',
+              name: '半结构化数据展示',
+              component: SemiStructureShow,
+            },
+            {
+              path: '/data/semistructure/SemiStructureDetail',
+              name: '半结构化数据详情',
+              component: SemiStructureDetail,
+            }
+          ]
         },
         {
           path: '/data/unstructure',
@@ -299,6 +323,26 @@ export default new Router({
           component: UnstructuredData,
           show: true,
           children: [
+            {
+              path: '/data/unstructure/UnstructureText',
+              name: '非结构文档',
+              component: UnstructureText,
+            },
+            {
+              path: '/data/unstructure/UnstructureTextDetail',
+              name: '非结构文档详情',
+              component: UnstructureTextDetail,
+            },
+            {
+              path: '/data/unstructure/UnstructureAlbum',
+              name: '非结构图片',
+              component: UnstructureAlbum,
+            },
+            {
+              path: '/data/unstructure/UnstructurePicture',
+              name: '图片详情',
+              component: UnstructurePicture,
+            }
           ]
         },
       ]

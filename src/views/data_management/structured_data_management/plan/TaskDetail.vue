@@ -187,7 +187,7 @@ export default {
     edit() {
       const _this = this
       _this.$router.push({
-        path: '/plandetail',
+        path: '/data/plan/plandetail',
         query:{
           id:this.$route.query.id2,
         }

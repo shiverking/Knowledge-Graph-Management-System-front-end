@@ -27,7 +27,7 @@
     <el-table
         :data="tableData"
         border
-        style="width: 90%">
+        style="width: 95%">
       <el-table-column
           fixed
           prop="id"
@@ -44,7 +44,11 @@
           label="图片"
           width="100">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
+          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column
@@ -60,23 +64,23 @@
       <el-table-column
           prop="bomb_length"
           label="长度"
-          width="50">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="bomb_weight"
           label="重量"
-          width="50">
+          width="100">
       </el-table-column>
 
       <el-table-column
           prop="winspan"
           label="翼展"
-          width="50">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="guidance_system"
           label="制导系统"
-          width="50">
+          width="100">
       </el-table-column>
 
       <el-table-column
@@ -87,12 +91,12 @@
       <el-table-column
           prop="scope"
           label="射程"
-          width="50">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="type"
           label="类型"
-          width="50">
+          width="100">
       </el-table-column>
 
       <el-table-column
@@ -148,8 +152,9 @@ export default {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
             console.log(resp)
-            _this.tableData = resp.data.content
-            _this.total = resp.data.totalElements
+            _this.tableData = resp.data.list
+            _this.pageSize = resp.data.pageSize
+            _this.total = resp.data.total
           })
         } else {
           return false;
@@ -170,12 +175,12 @@ export default {
     },
     add() {
       this.$router.push({
-        path: '/data/arm/AddMisile',
+        path: '/data/structure/arm/AddMisile',
       })
     },
     edit(row) {
       this.$router.push({
-        path: '/data/arm/MisileUpdate',
+        path: '/data/structure/arm/MisileUpdate',
         query:{
           id:row.id
         }
@@ -184,20 +189,20 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('/api/misile/findAll/' + (currentPage - 1) + '/2').then(function (resp) {
+        axios.get('/api/misile/findAll/' + (currentPage ) + '/2').then(function (resp) {
           console.log(resp)
-          _this.tableData = resp.data.content
-          _this.pageSize = resp.data.size
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
       else{
         _this.ruleForm.page= currentPage
         axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
-          _this.tableData = resp.data.content
-          _this.pageSize = resp.data.size
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
 
       }
@@ -210,9 +215,9 @@ export default {
     const _this = this
     axios.get('/api/misile/findAll/0/2').then(function(resp){
       console.log(resp)
-      _this.tableData = resp.data.content
-      _this.pageSize = resp.data.size
-      _this.total = resp.data.totalElements
+      _this.tableData = resp.data.list
+      _this.pageSize = resp.data.pageSize
+      _this.total = resp.data.total
     })
   }
 }

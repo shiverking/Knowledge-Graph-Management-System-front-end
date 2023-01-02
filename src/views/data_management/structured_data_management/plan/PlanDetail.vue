@@ -12,7 +12,7 @@
             <!-- 循环data中定义的数组 -->
             <h2>指挥官</h2>
             <el-form label-width="80px" ref="formperson">
-              <div v-for="(item,index) in formperson" :key="index">
+              <div v-for="(item,index) in form.person_new" :key="index">
                 <div class="formOuterBox">
                   <div class="formCotantBox">
 
@@ -50,7 +50,7 @@
           <h2>舰船舰艇</h2>
             <!-- 循环data中定义的数组 -->
             <el-form label-width="80px" ref="formpvessel">
-              <div v-for="(item,index) in formvessel" :key="index">
+              <div v-for="(item,index) in form.vessel_new" :key="index">
                 <div class="formOuterBox">
                   <div class="formCotantBox">
 
@@ -86,7 +86,7 @@
             </el-form>
           </div>
           <div>
-            <el-button type="primary" @click="submitForm1();submitForm2()" >提交</el-button>
+            <el-button type="primary" @click="submitForm1()" >提交</el-button>
           </div>
 
           <!--    <el-form-item>-->
@@ -209,23 +209,15 @@ export default {
   data() {
 
     return {
-      task_id1:'',
+      form:{
+        person_new:[],
+        vessel_new:[],
+      },
+
       options1:[],
       options2:[],
-      person_old:[],
-      vessel_old:[],
       dialogVisible: false,
       ruleForm:[],
-      formperson: [
-        {
-
-        },
-      ],
-      formvessel:[
-        {
-
-        },
-      ],
       pageSize: '1',
       total: '11',
       tableData: [],
@@ -234,91 +226,93 @@ export default {
   },
   methods: {
     addForm() {
-
-      this.formperson.push({
+      const _this =this
+      this.form.person_new.push({
         id:"",
+        task_id:_this.ruleForm.id
       });
 
     },
     // 删除操作
     removeIdx(item, index) {
       const _this = this
-      if(item.id==""){
-        _this.formperson.splice(index, 1);
+      // if(item.id==""){
+        _this.form.person_new.splice(index, 1);
         _this.$message({
           message: "删除成功",
           type: "success",
         })
-      }
-      else {
-        axios.get('/api/person/deletetask/' + item.id).then(function (resp) {
-
-          _this.formtask.splice(index, 1);
-          _this.$message({
-            message: "删除成功",
-            type: "success",
-          })
-        })
-      }
+      // }
+      // else {
+        // axios.get('/api/person/deletetask/' + item.id).then(function (resp) {
+        //
+        //   _this.formtask.splice(index, 1);
+        //   _this.$message({
+        //     message: "删除成功",
+        //     type: "success",
+        //   })
+        // })
+      //   this.form.deleteperson.push(item)
+      // }
     },
     addForm2() {
 
-      this.formvessel.push({
+      this.form.vessel_new.push({
         id:"",
+        task_id:_this.ruleForm.id
       });
 
     },
     // 删除操作
     removeIdx2(item, index) {
       const _this = this
-      if(item.id==""){
-        _this.formvessel.splice(index, 1);
+      // if(item.id==""){
+        _this.form.vessel_new.splice(index, 1);
         _this.$message({
           message: "删除成功",
           type: "success",
         })
-      }
-      else {
-        axios.get('/api/vessel/deletetask/' + item.id).then(function (resp) {
-
-          _this.formtask.splice(index, 1);
-          _this.$message({
-            message: "删除成功",
-            type: "success",
-          })
-        })
-      }
+      // }
+      // else {
+        // axios.get('/api/vessel/deletetask/' + item.id).then(function (resp) {
+        //
+        //   _this.formtask.splice(index, 1);
+        //   _this.$message({
+        //     message: "删除成功",
+        //     type: "success",
+        //   })
+        // })
+      //
+      // }
     },
-    deleteBook(row) {
-      const _this = this
-      axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
-        _this.$alert('《' + row.name + '》删除成功！', '消息', {
-          confirmButtonText: '确定',
-          callback: action => {
-            window.location.reload()
-          }
-        })
-      })
-    },
+    // deleteBook(row) {
+    //   const _this = this
+    //   axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
+    //     _this.$alert('《' + row.name + '》删除成功！', '消息', {
+    //       confirmButtonText: '确定',
+    //       callback: action => {
+    //         window.location.reload()
+    //       }
+    //     })
+    //   })
+    // },
     edit() {
       this.$router.push({
-        path: '/plan',
+        path: '/data/plan/plan',
       })
     },
 
     editmsg(row) {
       const _this =this
       axios.get('/api/person/findByTaskid/'+row.id).then(function(resp){
-        _this.formperson = resp.data
-        _this.person_old = resp.data
+        _this.form.person_new = resp.data
         console.log(resp.data)
       })
       axios.get('/api/vessel/findByTaskid/'+row.id).then(function(resp){
-        _this.formvessel = resp.data
-        _this.vessel_old = resp.data
+        _this.form.vessel_new = resp.data
         console.log(resp.data)
       })
-      this.ruleForm.id = row.id;
+      this.ruleForm.id=row.id;
       this.dialogVisible = true;
     },
     edit1(row) {
@@ -334,34 +328,30 @@ export default {
     },
 
     submitForm1() {
-      for(var i =0;i<this.person_old.length;i++){
-        axios.get('/api/person/deletetask/'+this.person_old[i].id).then(function(resp){
+      // for(var i =0;i<this.person_old.length;i++){
+        axios.post('/api/task/update',this.form).then(function(resp){
         })
-      }
-      for(var m =0;m<this.vessel_old.length;m++){
-        axios.get('/api/vessel/deletetask/'+this.vessel_old[m].id).then(function(resp){
-        })
-      }
-
-
+      // }
+      // for(var m =0;m<this.vessel_old.length;m++){
+      //   axios.get('/api/vessel/deletetask/'+this.vessel_old[m].id).then(function(resp){
+      //   })
+      // }
       this.dialogVisible =false;
-
-
     },
-    submitForm2() {
-      const _this =this
-      for(var j =0;j<this.formperson.length;j++){
-        axios.get('/api/person/settaskid/'+this.formperson[j].id+'/'+this.ruleForm.id).then(function(resp){
-        })
-      }
-      for(var n =0;n<this.formvessel.length;n++){
-        axios.get('/api/vessel/settaskid/'+this.formvessel[n].id+'/'+this.ruleForm.id).then(function(resp){
-        })
-      }
-      this.dialogVisible =false;
-
-
-    },
+    // submitForm2() {
+    //   const _this =this
+    //   for(var j =0;j<this.formperson.length;j++){
+    //     axios.get('/api/person/settaskid/'+this.formperson[j].id+'/'+this.ruleForm.id).then(function(resp){
+    //     })
+    //   }
+    //   for(var n =0;n<this.formvessel.length;n++){
+    //     axios.get('/api/vessel/settaskid/'+this.formvessel[n].id+'/'+this.ruleForm.id).then(function(resp){
+    //     })
+    //   }
+    //   this.dialogVisible =false;
+    //
+    //
+    // },
     allocation(row){
       const _this =this
       _this.$router.push({
@@ -389,11 +379,11 @@ export default {
   created() {
     const _this = this
     axios.get('/api/task/findByPlanid/' + this.$route.query.id).then(function (resp) {
-      console.log(resp)
+      // console.log(resp)
       _this.tableData = resp.data
     })
     axios.get('/api/person/findByPlanid/' + this.$route.query.id).then(function (resp) {
-
+      console.log(resp)
       _this.tableData1 = resp.data
     });
     axios.get('/api/person/findAll/').then(function(resp){

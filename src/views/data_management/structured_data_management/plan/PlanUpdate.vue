@@ -125,14 +125,7 @@ export default {
       options1:[],
       options2:[],
       ruleForm: {
-        id: '',
-        name_cn: '',
-        name_en: '',
-        gender:'',
-        picture:'',
-        address:'',
-        task_id:'',
-        plan_id:'',
+
       },
       rules: {
         name: [
@@ -214,7 +207,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           axios.get('/api/person/setplanid/'+this.person_id+'/'+this.ruleForm.id+'/'+this.person_id_old).then(function(resp){
-            console.log(_this.formeducation)
+
           })
         }
         else {
@@ -239,8 +232,8 @@ export default {
   created() {
     const _this = this
     axios.get('/api/plan/findById/'+this.$route.query.id).then(function(resp){
-
-      _this.ruleForm = resp.data[0]
+      console.log(resp)
+      _this.ruleForm=resp.data;
     })
     axios.get('/api/person/findByPlanid/'+this.$route.query.id).then(function(resp){
       _this.person_id = resp.data[0].id

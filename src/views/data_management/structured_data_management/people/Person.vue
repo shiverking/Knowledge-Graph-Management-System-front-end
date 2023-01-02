@@ -96,8 +96,9 @@ export default {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
-            _this.tableData = resp.data.content
-            _this.total = resp.data.totalElements
+            _this.tableData = resp.data.list
+            _this.pageSize = resp.data.pageSize
+            _this.total = resp.data.total
           })
         } else {
           return false;
@@ -143,19 +144,19 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('/api/person/findAll/' + (currentPage - 1) + '/7').then(function (resp) {
-          _this.tableData = resp.data.content
-          _this.pageSize = resp.data.size
-          _this.total = resp.data.totalElements
-
+        axios.get('/api/person/findAll/' + (currentPage ) + '/7').then(function (resp) {
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
       else{
         _this.ruleForm.page = _this.currentPage
         axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
-          _this.tableData = resp.data.content
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
     }
@@ -187,9 +188,10 @@ export default {
   created() {
     const _this = this
     axios.get('/api/person/findAll/0/7').then(function(resp){
-      _this.tableData = resp.data.content
-      _this.pageSize = resp.data.size
-      _this.total = resp.data.totalElements
+      console.log(resp)
+      _this.tableData = resp.data.list
+      _this.pageSize = resp.data.pageSize
+      _this.total = resp.data.total
     })
   }
 }
