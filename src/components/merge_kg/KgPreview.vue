@@ -81,7 +81,6 @@
           } else {
             const source = e.item.getSource();
             const target = e.item.getTarget();
-            console.log(e.item)
             outDiv.innerHTML = `关系类型: ${model.name}<br/>头实体: ${source.getModel().label}<br/>尾实体: ${target.getModel().label}`;
           }
           return outDiv;
@@ -225,9 +224,6 @@
       },
     },
     created() {
-      // console.log("进来了")
-      // console.log("原生data 是"+this.previewData)
-      // console.log("data 是",JSON.parse(this.previewData))
     },
     mounted() {
       //生成节点
