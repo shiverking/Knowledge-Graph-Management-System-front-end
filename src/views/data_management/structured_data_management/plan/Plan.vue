@@ -88,8 +88,9 @@ export default {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/plan/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
-            _this.tableData = resp.data.content
-            _this.total = resp.data.totalElements
+            _this.tableData = resp.data.list
+            _this.pageSize = resp.data.pageSize
+            _this.total = resp.data.total
           })
         } else {
           return false;
@@ -130,11 +131,11 @@ export default {
     },
     page(currentPage){
       const _this = this
-      axios.get('/api/plan/findAll/'+(currentPage-1)+'/9').then(function(resp){
+      axios.get('/api/plan/findAll/'+(currentPage)+'/9').then(function(resp){
         console.log(resp)
-        _this.tableData = resp.data.content
-        _this.pageSize = resp.data.size
-        _this.total = resp.data.totalElements
+        _this.tableData = resp.data.list
+        _this.pageSize = resp.data.pageSize
+        _this.total = resp.data.total
       })
     }
   },
@@ -166,9 +167,9 @@ export default {
     const _this = this
     axios.get('/api/plan/findAll/0/9').then(function(resp){
       console.log(resp)
-      _this.tableData = resp.data.content
-      _this.pageSize = resp.data.size
-      _this.total = resp.data.totalElements
+      _this.tableData = resp.data.list
+      _this.pageSize = resp.data.pageSize
+      _this.total = resp.data.total
     })
   }
 }

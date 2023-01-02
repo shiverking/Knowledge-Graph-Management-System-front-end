@@ -43,7 +43,11 @@
           label="图片"
           width="100">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
+          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column
@@ -89,12 +93,12 @@
       <el-table-column
           prop="width"
           label="宽度"
-          width="100">
+          width="50">
       </el-table-column>
       <el-table-column
           prop="crew_num"
           label="载员"
-          width="100">
+          width="50">
       </el-table-column>
       <el-table-column
           prop="full_load_displacement"
@@ -160,7 +164,7 @@ export default {
   methods: {
     add() {
       this.$router.push({
-        path: '/data/arm/AddVessel',
+        path: '/data/structure/arm/AddVessel',
       })
     },
     submitForm(formName) {
@@ -170,8 +174,9 @@ export default {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/vessel/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
-            _this.tableData = resp.data.content
-            _this.total = resp.data.totalElements
+            _this.tableData = resp.data.list
+            _this.pageSize = resp.data.pageSize
+            _this.total = resp.data.total
           })
         } else {
           return false;
@@ -191,7 +196,7 @@ export default {
     },
     edit(row) {
       this.$router.push({
-        path: '/data/arm/VesselUpdate',
+        path: '/data/structure/arm/VesselUpdate',
         query:{
           id:row.id
         }
@@ -200,18 +205,19 @@ export default {
     page(currentPage) {
       const _this = this
       if (_this.ruleForm.value == '') {
-        axios.get('/api/vessel/findAll/' + (currentPage - 1) + '/4').then(function (resp) {
+        axios.get('/api/vessel/findAll/' + (currentPage ) + '/4').then(function (resp) {
           console.log(resp)
-          _this.tableData = resp.data.content
-          _this.pageSize = resp.data.size
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       } else {
         _this.ruleForm.page = _this.currentPage
         axios.get('/api/vessel/search', {params: _this.ruleForm}).then(function (resp) {
           console.log(_this.ruleForm)
-          _this.tableData = resp.data.content
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
     }
@@ -223,9 +229,9 @@ export default {
     const _this = this
     axios.get('/api/vessel/findAll/0/4').then(function(resp){
       console.log(resp)
-      _this.tableData = resp.data.content
-      _this.pageSize = resp.data.size
-      _this.total = resp.data.totalElements
+      _this.tableData = resp.data.list
+      _this.pageSize = resp.data.pageSize
+      _this.total = resp.data.total
     })
   }
 }

@@ -43,7 +43,11 @@
           label="图片"
           width="200">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
+          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column
@@ -126,7 +130,7 @@ export default {
   methods: {
     add() {
       this.$router.push({
-        path: '/data/arm/AddBomb',
+        path: '/data/structure/arm/AddBomb',
       })
     },
     submitForm(formName) {
@@ -136,8 +140,9 @@ export default {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/bomb/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
-            _this.tableData = resp.data.content
-            _this.total = resp.data.totalElements
+            _this.tableData = resp.data.list
+            _this.pageSize = resp.data.pageSize
+            _this.total = resp.data.total
           })
         } else {
           return false;
@@ -158,7 +163,7 @@ export default {
     },
     edit(row) {
       this.$router.push({
-        path: '/data/arm/BombUpdate',
+        path: '/data/structure/arm/BombUpdate',
         query:{
           id:row.id
         }
@@ -167,18 +172,19 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value ==''){
-        axios.get('/api/bomb/findAll/'+(currentPage-1)+'/3').then(function(resp){
+        axios.get('/api/bomb/findAll/'+(currentPage)+'/3').then(function(resp){
           console.log(resp)
-          _this.tableData = resp.data.content
-          _this.pageSize = resp.data.size
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })}
       else{
         _this.ruleForm.page = _this.currentPage
         axios.get('/api/bomb/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
-          _this.tableData = resp.data.content
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
     }
@@ -190,9 +196,9 @@ export default {
     const _this = this
     axios.get('/api/bomb/findAll/0/3').then(function(resp){
       console.log(resp)
-      _this.tableData = resp.data.content
-      _this.pageSize = resp.data.size
-      _this.total = resp.data.totalElements
+      _this.tableData = resp.data.list
+      _this.pageSize = resp.data.pageSize
+      _this.total = resp.data.total
     })
   }
 }

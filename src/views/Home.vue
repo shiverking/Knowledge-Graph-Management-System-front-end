@@ -48,12 +48,21 @@
                 <i class="el-icon-rank"></i>
                 非结构化数据管理
               </template>
+              <router-link to="/data/unstructure/UnstructureText" class="routerlink">
+                <el-menu-item index="1-1-1"><i class = "el-icon-document"></i>非结构文档</el-menu-item>
+              </router-link>
+              <router-link to="/data/unstructure/UnstructureAlbum" class="routerlink">
+                <el-menu-item index="1-1-2"><i class = "el-icon-money"></i>非结构图片</el-menu-item>
+              </router-link>
             </el-submenu>
             <el-submenu index="1-2">
               <template slot="title">
                 <i class="el-icon-s-data"></i>
                 半结构化数据管理
               </template>
+              <router-link to="/data/semistructure/SemiStructureShow" class="routerlink">
+                <el-menu-item index="1-2-1"><i class = 'el-icon-document-copy'></i>半结构化数据展示</el-menu-item>
+              </router-link>
             </el-submenu>
             <el-submenu index="1-3">
               <template slot="title">
