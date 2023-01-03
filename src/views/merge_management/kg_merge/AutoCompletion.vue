@@ -235,6 +235,8 @@
       <el-table
           :data="confirmedDataTable"
           border
+          v-loading = "comfirmedLoading"
+          element-loading-text="正在提交中..."
           style="width: 100%">
         <el-table-column
             prop="head"
@@ -273,7 +275,7 @@
         <p>确定将当前结果保存至缓存表,并进行下一步吗？</p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="nextStepVisible = false;jumpToNext()">确定</el-button>
+          <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
         </div>
         <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==1" slot="reference" @click="nextStepVisible=true;">提交</el-button>
       </el-popover>
@@ -382,7 +384,6 @@ p {
         node_label_count: 0,
         node_label_list: [],
         relation_label_count_list: [],
-
         //概览可视化
         overviewVisible:false,
         //模型可视化
@@ -399,8 +400,8 @@ p {
         //当前选中行
         selectedRow:[],
         //待提交数据
-        confirmedDataTable:[]
-
+        confirmedDataTable:[],
+        comfirmedLoading:false
       }
     },
     methods: {
@@ -1248,9 +1249,6 @@ p {
 
       },
       get_overview_of_completion(){
-        this.getRelationBar()
-        this.getEntityTypeBar()
-        this.getBoxPlot()
           //axios请求
           axios.post('/pythonApi/get_overview_of_completion',{
           })
@@ -1279,6 +1277,7 @@ p {
       },
       chooseTail(row){
         this.selectedRow.tail = row.tail;
+        this.selectedRow.pred_prob= row.pred_prob;
       },
       //应用链接预测结果
       applyResult(){
@@ -1298,6 +1297,29 @@ p {
           message: '应用链接预测结果成功!',
           type: 'success'
         });
+      },
+      //将结果提交至缓存表
+      submitToCache(){
+        this.comfirmedLoading = true;
+        axios.post('/api/triples/completionCoreKg',{
+          res:this.confirmedDataTable,
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.comfirmedLoading = false;
+              this.$message({
+                showClose: true,
+                message: '提交成功!',
+                type: 'success'
+              });
+              this.jumpToNext();
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
     },
     mounted(){
