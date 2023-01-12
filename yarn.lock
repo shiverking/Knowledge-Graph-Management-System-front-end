@@ -3404,6 +3404,11 @@
     "loader-utils" "^1.0.2"
     "schema-utils" "^0.4.5"
 
+"file-saver@^2.0.5":
+  "integrity" "sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA=="
+  "resolved" "https://registry.npmmirror.com/file-saver/-/file-saver-2.0.5.tgz"
+  "version" "2.0.5"
+
 "filename-regex@^2.0.0":
   "integrity" "sha512-BTCqyBaWBTsauvnHiE8i562+EdJj+oUpkqWp2R1iCoR8f6oo8STRu3of7WJJ0TqWtxN50a5YFpzYK4Jj9esYfQ=="
   "resolved" "https://registry.npmmirror.com/filename-regex/-/filename-regex-2.0.1.tgz"

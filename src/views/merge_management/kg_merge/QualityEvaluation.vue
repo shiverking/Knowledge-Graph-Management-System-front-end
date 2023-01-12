@@ -110,10 +110,10 @@
           <el-dialog title="错误修改" :visible.sync="dialogFormVisible">
             <el-form :model="form">
               <el-form-item label="实体">
-                <el-input v-model="form.ent" style="width:300px;"></el-input>
+                <el-input disabled v-model="form.ent" style="width:300px;"></el-input>
               </el-form-item>
               <el-form-item label="实体类型">
-                <el-input v-model="form.ent_typ" style="width:300px;"></el-input>
+                <el-input disabled v-model="form.ent_typ" style="width:300px;"></el-input>
               </el-form-item>
               <p><b>修改后的结点名称和结点类别:</b></p>
               <el-form-item label="实体">
@@ -214,29 +214,29 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="头实体">
-                    <el-input v-model="form_of_relation_error.head" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_relation_error.head" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="头实体类型" style="margin-left:100px;">
-                    <el-input v-model="form_of_relation_error.head_typ" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_relation_error.head_typ" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="尾实体">
-                    <el-input v-model="form_of_relation_error.tail" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_relation_error.tail" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="尾实体类型" style="margin-left:100px;">
-                    <el-input v-model="form_of_relation_error.tail_typ" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_relation_error.tail_typ" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-form-item label="关系">
-                <el-input v-model="form_of_relation_error.rel" style="width:300px;"></el-input>
+                <el-input disabled v-model="form_of_relation_error.rel" style="width:300px;"></el-input>
               </el-form-item>
               <el-form-item label="操作形式">
                 <el-radio-group v-model="form_of_relation_error.resource" size="medium">
@@ -357,24 +357,24 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="实体">
-                    <el-input v-model="form_of_attribute_error.ent" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_attribute_error.ent" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="实体类型" style="margin-left:100px;">
-                    <el-input v-model="form_of_attribute_error.ent_typ" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_attribute_error.ent_typ" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="属性">
-                    <el-input v-model="form_of_attribute_error.attribute" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_attribute_error.attribute" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="属性值" style="margin-left:100px;">
-                    <el-input v-model="form_of_attribute_error.attribute_val" style="width:300px;"></el-input>
+                    <el-input disabled v-model="form_of_attribute_error.attribute_val" style="width:300px;"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>

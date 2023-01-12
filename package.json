@@ -19,6 +19,7 @@
     "d3-context-menu": "^1.1.2",
     "echarts": "^4.9.0",
     "element-ui": "^2.15.9",
+    "file-saver": "^2.0.5",
     "moment": "^2.29.4",
     "three-spritetext": "^1.5.3",
     "vue": "^2.5.2",
