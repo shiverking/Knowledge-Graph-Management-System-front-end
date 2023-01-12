@@ -94,7 +94,7 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                  @click="dailog_receive_entity_error(scope.row)">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -107,6 +107,27 @@
             :total="1"
             style="margin-top:10px">
           </el-pagination>
+          <el-dialog title="错误修改" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+              <el-form-item label="实体">
+                <el-input v-model="form.ent" style="width:300px;"></el-input>
+              </el-form-item>
+              <el-form-item label="实体类型">
+                <el-input v-model="form.ent_typ" style="width:300px;"></el-input>
+              </el-form-item>
+              <p><b>修改后的结点名称和结点类别:</b></p>
+              <el-form-item label="实体">
+                <el-input v-model="form.ent_new" style="width:300px;"></el-input>
+              </el-form-item>
+              <el-form-item label="实体类型">
+                <el-input v-model="form.ent_typ_new" style="width:300px;"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false;submit_an_entity_error_modification();">确 定</el-button>
+            </div>
+          </el-dialog>
       </div>
       <div v-if="this.active==1" style="margin-top: 10px;">
           <b>链接错误</b>
@@ -130,6 +151,13 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="头实体类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head_typ}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="关系"
               width="180">
               <template slot-scope="scope">
@@ -143,6 +171,13 @@
                 <span style="margin-left: 10px">{{ scope.row.tail }}</span>
               </template>
             </el-table-column>    
+            <el-table-column
+              label="尾实体类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail_typ }}</span>
+              </template>
+            </el-table-column>  
             <el-table-column
               label="错误类型"
               width="180">
@@ -161,7 +196,7 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                  @click="dailog_receive_relation_error(scope.row)">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -174,6 +209,75 @@
             :total="1"
             style="margin-top:10px">
           </el-pagination>
+          <el-dialog title="错误修改" :visible.sync="dialogRelationErrorFormVisible">
+            <el-form :model="form_of_relation_error">
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="头实体">
+                    <el-input v-model="form_of_relation_error.head" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="头实体类型" style="margin-left:100px;">
+                    <el-input v-model="form_of_relation_error.head_typ" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="尾实体">
+                    <el-input v-model="form_of_relation_error.tail" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="尾实体类型" style="margin-left:100px;">
+                    <el-input v-model="form_of_relation_error.tail_typ" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item label="关系">
+                <el-input v-model="form_of_relation_error.rel" style="width:300px;"></el-input>
+              </el-form-item>
+              <el-form-item label="操作形式">
+                <el-radio-group v-model="form_of_relation_error.resource" size="medium">
+                  <el-radio border label="修改"></el-radio>
+                  <el-radio border label="删除"></el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <p><b>修改后的结点名称和结点类别:</b></p>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="头实体">
+                    <el-input v-model="form_of_relation_error.head_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="头实体类型" style="margin-left:100px;">
+                    <el-input v-model="form_of_relation_error.head_typ_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="尾实体">
+                    <el-input v-model="form_of_relation_error.tail_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="尾实体类型" style="margin-left:100px;">
+                    <el-input v-model="form_of_relation_error.tail_typ_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item label="关系">
+                <el-input v-model="form_of_relation_error.rel_new" style="width:300px;"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogRelationErrorFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="dialogRelationErrorFormVisible = false;submit_an_relation_error_modification();">确 定</el-button>
+            </div>
+          </el-dialog>
         </div>
       <div v-if="this.active==2" style="margin-top: 10px;">
           <b>属性值错误</b>
@@ -194,6 +298,13 @@
               width="180">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.ent }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="实体类型"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.ent_typ }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -228,7 +339,7 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                  @click="dailog_receive_attribute_error(scope.row)">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -241,6 +352,69 @@
             :total="1"
             style="margin-top:10px">
           </el-pagination>
+          <el-dialog title="错误修改" :visible.sync="dialogAttributeErrorFormVisible">
+            <el-form :model="form_of_attribute_error">
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="实体">
+                    <el-input v-model="form_of_attribute_error.ent" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="实体类型" style="margin-left:100px;">
+                    <el-input v-model="form_of_attribute_error.ent_typ" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="属性">
+                    <el-input v-model="form_of_attribute_error.attribute" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="属性值" style="margin-left:100px;">
+                    <el-input v-model="form_of_attribute_error.attribute_val" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item label="操作形式">
+                <el-radio-group v-model="form_of_attribute_error.resource" size="medium">
+                  <el-radio border label="修改"></el-radio>
+                  <el-radio border label="删除"></el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <p><b>修改后的结点名称和结点类别:</b></p>
+              <el-row> 
+                <el-col :span="8">
+                  <el-form-item label="实体">
+                    <el-input v-model="form_of_attribute_error.ent_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="实体类型" style="margin-left:100px;">
+                    <el-input v-model="form_of_attribute_error.ent_typ_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="属性">
+                    <el-input v-model="form_of_attribute_error.attribute_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="属性值" style="margin-left:100px;">
+                    <el-input v-model="form_of_attribute_error.attribute_val_new" style="width:300px;"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogAttributeErrorFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="dialogAttributeErrorFormVisible = false;submit_an_attribute_error_modification();">确 定</el-button>
+            </div>
+          </el-dialog>
         </div>
       <div v-if="this.active==3" style="margin-top: 10px;">
         <el-table
@@ -248,18 +422,17 @@
             border
             style="width: 100%; margin-top: 10px;">
             <el-table-column
-              label="检测时间"
-              width="180">
-              <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.time }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
               label="头实体（旧）"
               width="180">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="头实体类型（旧）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head_typ }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -277,40 +450,64 @@
               </template>
             </el-table-column>    
             <el-table-column
+              label="尾实体类型（旧）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail_typ }}</span>
+              </template>
+            </el-table-column>   
+            <el-table-column
               label="头实体（新）"
               width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                <span style="margin-left: 10px">{{ scope.row.head_new }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="头实体类型（新）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head_typ_new }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="关系（新）"
               width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+                <span style="margin-left: 10px">{{ scope.row.rel_new }}</span>
               </template>
             </el-table-column>     
             <el-table-column
               label="尾实体（新）"
               width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                <span style="margin-left: 10px">{{ scope.row.tail_new }}</span>
+              </template>
+            </el-table-column>  
+            <el-table-column
+              label="尾实体类型（新）"
+              width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail_typ_new }}</span>
               </template>
             </el-table-column>  
             <el-table-column
               label="错误类型"
               width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.error_typ }}</span>
+                <span v-if="scope.row.error_typ=='0'">实体错误</span>
+                <span v-if="scope.row.error_typ=='1'">链接错误</span>
+                <span v-if="scope.row.error_typ=='2'">属性值错误</span>
               </template>
             </el-table-column>         
-            <el-table-column label="操作">
+            <el-table-column
+              label="更新方式"
+              width="180">
               <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <span v-if="scope.row.update_form=='0'">修改</span>
+                <span v-if="scope.row.update_form=='1'">删除</span>
               </template>
-            </el-table-column>
+            </el-table-column>    
           </el-table>
             <el-pagination
               @size-change="handleSizeChange"
@@ -352,9 +549,43 @@
         relation_error: [],
         attribute_error: [],
         data_to_be_submitted:[],
+        selectedRowOfEntityError:[],
         active:0,
         qualiatyVisible:false,
-        nextStepVisible:false
+        nextStepVisible:false,
+        dialogFormVisible: false,
+        dialogRelationErrorFormVisible: false,
+        dialogAttributeErrorFormVisible: false,
+        form: {
+          ent: '',
+          ent_typ: '',
+          ent_new: '',
+          ent_typ_new: '',
+        },
+        form_of_relation_error: {
+          head: '',
+          head_typ: '',
+          rel:'',
+          tail:'',
+          tail_typ:'',
+          head_new: '',
+          head_typ_new: '',
+          rel_new:'',
+          tail_new: '',
+          tail_typ_new: '',
+          resource: '修改',
+        },
+        form_of_attribute_error: {
+          ent: '',
+          ent_typ: '',
+          attribute:'',
+          attribute_val:'',
+          ent_new: '',
+          ent_typ_new: '',
+          attribute_new: '',
+          attribute_val_new: '',
+          resource: '修改',
+        },
       }
     },
     methods: {
@@ -370,12 +601,6 @@
       //上一步
       previous() {
         this.active--;
-      },
-      handleEdit(index, row) {
-        console.log(index, row);
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
       },
       getKgRadar(){
         var chartDom = document.getElementById('radar');
@@ -418,7 +643,6 @@
             if (response.status == 200) {
               //赋值给表格
               this.entity_error = response.data.data;
-              console.log(this.entity_error)
                //设置文本高亮
               }
           })
@@ -453,6 +677,109 @@
           .catch(function (error) {
             console.log(error)
           })
+      },
+      dailog_receive_entity_error(row){
+        this.form.ent = row.ent;
+        this.form.ent_typ = row.ent_typ;
+        this.form.ent_new = row.ent;
+        this.form.ent_typ_new = row.ent_typ;
+        this.dialogFormVisible = true;
+        this.selectedRowOfEntityError = row;
+      },
+      dailog_receive_relation_error(row){
+        this.form_of_relation_error.head = row.head;
+        this.form_of_relation_error.head_typ = row.head_typ;
+        this.form_of_relation_error.tail = row.tail;
+        this.form_of_relation_error.tail_typ = row.tail_typ;
+        this.form_of_relation_error.rel = row.rel;
+        this.form_of_relation_error.head_new = row.head;
+        this.form_of_relation_error.head_typ_new = row.head_typ;
+        this.form_of_relation_error.tail_new = row.tail;
+        this.form_of_relation_error.tail_typ_new = row.tail_typ;
+        this.form_of_relation_error.rel_new = row.rel;
+        this.dialogRelationErrorFormVisible = true;
+        this.selectedRowOfEntityError = row;
+      },
+      dailog_receive_attribute_error(row){
+        this.form_of_attribute_error.ent = row.ent;
+        this.form_of_attribute_error.ent_typ = row.ent_typ;
+        this.form_of_attribute_error.attribute = row.attribute;
+        this.form_of_attribute_error.attribute_val = row.attribute_val;
+        this.form_of_attribute_error.ent_new = row.ent;
+        this.form_of_attribute_error.ent_typ_new = row.ent_typ;
+        this.form_of_attribute_error.attribute_new = row.attribute;
+        this.form_of_attribute_error.attribute_val_new = row.attribute_val;
+        this.dialogAttributeErrorFormVisible = true;
+        this.selectedRowOfEntityError = row;
+      },
+      submit_an_entity_error_modification(){
+        this.selectedRowOfEntityError.error_status = '待提交';
+        var content = new Array();
+        content['head'] = this.form.ent;
+        content['head_typ'] = this.form.ent_typ;
+        content['rel'] = 'null';
+        content['tail'] = 'null';
+        content['tail_typ'] = 'null';
+        content['head_new'] = this.form.ent_new;
+        content['head_typ_new'] = this.form.ent_typ_new;
+        content['rel_new'] = 'null';
+        content['tail_new'] = 'null';
+        content['tail_typ_new'] = 'null';
+        content['error_typ'] = '0';
+        content['update_form'] = '0';
+        this.data_to_be_submitted.push(content)
+      },
+      submit_an_relation_error_modification(){
+        this.selectedRowOfEntityError.error_status = '待提交';
+        var content = new Array();
+        content['head'] = this.form_of_relation_error.head;
+        content['head_typ'] = this.form_of_relation_error.head_typ;
+        content['rel'] = this.form_of_relation_error.rel;
+        content['tail'] = this.form_of_relation_error.tail;
+        content['tail_typ'] = this.form_of_relation_error.tail_typ;
+        content['error_typ'] = '1';
+        if(this.form_of_relation_error.resource == '修改'){
+          content['head_new'] = this.form_of_relation_error.head_new;
+          content['head_typ_new'] = this.form_of_relation_error.head_typ_new;
+          content['rel_new'] = this.form_of_relation_error.rel_new;
+          content['tail_new'] = this.form_of_relation_error.tail_new;
+          content['tail_typ_new'] = this.form_of_relation_error.tail_typ_new;
+          content['update_form'] = '0';
+        }else{
+          content['head_new'] = 'null';
+          content['head_typ_new'] = 'null';
+          content['rel_new'] = 'null';
+          content['tail_new'] = 'null';
+          content['tail_typ_new'] = 'null';
+          content['update_form'] = '1';
+        }
+        this.data_to_be_submitted.push(content)
+      },
+      submit_an_attribute_error_modification(){
+        this.selectedRowOfEntityError.error_status = '待提交';
+        var content = new Array();
+        content['head'] = this.form_of_attribute_error.ent;
+        content['head_typ'] = this.form_of_attribute_error.ent_typ;
+        content['rel'] = this.form_of_attribute_error.attribute;
+        content['tail'] = this.form_of_attribute_error.attribute_val;
+        content['tail_typ'] = 'null';
+        content['error_typ'] = '2';
+        if(this.form_of_relation_error.resource == '修改'){
+          content['head_new'] = this.form_of_attribute_error.ent_new;
+          content['head_typ_new'] = this.form_of_attribute_error.ent_typ_new;
+          content['rel_new'] = this.form_of_attribute_error.attribute_new;
+          content['tail_new'] = this.form_of_attribute_error.attribute_val_new;
+          content['tail_typ_new'] = 'null';
+          content['update_form'] = '0';
+        }else{
+          content['head_new'] = 'null';
+          content['head_typ_new'] = 'null';
+          content['rel_new'] = 'null';
+          content['tail_new'] = 'null';
+          content['tail_typ_new'] = 'null';
+          content['update_form'] = '1';
+        }
+        this.data_to_be_submitted.push(content)
       },
     },
     mounted(){
