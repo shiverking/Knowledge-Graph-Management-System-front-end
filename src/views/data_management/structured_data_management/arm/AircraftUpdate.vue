@@ -94,7 +94,7 @@
                                 _this.$alert('《'+_this.ruleForm.aircraft_name+'》修改成功！', '消息', {
                                     confirmButtonText: '确定',
                                     callback: action => {
-                                        _this.$router.push('/aircraft')
+                                        _this.$router.push('/data/structure/arm/aircraft')
                                     }
                                 })
                             }
@@ -111,6 +111,7 @@
         created() {
             const _this = this
             axios.get('/api/aircraft/findById/'+this.$route.query.id).then(function(resp){
+              console.log(resp)
                 _this.ruleForm = resp.data
             })
         }

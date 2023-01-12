@@ -604,7 +604,6 @@ export default {
     //时间格式化
     dateFormat(data) {
       return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
-
     },
     //table单选
     setCurrent(row) {

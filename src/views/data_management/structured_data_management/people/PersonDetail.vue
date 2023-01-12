@@ -205,7 +205,7 @@ export default {
     // },
     edit() {
       this.$router.push({
-        path: '/person',
+        path: '/data/people/person',
       })
     },
     //   page(currentPage){
@@ -223,16 +223,15 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/resume/findById/' + this.$route.query.id).then(function (resp) {
+    axios.get('/api/person/searchresu/' + this.$route.query.id).then(function (resp) {
       _this.tableData1 = resp.data
     })
-    axios.get('/api/education/findById/' + this.$route.query.id).then(function (resp) {
-
+    axios.get('/api/person/searchedu/' + this.$route.query.id).then(function (resp) {
+      console.log(resp)
       _this.tableData = resp.data
     });
     axios.get('/api/plan/findById/' + this.$route.query.id1).then(function (resp) {
-
-      _this.tableData2 = resp.data
+      _this.tableData2.push(resp.data)
     });
   //   if (this.$route.query.id2 != null){
   //     axios.get('/api/task/findById/' + this.$route.query.id2).then(function (resp) {

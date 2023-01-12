@@ -13,7 +13,6 @@
         </el-form-item>
         <el-form-item label="值：">
           <el-input v-model="ruleForm.value" placeholder="请输入字段值"></el-input>
-
         </el-form-item >
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="submitForm('formInline')" >搜索</el-button>
@@ -26,7 +25,7 @@
     <el-table
         :data="tableData"
         border
-        style="width: 100%">
+        style="width: 95%">
       <el-table-column
           fixed
           prop="id"
@@ -48,7 +47,11 @@
           label="图片"
           width="100">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
+          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>
+            </div>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column
@@ -150,7 +153,7 @@ export default {
   methods: {
     add() {
       this.$router.push({
-        path: '/data/arm/AddArtillery',
+        path: '/data/structure/arm/AddArtillery',
       })
     },
     submitForm(formName) {
@@ -160,8 +163,9 @@ export default {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/artillery/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
-            _this.tableData = resp.data.content
-            _this.total = resp.data.totalElements
+            _this.tableData = resp.data.list
+            _this.pageSize = resp.data.pageSize
+            _this.total = resp.data.total
           })
         } else {
           return false;
@@ -181,7 +185,7 @@ export default {
     },
     edit(row) {
       this.$router.push({
-        path: '/data/arm/ArtilleryUpdate',
+        path: '/data/structure/arm/ArtilleryUpdate',
         query:{
           id:row.id
         }
@@ -190,19 +194,20 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('/api/artillery/findAll/' + (currentPage - 1) + '/3').then(function (resp) {
+        axios.get('/api/artillery/findAll/' + (currentPage ) + '/3').then(function (resp) {
           console.log(resp)
-          _this.tableData = resp.data.content
-          _this.pageSize = resp.data.size
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
       else{
         _this.ruleForm.page = _this.currentPage
         axios.get('/api/artillery/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
-          _this.tableData = resp.data.content
-          _this.total = resp.data.totalElements
+          _this.tableData = resp.data.list
+          _this.pageSize = resp.data.pageSize
+          _this.total = resp.data.total
         })
       }
     }
@@ -213,9 +218,9 @@ export default {
     const _this = this
     axios.get('/api/artillery/findAll/0/3').then(function(resp){
       console.log(resp)
-      _this.tableData = resp.data.content
-      _this.pageSize = resp.data.size
-      _this.total = resp.data.totalElements
+      _this.tableData = resp.data.list
+      _this.pageSize = resp.data.pageSize
+      _this.total = resp.data.total
     })
   }
 }

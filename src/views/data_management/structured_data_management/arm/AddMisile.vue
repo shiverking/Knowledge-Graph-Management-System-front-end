@@ -78,7 +78,7 @@ export default {
               _this.$alert('《'+_this.ruleForm.name+'》添加成功！', '消息', {
                 confirmButtonText: '确定',
                 callback: action => {
-                  _this.$router.push('/misile')
+                  _this.$router.push('/data/structure/arm/misile')
                 }
               })
             }
