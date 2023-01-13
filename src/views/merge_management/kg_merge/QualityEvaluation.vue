@@ -420,7 +420,10 @@
         <el-table
             :data="data_to_be_submitted"
             border
-            style="width: 100%; margin-top: 10px;">
+            style="width: 100%; margin-top: 10px;"
+            v-loading = submitLoading
+            element-loading-text="正在提交中..."
+        >
             <el-table-column
               label="头实体（旧）"
               width="180">
@@ -526,10 +529,10 @@
         <el-popover
             placement="left"
             v-model="nextStepVisible">
-          <p>确定保存当前操作并将其作为一条版本记录提交吗？</p>
+          <p>确定保存当前操作记录并提交至缓存表吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="nextStepVisible = false;">确定</el-button>
+            <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
           </div>
           <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" slot="reference" @click="nextStepVisible=true;">提交</el-button>
         </el-popover>
@@ -539,6 +542,7 @@
 <script>
   import Cache from "../../../components/merge_kg/Cache";
   import * as echarts from 'echarts';
+  import $ from '../../../plugins/jquery.min.js';
   export default {
     components:{
       Cache
@@ -551,6 +555,7 @@
         data_to_be_submitted:[],
         selectedRowOfEntityError:[],
         active:0,
+        submitLoading:false,
         qualiatyVisible:false,
         nextStepVisible:false,
         dialogFormVisible: false,
@@ -678,6 +683,29 @@
             console.log(error)
           })
       },
+      //提交到缓存
+      submitToCache(){
+        this.submitLoading = true;
+        axios.post('/api/triples/evaluationCoreKg',{
+          res:this.data_to_be_submitted,
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.submitLoading = false;
+              this.$message({
+                showClose: true,
+                message: '提交成功!',
+                type: 'success'
+              });
+              $("#detailButton").click()
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
       dailog_receive_entity_error(row){
         this.form.ent = row.ent;
         this.form.ent_typ = row.ent_typ;
@@ -714,7 +742,7 @@
       },
       submit_an_entity_error_modification(){
         this.selectedRowOfEntityError.error_status = '待提交';
-        var content = new Array();
+        var content = {};
         content['head'] = this.form.ent;
         content['head_typ'] = this.form.ent_typ;
         content['rel'] = 'null';
@@ -731,7 +759,7 @@
       },
       submit_an_relation_error_modification(){
         this.selectedRowOfEntityError.error_status = '待提交';
-        var content = new Array();
+        var content = {};
         content['head'] = this.form_of_relation_error.head;
         content['head_typ'] = this.form_of_relation_error.head_typ;
         content['rel'] = this.form_of_relation_error.rel;
@@ -757,7 +785,7 @@
       },
       submit_an_attribute_error_modification(){
         this.selectedRowOfEntityError.error_status = '待提交';
-        var content = new Array();
+        var content = {};
         content['head'] = this.form_of_attribute_error.ent;
         content['head_typ'] = this.form_of_attribute_error.ent_typ;
         content['rel'] = this.form_of_attribute_error.attribute;
