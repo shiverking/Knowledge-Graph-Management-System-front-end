@@ -246,7 +246,10 @@
         <el-table
             :data="data_to_be_submitted"
             border
-            style="width: 100%; margin-top: 10px;">
+            style="width: 100%; margin-top: 10px;"
+            v-loading = submitLoading
+            element-loading-text="正在提交中..."
+        >
             <el-table-column
               label="检测时间"
               width="180">
@@ -329,10 +332,10 @@
         <el-popover
             placement="left"
             v-model="nextStepVisible">
-          <p>确定保存当前操作并将其作为一条版本记录提交吗？</p>
+          <p>确定保存当前操作记录并提交至缓存表吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="nextStepVisible = false;">确定</el-button>
+            <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
           </div>
           <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" slot="reference" @click="nextStepVisible=true;">提交</el-button>
         </el-popover>
@@ -342,6 +345,7 @@
 <script>
   import Cache from "../../../components/merge_kg/Cache";
   import * as echarts from 'echarts';
+  import $ from '../../../plugins/jquery.min.js';
   export default {
     components:{
       Cache
@@ -352,7 +356,25 @@
         relation_error: [],
         attribute_error: [],
         data_to_be_submitted:[],
+        //一张临时的表,用来记录要提交至缓存的东西
+        data_to_be_submitted2:[
+          {
+            head:"AS 365“海豚” 双发涡轮轴中型直升机",
+            rel:"产国",
+            tail:"德国",
+            tail_typ:"",
+            tail_typ_new:"",
+            head_typ:"",
+            head_typ_new:"",
+            head_new:"",
+            rel_new:"",
+            tail_new:"法国",
+            update_form:"1",
+            error_typ:"1"
+          }
+        ],
         active:0,
+        submitLoading:false,
         qualiatyVisible:false,
         nextStepVisible:false
       }
@@ -454,6 +476,28 @@
             console.log(error)
           })
       },
+      submitToCache(){
+        this.submitLoading = true;
+        axios.post('/api/triples/evaluationCoreKg',{
+          res:this.data_to_be_submitted2,
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              this.submitLoading = false;
+              this.$message({
+                showClose: true,
+                message: '提交成功!',
+                type: 'success'
+              });
+              $("#detailButton").click()
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      }
     },
     mounted(){
       this.get_entity_error_list()

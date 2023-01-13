@@ -6,6 +6,7 @@
       <el-step title="置信检测" ></el-step>
       <el-step title="图谱融合" ></el-step>
     </el-steps>
+    <cache></cache>
     <div v-if="this.active==0">
       <div>
         <!-- 加载所有候选图谱-->
@@ -415,9 +416,11 @@
 import KgPreview from "../../../components/merge_kg/KgPreview";
 import moment from 'moment';
 import $ from "../../../plugins/jquery.min"
+import Cache from "../../../components/merge_kg/Cache";
 export default {
   components:{
-    KgPreview
+    KgPreview,
+    Cache
   },
   data() {
     return {
