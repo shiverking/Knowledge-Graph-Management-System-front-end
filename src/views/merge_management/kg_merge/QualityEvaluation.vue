@@ -416,13 +416,11 @@
             </div>
           </el-dialog>
         </div>
-      <div v-if="this.active==3" style="margin-top: 10px;">
+      <div v-if="this.active==3" style="margin-top: 10px;" v-loading = submitLoading element-loading-text="正在提交中...">
         <el-table
             :data="data_to_be_submitted"
             border
             style="width: 100%; margin-top: 10px;"
-            v-loading = submitLoading
-            element-loading-text="正在提交中..."
         >
             <el-table-column
               label="头实体（旧）"
@@ -527,13 +525,14 @@
         <el-button type="primary" style="margin-top: 12px;" v-if="this.active<3" @click="next">下一步</el-button>
         <el-popover
             placement="left"
-            v-model="nextStepVisible">
+            v-model="nextStepVisible"
+            v-if="this.active==3">
           <p>确定保存当前操作记录并提交至缓存表吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
           </div>
-          <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" slot="reference" @click="nextStepVisible=true;">提交</el-button>
+          <el-button type="primary" style="margin-top: 12px;"  slot="reference">提交</el-button>
         </el-popover>
       </div>
     </div>

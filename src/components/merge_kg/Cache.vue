@@ -16,17 +16,17 @@
       <el-button id="detailButton" type="primary" class="detail" @click="cacheDisplay=true">详情</el-button>
     </el-card>
     <!--对话框内容-->
-    <el-dialog title="缓存表内容" :visible.sync="cacheDisplay" width="1000px" v-loading="dialogLoading" element-loading-text="版本提交中.....">
-      <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange" >
+    <el-dialog title="缓存表内容" :visible.sync="cacheDisplay" width="1000px" >
+      <el-tabs v-model="activeName" type="card" v-loading="dialogLoading" element-loading-text="版本提交中....." >
         <!--融合改动-->
         <el-tab-pane label="融合改动" name="first">
           <el-popover
               placement="top"
-              v-model="mergeDeletaVisible">
+              v-model="mergeDeleteVisible">
             <p>确定要删除缓存表中关于融合的修改吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="mergeDeletaVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="mergeDeletaVisible = false">确定</el-button>
+              <el-button size="mini" type="text" @click="mergeDeleteVisible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="mergeDeleteVisible = false">确定</el-button>
             </div>
           <el-button type="danger" slot="reference">删除</el-button>
           </el-popover>
@@ -64,11 +64,11 @@
         <el-tab-pane label="补全改动" name="second">
           <el-popover
               placement="top"
-              v-model="visible">
+              v-model="completionDeleteVisible">
             <p>确定要删除缓存表中关于补全的修改吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
+              <el-button size="mini" type="text" @click="completionDeleteVisible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="completionDeleteVisible = false">确定</el-button>
             </div>
             <el-button type="danger" slot="reference">删除</el-button>
           </el-popover>
@@ -102,11 +102,11 @@
         <el-tab-pane label="质量评估改动" name="third">
           <el-popover
               placement="top"
-              v-model="evaluationDeletaVisible">
+              v-model="evaluationDeleteVisible">
             <p>确定要删除缓存表中关于质量评估的修改吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
+              <el-button size="mini" type="text" @click="evaluationDeleteVisible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="evaluationDeleteVisible = false">确定</el-button>
             </div>
             <el-button type="danger" slot="reference">删除</el-button>
           </el-popover>
@@ -183,9 +183,9 @@ export default {
     return{
       activeName:'first',
       cacheDisplay:false,
-      mergeDeletaVisible:false,
-      completionDeletaVisible:false,
-      evaluationDeletaVisible:false,
+      mergeDeleteVisible:false,
+      completionDeleteVisible:false,
+      evaluationDeleteVisible:false,
       submitVisible:false,
       deleteVisible:false,
       //下面是记录三种状态是否存在数据更新
