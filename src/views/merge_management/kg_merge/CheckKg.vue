@@ -2,94 +2,157 @@
   <div class="block" style="margin: 10px;">
         <!--版本查询-->
         <div  v-show="showDetail">
-          <div class="search_kg_input">
+        <div class="search_kg_input">
             <el-input placeholder="过滤器" v-model="input3" class="input-with-select">
               <el-select v-model="select" slot="prepend" placeholder="请选择"></el-select>
               <el-button slot="append" icon="el-icon-search"></el-button>
             </el-input>
-          </div>
-          <el-button class="search_button" type="primary">查询</el-button>
-          <el-button class="search_button" type="danger" @click="showDetail = !showDetail">测试按钮</el-button>
-          <el-button class="search_button" type="success">发布</el-button>
+        </div>
+        <el-button class="search_button" type="primary">查询</el-button>
         <!--概况-->
         <el-table
-          :data="tableData"
+          :data="versionTablePageData"
           border
           style="width: 100%"
           key="1">
           <el-table-column
-              prop="date"
-              label="ID"
-              width="180">
+              prop="version_number"
+              label="版本号"
+              :show-overflow-tooltip="true">
           </el-table-column>
           <el-table-column
               prop="name"
-              label="图谱名称"
-              width="180">
+              label="版本名称"
+              :show-overflow-tooltip="true">
           </el-table-column>
           <el-table-column
-              prop="address"
-              label="版本日期">
+              label="提交日期">
+            <template slot-scope="scope">
+              <span>{{dateFormat(scope.row.submit_time)}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-              prop="address"
-              label="版本号">
+              prop="submitted_by"
+              label="提交人">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  @click="showVersionDetail(scope.row.version_number)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-            class="pagination"
-            background
-            layout="prev, pager, next"
-            :total="1000">
-        </el-pagination>
+          <el-pagination
+              @current-change="versionHandleCurrentChange"
+              @size-change="versionHandleSizeChange"
+              :current-page.sync="versionCurrentPage"
+              :page-size="versionPageSize"
+              :page-sizes="versionPageSizes"
+              layout="total,sizes, prev, pager, next,jumper"
+              :total="versionTotal">
+          </el-pagination>
         </div>
         <!--详情-->
         <div v-show="!showDetail">
           <el-button @click="showDetail=true">返回</el-button>
-          <el-table
-              :data="tableData"
-              border
-              style="width: 100%">
-            <el-table-column
-                prop="date"
-                label="ID"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                label="头实体"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                label="尾实体">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                label="操作">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                label="日期">
-            </el-table-column>
-          </el-table>
-          <el-pagination
-            class="pagination"
-            background
-            layout="prev, pager, next"
-            :total="1000">
-        </el-pagination>
+          <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange" >
+            <!--融合改动-->
+            <el-tab-pane label="融合改动" name="first">
+              <el-table border :data="mergeData" height="400" style="margin-top:0vh">
+                <el-table-column property="head" label="头实体"></el-table-column>
+                <el-table-column property="head_from" label="From"></el-table-column>
+                <el-table-column property="relation" label="关系" ></el-table-column>
+                <el-table-column property="tail" label="尾实体" ></el-table-column>
+                <el-table-column property="tail_from" label="From"></el-table-column>
+                <el-table-column property="score" label="置信评分"></el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                  <span>
+                  <el-tag type="success" v-if="scope.row.operation=='插入'">{{ scope.row.operation}}</el-tag>
+                  <el-tag type="danger" v-if="scope.row.operation=='忽略'">{{ scope.row.operation}}</el-tag>
+                </span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作时间">
+                  <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+                </el-table-column>
+              </el-table>
+              <el-pagination
+                  @current-change="mergeHandleCurrentChange"
+                  @size-change="mergeHandleSizeChange"
+                  :current-page.sync="mergeCurrentPage"
+                  :page-size="mergePageSize"
+                  :page-sizes="mergePageSizes"
+                  layout="total,sizes, prev, pager, next,jumper"
+                  :total="mergeTotal">
+              </el-pagination>
+            </el-tab-pane>
+            <!--补全改动-->
+            <el-tab-pane label="补全改动" name="second">
+              <el-table border :data="completionData">
+                <el-table-column property="head" label="头实体"></el-table-column>
+                <el-table-column property="rel" label="关系" ></el-table-column>
+                <el-table-column property="tail" label="尾实体" ></el-table-column>
+                <el-table-column property="pred_prob" label="评分"></el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
+                    <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作时间">
+                  <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+                </el-table-column>
+              </el-table>
+              <el-pagination
+                  @current-change="completionHandleCurrentChange"
+                  @size-change="completionHandleSizeChange"
+                  :current-page.sync="completionCurrentPage"
+                  :page-size="completionPageSize"
+                  :page-sizes="completionPageSizes"
+                  layout="total,sizes, prev, pager, next,jumper"
+                  :total="completionTotal">
+              </el-pagination>
+            </el-tab-pane>
+            <!--质量评估改动-->
+            <el-tab-pane label="质量评估改动" name="third">
+              <el-table border :data="evaluationData">
+                <el-table-column property="head" label="头实体" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="head_new" label="新头实体" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="head_typ" label="类型" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="head_typ_new" label="新类型" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="rel" label="关系" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="rel_new" label="新关系" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="tail" label="尾实体" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="tail_new" label="新尾实体" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="tail_typ" label="类型" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="tail_typ_new" label="新类型" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column label="错误类型" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.error_typ=='0'">实体错误</span>
+                    <span v-if="scope.row.error_typ=='1'">链接错误</span>
+                    <span v-if="scope.row.error_typ=='2'">属性值错误</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="修改形式" >
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.update_form=='0'"><el-tag type="warning">修改</el-tag></span>
+                    <span v-if="scope.row.update_form=='1'"><el-tag type="danger">删除</el-tag></span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-pagination
+                  @current-change="evaluationHandleCurrentChange"
+                  @size-change="evaluationHandleSizeChange"
+                  :current-page.sync="evaluationCurrentPage"
+                  :page-size="evaluationPageSize"
+                  :page-sizes="evaluationPageSizes"
+                  layout="total,sizes, prev, pager, next,jumper"
+                  :total="evaluationTotal">
+              </el-pagination>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
 </template>
@@ -106,39 +169,38 @@ export default {
       input2: '',
       input3: '',
       select: '',
-
       //tab页默认激活
       activeName:"first",
-      //展示候选图谱的分页
-      candidateKgPageList:[],
-      candidateKgCurrentPage: 1,
-      candidateKgTotal: 0,
-      candidateKgPageSize: 20,
-      candidateKgPageSizes: [10, 50, 100, 200],
-      reverse: false,
-      activities: [{
-        content: '活动按期开始',
-        status:"untreated",
-        user:"zhangsan",
-        timestamp: '2018-04-13'
-      }, {
-        content: '通过审核',
-        status:"untreated",
-        user:"lisi",
-        timestamp: '2018-04-13'
-      }, {
-        content: '创建成功',
-        status:"untreated",
-        user:"wangwu",
-        timestamp: '2018-04-11'
-      }],
-      //未处理
-      untreated:3,
-      // 已处理个数
-      treated:10,
-      isIndeterminate: true,
       //是否展示界面
       showDetail:true,
+      //版本控制的分页
+      versionTablePageData:[],
+      versionCurrentPage:1,
+      versionPageSize:10,
+      versionPageSizes:[10,20,50,80,100],
+      versionTotal:0,
+      versionLoading:false,
+      //查询所有的merge的版本数据
+      mergeData:[],
+      mergeCurrentPage:1,
+      mergePageSize:10,
+      mergePageSizes:[10,20,50,80,100],
+      mergeTotal:0,
+      //查询所有的completion的版本数据
+      completionData:[],
+      completionCurrentPage:1,
+      completionPageSize:10,
+      completionPageSizes:[10,20,50,80,100],
+      completionTotal:0,
+      //查询所有的evaluation的版本数据
+      evaluationData:[],
+      evaluationCurrentPage:1,
+      evaluationPageSize:10,
+      evaluationPageSizes:[10,20,50,80,100],
+      evaluationTotal:0,
+      //当前正在查询的versionId
+      currentId:"",
+      dialogLoading:false,
     }
     },
   methods: {
@@ -196,80 +258,140 @@ export default {
       this.checkAll = checkedCount === this.cities.length;
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
     },
-    //处理候选图谱分页事件
-    candidateKgHandleSizeChange(val) {
+    //处理版本pagesize改变事件
+    versionHandleSizeChange(val) {
       //修改当前分页大小
-      this.candidateKgPageSize= val;
+      this.versionPageSize= val;
       //重新请求数据
-      this.get_candidate_kgs(this.candidateKgCurrentPage,val)
+      this.get_version(this.versionCurrentPage,val)
     },
-    //翻页动作
-    candidateKgHandleCurrentChange(val) {
-      this.get_candidate_kgs(val,this.candidateKgPageSize)
+    //版本翻页动作
+    versionHandleCurrentChange(val) {
+      this.get_version(val,this.versionPageSize)
     },
-    //向后端请求候选三元组数据
-    get_candidate_kgs(num, limit) {
+    //向后端请求版本数据
+    get_version(num, limit) {
       //axios请求
       axios.request({
         method:"POST",
-        url:'/api/candidateKg/getAllCandidateKg',
+        url:'/api/version/getVersionByPage',
         params:{page:num,limit:limit}
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          //修改数据
+          this.versionTablePageData = response.data.data
+          this.versionTotal = response.data.count
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    //获取mergeTableData
+    get_merge(page,limit){
+      axios.request({
+        method:"POST",
+        url:'/api/version/getMergeByPage',
+        params:{page:page,limit:limit,versionId:this.currentId}
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          //向表中加载数据
+          this.mergeData= response.data.data
+          this.mergeTotal= response.data.count
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    //mergeTable的PageSzie改变动作
+    mergeHandleSizeChange(val){
+      //修改当前分页大小
+      this.mergePageSize = val;
+      //重新请求数据
+      this.get_merge(this.mergePageSize,val)
+    },
+    //mergeTable分页改变动作
+    mergeHandleCurrentChange(val){
+      this.get_merge(val,this.mergePageSize)
+    },
+    //获取completionTableData
+    get_completion(page,limit){
+      axios.request({
+        method:"POST",
+        url:'/api/version/getCompletionByPage',
+        params:{page:page,limit:limit,versionId:this.currentId}
       })
           .then((response) => {
             if (response.status == 200) {
-              //修改数据
-              this.candidateKgPageList = response.data.data
-              this.candidateKgTotal = response.data.count
+              //向表中加载数据
+              this.completionData= response.data.data
+              this.completionTotal= response.data.count
             }
           })
           .catch(function (error) {
             console.log(error)
           })
     },
+    //completionTable的PageSzie改变动作
+    completionHandleSizeChange(val){
+      //修改当前分页大小
+      this.completionPageSize = val;
+      //重新请求数据
+      this.get_completion(this.completionPageSize,val)
+    },
+    //completionTable分页改变动作
+    completionHandleCurrentChange(val){
+      this.get_completion(val,this.completionPageSize)
+    },
+    //获取evaluationTableData
+    get_evaluation(page,limit){
+      axios.request({
+        method:"POST",
+        url:'/api/version/getEvaluationByPage',
+        params:{page:page,limit:limit,versionId:this.currentId}
+      })
+          .then((response) => {
+            if (response.status == 200) {
+              //向表中加载数据
+              this.evaluationData= response.data.data
+              this.evaluationTotal= response.data.count
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+    },
+    //evaluationTable的PageSzie改变动作
+    evaluationHandleSizeChange(val){
+      //修改当前分页大小
+      this.evaluationPageSize = val;
+      //重新请求数据
+      this.get_evaluation(this.evaluationPageSize,val)
+    },
+    //evaluationTable分页改变动作
+    evaluationHandleCurrentChange(val){
+      this.get_evaluation(val,this.evaluationPageSize)
+    },
+    //查看版本详细信息，包括merge,completion和evaluation
+    showVersionDetail(version_id) {
+      this.currentId = version_id
+      //加载信息
+      this.get_merge(this.mergeCurrentPage, this.mergePageSize)
+      this.get_completion(this.completionCurrentPage, this.completionPageSize)
+      this.get_evaluation(this.evaluationCurrentPage, this.evaluationPageSize)
+      //将详情页打开
+      this.showDetail = !this.showDetail;
+    },
     //时间格式化
     dateFormat(data) {return moment(new Date(data).getTime()).format('YYYY-MM-DD');},
-    //检查未处理的版本记录
-    checkOutTreated(){
-      this.activities =[{
-        content: '测试活动1',
-        status:"finished",
-        user:"zhangsan",
-        timestamp: '2018-04-13'
-      }, {
-        content: '测试活动2',
-        status:"discard",
-        user:"lisi",
-        timestamp: '2018-04-13'
-      }, {
-        content: '测试活动3',
-        status:"finished",
-        user:"wangwu",
-        timestamp: '2018-04-11'
-      }]
-    },
-    //查看处理的版本
-    checkOutUntreated(){
-      this.activities = [{
-        content: '活动按期开始',
-        status:"untreated",
-        user:"zhangsan",
-        timestamp: '2018-04-13'
-      }, {
-        content: '通过审核',
-        status:"untreated",
-        user:"lisi",
-        timestamp: '2018-04-13'
-      }, {
-        content: '创建成功',
-        status:"untreated",
-        user:"wangwu",
-        timestamp: '2018-04-11'
-      }]
-    }
+
   },
   mounted() {
     //获取候选图谱列表
-    this.get_candidate_kgs(this.candidateKgCurrentPage,this.candidateKgPageSize);
+    this.get_version(this.versionCurrentPage,this.versionPageSize);
   }
 }
 </script>
@@ -290,62 +412,8 @@ export default {
 .search_button{
   display: inline-block;
 }
-.button_group{
-  float: right;
-}
-.card_group{
-  border-right-width: 1px;
-  border-left-width: 1px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-.el-card__body{
-  padding: 0px;
-}
-.card_item{
-  border-radius: 0px;
-  margin-top: 0px;
-  border-top-width: 1px;
-  border-right: 0px;
-  border-left: 0px;
-  border-bottom: 0px;
-  padding:10px;
-}
-.operation_row{
-  border-right-width: 0px;
-  border-top-width: 0px;
-  border-left-width: 0px;
-  border-bottom-width: 1px;
-  background-color: #F6F8FA;
-  padding: 15px;
-}
 .pagination{
   margin-top: 10px;
   text-align: center;
-}
-.icon_image{
-  top:3px;
-  width: 20px;
-  height:20px
-}
-.change_data_icon{
-  padding:0px;
-  font-size: medium;
-  display: inline-block;
-  color:black;
-}
-.label{
-  font-weight: bold;
-  display: inline-block;
-  margin: 0px;
-  font-size: medium;
-}
-.small_label{
-  font-weight: 100;
-  font-size: small;
-}
-.my_sub_menu{
-  display: inline-block;
-  width: 100px;
 }
 </style>
