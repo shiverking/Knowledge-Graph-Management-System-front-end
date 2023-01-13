@@ -515,7 +515,7 @@
               :current-page.sync="currentPage1"
               :page-size="100"
               layout="total, prev, pager, next"
-              :total="1000"
+              :total="1"
               style="margin-top:10px">
             </el-pagination>
             <el-button plain style="margin-top:10px">提交</el-button>
