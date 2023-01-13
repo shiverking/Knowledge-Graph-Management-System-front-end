@@ -553,23 +553,6 @@
         relation_error: [],
         attribute_error: [],
         data_to_be_submitted:[],
-        //一张临时的表,用来记录要提交至缓存的东西
-        data_to_be_submitted2:[
-          {
-            head:"AS 365“海豚” 双发涡轮轴中型直升机",
-            rel:"产国",
-            tail:"德国",
-            tail_typ:"",
-            tail_typ_new:"",
-            head_typ:"",
-            head_typ_new:"",
-            head_new:"",
-            rel_new:"",
-            tail_new:"法国",
-            update_form:"1",
-            error_typ:"1"
-          }
-        ],
         selectedRowOfEntityError:[],
         active:0,
         submitLoading:false,
@@ -704,7 +687,7 @@
       submitToCache(){
         this.submitLoading = true;
         axios.post('/api/triples/evaluationCoreKg',{
-          res:this.data_to_be_submitted2,
+          res:this.data_to_be_submitted,
         })
         .then((response) => {
           if (response.status == 200) {
@@ -759,7 +742,7 @@
       },
       submit_an_entity_error_modification(){
         this.selectedRowOfEntityError.error_status = '待提交';
-        var content = new Array();
+        var content = {};
         content['head'] = this.form.ent;
         content['head_typ'] = this.form.ent_typ;
         content['rel'] = 'null';
@@ -776,7 +759,7 @@
       },
       submit_an_relation_error_modification(){
         this.selectedRowOfEntityError.error_status = '待提交';
-        var content = new Array();
+        var content = {};
         content['head'] = this.form_of_relation_error.head;
         content['head_typ'] = this.form_of_relation_error.head_typ;
         content['rel'] = this.form_of_relation_error.rel;
@@ -802,7 +785,7 @@
       },
       submit_an_attribute_error_modification(){
         this.selectedRowOfEntityError.error_status = '待提交';
-        var content = new Array();
+        var content = {};
         content['head'] = this.form_of_attribute_error.ent;
         content['head_typ'] = this.form_of_attribute_error.ent_typ;
         content['rel'] = this.form_of_attribute_error.attribute;
