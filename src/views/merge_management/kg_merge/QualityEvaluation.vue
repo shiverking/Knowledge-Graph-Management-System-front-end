@@ -521,7 +521,6 @@
               :total="1"
               style="margin-top:10px">
             </el-pagination>
-            <el-button plain style="margin-top:10px">提交</el-button>
         </div>
       <div style="text-align: right;">
         <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
