@@ -304,11 +304,11 @@ export default {
 
     editmsg(row) {
       const _this =this
-      axios.get('/api/person/findByTaskid/'+row.id).then(function(resp){
+      _this.axios.get('/api/person/findByTaskid/'+row.id).then(function(resp){
         _this.form.person_new = resp.data
         console.log(resp.data)
       })
-      axios.get('/api/vessel/findByTaskid/'+row.id).then(function(resp){
+      _this.axios.get('/api/vessel/findByTaskid/'+row.id).then(function(resp){
         _this.form.vessel_new = resp.data
         console.log(resp.data)
       })
@@ -329,7 +329,7 @@ export default {
 
     submitForm1() {
       // for(var i =0;i<this.person_old.length;i++){
-        axios.post('/api/task/update',this.form).then(function(resp){
+      _this.axios.post('/api/task/update',this.form).then(function(resp){
         })
       // }
       // for(var m =0;m<this.vessel_old.length;m++){
@@ -378,18 +378,18 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/task/findByPlanid/' + this.$route.query.id).then(function (resp) {
+    _this.axios.get('/api/task/findByPlanid/' + this.$route.query.id).then(function (resp) {
       // console.log(resp)
       _this.tableData = resp.data
     })
-    axios.get('/api/person/findByPlanid/' + this.$route.query.id).then(function (resp) {
+    _this.axios.get('/api/person/findByPlanid/' + this.$route.query.id).then(function (resp) {
       console.log(resp)
       _this.tableData1 = resp.data
     });
-    axios.get('/api/person/findAll/').then(function(resp){
+    _this.axios.get('/api/person/findAll/').then(function(resp){
       _this.options1 = resp.data
     })
-    axios.get('/api/vessel/findAll/').then(function(resp){
+    _this.axios.get('/api/vessel/findAll/').then(function(resp){
       _this.options2 = resp.data
     })
 

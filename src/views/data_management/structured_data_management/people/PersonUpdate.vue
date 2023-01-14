@@ -296,7 +296,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.put('/api/person/update',this.form).then(function(resp){
+          _this.axios.put('/api/person/update',this.form).then(function(resp){
                 _this.$alert('《' + _this.form.person.name_cn + '》修改成功！', '消息', {
                   confirmButtonText: '确定',
                   callback: action => {
@@ -339,15 +339,15 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/person/findById/'+this.$route.query.id).then(function(resp){
+    _this.axios.get('/api/person/findById/'+this.$route.query.id).then(function(resp){
       console.log(resp)
       _this.form.person = resp.data
     })
-    axios.get('/api/person/searchedu/'+this.$route.query.id).then(function(resp){
+    _this.axios.get('/api/person/searchedu/'+this.$route.query.id).then(function(resp){
       console.log(resp.data)
       _this.form.education = resp.data
     })
-    axios.get('/api/person/searchresu/'+this.$route.query.id).then(function(resp){
+    _this.axios.get('/api/person/searchresu/'+this.$route.query.id).then(function(resp){
       _this.form.resume = resp.data
     })
   }

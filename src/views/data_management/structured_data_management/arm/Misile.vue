@@ -150,7 +150,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
+          _this.axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
             console.log(resp)
             _this.tableData = resp.data.list
             _this.pageSize = resp.data.pageSize
@@ -163,7 +163,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('/api/misile/deleteById/'+row.id).then(function(resp){
+      _this.axios.delete('/api/misile/deleteById/'+row.id).then(function(resp){
 
         _this.$alert('《'+row.name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
@@ -189,7 +189,7 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('/api/misile/findAll/' + (currentPage ) + '/2').then(function (resp) {
+        _this.axios.get('/api/misile/findAll/' + (currentPage ) + '/2').then(function (resp) {
           console.log(resp)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
@@ -198,7 +198,7 @@ export default {
       }
       else{
         _this.ruleForm.page= currentPage
-        axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
+        _this.axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
@@ -213,7 +213,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('/api/misile/findAll/0/2').then(function(resp){
+    _this.axios.get('/api/misile/findAll/0/2').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize

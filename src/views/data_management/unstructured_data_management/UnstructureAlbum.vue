@@ -52,7 +52,7 @@
               <el-checkbox :label="index">
               </el-checkbox>
             </el-checkbox-group>
-            <img class="album-el-img" :src="item.albumImg" @click="openAblum(index)">
+            <img class="album-el-img" :src="serviceurl + item.albumImg" @click="openAblum(index)">
             <div class="album-el-txt">
               <span>{{ item.albumName }}</span>
               <div>图片数量:<a> {{ item.imageNumber }}张</a>
@@ -69,7 +69,7 @@
 export default {
   data() {
     return {
-
+      serviceurl:"http://localhost:8081/picture/",
       albumName: '好吃的汉堡',
       ImageNumber: 100,
       resizeTimer: null,
@@ -129,32 +129,21 @@ export default {
       displayCheckedMenu: '',  //隐藏
     };
   },
-  // mounted() {
-  //   var cookie = this.$cookie.getCookie();
-  //   if (cookie[0] != "token") {
-  //     this.$message({
-  //       message: '登录已过期!',
-  //       type: 'error'
-  //     });
-  //     this.$router.push({ name: 'login' });
+  mounted() {
+  this.selectAlbums();
+  // let h = window.document.body.clientHeight;
+  // this.mainStyle.height = (h * 0.75) + 'px';
+  // window.onresize = () => {
+  //   console.log()
+  //   if (this.resizeTimer) {
+  //     clearTimeout(this.resizeTimer)
   //   }
-  //   else {
-  //     this.token = cookie[1];
-  //   }
-  //   this.selectAlbums();
-  //   let h = window.document.body.clientHeight;
-  //   this.mainStyle.height = (h * 0.75) + 'px';
-  //   window.onresize = () => {
-  //     console.log()
-  //     if (this.resizeTimer) {
-  //       clearTimeout(this.resizeTimer)
-  //     }
-  //     this.resizeTimer = setTimeout(() => {
-  //       let h = window.document.body.clientHeight;
-  //       this.mainStyle.height = (h * 0.75) + 'px';
-  //     }, 500)
-  //   };
-  // },
+  //   this.resizeTimer = setTimeout(() => {
+  //     let h = window.document.body.clientHeight;
+  //     this.mainStyle.height = (h * 0.75) + 'px';
+  //   }, 500)
+  // };
+},
   methods: {
 
     //打开相册
@@ -171,20 +160,12 @@ export default {
     // 查询所有相册
     selectAlbums() {
       var _this = this;
-      const formData = new FormData();
-      formData.append('token', this.token);
       this.axios({
-        url: this.serveUrL + "/album/selectAlbumName",
-        method: "post",
-        data: formData
+        url:  "/api/album/findAllAlbum",
+        method: "Get",
       }).then(function (resp) {
-        if (resp.data.status == "success") {
-          _this.albumData = resp.data.data;
-          console.log(_this.albumData)
-        }
-        else {
-          1;
-        }
+        console.log(resp)
+        _this.albumData = resp.data;
       })
     },
     //新建相册

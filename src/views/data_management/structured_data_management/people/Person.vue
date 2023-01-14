@@ -94,7 +94,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
-          axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
+          _this.axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
             console.log(_this.ruleForm)
             _this.tableData = resp.data.list
             _this.pageSize = resp.data.pageSize
@@ -107,7 +107,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('/api/person/deleteById/'+row.id).then(function(resp){
+      _this.axios.delete('/api/person/deleteById/'+row.id).then(function(resp){
         _this.$alert('《'+row.name_cn+'》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -144,7 +144,7 @@ export default {
     page(currentPage){
       const _this = this
       if(_this.ruleForm.value =='') {
-        axios.get('/api/person/findAll/' + (currentPage ) + '/7').then(function (resp) {
+        _this.axios.get('/api/person/findAll/' + (currentPage ) + '/7').then(function (resp) {
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
           _this.total = resp.data.total
@@ -152,7 +152,7 @@ export default {
       }
       else{
         _this.ruleForm.page = _this.currentPage
-        axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
+        _this.axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
@@ -187,7 +187,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('/api/person/findAll/0/7').then(function(resp){
+    _this.axios.get('/api/person/findAll/0/7').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize
