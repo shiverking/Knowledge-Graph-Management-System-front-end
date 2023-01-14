@@ -221,7 +221,9 @@
           </el-table-column>
           <el-table-column label="选择尾实体">
             <template slot-scope="scope">
-              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
+<!--              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>-->
+              <el-button plain circle @click="chooseTail(scope.row)">选择</el-button>
+<!--              <el-radio v-model="radio" label="0" @click="chooseTail(scope.row)">选择</el-radio>-->
             </template>
           </el-table-column>
         </el-table>
@@ -401,7 +403,8 @@ p {
         selectedRow:[],
         //待提交数据
         confirmedDataTable:[],
-        comfirmedLoading:false
+        comfirmedLoading:false,
+        radio: '1'
       }
     },
     methods: {
