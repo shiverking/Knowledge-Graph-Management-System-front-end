@@ -81,10 +81,7 @@
 </template>
 
 <script>
-  import * as G6 from '../../../plugins/g6.min.js';
-  import $ from '../../../plugins/jquery.min.js';
   import OntologyDetail from '../../../components/candidate_ontology/OntologyDetail';
-
   export default {
     name:'CandidateOntologyShow',
     //添加该组件的子组件
