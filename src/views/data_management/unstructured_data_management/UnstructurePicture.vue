@@ -75,7 +75,7 @@
           </el-checkbox>
         </el-checkbox-group>
 
-        <el-image :src="item.compressUrL" :preview-src-list="getSrcList(index)" class="image">
+        <el-image :src="serviceurl+item.imageUrl" :preview-src-list="getSrcList(index)" class="image">
           <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"
                style="margin-top:40%">
           </div>
@@ -108,6 +108,7 @@ export default {
       loading: false,
       token: '',  //token凭证
       serveUrL: this.$serveUrL,
+      serviceurl:"http://localhost:8081/picture/",
       // 顶部菜单
       activeIndex: 'all',
       timeTitle: '生 产 时 间',
@@ -120,17 +121,17 @@ export default {
       images: [
         {
           imageId: '',
-          compressUrL: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
+          imageUrl: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
           imageName: '',
         },
         {
           imageId: '',
-          compressUrL: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
+          imageUrl: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
           imageName: '',
         },
         {
           imageId: '',
-          compressUrL: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
+          imageUrl: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
           imageName: '',
         }
       ],
@@ -182,23 +183,13 @@ export default {
   },
   created() {
 
-  },
-  beforeCreate() {
+    var _this = this;
+    this.axios.get('/api/album/findbyalbum/' + this.$route.query.albumId ).then(function (resp) {
+      _this.images = resp.data;
+    })
   },
   mounted() {
 
-    var cookie = this.$cookie.getCookie();
-    console.log(cookie)
-    if (cookie[0] != "token") {
-      this.$message({
-        message: '登录已过期!',
-        type: 'error'
-      });
-      this.$router.push({ name: 'login' });
-    }
-    else {
-      this.token = cookie[1];
-    }
     this.selectAllTimeType();
     this.selectAllImage();
   },
@@ -496,7 +487,7 @@ export default {
       this.handleSelect('', this.arrPath);
     },
 
-  }
+  },
 }
 </script>
 <style scoped>
@@ -541,10 +532,9 @@ export default {
 #image-content {
   margin-left: 1.6em;
   margin-top: 2em;
-  width: 100%;
-  height: 82%;
-  overflow: scroll;
-  overflow-x: hidden;
+  width: 1300px;
+  height: 300px;
+
 }
 
 .image-item {
@@ -552,7 +542,7 @@ export default {
   width: 12em;
   height: 12em;
   position: relative;
-  display: inline-block;
+  float: left;
 }
 
 .image-item:hover .check-box {

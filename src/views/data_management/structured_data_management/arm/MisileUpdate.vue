@@ -73,7 +73,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.put('/api/misile/update',this.ruleForm).then(function(resp){
+          _this.axios.put('/api/misile/update',this.ruleForm).then(function(resp){
             if(resp.data == 'success'){
               _this.$alert('《'+_this.ruleForm.name+'》修改成功！', '消息', {
                 confirmButtonText: '确定',
@@ -94,7 +94,7 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/misile/findById/'+this.$route.query.id).then(function(resp){
+    _this.axios.get('/api/misile/findById/'+this.$route.query.id).then(function(resp){
       _this.ruleForm = resp.data
     })
   }

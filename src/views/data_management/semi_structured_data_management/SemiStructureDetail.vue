@@ -22,7 +22,7 @@
     <div style="float: left ;width: 70%">
     <el-table
         ref="multipleTable"
-        :data="jsonData"
+        :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange">
@@ -32,69 +32,11 @@
       </el-table-column>
 
       <el-table-column
-          prop="名称"
-          label="名称"
->
-      </el-table-column>
-      <el-table-column
-          prop="總重"
-          label="總重"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="油量"
-          label="油量"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="留空時間"
-          label="留空時間"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="巡航空速"
-          label="巡航空速"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="馬力"
-          label="馬力"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="偵測裝備"
-          label="偵測裝備"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="武器"
-          label="武器"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="排水量滿載"
-          label="排水量滿載"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="最大速率"
-          label="最大速率"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="長"
-          label="長"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="寬"
-          label="寬"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="吃水"
-          label="吃水"
-      >
+          v-for="key in keys"
+          :prop="key"
+          :label="key"
+          >
+
       </el-table-column>
       <el-table-column
           fixed="right"
@@ -108,8 +50,10 @@
       </el-table-column>
     </el-table>
     <el-pagination
-        layout="prev, pager, next"
-        :total="1000">
+        @current-change="currentChange"
+        :current-page="page" :page-size="size"
+        layout="total,prev, pager, next"
+        :total="total">
     </el-pagination>
     </div>
     <div style="float: right ;width:30%">
@@ -133,6 +77,11 @@
 export default {
   data() {
     return {
+      indexs:[require('../../../data/militory_aircraft'),require('../../../data/navy_trachia.json'),require('../../../data/navy_simpchia.json'),require('../../../data/misile_old_en.json')],
+      keys:'',
+      page:1,
+      size:5,
+      total:10,
       activities: [{
         content: '新增21条数据',
         timestamp: '2022-07-23'
@@ -238,6 +187,19 @@ export default {
     }
   },
   methods: {
+    getTableData() {
+      this.tableData = this.jsonData.slice(
+          (this.page - 1) * this.size,
+          this.page * this.size
+      );
+      this.total=this.jsonData.length
+    },
+    currentChange(val) {
+      console.log(val)
+      this.page=val
+      this.getTableData()
+    },
+
     inputWid(key){
       return (String(key).length*10+ 10) + 'px'
     },
@@ -254,6 +216,24 @@ export default {
       this.current = null;
     }
   },
+  created(){
+    const index=this.$route.query.id
+    console.log(index)
+    const _this =this
+    const keys = new Set()
+    this.jsonData   = this.indexs[index-1]
+    for(var i=0; i<_this.jsonData.length; i++){
+      for(var key in _this.jsonData[i]){
+        if (key != "图片" & key != "简介" & key != "content" & key != "variant" & key != "data_origin"){
+          keys.add(key)
+        }
+
+      }
+    }
+    this.keys=keys
+    console.log(keys)
+    this.getTableData()
+  }
 
 }
 </script>

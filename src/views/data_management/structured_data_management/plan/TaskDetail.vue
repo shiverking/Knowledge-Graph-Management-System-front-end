@@ -175,7 +175,7 @@ export default {
   methods: {
     deleteBook(row) {
       const _this = this
-      axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
+      _this.axios.delete('/api/book/deleteById/' + row.id).then(function (resp) {
         _this.$alert('《' + row.name + '》删除成功！', '消息', {
           confirmButtonText: '确定',
           callback: action => {
@@ -208,11 +208,11 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/vessel/findByTaskid/' + this.$route.query.id).then(function (resp) {
+    _this.axios.get('/api/vessel/findByTaskid/' + this.$route.query.id).then(function (resp) {
       console.log(resp)
       _this.tableData = resp.data
     });
-    axios.get('/api/person/findByTaskid/' + this.$route.query.id).then(function (resp) {
+    _this.axios.get('/api/person/findByTaskid/' + this.$route.query.id).then(function (resp) {
       _this.tableData1 = resp.data
     });
     // axios.get('http://localhost:8181/plan/findById/' + this.$route.query.id1).then(function (resp) {
