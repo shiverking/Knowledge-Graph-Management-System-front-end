@@ -365,7 +365,7 @@ export default {
     },
     deleteBook(row){
       const _this = this
-      axios.delete('/api/aircraft/deleteById/'+row.id).then(function(resp){
+      _this.axios.delete('/api/aircraft/deleteById/'+row.id).then(function(resp){
 
         _this.$alert('《'+row.aircraft_name+'》删除成功！', '消息', {
           confirmButtonText: '确定',
@@ -392,7 +392,7 @@ export default {
 
       const _this = this
       if(_this.ruleForm.value ==''){
-        axios.get('/api/aircraft/findAll/'+(currentPage)+'/2').then(function(resp){
+        _this.axios.get('/api/aircraft/findAll/'+(currentPage)+'/2').then(function(resp){
           console.log(resp)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
@@ -400,7 +400,7 @@ export default {
         })}
       else{
         _this.ruleForm.page = currentPage
-        axios.get('/api/aircraft/search',{params:_this.ruleForm}).then(function(resp){
+        _this.axios.get('/api/aircraft/search',{params:_this.ruleForm}).then(function(resp){
           console.log(_this.ruleForm)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
@@ -452,7 +452,7 @@ export default {
     dataclean(){
       const _this =this
       this.dialogFormVisible = false
-      axios.post('/api/aircraft/clean',_this.tableData).then(function(resp){
+      _this.axios.post('/api/aircraft/clean',_this.tableData).then(function(resp){
         console.log(resp)
         _this.tableData = resp.data
       })
@@ -463,7 +463,7 @@ export default {
 
   created() {
     const _this = this
-    axios.get('/api/aircraft/findAll/0/2').then(function(resp){
+    _this.axios.get('/api/aircraft/findAll/0/2').then(function(resp){
       console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize

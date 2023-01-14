@@ -159,7 +159,9 @@ export default {
       this.seen = false;
     }
   },
-
+  created(){
+    this.input1=this.$route.query.content
+  }
 }
 </script>
 

@@ -165,6 +165,7 @@ export default {
       ],
       dialogPreviewJSON: false,
       tableData: [{
+        id:1,
         date: '2022-05-02 10:40:00',
         name: 'milltory_factory',
         origin: 'Militaryfactory ',
@@ -174,6 +175,7 @@ export default {
         type: '飞机 ; 导弹',
         user: '用户1',
       }, {
+        id:2,
         date: '2022-05-03 9:32:00',
         name: '台湾海军',
         origin: '台湾海军官网',
@@ -183,6 +185,7 @@ export default {
         type: '飞机 ; 火炮',
         user: '用户1',
       }, {
+        id:3,
         date: '2022-05-04 13:57:00',
         name: '台湾海军',
         origin: '台湾海军官网',
@@ -192,6 +195,7 @@ export default {
         type: '飞机 ; 火炮',
         user: '用户1',
       }, {
+        id:4,
         date: '2022-05-05 20:35:00',
         name: '美国飞机与导弹',
         url:'http://www.designation-systems.info/usmilav/index.html',

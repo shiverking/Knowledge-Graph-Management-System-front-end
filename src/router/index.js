@@ -44,6 +44,10 @@ import UnstructureText from "../views/data_management/unstructured_data_manageme
 import UnstructureTextDetail from "../views/data_management/unstructured_data_management/UnstructureTextDetail";
 import UnstructurePicture from "../views/data_management/unstructured_data_management/UnstructurePicture";
 import UnstructureAlbum from "../views/data_management/unstructured_data_management/UnstructureAlbum";
+import CrawlerList from "../views/data_management/crawler_management/CrawlerList";
+import CrawlerMonitor from "../views/data_management/crawler_management/CrawlerMonitor";
+import CrawlerInfo from "../views/data_management/crawler_management/CrawlerInfo";
+import Crawl from "../views/data_management/crawler_management/Crawl";
 //第二部分,候选生成管理部分组件
 import CandidateKg from "../views/candidate_generation_management/candidate_kg/CandidateKg";
 import CandidateKgBuild from "../views/candidate_generation_management/candidate_kg/CandidateKgBuild";
@@ -93,10 +97,7 @@ import Personal from "../views/system_management/Personal";
 import Setting from "../views/system_management/Setting";
 import Authority from "../views/system_management/Authority";
 import Role from "../views/system_management/Role";
-// 第七部分,爬虫管理
-import CrawlerList from "../views/crawler_management/CrawlerList";
-import CrawlerMonitor from "../views/crawler_management/CrawlerMonitor";
-import CrawlerInfo from "../views/crawler_management/CrawlerInfo";
+
 Vue.use(Router)
 
 export default new Router({
@@ -345,6 +346,33 @@ export default new Router({
             }
           ]
         },
+       //爬虫管理
+            {
+              path: '/data/crawler_management',
+              name: '爬虫管理',
+              component: Crawl,
+              show: true,
+              children: [
+                {
+                  path:'/data/crawler_management/CrawlerMonitor',
+                  name:'爬虫监控',
+                  component:CrawlerMonitor,
+                  show:true
+                },
+                {
+                  path:'/data/crawler_management/CrawlerList',
+                  name:'爬虫列表',
+                  component:CrawlerList,
+                  show: true
+                },
+                {
+                  path:'/data/crawler_management/CrawlerInfo',
+                  name:'爬虫信息',
+                  component:CrawlerInfo,
+                  show:true
+                },
+              ]
+            },
       ]
     },
     //第二部分,候选生成管理

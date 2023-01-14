@@ -1,0 +1,3346 @@
+[
+    {
+        "designation": "BG-1",
+        "manufacturer": "Fletcher",
+        "remarks": "(converted PQ-11)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BG-2",
+        "manufacturer": "Fletcher",
+        "remarks": "(converted CG-1; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BG-3",
+        "manufacturer": "Cornelius",
+        "remarks": "(cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-1",
+        "manufacturer": "Fleetwings",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-2",
+        "manufacturer": "Fleetwings",
+        "remarks": "(BQ-1 version)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-3",
+        "manufacturer": "Fairchild",
+        "remarks": "(converted AT-21)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-4",
+        "manufacturer": "Interstate",
+        "remarks": "(as Navy TDR)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-5",
+        "manufacturer": "Interstate",
+        "remarks": "(BQ-4 version; as Navy TD2R; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-6",
+        "manufacturer": "Interstate",
+        "remarks": "(as Navy TD3R; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-7",
+        "manufacturer": "Boeing",
+        "remarks": " (converted B-17)",
+        "designation_new": "MB-17",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BQ-8",
+        "manufacturer": "Consolidated",
+        "remarks": "(converted B-24)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-1",
+        "manufacturer": "Aeronca",
+        "remarks": "(preset glide path, no inflight guidance)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-2",
+        "manufacturer": "Bellanca",
+        "remarks": "(preset glide path, no inflight guidance)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-3",
+        "manufacturer": "Timm",
+        "remarks": "(preset glide path, no inflight guidance)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-4",
+        "manufacturer": "ATSC",
+        "remarks": "(TV controlled guidance)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-5",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 with light contrast seeker)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-6",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 with IR seeker)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-7",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 with passive or semi-active radar homing)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-8",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 with radio control)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-9",
+        "manufacturer": "ATSC",
+        "remarks": "(GB-4 modified for ground-skimming mode)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-10",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 with TV control)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-11",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 modified for chemical agent dispersal)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-12",
+        "manufacturer": "Aeronca",
+        "remarks": "(was GB-5C; GB-1 with light contrast seeker)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-13",
+        "manufacturer": "Aeronca",
+        "remarks": "(was GB-5D; GB-1 with flare seeker)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-14",
+        "manufacturer": "Aeronca",
+        "remarks": "(was GB-7B; GB-1 with active radar homing)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GB-15",
+        "manufacturer": "ATSC",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "GT-1",
+        "manufacturer": "Aeronca",
+        "remarks": "(GB-1 modified to deliver a torpedo)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-1",
+        "manufacturer": "Northrop",
+        "remarks": " (flying wing SSM)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-2",
+        "manufacturer": "Willys-Overland",
+        "remarks": " (V-1 copy, ASM and SSM)",
+        "designation_new": "LTV-A-1",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-3",
+        "manufacturer": "Hughes",
+        "remarks": " (rocket powered AAM)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-4",
+        "manufacturer": "AAF",
+        "remarks": "(modified GB-4 with pulsejet, ASM)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-5",
+        "manufacturer": "-",
+        "remarks": "(cancelled rocket)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-6",
+        "manufacturer": "-",
+        "remarks": "(cancelled rocket)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-7",
+        "manufacturer": "-",
+        "remarks": "(reserved for jet-powered cruise missile; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-8",
+        "manufacturer": "Boeing",
+        "designation_new": "SAM-A-1",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-9",
+        "manufacturer": "-",
+        "remarks": "(reserved for short-range SSM; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "JB-10",
+        "manufacturer": "Northrop",
+        "remarks": "(JB-1 modified with pulsejet)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-1",
+        "manufacturer": "ATSC",
+        "remarks": " (\"Azimuth only\", 1000 lb.)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-2",
+        "manufacturer": "ATSC",
+        "remarks": " (2000 lb.)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-3",
+        "manufacturer": "ATSC",
+        "remarks": " (\"Range and Azimuth\", 1000 lb..)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-4",
+        "manufacturer": "ATSC",
+        "remarks": " (2000 lb.)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-5",
+        "manufacturer": "ATSC",
+        "remarks": "(light contrast seeker, 1000 lb.)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-6",
+        "manufacturer": "ATSC",
+        "remarks": " (IR guided, 1000 lb.)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-7",
+        "manufacturer": "ATSC",
+        "remarks": "(TV guided)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-8",
+        "manufacturer": "ATSC",
+        "remarks": "(VB-7 version)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-9",
+        "manufacturer": "Douglas",
+        "remarks": " (radar guided)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-10",
+        "manufacturer": "Douglas",
+        "remarks": " (TV guided)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-11",
+        "manufacturer": "Douglas",
+        "remarks": " (IR guided)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-12",
+        "manufacturer": "Douglas",
+        "remarks": " (visually guided)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "VB-13",
+        "manufacturer": "Bell",
+        "remarks": " (12000 lb.)",
+        "designation_new": "ASM-A-1",
+        "department": "Army Air Force",
+        "year": "1941 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "BDR",
+        "manufacturer": "Interstate",
+        "remarks": "(jet-powered assault drone project)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1941 - 1945",
+        "type": "Missile"
+    },
+    {
+        "designation": "LBD",
+        "manufacturer": "McDonnell",
+        "designation_new": "KSD, KUD, RTV-N-2",
+        "department": "Navy",
+        "year": "1941 - 1945",
+        "type": "Missile"
+    },
+    {
+        "designation": "LBE",
+        "manufacturer": "Pratt-Read",
+        "remarks": " (Glider-Bomb)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1941 - 1945",
+        "type": "Missile"
+    },
+    {
+        "designation": "LBP",
+        "manufacturer": "Piper",
+        "remarks": " (similar to LBE; cancelled)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1941 - 1945",
+        "type": "Missile"
+    },
+    {
+        "designation": "LBT",
+        "manufacturer": "Taylorcraft",
+        "remarks": " (LBE built by Taylorcraft)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1941 - 1945",
+        "type": "Missile"
+    },
+    {
+        "designation": "KAM",
+        "manufacturer": "Martin",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KAN",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KA2N",
+        "manufacturer": "NAMU",
+        "designation_new": "KU2N, CTV-N-4",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KA3N",
+        "manufacturer": "NAMU",
+        "designation_new": "KU3N, RTV-N-4/CTV-N-6",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KAQ",
+        "manufacturer": "Fairchild",
+        "designation_new": "SAM-N-2, CTV-N-9",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KAS",
+        "manufacturer": "Sperry",
+        "designation_new": "AAM-N-2, AIM-7A",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KAY",
+        "manufacturer": "Convair",
+        "designation_new": "SAM-N-4, CTV-N-10",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KGN",
+        "manufacturer": "NAMU",
+        "designation_new": "KUN, CTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KGW",
+        "manufacturer": "Willys-Overland",
+        "remarks": " (as USAAF JB-2)",
+        "designation_new": "KUW, LTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KSD",
+        "manufacturer": "McDonnell",
+        "designation_new": "KUD, RTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KUD",
+        "manufacturer": "McDonnell",
+        "designation_new": "RTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KUM",
+        "manufacturer": "Martin",
+        "designation_new": "PTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KUN",
+        "manufacturer": "NAMU",
+        "designation_new": "CTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KU2N",
+        "manufacturer": "NAMU",
+        "designation_new": "CTV-N-4",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KU3N",
+        "manufacturer": "NAMU",
+        "designation_new": "RTV-N-4/CTV-N-6",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "KUW",
+        "manufacturer": "Willys-Overland",
+        "designation_new": "LTV-N-2",
+        "department": "Navy",
+        "year": "1946 - 1947",
+        "type": "Missile"
+    },
+    {
+        "designation": "(AAM-N-1)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-2",
+        "manufacturer": "Sperry",
+        "designation_new": "AIM-7A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-3",
+        "manufacturer": "Douglas",
+        "remarks": " (originally AAM-N-2a)",
+        "designation_new": "AIM-7B",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-4",
+        "manufacturer": "Martin",
+        "designation_new": "RV-N-16",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-5",
+        "manufacturer": "MIT/Bell",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-6",
+        "manufacturer": "Raytheon",
+        "designation_new": "AIM-7C/D/E",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-7",
+        "manufacturer": "NWC/Philco",
+        "designation_new": "AIM-9A/B/C/D",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(AAM-N-8)",
+        "manufacturer": "(No information)",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-9",
+        "manufacturer": "Raytheon",
+        "remarks": " (nuclear-armed ",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-10",
+        "manufacturer": "Bendix",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-N-11",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-54A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(ASM-N-1/3)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-2",
+        "manufacturer": "Bureau of Standards",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-4",
+        "manufacturer": "Eastman Kodak",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-5",
+        "manufacturer": "Martin",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-6",
+        "manufacturer": "Eastman Kodak",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-7",
+        "manufacturer": "Martin",
+        "designation_new": "AGM-12A/B/C",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-8",
+        "manufacturer": "Temco",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(ASM-N-9)",
+        "manufacturer": "(see ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-10",
+        "manufacturer": "Texas Instruments",
+        "designation_new": "AGM-45A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-N-11",
+        "manufacturer": "Rockwell",
+        "designation_new": "AGM-53A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(AUM-N-1/3/5)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AUM-N-2",
+        "manufacturer": "Fairchild",
+        "remarks": " (ex Kingfisher C)",
+        "designation_new": "AQM-41A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AUM-N-4",
+        "manufacturer": "Bureau of Standards",
+        "remarks": " (ex Kingfisher D)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AUM-N-6",
+        "manufacturer": "Bureau of Standards/McDonnell",
+        "remarks": " (ex Kingfisher F)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(SAM-N-1/3/5)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-2",
+        "manufacturer": "Fairchild",
+        "designation_new": "CTV-N-9",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-4",
+        "manufacturer": "Convair",
+        "designation_new": "CTV-N-10",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-6",
+        "manufacturer": "Bendix",
+        "designation_new": "RIM-8A/.../F",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-7",
+        "manufacturer": "Convair",
+        "designation_new": "RIM-2A/.../E",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-8",
+        "manufacturer": "Naval Ordnance Lab",
+        "remarks": " (gun-launched guided projectile)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-8",
+        "manufacturer": "Bendix",
+        "designation_new": "RIM-50A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-N-9",
+        "manufacturer": "Bendix",
+        "designation_new": "RIM-55A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(SSM-N-1/3/5/7)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-N-2",
+        "manufacturer": "Applied Physics Lab",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-N-4",
+        "manufacturer": "North American",
+        "remarks": " (unmanned XAJ-1)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-N-6",
+        "manufacturer": "Grumman",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-N-8",
+        "manufacturer": "Vought",
+        "designation_new": "RGM-6A/B",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-N-9",
+        "manufacturer": "Applied Physics Lab",
+        "designation_new": "SSM-A-12, MGM-18A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-N-9",
+        "manufacturer": "Vought",
+        "designation_new": "RGM-15A",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(SUM-N-1)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SUM-N-2",
+        "manufacturer": "Bureau of Standards/Goodyear",
+        "remarks": " (ex Kingfisher E)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(CTV-N-1/3/5/7)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-N-2",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-N-4",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-N-6",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-N-8",
+        "manufacturer": "Applied Physics Lab",
+        "remarks": " (Supersonic Test Vehicle)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-N-9",
+        "manufacturer": "Fairchild",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-N-10",
+        "manufacturer": "Convair",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(LTV-N-1/3)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "LTV-N-2",
+        "manufacturer": "Willys-Overland",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "LTV-N-4",
+        "manufacturer": "NOTS",
+        "remarks": "(solid-propellant booster rocket)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(PTV-N-1/3)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "PTV-N-2",
+        "manufacturer": "Martin",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "PTV-N-4",
+        "manufacturer": "Applied Physics Lab",
+        "remarks": " (",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(RTV-N-1/3/5/7/9/11)",
+        "manufacturer": "Not assigned",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-2",
+        "manufacturer": "McDonnell",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-4",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-6",
+        "manufacturer": "Applied Physics Lab",
+        "remarks": " (Experimental Prototype Missile)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-8",
+        "manufacturer": "Aerojet",
+        "remarks": " (XASR-1)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-10",
+        "manufacturer": "Aerojet",
+        "remarks": " (XASR-2)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-12",
+        "manufacturer": "Martin",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-13",
+        "manufacturer": "Aerojet",
+        "designation_new": "RV-N-13",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(RTV-N-14)",
+        "manufacturer": "(No information)",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-N-15",
+        "manufacturer": "NADC",
+        "remarks": " (Gorgon version)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RV-N-16",
+        "manufacturer": "Martin",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1947 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-G-1",
+        "manufacturer": "JPL",
+        "designation_new": "RV-A-1",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-G-2",
+        "manufacturer": "JPL",
+        "designation_new": "RV-A-2",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-G-3",
+        "manufacturer": "General Electric",
+        "designation_new": "RV-A-3",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-G-4",
+        "manufacturer": "General Electric",
+        "remarks": " (A4 + WAC Corporal)",
+        "designation_new": "RV-A-4",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "CTV-G-5",
+        "manufacturer": "General Electric",
+        "designation_new": "RV-A-5",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-G-6",
+        "manufacturer": "General Electric",
+        "designation_new": "RV-A-6",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-G-7",
+        "manufacturer": "Western Electric",
+        "designation_new": "SAM-A-7, M1, MIM-3A",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-8",
+        "manufacturer": "General Electric",
+        "designation_new": "RTV-G-8, RV-A-8",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-9",
+        "manufacturer": "General Electric",
+        "designation_new": "SSM-A-9",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-G-10",
+        "manufacturer": "General Electric",
+        "remarks": "(test vehicle for Hermes A-2)",
+        "designation_new": "RV-A-10",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(?-G-11)",
+        "manufacturer": "(No information)",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-12",
+        "manufacturer": "Martin",
+        "designation_new": "SSM-A-12, M4, MGM-18A",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-13",
+        "manufacturer": "General Electric",
+        "designation_new": "SSM-A-13",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-14",
+        "manufacturer": "Chrysler",
+        "designation_new": "SSM-A-14, M8, PGM-11A",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-15",
+        "manufacturer": "General Electric",
+        "designation_new": "SSM-A-15",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-16",
+        "manufacturer": "General Electric",
+        "designation_new": "SSM-A-16",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-G-17",
+        "manufacturer": "JPL/Firestone",
+        "designation_new": "SSM-A-17, M2, MGM-5A/B",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-A-18",
+        "manufacturer": "Raytheon",
+        "designation_new": "M3, MIM-23A",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-A-19",
+        "manufacturer": "Sylvania Electric",
+        "remarks": " (missile defense project)",
+        "designation_new": " ",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(?-A-20)",
+        "manufacturer": "(No information)",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(?-A-21)",
+        "manufacturer": "(No information)",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "RV-A-22",
+        "manufacturer": "Martin/Convair",
+        "remarks": " (test vehicle for SSM-A-12)",
+        "designation_new": " ",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-23",
+        "manufacturer": "Aerophysics Development Corp",
+        "designation_new": " ",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(?-A-24)",
+        "manufacturer": "(No information, see ",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-A-25",
+        "manufacturer": "Western Electric",
+        "designation_new": "M6, MIM-14A/B",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(?-A-26)",
+        "manufacturer": "(No information, see ",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-27",
+        "manufacturer": "Sperry/JPL",
+        "designation_new": "M15, MGM-29A",
+        "department": "Army",
+        "year": "1948 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-A-1",
+        "manufacturer": "Ryan",
+        "remarks": " (MX-799)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "AAM-A-2",
+        "manufacturer": "Hughes",
+        "designation_new": "F-98, GAR-1, AIM-4/4A",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-A-1",
+        "manufacturer": "Bell",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "ASM-A-2",
+        "manufacturer": "Bell",
+        "designation_new": "B-63, GAM-63",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SAM-A-1",
+        "manufacturer": "Boeing",
+        "remarks": " (MX-606)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-1",
+        "manufacturer": "Martin",
+        "designation_new": "B-61, TM-61, MGM-1C",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-2",
+        "manufacturer": "North American",
+        "remarks": " (Model NA-704)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-3",
+        "manufacturer": "Northrop",
+        "designation_new": "B-62, SM-62",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-4",
+        "manufacturer": "North American",
+        "remarks": " (Model G-26)",
+        "designation_new": "B-64, SM-64",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-5",
+        "manufacturer": "Northrop",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "SSM-A-6",
+        "manufacturer": "North American",
+        "remarks": " (Model G-38)",
+        "designation_new": "B-64A, SM-64A",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "LTV-A-1",
+        "manufacturer": "Willys-Overland",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "PTV-A-1",
+        "manufacturer": "Lockheed",
+        "remarks": "(MX-883 ramjet test vehicle)",
+        "designation_new": "X-7",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-A-1",
+        "manufacturer": "Aerojet",
+        "designation_new": "X-8",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-A-2",
+        "manufacturer": "Convair",
+        "remarks": " (MX-774)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-A-3",
+        "manufacturer": "North American",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-A-4",
+        "manufacturer": "Bell",
+        "remarks": " (test vehicle for GAM-63)",
+        "designation_new": "X-9",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "RTV-A-5",
+        "manufacturer": "North American",
+        "remarks": "(test vehicle for SM-64)",
+        "designation_new": "X-10",
+        "department": "Air Force",
+        "year": "1947 - 1951",
+        "type": "Missile"
+    },
+    {
+        "designation": "B-61",
+        "manufacturer": "Martin",
+        "designation_new": "TM-61, MGM-1C",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "B-62",
+        "manufacturer": "Northrop",
+        "designation_new": "SM-62",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "B-63",
+        "manufacturer": "Bell",
+        "designation_new": "GAM-63",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "B-64",
+        "manufacturer": "North American",
+        "designation_new": "SM-64",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "B-65",
+        "manufacturer": "Convair",
+        "designation_new": "SM-65, CGM/HGM-16D/E/F",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "B-67",
+        "manufacturer": "Radioplane",
+        "designation_new": "GAM-67",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "F-98",
+        "manufacturer": "Hughes",
+        "designation_new": "GAR-1, AIM-4/4A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "F-99",
+        "manufacturer": "Boeing",
+        "designation_new": "IM-69, IM-99, CIM-10A/B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "F-104",
+        "manufacturer": "Hughes",
+        "designation_new": "F-98A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-7",
+        "manufacturer": "Lockheed",
+        "remarks": "(MX-883 ramjet test vehicle)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-8",
+        "manufacturer": "Aerojet",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-9",
+        "manufacturer": "Bell",
+        "remarks": " (test vehicle for GAM-63)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-10",
+        "manufacturer": "North American",
+        "remarks": "(test vehicle for SM-64)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-11",
+        "manufacturer": "Convair",
+        "remarks": " (test vehicle for SM-65; not built)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-12",
+        "manufacturer": "Convair",
+        "remarks": " (test vehicle for SM-65; not built)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "X-17",
+        "manufacturer": "Lockheed",
+        "remarks": "(test vehicle for re-entry shapes)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M1",
+        "manufacturer": "Western Electric",
+        "designation_new": "MIM-3A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M2",
+        "manufacturer": "JPL/Firestone",
+        "designation_new": "MGM-5A/B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M3",
+        "manufacturer": "Raytheon",
+        "designation_new": "MIM-23A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M4",
+        "manufacturer": "Martin",
+        "designation_new": "MGM-18A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(M5)",
+        "manufacturer": "(No information)",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M6",
+        "manufacturer": "Western Electric",
+        "designation_new": "MIM-14A/B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(M7)",
+        "manufacturer": "(No information)",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M8",
+        "manufacturer": "Chrysler",
+        "designation_new": "PGM-11A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M9",
+        "manufacturer": "Chrysler",
+        "remarks": " (training missile)",
+        "designation_new": "PTM-11B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(M10 ... M12)",
+        "manufacturer": "(No information)",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M13",
+        "manufacturer": "Ford",
+        "designation_new": "MGM-51A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M14",
+        "manufacturer": "Martin",
+        "designation_new": "MGM-31A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M15",
+        "manufacturer": "Sperry/JPL",
+        "designation_new": "MGM-29A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M16",
+        "manufacturer": "Raytheon",
+        "remarks": " (training missile)",
+        "designation_new": "MTM-23B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "(M17)",
+        "manufacturer": "(No information)",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M18",
+        "manufacturer": "Raytheon",
+        "remarks": " (training missile)",
+        "designation_new": "MTM-23C",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M19",
+        "manufacturer": "Martin",
+        "remarks": " (training missile)",
+        "designation_new": "MTM-31B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "Target Drones",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M21",
+        "manufacturer": "Ryan",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M23",
+        "manufacturer": "Radioplane",
+        "remarks": " ",
+        "designation_new": "MQM-33A/B",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "Rockets (series started ca. 1940)",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M2",
+        "manufacturer": " ",
+        "remarks": "(target rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M6",
+        "manufacturer": " ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M7",
+        "manufacturer": " ",
+        "remarks": " (training rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M8",
+        "manufacturer": " ",
+        "remarks": "(4.5\" HE rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M9",
+        "manufacturer": " ",
+        "remarks": "(4.5\" barrage rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M10",
+        "manufacturer": " ",
+        "remarks": "(2.36\" smoke rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M12",
+        "manufacturer": " ",
+        "remarks": "(4.5\" barrage rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M16",
+        "manufacturer": " ",
+        "remarks": "(4.5\" barrage rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M17",
+        "manufacturer": " ",
+        "remarks": "(4.5\" barrage rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M20",
+        "manufacturer": " ",
+        "remarks": "(4.5\" barrage rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M21",
+        "manufacturer": " ",
+        "remarks": "(4.5\" barrage rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M25",
+        "manufacturer": " ",
+        "remarks": "(7.2\" chemical rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M26",
+        "manufacturer": " ",
+        "remarks": "(2.36\" gas rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M27",
+        "manufacturer": " ",
+        "remarks": "(7.2\" chemical rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M28",
+        "manufacturer": " ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M29",
+        "manufacturer": " ",
+        "remarks": " (training rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M30",
+        "manufacturer": " ",
+        "remarks": " (smoke rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M31",
+        "manufacturer": "Douglas",
+        "designation_new": "MGR-1A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M47",
+        "manufacturer": "Emerson Electric",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M50",
+        "manufacturer": "Douglas",
+        "designation_new": "MGR-1B/C",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M51",
+        "manufacturer": "Emerson Electric",
+        "designation_new": "MGR-3A",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M55",
+        "manufacturer": " ",
+        "remarks": "(115 mm chemical warfare rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M60",
+        "manufacturer": " ",
+        "remarks": "(M55 dummy rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M61",
+        "manufacturer": " ",
+        "remarks": "(M55 practice rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M72",
+        "manufacturer": " ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M73",
+        "manufacturer": " ",
+        "remarks": "(M72 training rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "M74",
+        "manufacturer": " ",
+        "remarks": "(66 mm incendiary rocket)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1951 - 1955",
+        "type": "Missile"
+    },
+    {
+        "designation": "TM-61",
+        "manufacturer": "Martin",
+        "designation_new": "MGM-1C",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-62",
+        "manufacturer": "Northrop",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-63",
+        "manufacturer": "Bell",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-64",
+        "manufacturer": "North American",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-65",
+        "manufacturer": "Convair",
+        "designation_new": "CGM/HGM-16D/E/F, CTM-16D/E",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-67",
+        "manufacturer": "Radioplane",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-68",
+        "manufacturer": "Martin",
+        "designation_new": "HGM-25A, HTM-25B, LGM-25C",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "IM-69",
+        "manufacturer": "Boeing",
+        "designation_new": "IM-99, CIM-10A/B",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "IM-70",
+        "manufacturer": "Bendix",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-71",
+        "manufacturer": "Convair",
+        "remarks": " (air-launched decoy for B-36)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-72",
+        "manufacturer": "McDonnell",
+        "designation_new": "ADM-20A/B/C",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-73",
+        "manufacturer": "Fairchild",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-74",
+        "manufacturer": "Convair",
+        "remarks": "(see ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-75",
+        "manufacturer": "Douglas",
+        "designation_new": "PGM-17A, PTM-17A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "TM-76",
+        "manufacturer": "Martin",
+        "designation_new": "MGM-13A/B, CGM-13C",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-77",
+        "manufacturer": "North American",
+        "designation_new": "AGM-28A/B",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-78",
+        "manufacturer": "Chrysler",
+        "designation_new": "PGM-19A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-79",
+        "manufacturer": "Martin",
+        "remarks": " (see ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "SM-80",
+        "manufacturer": "Boeing",
+        "designation_new": "LGM-30A/B/F",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-81",
+        "manufacturer": "Lockheed",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-82",
+        "manufacturer": "JPL",
+        "remarks": " (see ",
+        "designation_new": "PWN-1A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-83",
+        "manufacturer": "Martin",
+        "designation_new": "AGM-12A/B/D, ATM-12",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-84",
+        "manufacturer": "Aerojet General",
+        "remarks": " (see ",
+        "designation_new": "PWN-2A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-85",
+        "manufacturer": "University of Michigan/NACA",
+        "designation_new": "PWN-3A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-86",
+        "manufacturer": "University of Michigan",
+        "designation_new": "PWN-4A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAM-87",
+        "manufacturer": "Douglas",
+        "designation_new": "AGM-48A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-88",
+        "manufacturer": "Cooper Development",
+        "designation_new": "PWN-5A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-89",
+        "manufacturer": "Ford Aeronutronics",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-90",
+        "manufacturer": "Ford Aeronutronics",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-91",
+        "manufacturer": "Ford Aeronutronics",
+        "designation_new": "SLV-1",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "RM-92",
+        "manufacturer": "Ford Aeronutronics",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(M-93 ... M-98)",
+        "manufacturer": "(Not assigned)",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "IM-99",
+        "manufacturer": "Boeing",
+        "designation_new": "CIM-10A/B",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "AIM-101",
+        "manufacturer": "Raytheon",
+        "designation_new": "AIM-7D",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-1",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-4/4A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-2",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-4B/C/D",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-3",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-4E/F",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-4",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-4G",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-5",
+        "manufacturer": "Hughes",
+        "remarks": " (cancelled nuclear version; see ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-6",
+        "manufacturer": "Hughes",
+        "remarks": " (cancelled nuclear version; see ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(GAR-7)",
+        "manufacturer": "(No information)",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-8",
+        "manufacturer": "Philco",
+        "designation_new": "AIM-9B",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-9",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-47A",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "(GAR-10)",
+        "manufacturer": "(No information)",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "GAR-11",
+        "manufacturer": "Hughes",
+        "designation_new": "AIM-26A/B",
+        "department": "Air Force",
+        "year": "1955 - 1963",
+        "type": "Missile"
+    },
+    {
+        "designation": "TDC",
+        "manufacturer": "Culver",
+        "remarks": " (as USAAF PQ-8)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD2C",
+        "manufacturer": "Culver",
+        "remarks": "(as USAAF PQ-14)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD3C",
+        "manufacturer": "Culver",
+        "remarks": "(as USAAF PQ-15)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD4C",
+        "manufacturer": "Culver",
+        "remarks": " ",
+        "designation_new": "UC-1K",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TDD",
+        "manufacturer": "Radioplane",
+        "remarks": "(as USAAF OQ-2/3/14)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD2D",
+        "manufacturer": "McDonnell",
+        "designation_new": "KDD, KDH",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD3D",
+        "manufacturer": "Frankfort",
+        "remarks": "(as USAAF OQ-16)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD4D",
+        "manufacturer": "Radioplane",
+        "remarks": " (as USAAF OQ-17)",
+        "designation_new": "KDR",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TDL",
+        "manufacturer": "Bell",
+        "designation_new": "F2L-1K",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TDN",
+        "manufacturer": "NAMU",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD2N",
+        "manufacturer": "NAMU",
+        "designation_new": "KDN",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD3N",
+        "manufacturer": "NAMU",
+        "designation_new": "KD2N",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TDR",
+        "manufacturer": "Interstate",
+        "remarks": "(assault drone; as USAAF BQ-4)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD2R",
+        "manufacturer": "Interstate",
+        "remarks": "(assault drone; as USAAF BQ-5; cancelled)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "TD3R",
+        "manufacturer": "Interstate",
+        "remarks": "(assault drone; as USAAF BQ-6)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1942 - 1946",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDA",
+        "manufacturer": "Ryan",
+        "remarks": " (USAF Q-2)",
+        "designation_new": "AQM-34B/C",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDB",
+        "manufacturer": "Beech",
+        "remarks": " (Model 1001)",
+        "designation_new": "MQM-39A",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD2B",
+        "manufacturer": "Beech",
+        "remarks": "(Model 1019; USAF Q-12)",
+        "designation_new": "AQM-37A",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDC",
+        "manufacturer": "Curtiss",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD2C",
+        "manufacturer": "Curtiss",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD3C",
+        "manufacturer": "Curtiss",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDD",
+        "manufacturer": "McDonnell",
+        "designation_new": "KDH",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDG",
+        "manufacturer": "Globe",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD2G",
+        "manufacturer": "Globe",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD3G",
+        "manufacturer": "Globe",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD4G",
+        "manufacturer": "Globe",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD5G",
+        "manufacturer": "Globe",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD6G",
+        "manufacturer": "Globe",
+        "designation_new": "XQM-40A",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDH",
+        "manufacturer": "McDonnell",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDM",
+        "manufacturer": "Martin",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDN",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD2N",
+        "manufacturer": "NAMU",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDR",
+        "manufacturer": "Radioplane",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD2R",
+        "manufacturer": "Radioplane/Northrop",
+        "designation_new": "MQM-36A",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "(KD3R)",
+        "manufacturer": "(No information)",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD4R",
+        "manufacturer": "Radioplane",
+        "remarks": "(Model RP-70)",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDT",
+        "manufacturer": "Temco",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KDU",
+        "manufacturer": "Vought",
+        "designation_new": "BQM-6C",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "KD2U",
+        "manufacturer": "Vought",
+        "designation_new": "MQM-15A",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "UC",
+        "manufacturer": "Culver",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Navy",
+        "year": "1946 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-1",
+        "manufacturer": "Fleetwings",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-2",
+        "manufacturer": "Radioplane",
+        "remarks": "(Model RP-5)",
+        "designation_new": "OQ-2",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-3",
+        "manufacturer": "Curtiss",
+        "remarks": "(conversion of Navy N2C-2)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-4",
+        "manufacturer": "Douglas",
+        "remarks": "(conversion of BT-2B and -2BI; a.k.a. BT-2BR and -2BG)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-5",
+        "manufacturer": "Boeing",
+        "remarks": "(reserved for conversion of P-12E; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-6",
+        "manufacturer": "Douglas",
+        "remarks": "(reserved for conversion of O-38; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-7",
+        "manufacturer": "Bell",
+        "remarks": "(reserved for conversion of P-39; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "A-8",
+        "manufacturer": "Culver",
+        "designation_new": "PQ-8, Q-8",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "(OQ-1)",
+        "manufacturer": "Not assigned (see ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-2",
+        "manufacturer": "Radioplane",
+        "remarks": "(small 12ft. target; as Navy TDD-1; Model RP-5)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-3",
+        "manufacturer": "Radioplane",
+        "remarks": "(improved OQ-3; as Navy TDD-2)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-4",
+        "manufacturer": "Brunswick-Balke-Collender",
+        "remarks": "(small 12ft. target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-5",
+        "manufacturer": "?",
+        "remarks": "(small 12ft. target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-6",
+        "manufacturer": "Radioplane",
+        "remarks": "(high speed target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-7",
+        "manufacturer": "Radioplane",
+        "remarks": "(modified OQ-3)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "(OQ-8 ... OQ-10)",
+        "manufacturer": "Not assigned",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-11",
+        "manufacturer": "Simmonds Aerocessories",
+        "remarks": "(small 12ft. target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-12",
+        "manufacturer": "Radioplane",
+        "remarks": "(small 12ft. target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-13",
+        "manufacturer": "Radioplane",
+        "remarks": "(OQ-3 modified for over-water use)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-14",
+        "manufacturer": "Radioplane",
+        "remarks": "(improved OQ-3; as Navy TDD-3; Model RP-8)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-15",
+        "manufacturer": "?",
+        "remarks": "(small 12ft. target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-16",
+        "manufacturer": "Frankfort",
+        "remarks": "(small 12ft. target; as Navy TD3D)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-17",
+        "manufacturer": "Radioplane",
+        "remarks": "(small 12ft. target; as Navy TD4D/KDR; Model RP-18)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-18",
+        "manufacturer": "?",
+        "remarks": "(larger 15ft. target)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "OQ-19",
+        "manufacturer": "Radioplane/Northrop",
+        "remarks": "(as Navy KD2R; Model RP-19)",
+        "designation_new": "MQM-33A/B",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "(PQ-1 ... PQ-7)",
+        "manufacturer": "Not assigned",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-8",
+        "manufacturer": "Culver",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-9",
+        "manufacturer": "Culver",
+        "remarks": "(Model NR-B; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-10",
+        "manufacturer": "Culver",
+        "remarks": "(Model MR; cancelled)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-11",
+        "manufacturer": "Fletcher",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-12",
+        "manufacturer": "Fleetwings",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-13",
+        "manufacturer": "Erco",
+        "remarks": "(Model Ercoupe 415C)",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-14",
+        "manufacturer": "Culver",
+        "remarks": " ",
+        "designation_new": "Q-14",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "PQ-15",
+        "manufacturer": "Culver",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Army Air Force",
+        "year": "1943 - 1947",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-1",
+        "manufacturer": "Radioplane",
+        "remarks": "(jet-powered target similar to GAM-67)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-2",
+        "manufacturer": "Ryan",
+        "designation_new": "BQM-34A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-3",
+        "manufacturer": "Radioplane",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-4",
+        "manufacturer": "Radioplane/Bendix",
+        "remarks": " ",
+        "designation_new": "AQM-35A/B",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-5",
+        "manufacturer": "Lockheed",
+        "remarks": " (modified X-7)",
+        "designation_new": "AQM-60A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-6",
+        "manufacturer": "-",
+        "remarks": "(medium performance target drone project; cancelled)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "(",
+        "manufacturer": "Not assigned (Q-7A/B/C designations requested, but not approved)",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "(",
+        "manufacturer": "Not assigned (Q-8A/B/C designations requested, but not approved)",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-9",
+        "manufacturer": "-",
+        "remarks": "(low-cost short duration target drone project; cancelled)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-10",
+        "manufacturer": "Radioplane",
+        "remarks": "(OQ-19 derivative)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "(",
+        "manufacturer": "Not assigned (XQ-11 designation requested, but not approved)",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-12",
+        "manufacturer": "Beech",
+        "remarks": "(Model 1019; Navy KD2B)",
+        "designation_new": "AQM-37A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "(Q-13)",
+        "manufacturer": "Not assigned",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "Q-14",
+        "manufacturer": "Culver",
+        "remarks": " ",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Drone"
+    },
+    {
+        "designation": "M6",
+        "manufacturer": " ",
+        "remarks": " (Army)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "M28",
+        "manufacturer": " ",
+        "remarks": " (Army)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "M31/M50",
+        "manufacturer": "Douglas",
+        "remarks": " (Army)",
+        "designation_new": "MGR-1A/B/C",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "M47/M51",
+        "manufacturer": "Emerson Electric",
+        "remarks": " (Army)",
+        "designation_new": "MGR-3A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "M55",
+        "manufacturer": " ",
+        "remarks": "(chemical warfare rocket; Army)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "M72",
+        "manufacturer": " ",
+        "remarks": " (Army)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "MB-1",
+        "manufacturer": "Douglas",
+        "remarks": " (Air Force)",
+        "designation_new": "AIR-2A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": " ",
+        "manufacturer": "NOTS",
+        "remarks": " (Navy)",
+        "designation_new": "RUR-4A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": " ",
+        "manufacturer": "NOTS",
+        "remarks": " (Navy)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "R.A.T. ",
+        "manufacturer": "Honeywell",
+        "remarks": " (Navy)",
+        "designation_new": "RUR-5A",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": " ",
+        "manufacturer": "Bendix",
+        "remarks": " (Army)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "30.5\" Rocket MK 1",
+        "manufacturer": "NOTS",
+        "remarks": " (Navy)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "2.75\" FFAR",
+        "manufacturer": "NOTS",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "5\" HVAR",
+        "manufacturer": "NOTS",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "5\" FFAR",
+        "manufacturer": "NOTS",
+        "remarks": " (Navy)",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Rocket"
+    },
+    {
+        "designation": "SLV-1",
+        "manufacturer": "L.T.V./Ford Aeronutronics",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Space Launch Vehicle"
+    },
+    {
+        "designation": "SLV-2",
+        "manufacturer": "Douglas",
+        "designation_new": " ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Space Launch Vehicle"
+    },
+    {
+        "designation": "SLV-3",
+        "manufacturer": "Convair",
+        "designation_new": "(see ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Space Launch Vehicle"
+    },
+    {
+        "designation": "SLV-4",
+        "manufacturer": "Martin Marietta",
+        "designation_new": "(see ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Space Launch Vehicle"
+    },
+    {
+        "designation": "SLV-5",
+        "manufacturer": "Martin Marietta",
+        "designation_new": "(see ",
+        "department": "Air Force",
+        "year": "1947 - 1963",
+        "type": "Space Launch Vehicle"
+    }
+]
