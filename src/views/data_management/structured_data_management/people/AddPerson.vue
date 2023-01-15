@@ -218,7 +218,7 @@ export default {
     },
     change1(){
       const _this = this
-      axios.get('/api/task/findByPlanid/'+this.ruleForm.plan_id).then(function(resp){
+      _this.axios.get('/api/task/findByPlanid/'+this.ruleForm.plan_id).then(function(resp){
         _this.options2 = resp.data
       })
     },
@@ -226,7 +226,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('/api/person/save',this.form).then(function(resp){
+          _this.axios.post('/api/person/save',this.form).then(function(resp){
               console.log(_this.form)
                 _this.$alert('《' + _this.form.person.name_cn + '》添加成功！', '消息', {
                   confirmButtonText: '确定',
@@ -272,7 +272,7 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/plan/findAll').then(function(resp){
+    _this.axios.get('/api/plan/findAll').then(function(resp){
       _this.options1 = resp.data
     })
   }

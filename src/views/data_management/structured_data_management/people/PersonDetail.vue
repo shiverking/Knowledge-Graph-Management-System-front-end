@@ -223,14 +223,14 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/person/searchresu/' + this.$route.query.id).then(function (resp) {
+    _this.axios.get('/api/person/searchresu/' + this.$route.query.id).then(function (resp) {
       _this.tableData1 = resp.data
     })
-    axios.get('/api/person/searchedu/' + this.$route.query.id).then(function (resp) {
+    _this.axios.get('/api/person/searchedu/' + this.$route.query.id).then(function (resp) {
       console.log(resp)
       _this.tableData = resp.data
     });
-    axios.get('/api/plan/findById/' + this.$route.query.id1).then(function (resp) {
+    _this.axios.get('/api/plan/findById/' + this.$route.query.id1).then(function (resp) {
       _this.tableData2.push(resp.data)
     });
   //   if (this.$route.query.id2 != null){

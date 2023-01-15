@@ -110,6 +110,27 @@
                 </router-link>
               </el-submenu>
             </el-submenu>
+            <el-submenu index="1-4" >
+              <template slot="title">
+                <i class="el-icon-cpu"></i>
+                <span slot="title">爬虫管理</span>
+              </template>
+              <router-link  to="/data/crawler_management/CrawlerMonitor" class="routerlink">
+                <el-menu-item index="1-4-1">
+                  <i class="el-icon-view"></i>爬虫监控
+                </el-menu-item>
+              </router-link>
+              <router-link to="/data/crawler_management/CrawlerList" class="routerlink">
+                <el-menu-item index="1-4-2">
+                  <i class="el-icon-notebook-2"></i>爬虫列表
+                </el-menu-item>
+              </router-link>
+              <router-link to="/data/crawler_management/CrawlerInfo" class="routerlink">
+                <el-menu-item index="1-4-3">
+                  <i class="el-icon-document"></i>爬虫信息
+                </el-menu-item>
+              </router-link>
+            </el-submenu>
           </el-submenu>
           <el-submenu index="2" class="parent_submenu">
             <template slot="title">
@@ -298,27 +319,6 @@
             <router-link to="/system_management/personal" class="routerlink">
               <el-menu-item index="6-4">
                 <i class="el-icon-user"></i>个人中心
-              </el-menu-item>
-            </router-link>
-          </el-submenu>
-          <el-submenu index="7" class="parent_submenu">
-            <template slot="title">
-              <i class="el-icon-cpu"></i>
-              <span slot="title">爬虫管理</span>
-            </template>
-            <router-link  to="/crawler_management/CrawlerMonitor" class="routerlink">
-              <el-menu-item index="7-1">
-                <i class="el-icon-view"></i>爬虫监控
-              </el-menu-item>
-            </router-link>
-            <router-link to="/crawler_management/CrawlerList" class="routerlink">
-              <el-menu-item index="7-2">
-                <i class="el-icon-notebook-2"></i>爬虫列表
-              </el-menu-item>
-            </router-link>
-            <router-link to="/crawler_management/CrawlerInfo" class="routerlink">
-              <el-menu-item index="7-3">
-                <i class="el-icon-document"></i>爬虫信息
               </el-menu-item>
             </router-link>
           </el-submenu>

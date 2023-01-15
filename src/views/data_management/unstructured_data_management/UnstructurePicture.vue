@@ -68,14 +68,14 @@
 
     <!-- 图片及复选框 -->
     <div id="image-content">
-      <div class="image-item" v-for="(item, index) in images" :key="index" :style="reactiveImage">
+      <div class="image-item" v-for="(item, index) in typeimages" :key="index" :style="reactiveImage">
         <el-checkbox-group v-model="checkedImgIndex" @change="handleCheckedImgChange" class="check-box"
                            :style="displayCheckedMenu">
           <el-checkbox :label="index">
           </el-checkbox>
         </el-checkbox-group>
 
-        <el-image :src="item.compressUrL" :preview-src-list="getSrcList(index)" class="image">
+        <el-image :src="serviceurl+item.imageUrl" :preview-src-list="previewImageUrL" class="image">
           <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"
                style="margin-top:40%">
           </div>
@@ -100,6 +100,7 @@
 export default {
   data() {
     return {
+      typeimages:[],
       page_size: [10, 15, 20, 25, 30, 40],
       options: ['s', 's'],
       value: ['飞机'],
@@ -108,9 +109,10 @@ export default {
       loading: false,
       token: '',  //token凭证
       serveUrL: this.$serveUrL,
+      serviceurl:"http://localhost:8081/picture/",
       // 顶部菜单
       activeIndex: 'all',
-      timeTitle: '生 产 时 间',
+      timeTitle: '服 役 年 份',
       typeTitle: '图 片 类 别',
       arrPath: ['all'],   //存放当前菜单路径
       placeholder: '请输入关键词查询图片',
@@ -120,25 +122,21 @@ export default {
       images: [
         {
           imageId: '',
-          compressUrL: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
+          imageUrl: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
           imageName: '',
         },
         {
           imageId: '',
-          compressUrL: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
+          imageUrl: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
           imageName: '',
         },
         {
           imageId: '',
-          compressUrL: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
+          imageUrl: 'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
           imageName: '',
         }
       ],
-      previewImageUrL: [
-        'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
-        'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
-        'https://img2.baidu.com/it/u=4244886866,306641591&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1672678800&t=02c1b790ff5c840a2e263cec7b60264a',
-      ],
+      previewImageUrL: [],
 
       //添加到相册
       dialogTableVisible: false,//菜单状态
@@ -159,7 +157,7 @@ export default {
         height: '29%',
       },
       imageTypes: ['战斗机', '舰载电子战斗机', '预警机','直升机','运输机'],//所有图片类型
-      imageTimes: ['2021-8-26', '2022-9-23', '2022-9-26'],  //所有图片时间
+      imageTimes: ['2011年', '2013年', '2015年'],  //所有图片时间
 
       //复选框
       checkAll: false,       //是否全选
@@ -182,23 +180,19 @@ export default {
   },
   created() {
 
-  },
-  beforeCreate() {
+    var _this = this;
+    this.axios.get('/api/album/findbyalbum/' + this.$route.query.albumId ).then(function (resp) {
+      _this.images = resp.data;
+      _this.typeimages = resp.data;
+      for (var i =0;i<_this.images.length;i++){
+        _this.previewImageUrL.push(_this.serviceurl+_this.images[i]['imageUrl'])
+      }
+
+    })
+    console.log(this.previewImageUrL)
   },
   mounted() {
 
-    var cookie = this.$cookie.getCookie();
-    console.log(cookie)
-    if (cookie[0] != "token") {
-      this.$message({
-        message: '登录已过期!',
-        type: 'error'
-      });
-      this.$router.push({ name: 'login' });
-    }
-    else {
-      this.token = cookie[1];
-    }
     this.selectAllTimeType();
     this.selectAllImage();
   },
@@ -209,7 +203,7 @@ export default {
     },
     // 其中大图预览目前总是从第一张开始,简单处理下,就是构建一个以当前图片为起始的数组
     getSrcList(index) {
-      return this.previewImageUrL.slice(index).concat(this.previewImageUrL.slice(0, index))
+      return this.serviceurl+this.previewImageUrL.slice(index).concat(this.previewImageUrL.slice(0, index))
     },
     openAlbum() {
       this.selectAlbums();
@@ -357,13 +351,13 @@ export default {
       switch (path[0]) {
         case "all": {
           this.selectAllImage('', '');
-          this.timeTitle = '拍 摄 时 间';
+          this.timeTitle = '服 役 年 份';
           this.typeTitle = '图 片 类 别';
           break;
         }
         case "type": {
           this.typeTitle = path[1];
-          this.timeTitle = '拍 摄 时 间';
+          this.timeTitle = '服 役 年 份';
           this.selectAllImage('type', path[1]);
           break;
         }
@@ -386,13 +380,41 @@ export default {
       formData.append("currentPage", this.currentPage);
       formData.append("pageSize", this.pageSize);
       formData.append("token", this.token);
+
       if (mode == "type") {
-        formData.append("imageType", value);
-        requestApi = '/image/selectAllByType';
+        // formData.append("imageType", value);
+        // requestApi = '/image/selectAllByType';
+        if (value=="战斗机"){
+          _this.typeimages=_this.images.slice(0,4)
+        }
+        if (value=="舰载电子战斗机"){
+          _this.typeimages=_this.images.slice(4,8)
+        }
+        if (value=="预警机"){
+          _this.typeimages=_this.images.slice(8,12)
+        }
+        if (value=="直升机"){
+          _this.typeimages=_this.images.slice(12,16)
+        }
+        if (value=="运输机"){
+          _this.typeimages=_this.images.slice(16,20)
+        }
       }
-      if (mode == "time") {
-        formData.append("imageDate", value);
-        requestApi = '/image/selectAllByTime';
+      else if (mode == "time") {
+        // formData.append("imageDate", value);
+        // requestApi = '/image/selectAllByTime';
+        if (value=="2011年"){
+          _this.typeimages=_this.images.slice(0,7)
+        }
+        if (value=="2013年"){
+          _this.typeimages=_this.images.slice(7,10)
+        }
+        if (value=="2015年"){
+          _this.typeimages=_this.images.slice(10,20)
+        }
+      }
+      else{
+        _this.typeimages=_this.images
       }
       this.axios({
         url: this.$serveUrL + requestApi,
@@ -496,7 +518,7 @@ export default {
       this.handleSelect('', this.arrPath);
     },
 
-  }
+  },
 }
 </script>
 <style scoped>
@@ -541,10 +563,9 @@ export default {
 #image-content {
   margin-left: 1.6em;
   margin-top: 2em;
-  width: 100%;
-  height: 82%;
-  overflow: scroll;
-  overflow-x: hidden;
+  width: 1300px;
+  height: 300px;
+
 }
 
 .image-item {
@@ -552,7 +573,7 @@ export default {
   width: 12em;
   height: 12em;
   position: relative;
-  display: inline-block;
+  float: left;
 }
 
 .image-item:hover .check-box {

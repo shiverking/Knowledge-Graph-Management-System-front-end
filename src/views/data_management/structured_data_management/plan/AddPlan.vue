@@ -153,7 +153,7 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('/api/plan/save',this.form).then(function(resp){
+          _this.axios.post('/api/plan/save',this.form).then(function(resp){
             _this.$alert('《' + _this.form.plan.plan_name + '》添加成功！', '消息', {
               confirmButtonText: '确定',
               callback: action => {
@@ -197,7 +197,7 @@ export default {
   },
   created() {
     const _this = this
-    axios.get('/api/person/findAll').then(function(resp){
+    _this.axios.get('/api/person/findAll').then(function(resp){
       _this.options1 = resp.data
     })
   }

@@ -84,7 +84,7 @@
           width="200px"
       >
         <template slot-scope="scope">
-          <el-button @click="textdetail()" type="text" size="big" >详情</el-button>
+          <el-button @click="textdetail(scope.row)" type="text" size="big" >详情</el-button>
           <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>
           <el-button @click="downloadTxt()" type="text" size="big" >下载</el-button>
           <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>
@@ -92,8 +92,10 @@
       </el-table-column>
     </el-table>
     <el-pagination
-        layout="prev, pager, next"
-        :total="50">
+        @current-change="currentChange"
+        :current-page="page" :page-size="size"
+        layout="total,prev, pager, next"
+        :total="total">
     </el-pagination>
     <!--    <el-dialog-->
     <!--        :visible.sync="dialogPreviewJSON"-->
@@ -123,6 +125,10 @@ import { saveAs } from 'file-saver';
 export default {
   data() {
     return {
+      textData:'',
+      page:1,
+      size:10,
+      total:10,
       currentIndex:0,
       listdata:['全部','飞机','导弹','火炮','爆炸物','舰船','人员'],
       ruleForm:[],
@@ -169,12 +175,28 @@ export default {
     }
   },
   methods: {
+    getTableData() {
+      this.tableData = this.textData.slice(
+          (this.page - 1) * this.size,
+          this.page * this.size
+      );
+      this.total=this.textData.length
+    },
+    currentChange(val) {
+      console.log(val)
+      this.page=val
+      this.getTableData()
+    },
     change(index){
       this.currentIndex=index
     },
-    textdetail(){
-      this.$router.push({ path: '/data/unstructure/UnstructureTextDetail' });
-
+    textdetail(row) {
+      this.$router.push({
+        path: '/data/unstructure/UnstructureTextDetail',
+        query: {
+          content: row.content
+        }
+      })
     },
     downloadTxt() {
       let str = '濟陽級飛彈巡防艦設計以遠洋反潛能力著稱，服役以來主要負擔台灣東北部至東部海域偵巡任務，駐地於海軍蘇澳軍港，隸屬海軍一六八艦隊。該型艦以反制潛艦設計為導向艦艇，配備武三系統、標準飛彈、五吋砲及近迫武器系統，可有效執行偵巡及防衛作戰任務。'
@@ -194,7 +216,12 @@ export default {
       const property = column['property'];
       return row[property] === value;
     }
-  }
+  },
+
+created(){
+  this.textData   = require('../../../data/unstructure.json')
+  this.getTableData()
+},
 }
 </script>
 <style scoped>
