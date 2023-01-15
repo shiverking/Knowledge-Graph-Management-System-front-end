@@ -70,21 +70,6 @@
             width="200">
         </el-table-column>
         <el-table-column
-            prop="Hits1"
-            label="Hits@1"
-            width="">
-        </el-table-column>
-        <el-table-column
-            prop="Hits10"
-            label="Hits@10"
-            width="">
-        </el-table-column>
-        <el-table-column
-            prop="MRR"
-            label="MRR"
-            width="">
-        </el-table-column>
-        <el-table-column
             label="操作"
             width="">
           <template slot-scope="scope">
@@ -1183,34 +1168,19 @@ p {
           title: {
             text: '图谱嵌入指标'
           },
-          tooltip: {
-            trigger: 'axis'
-          },
           legend: {
             top: "7%",
-            data: ['MRR', 'Hits@1', 'Hits@3', 'Hits@10']
+            data: ['MRR', 'Hits@1', 'Hits@10']
           },
-          // grid: {
-          //   left: '3%',
-          //   right: '4%',
-          //   bottom: '3%',
-          //   containLabel: true
-          // },
           grid:{
             top:60,
             x:45,
             x2:50,
             y2:30,
           },
-          toolbox: {
-            feature: {
-              saveAsImage: {}
-            }
-          },
           xAxis: {
             type: 'category',
-            boundaryGap: false,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: ['11-4', '11-15', '11-16', '11-18', '11-20']
           },
           yAxis: {
             type: 'value'
@@ -1219,29 +1189,78 @@ p {
             {
               name: 'MRR',
               type: 'line',
-              stack: 'Total',
-              data: [120, 132, 101, 134, 90, 230, 210]
+              data: [0.44, 0.47, 0.46, 0.39, 0.43]
             },
             {
               name: 'Hits@1',
               type: 'line',
-              stack: 'Total',
-              data: [220, 182, 191, 234, 290, 330, 310]
-            },
-            {
-              name: 'Hits@3',
-              type: 'line',
-              stack: 'Total',
-              data: [150, 232, 201, 154, 190, 330, 410]
+              data: [0.23, 0.24, 0.25, 0.24, 0.26]
             },
             {
               name: 'Hits@10',
               type: 'line',
-              stack: 'Total',
-              data: [320, 332, 301, 334, 390, 330, 320]
+              data: [0.5, 0.57, 0.51, 0.52, 0.55]
             }
           ]
         };
+
+        // option = {
+        //   title: {
+        //     text: '图谱嵌入指标'
+        //   },
+        //   tooltip: {
+        //     trigger: 'axis'
+        //   },
+        //   legend: {
+        //     top: "7%",
+        //     data: ['MRR', 'Hits@1', 'Hits@10']
+        //   },
+        //   // grid: {
+        //   //   left: '3%',
+        //   //   right: '4%',
+        //   //   bottom: '3%',
+        //   //   containLabel: true
+        //   // },
+        //   grid:{
+        //     top:60,
+        //     x:45,
+        //     x2:50,
+        //     y2:30,
+        //   },
+        //   toolbox: {
+        //     feature: {
+        //       saveAsImage: {}
+        //     }
+        //   },
+        //   xAxis: {
+        //     type: 'category',
+        //     boundaryGap: false,
+        //     data: ['11-4', '11-15', '11-16', '11-18', '11-20']
+        //   },
+        //   yAxis: {
+        //     type: 'value'
+        //   },
+        //   series: [
+        //     {
+        //       name: 'MRR',
+        //       type: 'line',
+        //       stack: 'Total',
+        //       data: [0.44, 0.47, 0.46, 0.24, 0.55]
+        //     },
+        //     {
+        //       name: 'Hits@1',
+        //       type: 'line',
+        //       stack: 'Total',
+        //       data: [0.23, 0.24, 0.25, 0.24, 0.26]
+        //     },
+        //     {
+        //       name: 'Hits@10',
+        //       type: 'line',
+        //       stack: 'Total',
+        //       data: [0.5, 0.57, 0.51, 0.52, 0.55]
+        //     }
+        //   ]
+        // };
 
         option && myChart.setOption(option);
 
