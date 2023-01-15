@@ -7,7 +7,7 @@
     <cache></cache>
     <!--概览dialog-->
     <el-button @click="overviewVisible=true;get_overview_of_completion()">概览</el-button>
-    <el-dialog title="概览" :visible.sync="overviewVisible" fullscreen="true">
+    <el-dialog title="概览" :visible.sync="overviewVisible" fullscreen="true" v-loading = overviewLoading  element-loading-text="数据请求中......">
       <el-row :gutter="12" style="margin-bottom:10px">
         <el-col :span="8">
           <el-card shadow="hover">
@@ -47,8 +47,8 @@
       </el-row>
     </el-dialog>
     <!--模型管理dialog-->
-    <el-button @click="modelVisible=true; handleTabChange()">模型管理</el-button>
-    <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true">
+    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu()">模型管理</el-button>
+    <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
       <el-table
           :data="tableData4"
           style="width: 100%; "
@@ -386,7 +386,11 @@ p {
         selectedRow:[],
         //待提交数据
         confirmedDataTable:[],
-        comfirmedLoading:false
+        comfirmedLoading:false,
+        //概览加载
+        overviewLoading:false,
+        //停止加载gpu和cpu 数据
+        stop_read_gpu_cpu:false,
       }
     },
     methods: {
@@ -815,6 +819,7 @@ p {
         var chartDom = document.getElementById('gpu_status');
         var myChart = echarts.init(chartDom);
         var option;
+        var _this = this;
         //请求cpu占用数据
         function get_status_of_gpu(callback){
           //axios请求
@@ -910,20 +915,25 @@ p {
             }
           ]
         };
-        
-        setInterval(function () {
-            get_status_of_gpu(function(arr){
-                if(60 < data.length) 
+
+        var _time =setInterval(function () {
+            get_status_of_gpu((arr)=>{
+                if(60 < data.length)
                   data.shift();
-                data.push(randomData(arr));
-                myChart.setOption({
-                series: [
-                  {
-                    data: data
-                  }
-                ]
-              });
+                  data.push(randomData(arr));
+                  myChart.setOption({
+                    series: [
+                      {
+                        data: data
+                      }
+                    ]
+                  });
+                //如果关闭窗口，则停止请求
+              if(_this.stop_read_gpu_cpu == true) {
+                clearInterval(_time);
+              }
             });
+
         }, 2000);
 
         option && myChart.setOption(option);
@@ -933,6 +943,7 @@ p {
         var chartDom = document.getElementById('cpu_status');
         var myChart = echarts.init(chartDom);
         var option;
+        var _this = this;
         //请求cpu占用数据
         function get_status_of_cpu(callback){
           //axios请求
@@ -1028,8 +1039,8 @@ p {
             }
           ]
         };
-        
-        setInterval(function () {
+
+        var _time =setInterval(function () {
             get_status_of_cpu(function(arr){
                 if(60 < data.length) 
                   data.shift();
@@ -1041,15 +1052,26 @@ p {
                   }
                 ]
               });
+              if(_this.stop_read_gpu_cpu == true) {
+                clearInterval(_time);
+              }
             });
         }, 2000);
-
         option && myChart.setOption(option);
       },
-      //处理tab页展开事件
-      handleTabChange() {
+      //处理模型管理界面打开事件
+      startToGetGpuAndCpu() {
+        setTimeout(()=>{
           this.get_gpu_status()
+        },100)
+        setTimeout(()=>{
           this.get_cpu_status()
+        },100)
+      },
+      //关闭模型管理界面回调
+      closeModelView(done){
+          this.stop_read_gpu_cpu = true;
+          done();
       },
       getRelationBar(){
         var chartDom = document.getElementById('relation_bar');
@@ -1266,12 +1288,12 @@ p {
 
       },
       get_overview_of_completion(){
+          this.overviewLoading=true;
           //axios请求
           axios.post('/pythonApi/get_overview_of_completion',{
           })
           .then((response)=>{
             if (response.status == 200) {
-              console.log(response.data)
               this.node_count = response.data['node_count']
               this.edge_count = response.data['edge_count']
               this.node_label_count = response.data['node_label_count']
@@ -1280,7 +1302,9 @@ p {
               this.getRelationBar()
               this.getEntityTypeBar()
               this.getBoxPlot()
+              this.overviewLoading=false;
               }
+
           })
           .catch(function (error) {
             console.log(error)
@@ -1341,7 +1365,7 @@ p {
     },
     mounted(){
       this.get_saved_models_list();
-      this.get_overview_of_completion()
+      // this.get_overview_of_completion();
     },
     created(){
       this.get_saved_models_list();
