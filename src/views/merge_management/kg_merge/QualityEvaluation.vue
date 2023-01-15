@@ -19,31 +19,37 @@
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               准确性评估
+              <p style="fontSize:20px; color:blue">65</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               一致性评估
+              <p style="fontSize:20px; color:blue">80</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               完整性评估
+              <p style="fontSize:20px; color:blue">65</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               时效性评估
+              <p style="fontSize:20px; color:blue">55</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               可信度评估
+              <p style="fontSize:20px; color:blue">70</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               可用性评估
+              <p style="fontSize:20px; color:blue">60</p>
             </el-card>
           </el-col>
         </el-row>
@@ -635,7 +641,7 @@
               type: 'radar',
               data: [
                 {
-                  value: [42, 80, 65, 35, 50, 70],
+                  value: [65, 80, 65, 55, 70, 60],
                   name: 'Allocated Budget'
                 },
               ]
