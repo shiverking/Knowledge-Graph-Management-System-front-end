@@ -8,7 +8,7 @@
       </el-steps>
       <cache></cache>
       <!--质量评估指标dialog-->
-      <el-button @click="qualiatyVisible=true;getKgRadar()">质量评估</el-button>
+      <el-button @click="qualiatyVisible=true;dispalyEvaluation()">质量评估</el-button>
       <el-dialog title="质量评估" :visible.sync="qualiatyVisible" fullscreen="true">
         <el-row :gutter="12">
           <el-col :span="8">
@@ -604,6 +604,11 @@
       //上一步
       previous() {
         this.active--;
+      },
+      dispalyEvaluation(){
+        setTimeout(()=>{
+          this.getKgRadar()
+        },100)
       },
       getKgRadar(){
         var chartDom = document.getElementById('radar');
