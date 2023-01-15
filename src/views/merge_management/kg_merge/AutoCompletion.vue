@@ -47,7 +47,7 @@
       </el-row>
     </el-dialog>
     <!--模型管理dialog-->
-    <el-button @click="modelVisible=true;">模型管理</el-button>
+    <el-button @click="modelVisible=true; handleTabChange()">模型管理</el-button>
     <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true">
       <el-table
           :data="tableData4"
@@ -1062,11 +1062,9 @@ p {
         option && myChart.setOption(option);
       },
       //处理tab页展开事件
-      handleTabChange(tab, event) {
-        if(tab.label=="模型管理"){
+      handleTabChange() {
           this.get_gpu_status()
           this.get_cpu_status()
-        }
       },
       getRelationBar(){
         var chartDom = document.getElementById('relation_bar');
@@ -1323,11 +1321,11 @@ p {
       }
     },
     mounted(){
-      // this.get_saved_models_list();
+      this.get_saved_models_list();
       this.get_overview_of_completion()
     },
     created(){
-      // this.get_saved_models_list();
+      this.get_saved_models_list();
     }
   }
 </script>
