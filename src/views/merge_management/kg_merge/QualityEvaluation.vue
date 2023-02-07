@@ -8,7 +8,7 @@
       </el-steps>
       <cache></cache>
       <!--质量评估指标dialog-->
-      <el-button @click="qualiatyVisible=true;getKgRadar()">质量评估</el-button>
+      <el-button @click="qualiatyVisible=true;dispalyEvaluation()">质量评估</el-button>
       <el-dialog title="质量评估" :visible.sync="qualiatyVisible" fullscreen="true">
         <el-row :gutter="12">
           <el-col :span="8">
@@ -19,31 +19,37 @@
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               准确性评估
+              <p style="fontSize:20px; color:blue">65</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               一致性评估
+              <p style="fontSize:20px; color:blue">80</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               完整性评估
+              <p style="fontSize:20px; color:blue">65</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               时效性评估
+              <p style="fontSize:20px; color:blue">55</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               可信度评估
+              <p style="fontSize:20px; color:blue">70</p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover" style="height:100px; margin-bottom: 10px;">
               可用性评估
+              <p style="fontSize:20px; color:blue">60</p>
             </el-card>
           </el-col>
         </el-row>
@@ -605,6 +611,11 @@
       previous() {
         this.active--;
       },
+      dispalyEvaluation(){
+        setTimeout(()=>{
+          this.getKgRadar()
+        },100)
+      },
       getKgRadar(){
         var chartDom = document.getElementById('radar');
         var myChart = echarts.init(chartDom);
@@ -630,7 +641,7 @@
               type: 'radar',
               data: [
                 {
-                  value: [42, 80, 65, 35, 50, 70],
+                  value: [65, 80, 65, 55, 70, 60],
                   name: 'Allocated Budget'
                 },
               ]

@@ -47,8 +47,8 @@
       </el-row>
     </el-dialog>
     <!--模型管理dialog-->
-    <el-button @click="modelVisible=true;">模型管理</el-button>
-    <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true">
+    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu()">模型管理</el-button>
+    <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
       <el-table
           :data="tableData4"
           style="width: 100%; "
@@ -68,21 +68,6 @@
             prop="train_set"
             label="训练数据"
             width="200">
-        </el-table-column>
-        <el-table-column
-            prop="Hits1"
-            label="Hits@1"
-            width="">
-        </el-table-column>
-        <el-table-column
-            prop="Hits10"
-            label="Hits@10"
-            width="">
-        </el-table-column>
-        <el-table-column
-            prop="MRR"
-            label="MRR"
-            width="">
         </el-table-column>
         <el-table-column
             label="操作"
@@ -221,9 +206,7 @@
           </el-table-column>
           <el-table-column label="选择尾实体">
             <template slot-scope="scope">
-<!--              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>-->
-              <el-button plain circle @click="chooseTail(scope.row)">选择</el-button>
-<!--              <el-radio v-model="radio" label="0" @click="chooseTail(scope.row)">选择</el-radio>-->
+              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -404,7 +387,10 @@ p {
         //待提交数据
         confirmedDataTable:[],
         comfirmedLoading:false,
-        radio: '1'
+        //概览加载
+        overviewLoading:false,
+        //停止加载gpu和cpu 数据
+        stop_read_gpu_cpu:false,
       }
     },
     methods: {
