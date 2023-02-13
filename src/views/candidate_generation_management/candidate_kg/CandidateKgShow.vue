@@ -23,6 +23,12 @@
               </el-option>
             </el-select>
             <el-button type="primary" style="margin-top: 10px;" @click="load_all()">查询</el-button>
+            <el-switch
+                v-model="switchValue"
+                style="float: right;margin-top:20px;"
+                active-text="原始图谱"
+                inactive-text="融合图谱">
+            </el-switch>
           </div>
           <el-table
               :data="candidateKgPageList"
@@ -121,6 +127,8 @@ export default {
       candidateKgTotal: 0,
       candidateKgPageSize: 10,
       candidateKgPageSizes: [10, 50, 100, 200],
+      //选择原始图谱还是融合图谱
+      switchValue:false,
     }
   },
   methods: {

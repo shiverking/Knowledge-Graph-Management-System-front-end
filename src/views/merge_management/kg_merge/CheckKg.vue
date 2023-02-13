@@ -9,6 +9,7 @@
             </el-input>
         </div>
         <el-button class="search_button" type="primary">查询</el-button>
+        <el-button id= "syn" class="search_button" type="success" :loading="synchronizationLoading">同步图数据库中</el-button>
         <!--概况-->
         <el-table
           :data="versionTablePageData"
@@ -35,6 +36,15 @@
               prop="submitted_by"
               label="提交人">
           </el-table-column>
+          <el-table-column
+              label="是否同步">
+            <template slot-scope="scope">
+              <el-image v-if="scope.row.synchronization==0" style="width: 25px; height: 25px"
+                        src="/static/icon/discard.png" :fit="fit"></el-image>
+              <el-image v-if="scope.row.synchronization==1"style="width: 25px; height: 25px"
+                        src="/static/icon/success.png" :fit="fit"></el-image>
+            </template>
+          </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
@@ -56,10 +66,10 @@
         <!--详情-->
         <div v-show="!showDetail">
           <el-button @click="showDetail=true">返回</el-button>
-          <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange" >
+          <el-tabs v-model="activeName" @tab-click="handleTabChange" >
             <!--融合改动-->
             <el-tab-pane label="融合改动" name="first">
-              <el-table border :data="mergeData" height="400" style="margin-top:0vh">
+              <el-table border :data="mergeData" style="margin-top:0vh">
                 <el-table-column property="head" label="头实体"></el-table-column>
                 <el-table-column property="head_from" label="From"></el-table-column>
                 <el-table-column property="relation" label="关系" ></el-table-column>
@@ -117,7 +127,7 @@
             </el-tab-pane>
             <!--质量评估改动-->
             <el-tab-pane label="质量评估改动" name="third">
-              <el-table border :data="evaluationData">
+              <el-table :data="evaluationData">
                 <el-table-column property="head" label="头实体" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column property="head_new" label="新头实体" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column property="head_typ" label="类型" :show-overflow-tooltip="true"></el-table-column>
@@ -201,6 +211,8 @@ export default {
       //当前正在查询的versionId
       currentId:"",
       dialogLoading:false,
+      //同步按钮loading
+      synchronizationLoading:true,
     }
     },
   methods: {
@@ -387,11 +399,32 @@ export default {
     },
     //时间格式化
     dateFormat(data) {return moment(new Date(data).getTime()).format('YYYY-MM-DD');},
-
+    //同步图数据库
+    synchronize(){
+      this.synchronizationLoading = true;
+      axios.request({
+        method:"POST",
+        url:'/api/version/synchronize',
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          //向表中加载数据
+          this.synchronizationLoading = false;
+          //修改button文字
+          $("#syn").text("已同步图数据库")
+          //重新请求表格
+          this.get_version(this.versionCurrentPage,this.versionPageSize);
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    }
   },
   mounted() {
-    //获取候选图谱列表
+    //获取版本列表
     this.get_version(this.versionCurrentPage,this.versionPageSize);
+    this.synchronize();
   }
 }
 </script>
