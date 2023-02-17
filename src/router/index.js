@@ -407,14 +407,8 @@ export default new Router({
               show: true
             },
             {
-              path:'/candidate/kg/ner',
-              name:'实体抽取',
-              component:NamedEntityRecognition,
-              show:true
-            },
-            {
               path:'/candidate/kg/triplesExtraction',
-              name:'三元组抽取',
+              name:'非结构文本抽取',
               component:TriplesExtraction,
               show: true
             }

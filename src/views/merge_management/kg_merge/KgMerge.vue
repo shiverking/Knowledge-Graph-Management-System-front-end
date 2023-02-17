@@ -341,7 +341,8 @@
           v-for="item in mergeStrategyOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
+          :value="item.value"
+          >
           </el-option>
           </el-select>
           <el-popover
@@ -450,13 +451,10 @@ export default {
       mergeStrategyOptions: [
       {
         value: '1',
-        label: '不保留候选图谱'
-      }, {
-        value: '2',
         label: '保留候选图谱'
       }],
-      selectedMergeStrategy: '',
-      newKgComment:"",
+      selectedMergeStrategy:'',
+      newKgComment:'',
       //选择图谱可视化
       dialogAllKGVisible:false,
       //目标图谱分页数据
@@ -637,7 +635,7 @@ export default {
           })
     },
     //翻页动作
-    multipleCandidateKgHandleCurrentChange(){
+    multipleCandidateKgHandleCurrentChange(val){
       this.loadMultipleSelectCandidateData(val,this.multipleCandidateKgPageSize)
     },
     //选择候选图谱时的多选框动作

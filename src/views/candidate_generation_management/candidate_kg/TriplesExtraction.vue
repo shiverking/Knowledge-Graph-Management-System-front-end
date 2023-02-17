@@ -1,8 +1,8 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-button type="primary" >文件导入</el-button>
+    <el-button type="primary" plain @click="dialogFormVisible=true">选择文本</el-button>
     <el-button type="primary" @click="triples_extraction" style="margin: 0px;">开始抽取</el-button>
-    <el-button type="danger" @click="reset" style="margin: 0px;">重置</el-button>
+    <el-button type="primary" @click="dialogVisible=true" style="margin: 0px;">预览结果</el-button>
     <el-select v-model="algorithm_value" placeholder="请选择算法">
       <el-option
           v-for="item in algoritm_options"
@@ -11,19 +11,41 @@
           :value="item.value">
       </el-option>
     </el-select>
-    <el-input
-        style="display: block;margin-top:10px;"
-        type="textarea"
-        :autosize="{ minRows: 2, maxRows: 4}"
-        placeholder="请输入内容"
-        v-model="extract_data"
-    >
-    </el-input>
-    <el-card shadow="always"  class="triples_card" v-loading="loading" >
-      <h4 class="triples_label">结果标注</h4>
-      <span class="triples_result" id="triples_result">{{extract_data}}</span>
-    </el-card>
-    <el-card shadow="always"  class="triples_card_left_half" v-loading="loading" element-loading-text="疯狂抽取中">
+    <el-dialog title="选择非结构文本(仅显示未抽取过的数据)" :visible.sync="dialogFormVisible">
+      <el-table
+          :data="tableData"
+          style="width: 100%"
+          @selection-change="handleSelectionChange">
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            prop="date"
+            label="名称"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="name"
+            label="内容"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="address"
+            label="种类">
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+<!--    <el-progress type="circle" :percentage="100"></el-progress>-->
+    <el-dialog
+        title="抽取结果"
+        :visible.sync="dialogVisible"
+        width="50%">
+      <el-card shadow="always"  class="triples_card_top_half">
         <h4 class="triples_label">抽取结果</h4>
         <el-table
             :data="extract_table"
@@ -45,10 +67,11 @@
           </el-table-column>
         </el-table>
       </el-card>
-    <el-card shadow="always"  class="triples_card_right_half">
+      <el-card shadow="always"  class="triples_card_bottom_half">
         <h4 class="triples_label">三元组预览</h4>
         <div id="triples_show" style="height: 500px;width: auto" ><el-empty description="暂无预览" image="../../static/icon/no_data.png"></el-empty></div>
       </el-card>
+    </el-dialog>
   </div>
 
 </template>
@@ -60,19 +83,16 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.triples_card_left_half{
-  float: left;
-  display: inline-block;
+.triples_card_top_half{
+  display: block;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 10px;
-  width: 50%;
 }
-.triples_card_right_half{
-  display: inline-block;
+.triples_card_bottom_half{
+  display: block;
   margin-top: 10px;
   margin-bottom: 10px;
-  width: 49%;
 }
 .triples_result{
   word-break: normal;
@@ -94,6 +114,8 @@
         //三元组抽取数据
         extract_data:"唐纳德·特朗普(Donald Trump，1946年6月14日-)，出生于美国纽约，祖籍德国巴伐利亚自由州，德裔美国共和党籍政治家、企业家、房地产商人、电视人，第45任美国总统(2017年1月20日-2021年1月20日)。特朗普于1968年获得宾夕法尼亚大学沃顿商学院经济学学士学位，随后任职于父亲弗雷德·特朗普的房地产公司。",
         extract_table:[],
+        dialogVisible:false,
+        dialogFormVisible:false,
       };
     },
 
