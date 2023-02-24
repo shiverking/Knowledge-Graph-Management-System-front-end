@@ -125,11 +125,6 @@
                   <i class="el-icon-notebook-2"></i>爬虫列表
                 </el-menu-item>
               </router-link>
-              <router-link to="/data/crawler_management/CrawlerInfo" class="routerlink">
-                <el-menu-item index="1-4-3">
-                  <i class="el-icon-document"></i>爬虫信息
-                </el-menu-item>
-              </router-link>
             </el-submenu>
           </el-submenu>
           <el-submenu index="2" class="parent_submenu">
