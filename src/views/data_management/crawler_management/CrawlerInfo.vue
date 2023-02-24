@@ -1,39 +1,41 @@
 <template>
   <div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="爬虫信息" name="first">
     <el-card class="box-card">
-      <h3>爬虫信息</h3>
-      <el-form ref="form" :model="sizeForm" label-width="auto" size="medium" style="margin-top: 10px">
-        <el-form-item label="爬虫名称">
-          <el-input v-model="sizeForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="定时">
-          <el-select v-model="sizeForm.status" placeholder="请选择">
-            <el-option label="启用" value="true"></el-option>
-            <el-option label="关闭" value="false"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="爬取间隔时间">
-          <el-select v-model="sizeForm.num" placeholder="请选择">
-            <el-option label="1" value="1"></el-option>
-            <el-option label="2" value="2"></el-option>
-            <el-option label="3" value="3"></el-option>
-            <el-option label="4" value="4"></el-option>
-            <el-option label="5" value="5"></el-option>
-          </el-select>
-          <el-select v-model="sizeForm.data" placeholder="请选择">
-            <el-option label="天" value="day"></el-option>
-            <el-option label="周" value="week"></el-option>
-            <el-option label="月" value="month"></el-option>
-            <el-option label="年" value="year"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="sizeForm.text"></el-input>
-        </el-form-item>
-      </el-form>
+      <h3>历史状态</h3>
+<!--      <el-form ref="form" :model="sizeForm" label-width="auto" size="medium" style="margin-top: 10px">-->
+<!--        <el-form-item label="爬虫名称">-->
+<!--          <el-input v-model="sizeForm.name"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="定时">-->
+<!--          <el-select v-model="sizeForm.status" placeholder="请选择">-->
+<!--            <el-option label="启用" value="true"></el-option>-->
+<!--            <el-option label="关闭" value="false"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="爬取间隔时间">-->
+<!--          <el-select v-model="sizeForm.num" placeholder="请选择">-->
+<!--            <el-option label="1" value="1"></el-option>-->
+<!--            <el-option label="2" value="2"></el-option>-->
+<!--            <el-option label="3" value="3"></el-option>-->
+<!--            <el-option label="4" value="4"></el-option>-->
+<!--            <el-option label="5" value="5"></el-option>-->
+<!--          </el-select>-->
+<!--          <el-select v-model="sizeForm.data" placeholder="请选择">-->
+<!--            <el-option label="天" value="day"></el-option>-->
+<!--            <el-option label="周" value="week"></el-option>-->
+<!--            <el-option label="月" value="month"></el-option>-->
+<!--            <el-option label="年" value="year"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="备注">-->
+<!--          <el-input v-model="sizeForm.text"></el-input>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
       <el-table
           ref="filterTable"
-          :data="tableData"
+          :data="tableData1"
           style="width: 100%;margin-top: 10px;"
           border
           key="version_table"
@@ -92,6 +94,107 @@
     </el-card>
     <el-card class="card" style="height:500px; margin-top: 10px" id="data_flow">
     </el-card>
+        </el-tab-pane>
+      <el-tab-pane label="运行结果" name="second">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <strong>半结构化数据</strong>
+            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+          </div>
+            <el-table
+                ref="multipleTable"
+                :data="tableData"
+                tooltip-effect="dark"
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+              <el-table-column
+                  type="selection"
+              >
+              </el-table-column>
+
+              <el-table-column
+                  v-for="key in keys"
+                  :prop="key"
+                  :label="key"
+                  width="100px"
+                  :show-overflow-tooltip="true"
+              >
+
+              </el-table-column>
+<!--              <el-table-column-->
+<!--                  fixed="right"-->
+<!--                  label="操作"-->
+<!--                  width="100px"-->
+<!--              >-->
+<!--                <template slot-scope="scope">-->
+<!--                  <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>-->
+<!--                  <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>-->
+<!--                </template>-->
+<!--              </el-table-column>-->
+            </el-table>
+            <el-pagination
+                @current-change="currentChange"
+                :current-page="page" :page-size="size"
+                layout="total,prev, pager, next"
+                :total="total">
+            </el-pagination>
+
+        </el-card>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <strong>非结构文本</strong>
+            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+          </div>
+          <el-table
+              ref="multipleTable"
+              :data="tableData3"
+              tooltip-effect="dark"
+              style="width: 50%"
+              @selection-change="handleSelectionChange"
+              >
+            <el-table-column
+                type="selection"
+            >
+            </el-table-column>
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="全文">
+                    <span style="white-space: normal">{{ props.row.content }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+            <el-table-column
+                v-for="key in keys3"
+                :prop="key"
+                :label="key"
+                width="100px"
+                :show-overflow-tooltip="true"
+            >
+
+            </el-table-column>
+<!--            <el-table-column-->
+<!--                fixed="right"-->
+<!--                label="操作"-->
+<!--                width="100px"-->
+<!--            >-->
+<!--              <template slot-scope="scope">-->
+<!--                <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>-->
+<!--                <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+          </el-table>
+          <el-pagination
+              @current-change="currentChange3"
+              :current-page="page3" :page-size="size3"
+              layout="total,prev, pager, next"
+              :total="total3">
+          </el-pagination>
+
+        </el-card>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -99,8 +202,36 @@
 import * as echarts from "echarts";
 
 export default {
+
   name: "TaskList",
   methods: {
+    getTableData() {
+      this.tableData = this.jsonData.slice(
+          (this.page - 1) * this.size,
+          this.page * this.size
+      );
+      this.total=this.jsonData.length
+    },
+    getTableData3() {
+      this.tableData3 = this.jsonData3.slice(
+          (this.page3 - 1) * this.size3,
+          this.page3 * this.size3
+      );
+      this.total3=this.jsonData3.length
+    },
+    currentChange(val) {
+      console.log(val)
+      this.page=val
+      this.getTableData()
+    },
+    currentChange3(val) {
+      console.log(val)
+      this.page3=val
+      this.getTableData3()
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
     draw_dataflow(){
       var chartDom = document.getElementById('data_flow');
       var myChart = echarts.init(chartDom);
@@ -166,6 +297,16 @@ export default {
   },
   data() {
     return {
+      keys3:null,
+      keys:null,
+      page:1,
+      size:10,
+      total:10,
+      page3:1,
+      size3:10,
+      total3:10,
+      jsonData3:[],
+      activeName: 'first',
       sizeForm: {
         name: '',
         status: '',
@@ -173,7 +314,9 @@ export default {
         data: '',
         text: '',
       },
-      tableData: [{
+      tableData:[],
+      tableData3:[],
+      tableData1: [{
         id: '1',
         ip: '169.254.86.1',
         starttime: '2022-08-24 15:24:25',
@@ -183,6 +326,38 @@ export default {
       }],
     }
   },
+  created(){
+    const _this =this
+    const keys = new Set()
+    const keys3 = new Set()
+    try{
+      this.jsonData   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\militory_text.json")
+      this.jsonData3   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\text.json")
+    }
+    catch (error){
+    }
+    console.log(this.jsonData3)
+    for(var i=0; i<_this.jsonData.length; i++){
+      for(var key in _this.jsonData[i]){
+        if (key != "图片" & key != "简介" & key != "content" & key != "variant" & key != "data_origin"){
+          keys.add(key)
+        }
+
+      }
+    }
+    for(var j=0; j<_this.jsonData3.length; j++){
+      for(var key3 in _this.jsonData3[j]){
+        if (key3 != "图片" & key3 != "简介"  & key3 != "variant" & key3 != "data_origin"){
+          keys3.add(key3)
+        }
+
+      }
+    }
+    this.keys=keys
+    this.keys3=keys3
+    this.getTableData()
+    this.getTableData3()
+  }
 
 }
 </script>

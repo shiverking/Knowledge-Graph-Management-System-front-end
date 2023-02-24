@@ -64,18 +64,29 @@
           <el-table-column
               label="定时启用/关闭"
           >
+            <template slot-scope="scope">
             <el-switch
-                v-model="regularstatus"
+                v-model="scope.row.regularstatus"
                 active-color="#13ce66"
-                inactive-color="#ff4949">
+                inactive-color="#ff4949"
+                :active-value=true
+                :inactive-value=false>
             </el-switch>
+            </template>
           </el-table-column>
           <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
               <el-button
                   size="mini"
-                  type="primary">
+                  type="primary" @click="start_crawl()"
+                  v-if="start_stop">
                 <i class="el-icon-video-play" style="font-size: 18px"></i>
+              </el-button>
+              <el-button
+                  size="mini"
+                  type="primary" @click="stop_crawl()"
+                  v-if="!start_stop">
+                <i class="el-icon-video-pause" style="font-size: 18px"></i>
               </el-button>
               <el-button
                   size="mini" @click="crawldetail">
@@ -112,6 +123,7 @@ export default {
 
   data() {
     return {
+      start_stop:true,
       editableTabsValue: '1',
       editableTabs: [{
         title: '爬虫列表',
@@ -196,6 +208,20 @@ export default {
     }
   },
   methods: {
+    start_crawl(){
+      const _this =this
+      this.start_stop=false
+      this.axios.get('/api/crawl/start').then(function(resp){
+        console.log(resp)
+      })
+    },
+    stop_crawl(){
+      const _this =this
+      this.start_stop=true
+      this.axios.get('/api/crawl/stop').then(function(resp){
+        console.log(resp)
+      })
+    },
     crawldetail(){
       this.$router.push({path:"/data/crawler_management/CrawlerInfo"})
     },
