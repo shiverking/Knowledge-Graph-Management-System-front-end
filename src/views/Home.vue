@@ -165,6 +165,15 @@
                 <el-menu-item index="2-2-2"><i class="el-icon-moon-night"></i>候选本体构建</el-menu-item>
               </router-link>
             </el-submenu>
+            <el-submenu index="2-3">
+              <template slot="title"><i class="el-icon-cloudy-and-sunny"></i>结构化候选数据</template>
+              <router-link to="/candidate/structured/ontology" class="routerlink">
+                <el-menu-item index="2-3-1"><i class="el-icon-moon"></i>本体数据</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/structured/triples" class="routerlink">
+                <el-menu-item index="2-3-2"><i class="el-icon-moon-night"></i>三元组数据</el-menu-item>
+              </router-link>
+            </el-submenu>
           </el-submenu>
           <el-submenu index="3" class="parent_submenu">
             <template slot="title">
