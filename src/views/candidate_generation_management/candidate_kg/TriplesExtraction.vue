@@ -1,8 +1,5 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-button type="primary" plain @click="dialogFormVisible=true">选择文本</el-button>
-    <el-button type="primary" @click="triples_extraction" style="margin: 0px;">开始抽取</el-button>
-    <el-button type="primary" @click="dialogVisible=true" style="margin: 0px;">预览结果</el-button>
     <el-select v-model="algorithm_value" placeholder="请选择算法">
       <el-option
           v-for="item in algoritm_options"
@@ -11,36 +8,9 @@
           :value="item.value">
       </el-option>
     </el-select>
-    <el-dialog title="选择非结构文本(仅显示未抽取过的数据)" :visible.sync="dialogFormVisible">
-      <el-table
-          :data="tableData"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
-        <el-table-column
-            type="selection"
-            width="55">
-        </el-table-column>
-        <el-table-column
-            prop="date"
-            label="名称"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="name"
-            label="内容"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="address"
-            label="种类">
-        </el-table-column>
-      </el-table>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div>
-    </el-dialog>
-<!--    <el-progress type="circle" :percentage="100"></el-progress>-->
+    <el-button type="primary" @click="triples_extraction" style="margin:0px;">开始抽取</el-button>
+    <el-button type="primary" plain style="margin:0px;">全部开始</el-button>
+    <el-progress :percentage="10" :format="format"></el-progress>
     <el-dialog
         title="抽取结果"
         :visible.sync="dialogVisible"
@@ -72,8 +42,70 @@
         <div id="triples_show" style="height: 500px;width: auto" ><el-empty description="暂无预览" image="../../static/icon/no_data.png"></el-empty></div>
       </el-card>
     </el-dialog>
+    <!--内容预览-->
+    <el-dialog title="内容" :visible.sync="contentVisible" top="7vh" width="70%">
+      <el-input :rows="20" v-model="content" type="textarea" style="width: 100%" :readonly="read" ></el-input>
+    </el-dialog>
+    <el-table
+        ref="multipleTable"
+        :data="unstructuredTextPageList"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+      <el-table-column
+          type="selection"
+          width="55">
+      </el-table-column>
+      <el-table-column
+          label="标题"
+          width="400"
+          show-overflow-tooltip>
+        <template slot-scope="scope">{{ scope.row.title}}</template>
+      </el-table-column>
+      <el-table-column
+          label="内容">
+        <template slot-scope="scope">
+          <el-button type="text" @click = "displayContent(scope.row.content)">查看</el-button></template>
+      </el-table-column>
+      <el-table-column
+          label="类型">
+        <template slot-scope="scope">{{ scope.row.type}}</template>
+      </el-table-column>
+      <el-table-column
+          label="状态"
+          show-overflow-tooltip>
+        <template slot-scope="scope">{{ scope.row.status}}</template>
+      </el-table-column>
+      <el-table-column
+          label="创建时间"
+          width="120"
+          show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span v-if="scope.row.create_time!=null">{{timeProcess(scope.row.create_time)}}</span>
+          <span v-if="scope.row.create_time==null">暂无</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="操作"
+          width="200">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="查看抽取结果" placement="top-start">
+            <el-button type="primary" plain icon="el-icon-zoom-in" @click="dialogVisible=true"></el-button>
+          </el-tooltip>
+          <el-button type="success" plain @click="triples_extraction(scope.row.content)">测试抽取</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+        @size-change="unstructuredTextHandleSizeChange"
+        @current-change="unstructuredTextHandleCurrentChange"
+        :current-page="unstructuredTextCurrentPage"
+        :page-sizes="unstructuredTextPageSizes"
+        :page-size="unstructuredTextPageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="unstructuredTextTotal">
+    </el-pagination>
   </div>
-
 </template>
 <style>
 .triples_label{
@@ -115,10 +147,17 @@
         extract_data:"唐纳德·特朗普(Donald Trump，1946年6月14日-)，出生于美国纽约，祖籍德国巴伐利亚自由州，德裔美国共和党籍政治家、企业家、房地产商人、电视人，第45任美国总统(2017年1月20日-2021年1月20日)。特朗普于1968年获得宾夕法尼亚大学沃顿商学院经济学学士学位，随后任职于父亲弗雷德·特朗普的房地产公司。",
         extract_table:[],
         dialogVisible:false,
-        dialogFormVisible:false,
+        //非结构文本分页
+        unstructuredTextPageList: [],
+        unstructuredTextCurrentPage: 1,
+        unstructuredTextTotal: 1,
+        unstructuredTextPageSize: 10,
+        unstructuredTextPageSizes: [10, 50, 100, 200],
+        //查看内容
+        contentVisible:false,
+        content:"",
       };
     },
-
     methods: {
       handleSuccess(){
         this.$refs.upload.clearFiles()
@@ -222,40 +261,40 @@
         console.log(file);
       },
       // 三元组抽取
-      triples_extraction(){
-        let content = this.extract_data;
+      triples_extraction(content){
+        // let content = this.extract_data;
         //如果为空，提示triples_extraction
-        if(content==""){
-          this.$message({
-            type: 'warning',
-            message: '请输入信息'
-          });
-        }
-        else{
-          this.loading = true
-          //axios请求
-          axios.post('/pythonApi/triple_extraction',{
-            data: this.extract_data,
-          })
-              .then((response)=>{
-                if (response.status == 200) {
-                  this.$message({
-                    type: 'success',
-                    message: '抽取成功!'
-                  });
-                  let arr = response.data.data;
-                  this.loading=false;
-                  //赋值给表格
-                  this.extract_table= arr;
-                  //设置文本高亮
-                  // this.setHeightKeyWord(arr)
-                  this.show_triples(arr);
-                }
-              })
-              .catch(function (error) {
-                console.log(error)
-              })
-        }
+        // if(content==""){
+        //   this.$message({
+        //     type: 'warning',
+        //     message: '请输入信息'
+        //   });
+        // }
+        // else{
+        this.loading = true
+        //axios请求
+        axios.post('/pythonApi/triple_extraction',{
+          // data: this.extract_data,
+          data: content,
+        })
+        .then((response)=>{
+          if (response.status == 200) {
+            this.$message({
+              type: 'success',
+              message: '抽取成功!'
+            });
+            let arr = response.data.data;
+            this.loading=false;
+            //赋值给表格
+            this.extract_table= arr;
+            //设置文本高亮
+            // this.setHeightKeyWord(arr)
+            this.show_triples(arr);
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       },
       //三元组展示
       show_triples(arr){
@@ -353,8 +392,58 @@
         console.log(data);
         return data;
       },
+      //编辑进度条的
+      format(percentage) {
+        return percentage === 100 ? '抽取完成' : `${percentage}%`;
+      },
+      //处理候选三元组分页事件
+      unstructuredTextHandleSizeChange(val) {
+        //修改当前分页大小
+        this.unstructuredTextPageSize = val;
+        //重新请求数据
+        this.get_unstructured_text(this.unstructuredTextCurrentPage,val)
+      },
+      //翻页动作
+      unstructuredTextHandleCurrentChange(val) {
+        this.get_unstructured_text(val,this.unstructuredTextPageSize)
+      },
+      //向后端请求存储的非结构文本数据
+      get_unstructured_text(num, limit) {
+        //axios请求
+        axios.request({
+          method:"POST",
+          url:'/api/unstructure/getAllTextByPage',
+          params:{page:num,limit:limit}
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            //修改数据
+            this.unstructuredTextPageList = response.data.data
+            this.unstructuredTextTotal = response.data.count
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      //显示内容详情
+      displayContent(content){
+        this.contentVisible = true;
+        this.content = content;
+      },
+      timeProcess(time){
+        var res = "";
+        for(var i=0;i<3;i++){
+          res+=time[i];
+          if(i<2){
+            res+="-";
+          }
+        }
+        return res;
+      }
     },
     mounted() {
+      this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
     }
   }
 </script>
