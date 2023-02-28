@@ -1,14 +1,16 @@
 <template>
     <div style="margin-top: 20px;">
-      <el-steps :active="active" finish-status="success" simple>
-        <el-step title="实体错误"></el-step>
-        <el-step title="链接错误"></el-step>
-        <el-step title="属性值错误"></el-step>
-        <el-step title="评估提交"></el-step>
-      </el-steps>
       <cache></cache>
-      <!--质量评估指标dialog-->
-      <el-button @click="qualiatyVisible=true;dispalyEvaluation()">质量评估</el-button>
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tab-pane label="基于本体检测" name="first">
+      <el-steps :active="active" finish-status="success" simple>
+        <!-- <el-step title="实体错误"></el-step> -->
+        <el-step title="链接异常"></el-step>
+        <el-step title="属性值异常"></el-step>
+        <el-step title="评估提交"></el-step>
+      </el-steps> 
+      <!-- 质量评估指标dialog-->
+      <!-- <el-button @click="qualiatyVisible=true;dispalyEvaluation()">质量评估</el-button>
       <el-dialog title="质量评估" :visible.sync="qualiatyVisible" fullscreen="true">
         <el-row :gutter="12">
           <el-col :span="8">
@@ -53,8 +55,8 @@
             </el-card>
           </el-col>
         </el-row>
-      </el-dialog>
-      <div v-if="this.active==0" style="margin-top: 10px;">
+      </el-dialog> -->
+      <!-- <div v-if="this.active==0" style="margin-top: 10px;">
           <b >实体类型错误</b>
           <el-table
             :data="entity_error"
@@ -134,21 +136,20 @@
               <el-button type="primary" @click="dialogFormVisible = false;submit_an_entity_error_modification();">确 定</el-button>
             </div>
           </el-dialog>
-      </div>
-      <div v-if="this.active==1" style="margin-top: 10px;">
-          <b>链接错误</b>
+      </div> -->
+      <div v-if="this.active==0" style="margin-top: 10px;">
           <el-table
-            :data="relation_error"
+            :data="tableData2"
             border
             style="width: 100%; margin-top: 10px;">
-            <el-table-column
+            <!-- <el-table-column
               label="检测时间"
               width="180">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
                 <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               label="头实体"
               width="180">
@@ -207,13 +208,15 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage1"
-            :page-size="100"
-            layout="total, prev, pager, next"
-            :total="1"
-            style="margin-top:10px">
+            @size-change="sizeChange2"
+            @current-change="currentChange2"
+            :current-page="tableData2_page"
+            :page-size="tableData2_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData2_total"
+            style="margin-top: 10px;">
           </el-pagination>
           <el-dialog title="错误修改" :visible.sync="dialogRelationErrorFormVisible">
             <el-form :model="form_of_relation_error">
@@ -285,58 +288,64 @@
             </div>
           </el-dialog>
         </div>
-      <div v-if="this.active==2" style="margin-top: 10px;">
-          <b>属性值错误</b>
+      <div v-if="this.active==1" style="margin-top: 10px;">
           <el-table
-            :data="attribute_error"
+            :data="tableData3"
             border
             style="width: 100%; margin-top: 10px;" >
-            <el-table-column
+            <!-- <el-table-column
               label="检测时间"
               width="180">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
                 <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               label="实体"
-              width="180">
+              >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.ent }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="实体类型"
-              width="180">
+              >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.ent_typ }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="属性"
-              width="180">
+              >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.attribute }}</span>
               </template>
             </el-table-column>     
             <el-table-column
               label="属性值"
-              width="180">
+              >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.attribute_val }}</span>
               </template>
             </el-table-column>    
             <el-table-column
+              label="检测方法"
+              >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.normal_range }}</span>
+              </template>
+            </el-table-column>  
+            <el-table-column
               label="错误类型"
-              width="180">
+              >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.error_typ }}</span>
               </template>
             </el-table-column>   
             <el-table-column
               label="错误状态"
-              width="180">
+              >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.error_status }}</span>
               </template>
@@ -350,13 +359,15 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage1"
-            :page-size="10"
-            layout="total, prev, pager, next"
-            :total="1"
-            style="margin-top:10px">
+            @size-change="sizeChange3"
+            @current-change="currentChange3"
+            :current-page="tableData3_page"
+            :page-size="tableData3_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData3_total"
+            style="margin-top: 10px;">
           </el-pagination>
           <el-dialog title="错误修改" :visible.sync="dialogAttributeErrorFormVisible">
             <el-form :model="form_of_attribute_error">
@@ -422,7 +433,7 @@
             </div>
           </el-dialog>
         </div>
-      <div v-if="this.active==3" style="margin-top: 10px;" v-loading = submitLoading element-loading-text="正在提交中...">
+      <div v-if="this.active==2" style="margin-top: 10px;" v-loading = submitLoading element-loading-text="正在提交中...">
         <el-table
             :data="data_to_be_submitted"
             border
@@ -526,13 +537,13 @@
               style="margin-top:10px">
             </el-pagination>
         </div>
-      <div style="text-align: right;">
+        <div style="text-align: right;">
         <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
-        <el-button type="primary" style="margin-top: 12px;" v-if="this.active<3" @click="next">下一步</el-button>
+        <el-button type="primary" style="margin-top: 12px;" v-if="this.active<2" @click="next">下一步</el-button>
         <el-popover
             placement="left"
             v-model="nextStepVisible"
-            v-if="this.active==3">
+            v-if="this.active==2">
           <p>确定保存当前操作记录并提交至缓存表吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
@@ -541,6 +552,53 @@
           <el-button type="primary" style="margin-top: 12px;"  slot="reference">提交</el-button>
         </el-popover>
       </div>
+        </el-tab-pane>
+        <el-tab-pane label="基于压缩检测" name="fourth">
+          <el-table
+            :data="tableData1"
+            border
+            style="width: 100%">
+            <el-table-column
+              prop="head"
+              label="头实体"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="head_typ"
+              label="头实体类别">
+            </el-table-column>
+            <el-table-column
+              prop="rel"
+              label="关系"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="tail"
+              label="尾实体">
+            </el-table-column>
+            <el-table-column
+              prop="tail_typ"
+              label="尾实体类别"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="abnormal_score"
+              label="异常分数">
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            @size-change="sizeChange"
+            @current-change="currentChange"
+            :current-page="tableData1_page"
+            :page-size="tableData1_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData1_total"
+            style="margin-top: 10px;">
+          </el-pagination>
+        </el-tab-pane>
+      </el-tabs>
     </div>
 </template>
 <script>
@@ -553,8 +611,24 @@
     },
     data() {
       return {
-        entity_error: [],
+        activeName: 'first',
+        //kgist检测到的异常
+        abnormal_from_kgist:[],
+        tableData1_page: 1,
+        tableData1_size: 10,
+        tableData1_total: 0,
+        //从本体检测到的链接异常
         relation_error: [],
+        tableData1 : [],
+        tableData2_page: 1,
+        tableData2_size: 10,
+        tableData2_total: 0,
+        tableData2 : [],
+        tableData3_page: 1,
+        tableData3_size: 10,
+        tableData3_total: 0,
+        tableData3 : [],
+        entity_error: [],
         attribute_error: [],
         data_to_be_submitted:[],
         selectedRowOfEntityError:[],
@@ -598,6 +672,9 @@
       }
     },
     methods: {
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
       //下一步
       next() {
         if(this.active<3){
@@ -671,6 +748,7 @@
             if (response.status == 200) {
               //赋值给表格
               this.relation_error = response.data.data;
+              this.getTableData2();
                //设置文本高亮
               }
           })
@@ -685,6 +763,22 @@
             if (response.status == 200) {
               //赋值给表格
               this.attribute_error = response.data.data;
+              this.getTableData3()
+               //设置文本高亮
+              }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      },
+      get_abnormal_by_algorithm(){
+          //axios请求
+          axios.post('/pythonApi/get_abnormal_by_algorithm',{})
+          .then((response)=>{
+            if (response.status == 200) {
+              //赋值给表格
+              this.abnormal_from_kgist = response.data.data;
+              this.getTableData();
                //设置文本高亮
               }
           })
@@ -754,14 +848,14 @@
         var content = {};
         content['head'] = this.form.ent;
         content['head_typ'] = this.form.ent_typ;
-        content['rel'] = 'null';
-        content['tail'] = 'null';
-        content['tail_typ'] = 'null';
+        content['rel'] = '-';
+        content['tail'] = '-';
+        content['tail_typ'] = '-';
         content['head_new'] = this.form.ent_new;
         content['head_typ_new'] = this.form.ent_typ_new;
-        content['rel_new'] = 'null';
-        content['tail_new'] = 'null';
-        content['tail_typ_new'] = 'null';
+        content['rel_new'] = '-';
+        content['tail_new'] = '-';
+        content['tail_typ_new'] = '-';
         content['error_typ'] = '0';
         content['update_form'] = '0';
         this.data_to_be_submitted.push(content)
@@ -783,11 +877,11 @@
           content['tail_typ_new'] = this.form_of_relation_error.tail_typ_new;
           content['update_form'] = '0';
         }else{
-          content['head_new'] = 'null';
-          content['head_typ_new'] = 'null';
-          content['rel_new'] = 'null';
-          content['tail_new'] = 'null';
-          content['tail_typ_new'] = 'null';
+          content['head_new'] = '-';
+          content['head_typ_new'] = '-';
+          content['rel_new'] = '-';
+          content['tail_new'] = '-';
+          content['tail_typ_new'] = '-';
           content['update_form'] = '1';
         }
         this.data_to_be_submitted.push(content)
@@ -799,30 +893,86 @@
         content['head_typ'] = this.form_of_attribute_error.ent_typ;
         content['rel'] = this.form_of_attribute_error.attribute;
         content['tail'] = this.form_of_attribute_error.attribute_val;
-        content['tail_typ'] = 'null';
+        content['tail_typ'] = '-';
         content['error_typ'] = '2';
         if(this.form_of_relation_error.resource == '修改'){
           content['head_new'] = this.form_of_attribute_error.ent_new;
           content['head_typ_new'] = this.form_of_attribute_error.ent_typ_new;
           content['rel_new'] = this.form_of_attribute_error.attribute_new;
           content['tail_new'] = this.form_of_attribute_error.attribute_val_new;
-          content['tail_typ_new'] = 'null';
+          content['tail_typ_new'] = '-';
           content['update_form'] = '0';
         }else{
-          content['head_new'] = 'null';
-          content['head_typ_new'] = 'null';
-          content['rel_new'] = 'null';
-          content['tail_new'] = 'null';
-          content['tail_typ_new'] = 'null';
+          content['head_new'] = '-';
+          content['head_typ_new'] = '-';
+          content['rel_new'] = '-';
+          content['tail_new'] = '-';
+          content['tail_typ_new'] = '-';
           content['update_form'] = '1';
         }
         this.data_to_be_submitted.push(content)
+      },
+      //getTableData
+      getTableData(){
+        //allData为全部数据
+        this.tableData1 = this.abnormal_from_kgist.slice(
+          (this.tableData1_page - 1) * this.tableData1_size,
+          this.tableData1_page * this.tableData1_size
+        );
+        this.tableData1_total = this.abnormal_from_kgist.length
+        this.getTableData();
+      },
+      currentChange(val){
+        this.tableData1_page = val
+        this.getTableData()
+      },
+      sizeChange(val){
+        this.tableData1_size = val
+        this.tableData1_page = 1
+        this.getTableData()
+      },
+      getTableData2(){
+        //allData为全部数据
+        this.tableData2 = this.relation_error.slice(
+          (this.tableData2_page - 1) * this.tableData2_size,
+          this.tableData2_page * this.tableData2_size
+        );
+        this.tableData2_total = this.relation_error.length
+        this.getTableData2();
+      },
+      currentChange2(val){
+        this.tableData2_page = val
+        this.getTableData2()
+      },
+      sizeChange2(val){
+        this.tableData2_size = val
+        this.tableData2_page = 1
+        this.getTableData2()
+      },
+      getTableData3(){
+        //allData为全部数据
+        this.tableData3 = this.attribute_error.slice(
+          (this.tableData3_page - 1) * this.tableData3_size,
+          this.tableData3_page * this.tableData3_size
+        );
+        this.tableData3_total = this.attribute_error.length
+        this.getTableData3();
+      },
+      currentChange3(val){
+        this.tableData3_page = val
+        this.getTableData3()
+      },
+      sizeChange3(val){
+        this.tableData3_size = val
+        this.tableData3_page = 1
+        this.getTableData3()
       },
     },
     mounted(){
       this.get_entity_error_list()
       this.get_relation_error_list()
       this.get_attribute_error_list()
+      this.get_abnormal_by_algorithm()
     }
   }
 </script>
