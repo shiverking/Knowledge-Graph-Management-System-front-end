@@ -47,7 +47,7 @@
       </el-row>
     </el-dialog>
     <!--模型管理dialog-->
-    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu()">模型管理</el-button>
+    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu()" style="margin-top:10px">模型管理</el-button>
     <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
       <el-table
           :data="tableData4"
@@ -138,23 +138,64 @@
       </el-card>
     </el-dialog>
     <div v-if="this.active==0">
-      <el-button type="primary" @click="link_prediction" style="margin: 0px;">开始识别</el-button>
+      <div style="margin-top:10px">
+        <p><b>选择待预测的实体和关系</b></p>
+          <el-row class="demo-autocomplete">
+              <el-autocomplete
+                class="inline-input"
+                v-model="state1"
+                clearable
+                :fetch-suggestions="querySearch"
+                placeholder="请选择实体"
+                @select="handleSelect"
+              ></el-autocomplete>
+              <el-autocomplete
+                class="inline-input"
+                v-model="state2"
+                clearable
+                :fetch-suggestions="querySearch2"
+                placeholder="请选择关系"
+                @select="handleSelect2"
+              ></el-autocomplete>
+              <el-button plain @click="comm_entRel_pair">确定</el-button>
+          </el-row>
+      </div>
+      <el-table
+        :data="entRel_pair_selected"
+        border
+        style="width: 100%; margin-top: 20px">
+        <!-- <el-table-column
+          prop="date"
+          label="日期"
+          width="180">
+        </el-table-column> -->
+        <el-table-column
+          prop="ent"
+          label="实体"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="rel"
+          label="关系">
+        </el-table-column>
+      </el-table>
+      <el-button type="primary" @click="link_prediction" style="margin-top: 20px">开始识别</el-button>
       <el-button type="danger" @click="CleanLinkPredictionResult" style="margin: 0px;">重置</el-button>
       <el-tooltip class="item" effect="dark" content="预提交选择好的链接预测结果" placement="top-start">
         <el-button type="success" @click="applyResult" style="margin: 0px;">应用</el-button>
       </el-tooltip>
-      <el-input
+      <!-- <el-input
       style="display: block;margin-top:10px;"
       type="textarea"
       :autosize="{ minRows: 2, maxRows: 20}"
       placeholder="请输入内容"
       v-model="TriplesBeforeLinkPrediction"
       >
-      </el-input>
+      </el-input> -->
       <el-table
           :data="predTable"
           border
-          style="width: 100%">
+          style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="head"
             label="头实体"
@@ -301,6 +342,13 @@ p {
     },
     data() {
       return {
+        //提示输入框1
+        ent_sets: [],
+        //提示输入框2
+        rel_set: [],
+        state1: '',
+        state2: '',
+        entRel_pair_selected:[],
         // 右侧三元组显示
         triplesPageList:[],
         triplesCurrentPage: 1,
@@ -687,19 +735,19 @@ p {
       },
       //请求链接预测服务
       link_prediction(){
-        let content = this.TriplesBeforeLinkPrediction;
+        let content = this.entRel_pair_selected;
         //如果为空，提示
         if(content==""){
           this.$message({
             type: 'warning',
-            message: '请输入待预测三元组！'
+            message: '请选择待预测三元组！'
           });
         }
         else{
           this.loading = true;
           //axios请求
           axios.post('/pythonApi/link_prediction',{
-            data: this.TriplesBeforeLinkPrediction,
+            data: this.entRel_pair_selected,
           })
           .then((response)=>{
             if (response.status == 200) {
@@ -710,14 +758,13 @@ p {
                 offset: 100
               });
               //赋值给表格
-              this.LinkPredictionResult = ""
-              for (var i = 0; i <response.data.data.res_str.length; i ++){
-                this.LinkPredictionResult += response.data.data.res_str[i] + '\n'
-              }
-              this.extract_table= response.data.data.preds;
+              // this.LinkPredictionResult = ""
+              // for (var i = 0; i <response.data.data.res_str.length; i ++){
+              //   this.LinkPredictionResult += response.data.data.res_str[i] + '\n'
+              // }
               this.loading = false;
               //解析数据到表格显示
-              this.decode_data(this.TriplesBeforeLinkPrediction,response.data.data.preds);
+              this.decode_data(this.entRel_pair_selected,response.data.data.preds);
               }
           })
           .catch(function (error) {
@@ -731,11 +778,16 @@ p {
           var res =[];
           var decodedData = [];
           //解析字符串
-          var data1 = data.split('\n')
-          data1.forEach(function(element) {
-            var tmp = element.split(',');
-            decodedData.push([tmp[0],tmp[1]]);
-          })
+          // var data1 = data.split('\n')
+          // data1.forEach(function(element) {
+          //   var tmp = element.split(',');
+          //   decodedData.push([tmp[0],tmp[1]]);
+          // })
+          for(var i = 0; i < data.length; i++){
+            decodedData.push([data[i]['ent'],data[i]['rel']]);
+            console.log('在这里')
+            console.log(data[i]['ent'],data[i]['rel'])
+          }
           for(var i =0;i<preds.length;i++){
             var origin = decodedData[i];
             var pred_res = [];
@@ -1361,11 +1413,100 @@ p {
         .catch(function (error) {
           console.log(error)
         })
-      }
+      },
+      querySearch(queryString, cb) {
+        var ent_sets = this.ent_sets;
+        var results = queryString ? ent_sets.filter(this.createFilter(queryString)) : ent_sets;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (ent_set) => {
+          return (ent_set.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      querySearch2(queryString, cb) {
+        var rel_sets = this.rel_sets;
+        var results = queryString ? rel_sets.filter(this.createFilter2(queryString)) : rel_sets;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter2(queryString) {
+        return (rel_set) => {
+          return (rel_set.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      load_entSet() {
+        //axios请求
+        axios.post('/pythonApi/get_entSet',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.ent_sets = response.data.data;
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      load_relSet() {
+        //axios请求
+        axios.post('/pythonApi/get_relSet',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.rel_sets = response.data.data;
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      handleSelect2(item) {
+        console.log(item);
+      },  
+      open_when_input_isIncomplete() {
+        this.$message({
+          showClose: true,
+          message: '警告哦，这是一条警告消息',
+          type: 'warning'
+        });
+      },
+      open_when_input_isRepeat() {
+        this.$message({
+          showClose: true,
+          message: '这是一条消息提示'
+        });
+      },
+      comm_entRel_pair(){
+        if (this.state1 != '' && this.state2 != ''){
+          var entRel_pair = {'ent': this.state1, 'rel': this.state2 }
+          // for(var i = 0; i < this.entRel_pair_selected.length; i++){
+          //   console.log('到这')
+          //   if(this.state1 == this.entRel_pair_selected[i]['ent'] && this.state2 == this.entRel_pair_selected[i]['rel']){
+          //     console.log('到这2')
+          //     this.open_when_input_isRepeat()
+          //   }
+          //   else
+          this.entRel_pair_selected.push(entRel_pair)
+          // }
+        }else{
+          this.open_when_input_isIncomplete();
+        }
+        this.state1 = '';
+        this.state2 = '';
+      }    
     },
     mounted(){
       this.get_saved_models_list();
       // this.get_overview_of_completion();
+      this.load_entSet();
+      this.load_relSet();
     },
     created(){
       this.get_saved_models_list();
