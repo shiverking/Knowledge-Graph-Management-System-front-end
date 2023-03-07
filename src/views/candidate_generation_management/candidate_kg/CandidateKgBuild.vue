@@ -255,7 +255,6 @@
               :data="candidateTriplePageList"
               border
               style="width: 100%; margin-top:10px"
-              @select='onTableSelect'
               @selection-change="handleSelectionChange"
               :row-key="getRowKeys"
               key="2">
@@ -267,7 +266,7 @@
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     {{ scope.row.head }}
-                    <el-tag size="small" type="info">{{ scope.row.headCategory }}</el-tag>
+                    <el-tag v-if="scope.row.headCategory!=''" size="small" type="info">{{ scope.row.headCategory }}</el-tag>
                   </div>
               </template>
             </el-table-column>
@@ -286,7 +285,7 @@
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                    {{ scope.row.tail }}
-                    <el-tag size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
+                    <el-tag v-if="scope.row.tailCategory!=''" size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
                   </div>
               </template>
             </el-table-column>
@@ -649,12 +648,22 @@
       candidateTripleHandleSizeChange(val) {
         //修改当前分页大小
         this.candidateTriplePageSize = val;
-        //重新请求数据
-        this.get_candidate_triples(this.candidateTripleCurrentPage,val)
+        if(this.isConditionalSearch == false) {
+          //重新请求数据
+          this.get_candidate_triples(this.candidateTripleCurrentPage, val)
+        }
+        else{
+          this.get_candidate_triples_conditional(this.candidateTripleCurrentPage, val);
+        }
       },
       //翻页动作
       candidateTripleHandleCurrentChange(val) {
-        this.get_candidate_triples(val,this.candidateTriplePageSize)
+        if(this.isConditionalSearch == false){
+           this.get_candidate_triples(val,this.candidateTriplePageSize)
+        }
+        else{
+          this.get_candidate_triples_conditional(val,this.candidateTriplePageSize);
+        }
       },
       //向后端请求候选三元组数据
       get_candidate_triples(num, limit) {
@@ -714,6 +723,7 @@
           })
         }
       },
+      //该函数已弃用，目前使用handleSelectionChange进行多选控制
       onTableSelect(rows, row) {
         let selected = rows.length && rows.indexOf(row) !== -1
         //如果选中
@@ -724,6 +734,7 @@
             this.selectedTriplePageList.push(row);
           }
         }
+        //取消选中
         else {
           this.selectedTripleList = this.selectedTripleList.filter(function (item) {
                 return item != row;
@@ -735,6 +746,23 @@
           );
           this.selectedTripleTotal-=1;
         }
+      },
+      // 多选值的变化
+      handleSelectionChange(val){
+        // console.log(val);
+        //清空数组
+        this.selectedTripleList.splice(0,this.selectedTripleList.length);
+        val.forEach((item,index)=>{
+          this.selectedTripleList.push(item);
+        })
+        console.log(this.selectedTripleList)
+        //重新计算分页
+        this.selectedTriplePageList = this.selectedTripleList.slice(
+            (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
+            this.selectedTripleCurrentPage * this.selectedTriplePageSize
+        );
+
+        this.selectedTripleTotal = this.selectedTripleList.length;
       },
       getRowKeys(row) {
         return row.id
@@ -782,11 +810,13 @@
               this.selectedTriplePageList = []
               this.selectedTripleList = []
               this.candidateTriplePageList = []
+              //恢复到第二页并重新请求当页数据
+              // this.allTriplePageList=[]
+              // this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
               //重新请求数据
-              this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
-              this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
-              this.get_entities(this.entityCurrentPage,this.entityPageSize)
-              this.get_relations(this.relationCurrentPage,this.relationPageSize)
+              // this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+              // this.get_entities(this.entityCurrentPage,this.entityPageSize)
+              // this.get_relations(this.relationCurrentPage,this.relationPageSize)
             }
             else{
               this.$message({
