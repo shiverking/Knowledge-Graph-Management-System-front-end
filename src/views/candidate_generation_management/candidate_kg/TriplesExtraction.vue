@@ -390,6 +390,7 @@
       },
       //翻页动作
       unstructuredTextHandleCurrentChange(val) {
+        this.unstructuredTextCurrentPage = val;
         this.get_unstructured_text(val,this.unstructuredTextPageSize)
       },
       //向后端请求存储的非结构文本数据
