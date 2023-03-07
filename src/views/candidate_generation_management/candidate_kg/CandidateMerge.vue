@@ -25,13 +25,11 @@
             <el-table-column
                 prop="head"
                 label="头实体"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="relation"
                 label="关系"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
@@ -70,13 +68,11 @@
             <el-table-column
                 prop="head"
                 label="头实体"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="relation"
                 label="关系"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
@@ -85,7 +81,7 @@
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
-                prop="candidateId"
+                prop="candidateName"
                 label="所属图谱">
             </el-table-column>
           </el-table>

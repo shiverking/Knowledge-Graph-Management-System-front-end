@@ -89,10 +89,9 @@
           :key="item.candidateId"
           :label="item.title"
           :name="item.name"
-          :closable="item.close"
-      >
+          :closable="item.close">
         <keep-alive>
-            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId"></component>
+            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId" @delete="deleteCapture"></component>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -304,6 +303,34 @@ export default {
       else if(val==false){
         this.get_candidate_kgs(0,this.candidateKgPageSize);
       }
+    },
+    //删除整个候选图谱动作
+    deleteCapture(id,containerId){
+      axios.post('/api/candidateKg/deleteKg',{
+           id:id,
+      })
+      .then((response) => {
+        if (response.status == 200&&response.data.msg=="success") {
+            //关闭标签页
+            this.removeTab(containerId);
+            //提示
+            this.$message({
+              message: '候选图谱删除成功',
+              type: 'success'
+            });
+            //重新请求当页数据
+            this.get_candidate_kgs(this.candidateKgCurrentPage,this.candidateKgPageSize);
+          }
+        else{
+          this.$message({
+            message: '候选图谱删除失败',
+            type: 'danger'
+          });
+        }
+        })
+      .catch(function (error){
+        console.log(error)
+      })
     }
   },
   mounted() {

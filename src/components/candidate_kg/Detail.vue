@@ -35,7 +35,7 @@
             <p>确定要删除该该候选图谱吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="deleteVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="deleteVisible = false">确定</el-button>
+              <el-button type="primary" size="mini" @click="deleteVisible = false;deleteCandidateKg()">确定</el-button>
             </div>
             <el-button type="danger" icon="el-icon-delete" circle  slot="reference" class="operation_button"></el-button>
           </el-popover>
@@ -287,7 +287,6 @@ export default {
               } else {
                 const source = e.item.getSource();
                 const target = e.item.getTarget();
-                console.log(e.item)
                 outDiv.innerHTML = `关系类型: ${model.name}<br/>头实体: ${source.getModel().label}<br/>尾实体: ${target.getModel().label}`;
               }
               return outDiv;
@@ -436,6 +435,11 @@ export default {
       .catch(function (error) {
         console.log(error)
       })
+    },
+    //删除整个候选图谱
+    deleteCandidateKg(){
+       //向父组件传值
+      this.$emit('delete',this.candidateId,this.containerId);
     }
   },
   watch: {
