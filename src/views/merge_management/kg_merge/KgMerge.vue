@@ -553,8 +553,7 @@ export default {
       }
       else{
         this.simLoading=true
-        axios.post('/pythonApi/calculateEntitySimilarity',{
-          firstEntity : this.toKgTableTotalData,
+        axios.post('/pythonApi/calculateEntitySimilarityFromCoreKg',{
           secondEntity : this.fromKgTableData,
           threshold :this.threshold,
           algorithm:this.algorithm
