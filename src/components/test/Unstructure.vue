@@ -19,7 +19,7 @@
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
     </el-upload>
     <div style = "height: 100px;border-radius: 2px">
-      <div v-for="fil in fileList" style="width: 20%;" >
+      <div v-for=" in fileList" :key="fil" style="width: 20%;" >
         <el-row>
           <el-col :span="12"><div class="grid-content bg-purple">
             <el-image
@@ -30,7 +30,7 @@
             </el-image>
           </div></el-col>
           <el-col :span="12"><div class="grid-content bg-purple-light">
-            <span style='padding: 0px 10px'>{{fil.name}}</span>
+            <span style='padding:0px 10px'>{{fil.name}}</span>
           </div></el-col>
         </el-row>
 

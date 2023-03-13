@@ -6,8 +6,6 @@
     </el-steps>
     <cache></cache>
     <!--概览dialog-->
-    <!-- <el-button @click="overviewVisible=true;get_overview_of_completion()">概览</el-button>
-    <el-dialog title="概览" :visible.sync="overviewVisible" fullscreen="true" v-loading = overviewLoading  element-loading-text="数据请求中......">
       <el-row :gutter="12" style="margin-bottom:10px">
         <el-col :span="8">
           <el-card shadow="hover">
@@ -789,7 +787,6 @@ p {
         var chartDom = document.getElementById('gpu_status');
         var myChart = echarts.init(chartDom);
         var option;
-        var _this = this;
         //请求cpu占用数据
         function get_status_of_gpu(callback){
           //axios请求
@@ -885,25 +882,20 @@ p {
             }
           ]
         };
-
-        var _time =setInterval(function () {
-            get_status_of_gpu((arr)=>{
-                if(60 < data.length)
+        
+        setInterval(function () {
+            get_status_of_gpu(function(arr){
+                if(60 < data.length) 
                   data.shift();
-                  data.push(randomData(arr));
-                  myChart.setOption({
-                    series: [
-                      {
-                        data: data
-                      }
-                    ]
-                  });
-                //如果关闭窗口，则停止请求
-              if(_this.stop_read_gpu_cpu == true) {
-                clearInterval(_time);
-              }
+                data.push(randomData(arr));
+                myChart.setOption({
+                series: [
+                  {
+                    data: data
+                  }
+                ]
+              });
             });
-
         }, 2000);
 
         option && myChart.setOption(option);
@@ -913,7 +905,6 @@ p {
         var chartDom = document.getElementById('cpu_status');
         var myChart = echarts.init(chartDom);
         var option;
-        var _this = this;
         //请求cpu占用数据
         function get_status_of_cpu(callback){
           //axios请求
@@ -1009,8 +1000,8 @@ p {
             }
           ]
         };
-
-        var _time =setInterval(function () {
+        
+        setInterval(function () {
             get_status_of_cpu(function(arr){
                 if(60 < data.length) 
                   data.shift();
@@ -1022,26 +1013,17 @@ p {
                   }
                 ]
               });
-              if(_this.stop_read_gpu_cpu == true) {
-                clearInterval(_time);
-              }
             });
         }, 2000);
+
         option && myChart.setOption(option);
       },
-      //处理模型管理界面打开事件
-      startToGetGpuAndCpu() {
-        setTimeout(()=>{
+      //处理tab页展开事件
+      handleTabChange(tab, event) {
+        if(tab.label=="模型管理"){
           this.get_gpu_status()
-        },100)
-        setTimeout(()=>{
           this.get_cpu_status()
-        },100)
-      },
-      //关闭模型管理界面回调
-      closeModelView(done){
-          this.stop_read_gpu_cpu = true;
-          done();
+        }
       },
       getRelationBar(){
         var chartDom = document.getElementById('relation_bar');
@@ -1160,19 +1142,34 @@ p {
           title: {
             text: '图谱嵌入指标'
           },
+          tooltip: {
+            trigger: 'axis'
+          },
           legend: {
             top: "7%",
-            data: ['MRR', 'Hits@1', 'Hits@10']
+            data: ['MRR', 'Hits@1', 'Hits@3', 'Hits@10']
           },
+          // grid: {
+          //   left: '3%',
+          //   right: '4%',
+          //   bottom: '3%',
+          //   containLabel: true
+          // },
           grid:{
             top:60,
             x:45,
             x2:50,
             y2:30,
           },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
           xAxis: {
             type: 'category',
-            data: ['11-4', '11-15', '11-16', '11-18', '11-20']
+            boundaryGap: false,
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
           },
           yAxis: {
             type: 'value'
@@ -1181,17 +1178,26 @@ p {
             {
               name: 'MRR',
               type: 'line',
-              data: [0.44, 0.47, 0.46, 0.39, 0.43]
+              stack: 'Total',
+              data: [120, 132, 101, 134, 90, 230, 210]
             },
             {
               name: 'Hits@1',
               type: 'line',
-              data: [0.23, 0.24, 0.25, 0.24, 0.26]
+              stack: 'Total',
+              data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+              name: 'Hits@3',
+              type: 'line',
+              stack: 'Total',
+              data: [150, 232, 201, 154, 190, 330, 410]
             },
             {
               name: 'Hits@10',
               type: 'line',
-              data: [0.5, 0.57, 0.51, 0.52, 0.55]
+              stack: 'Total',
+              data: [320, 332, 301, 334, 390, 330, 320]
             }
           ]
         };
@@ -1200,12 +1206,12 @@ p {
 
       },
       get_overview_of_completion(){
-          this.overviewLoading=true;
           //axios请求
           axios.post('/pythonApi/get_overview_of_completion',{
           })
           .then((response)=>{
             if (response.status == 200) {
+              console.log(response.data)
               this.node_count = response.data['node_count']
               this.edge_count = response.data['edge_count']
               this.node_label_count = response.data['node_label_count']
@@ -1214,9 +1220,7 @@ p {
               this.getRelationBar()
               this.getEntityTypeBar()
               this.getBoxPlot()
-              this.overviewLoading=false;
               }
-
           })
           .catch(function (error) {
             console.log(error)
@@ -1375,9 +1379,13 @@ p {
       }    
     },
     mounted(){
+      this.get_overview_of_completion()
+    },
+    created(){
       this.load_entSet(); //加载实体集合
       this.load_relSet(); //加载关系集合
       this.load_modSet(); //加载模型集合
     },
+
   }
 </script>

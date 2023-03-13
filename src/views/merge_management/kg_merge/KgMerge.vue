@@ -204,12 +204,12 @@
             <template slot-scope="scope">
             <el-image
                 style="top:3px;width: 20px;height:20px"
-                src="../../../static/icon/right-arrow.png"
+                :src="rightArrow"
                 v-if="scope.row.direction=='right'"
             ></el-image>
             <el-image
                 style="top:3px;width: 20px;height:20px"
-                src="../../../static/icon/left-arrow2.png"
+                :src="rightArrow2"
                 v-if="scope.row.direction=='left'"
             ></el-image>
             </template>
@@ -403,6 +403,9 @@ import KgPreview from "../../../components/merge_kg/KgPreview";
 import moment from 'moment';
 import $ from "../../../plugins/jquery.min"
 import Cache from "../../../components/merge_kg/Cache";
+import rightImg from "@/assets/icon/right.png"
+import rightArrow from "@/assets/icon/right-arrow.png"
+import rightArrow2 from "@/assets/icon/right-arrow.png"
 export default {
   components:{
     KgPreview,
@@ -410,6 +413,9 @@ export default {
   },
   data() {
     return {
+      rightImg:rightImg,
+      rightArrow:rightArrow,
+      rightArrow2:rightArrow2,
       active:0,
       //融合时主图谱和候选图谱切换
       kgType:"",
