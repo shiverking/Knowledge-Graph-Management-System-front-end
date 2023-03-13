@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+Vue.use(Router)
 //全局组件
 import Register from "../views/Register";
 import Login from "../views/Login";
@@ -103,10 +105,10 @@ import Role from "../views/system_management/Role";
 import candidateStructuredTriples
   from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredTriples";
 
-Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
+  scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
       path: '/login',
