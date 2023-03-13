@@ -214,10 +214,10 @@
         </template>
         </el-table-column>
         <el-table-column
-            label="预测类型">
+            label="链接状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
-            <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+            <span v-if="scope.row.linked_status=='0'">“实体-关系”链接存在</span>
+            <span v-if="scope.row.linked_status=='1'">“实体-关系”链接不存在</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -249,11 +249,6 @@
             <template slot-scope="scope">
               {{scope.row.pred_prob}}
             </template>
-          </el-table-column>
-          <el-table-column label="链接状态">
-            <!-- <template slot-scope="scope">
-              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
-            </template> -->
           </el-table-column>
           <el-table-column label="选择尾实体">
             <template slot-scope="scope">
@@ -653,7 +648,7 @@ p {
               this.getTableData();
               this.loading = false;
               //解析数据到表格显示
-              this.decode_data(this.tmpTable,response.data.data.preds);
+              this.decode_data(this.tmpTable,response.data.data.preds, response.data.data.linked_status);
               }
           })
           .catch(function (error) {
@@ -663,7 +658,7 @@ p {
       },
       //解析返回的结果,用于表格显示
       //输入第一个为预测字符串(先用这种形式)，第二个列表为预测结果preds[]
-      decode_data(data,preds){
+      decode_data(data,preds,linked_status){
           var res =[];
           var decodedData = [];
           for(var i = 0; i < data.length; i++){
@@ -676,7 +671,7 @@ p {
             preds[i].forEach(function(element) {
               pred_res.push({"tail":element[0],"pred_prob":element[2]});
             })
-            res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":0,"pred_res":pred_res});
+            res.push({"head":origin[0],"rel":origin[1], "linked_status": linked_status,"time":this.dateFormat(new Date()),"pred_form":0,"pred_res":pred_res});
           }
           this.predTable = res;
           this.getTableData2();
