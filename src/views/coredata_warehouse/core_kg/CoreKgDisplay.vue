@@ -8,34 +8,34 @@
         <el-row :gutter="12" class="main_data_row">
           <el-col :span="8">
             <el-card shadow="hover">
-              节点数:
+              节点数:{{nodeNum}}
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              边数:
+              关系数:{{relationNum}}
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              子图谱数:
+              子图谱数:{{childKg}}
             </el-card>
           </el-col>
         </el-row>
         <el-row :gutter="12" class="main_data_row">
           <el-col :span="8">
             <el-card shadow="hover">
-              实体个数:
+              实体个数:{{entityNum}}
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              更新次数:
+              更新次数:{{updateTimes}}
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              最后更新时间:
+              最后更新时间:{{latest}}
             </el-card>
           </el-col>
         </el-row>
@@ -48,29 +48,22 @@
     </div>
     <div class="area-right">
       <!--更新记录-->
-      <el-card class="box-card card" style="height:500px;">
-        <h3 class="card_label">更新记录</h3>
+      <el-card class="box-card card" >
+        <h3 class="card_label">最近更新记录</h3>
         <el-timeline style="padding: 10px;">
           <el-timeline-item
-              v-for="(activity, index) in activities"
+              v-for="(version, index) in versionTablePageData"
               :key="index"
-              :timestamp="activity.timestamp">
-            {{activity.content}}
+              :timestamp="dateFormat(version.submit_time)">
+            {{stringProcess(version.name)}}
           </el-timeline-item>
         </el-timeline>
-      </el-card>
-      <!--待更新版本-->
-      <el-card class="box-card card" style="height:auto;">
-        <h3 class="card_label">待更新版本</h3>
-        <el-card shadow="never" class="to_update">
-          待更新版本1
-        </el-card>
-        <el-card shadow="never" class="to_update">
-          待更新版本2
-        </el-card>
-        <el-card shadow="never" class="to_update">
-          待更新版本3
-        </el-card>
+        <div style="display: grid;place-items: center;">
+          <el-button-group>
+            <el-button icon="el-icon-arrow-left" @click="pageDown">更新</el-button>
+            <el-button @click="pageUp">更早<i class="el-icon-arrow-right el-icon--right" ></i></el-button>
+          </el-button-group>
+        </div>
       </el-card>
     </div>
   </div>
@@ -78,10 +71,22 @@
 <script>
 import * as echarts from 'echarts';
 import graph from "../../../data/mainkg_example.json";
+import moment from "moment";
 export default {
   name: "core_kg_display",
   data(){
     return{
+       nodeNum:"",
+       entityNum:"",
+       relationNum:"",
+       latest:"",
+       updateTimes:"",
+       childKg:"",
+       //更新记录
+        versionTablePageData:[],
+        versionCurrentPage:1,
+        versionPageSize:7,
+        versionTotal:0,
       //主图谱-更新记录
       activities: [{
         content: '版本更新V1.0.7',
@@ -113,7 +118,6 @@ export default {
       let chartDom = document.getElementById('data_flow');
       let myChart = echarts.init(chartDom,{renderer:'svg'});
       var option;
-      console.log(chartDom);
       // prettier-ignore
       const data = [["2022-06-05", 116], ["2022-06-06", 129], ["2022-06-07", 135], ["2022-06-08", 86], ["2022-06-09", 73], ["2022-06-10", 85], ["2022-06-11", 73], ["2022-06-12", 68], ["2022-06-13", 92], ["2022-06-14", 130], ["2022-06-15", 245], ["2022-06-16", 139], ["2022-06-17", 115], ["2022-06-18", 111], ["2022-06-19", 309], ["2022-06-20", 206], ["2022-06-21", 137], ["2022-06-22", 128], ["2022-06-23", 85], ["2022-06-24", 94], ["2022-06-25", 71], ["2022-06-26", 106], ["2022-06-27", 84], ["2022-06-28", 93], ["2022-06-29", 85], ["2022-06-30", 73], ["2022-07-01", 83], ["2022-07-02", 125], ["2022-07-03", 107], ["2022-07-04", 82], ["2022-07-05", 44], ["2022-07-06", 72], ["2022-07-07", 106], ["2022-07-08", 107], ["2022-07-09", 66], ["2022-07-10", 91], ["2022-07-11", 92], ["2022-07-12", 113], ["2022-07-13", 107], ["2022-07-14", 131], ["2022-07-15", 111], ["2022-07-16", 64], ["2022-07-17", 69], ["2022-07-18", 88], ["2022-07-19", 77], ["2022-07-20", 83], ["2022-07-21", 111], ["2022-07-22", 57], ["2022-07-23", 55], ["2022-07-24", 60]];
       const dateList = data.map(function (item) {
@@ -224,11 +228,77 @@ export default {
         ]
       };
       myChart_KGPreivew.setOption(option);
-    }
+    },
+    getBrefInformation(){
+      //axios请求
+      axios.post('/api/coredata/briefInformation',{})
+      .then((response)=>{
+        if (response.status == 200) {
+          if(response.data.msg ="success") {
+            this.nodeNum = response.data.data.nodeNum;
+            this.childKg = response.data.data.childKg;
+            this.entityNum = response.data.data.entityNum;
+            this.relationNum = response.data.data.relationNum;
+            this.updateTimes = response.data.data.updateTimes;
+            this.latest = response.data.data.latest;
+          }
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    //向后端请求版本数据
+    get_version_time_desc(num, limit) {
+      //axios请求
+      axios.request({
+        method:"POST",
+        url:'/api/version/getVersionByPageByTimeDesc',
+        params:{page:num,limit:limit}
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          //修改数据
+          this.versionTablePageData = response.data.data
+          this.versionTotal = response.data.count
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    pageDown() {
+      if(this.versionPageSize>0){
+        this.versionCurrentPage--;
+        this.get_version(this.versionPageSize,this.versionPageSize);
+      }
+    },
+    //版本翻页动作
+    pageUp() {
+      if(this.versionCurrentPage<(this.versionTotal/this.versionPageSize)) {
+        this.versionCurrentPage++;
+        this.get_version(this.versionPageSize,this.versionPageSize);
+      }
+    },
+    dateFormat(data) {
+      return moment(new Date(data).getTime()).format('YYYY-MM-DD');
+    },
+    stringProcess(data) {
+      var arr = data.split("_");
+      var M = parseInt(arr[3].substr(1)).toString();
+      var C = parseInt(arr[4].substr(1)).toString();
+      var E = parseInt(arr[5].substr(1)).toString();
+      var str = "融合:"+M+" 补全:"+C+" 质量评估:"+ E;
+      return str;
+    },
   },
   mounted() {
     this.draw_dataflow();
     this.draw_kg_example();
+    //获取简要信息
+    this.getBrefInformation();
+    //时间降序获取版本列表
+    this.get_version_time_desc(this.versionCurrentPage,this.versionPageSize);
   }
 }
 </script>

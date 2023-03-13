@@ -25,13 +25,11 @@
             <el-table-column
                 prop="head"
                 label="头实体"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="relation"
                 label="关系"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
@@ -70,13 +68,11 @@
             <el-table-column
                 prop="head"
                 label="头实体"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
                 prop="relation"
                 label="关系"
-                width="180"
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
@@ -85,7 +81,7 @@
                 :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
-                prop="candidateId"
+                prop="candidateName"
                 label="所属图谱">
             </el-table-column>
           </el-table>
@@ -680,6 +676,7 @@ export default {
     //选择候选图谱时的多选框动作
     multipleCandidateKgHandleSelectionChange(val){
       this.multipleSelection = val;
+      console.log(val);
       if(val.length>2){
         this.$message({
           message: '最多选择两个融合图谱',
@@ -950,6 +947,11 @@ export default {
         this.processPercentage =0;
         this.successShow= false;
         var flag = false;
+        var selectedId  = [];
+        for (const item of this.multipleSelection) {
+            selectedId.push(item.id);
+        };
+        selectedId.push(this.currentRowId);
         var timerId = setInterval(() => {
           this.processPercentage++;
           //发现返回直接退出
@@ -976,6 +978,7 @@ export default {
           //选择策略2时才使用
           newKgName:this.newKgName,
           newKgComment:this.newKgComment,
+          selectedId:selectedId,
         })
         .then((response) => {
           if (response.status == 200) {

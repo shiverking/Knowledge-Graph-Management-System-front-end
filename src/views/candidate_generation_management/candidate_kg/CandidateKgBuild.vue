@@ -1,5 +1,65 @@
 <template>
   <div style="margin-top: 20px;">
+    <el-button type="primary" style="margin-top:10px;margin-bottom: 10px;" @click="synchronizationDisplay=true">同步</el-button>
+    <el-dialog
+        title="提示"
+        :visible.sync="synchronizationDisplay"
+        width="70%">
+      <el-row>
+        <el-col :span="11">
+          <h3>自动更新</h3>
+          <el-col class="col-class">
+            <span>时间间隔:&nbsp;</span>
+            <el-select v-model="timeOption" placeholder="请选择更新间隔">
+              <el-option
+                  v-for="item in timeOptions"
+                  :key="item.value"
+                  :label="item.value"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col class="col-class">
+            <span>下次更新时间:</span><span>16:30</span>
+          </el-col>
+          <el-col class="col-class">
+          <p>最近五次请求记录</p>
+          <el-table
+              border
+              :data="requestData"
+              style="width: 100%">
+            <el-table-column
+                prop="code"
+                label="请求编号">
+            </el-table-column>
+            <el-table-column
+                prop="time"
+                label="请求时间">
+            </el-table-column>
+            <el-table-column
+                prop="num"
+                label="获得数量">
+            </el-table-column>
+            <el-table-column
+                width="50px"
+                label="结果">
+            </el-table-column>
+          </el-table>
+          </el-col>
+          <el-col>
+            <el-button type="primary">确定</el-button>
+          </el-col>
+        </el-col>
+        <el-col :span="1"><span>&nbsp;</span></el-col>
+        <el-col :span="12">
+          <h3>手动更新</h3>
+          <div style="display: block;margin-top: 20px;margin-bottom: 25px;">
+            <span>上次更新时间:</span><span>15:30</span>
+          </div>
+          <el-button type="success">更新</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <el-tabs v-model="activeName" type="card" @tab-click="handleTabChange">
       <el-tab-pane label="仓库" name="first">
         <el-radio-group v-model="tabSelection" @input="handelInputChange">
@@ -130,7 +190,6 @@
             </el-table-column>
             <el-table-column label="创建时间">
               <template slot-scope="scope">
-                <i class="el-icon-time"></i>
                 <span style="margin-left: 10px">{{ dateFormat(scope.row.time)}}</span>
               </template>
             </el-table-column>
@@ -163,12 +222,12 @@
               key="1">
           </el-pagination>
         </div>
-
       </el-tab-pane>
       <el-tab-pane label="三元组(未归类)" name="second">
         <div class="block">
+            <span>到达时间:</span>
             <el-date-picker
-                v-model="value1"
+                v-model="now"
                 type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -176,7 +235,19 @@
                 end-placeholder="结束日期"
                 align="right">
             </el-date-picker>
-            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">筛选</el-button>
+            <div style="display: inline-block;margin: 10px;">
+              <span>数据来源:</span>
+              <el-radio v-model="source" label="编目系统">编目系统</el-radio>
+              <el-radio v-model="source" label="文本抽取">文本抽取</el-radio>
+              <el-radio v-model="source" label="">默认</el-radio>
+            </div>
+            <el-tooltip class="item" effect="dark" content="重置搜索条件" placement="top">
+              <el-button icon="el-icon-refresh-left" circle @click="reset()"></el-button>
+            </el-tooltip>
+            <el-button type="primary" style="margin-top: 10px;" @click="filter()">筛选</el-button>
+            <el-tooltip class="item" effect="dark" content="选取符合当前条件的所有三元组" placement="top">
+              <el-button type="success" style="margin-top: 10px;">全选</el-button>
+            </el-tooltip>
           </div>
         <keep-alive>
           <el-table
@@ -184,7 +255,6 @@
               :data="candidateTriplePageList"
               border
               style="width: 100%; margin-top:10px"
-              @select='onTableSelect'
               @selection-change="handleSelectionChange"
               :row-key="getRowKeys"
               key="2">
@@ -196,7 +266,7 @@
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     {{ scope.row.head }}
-                    <el-tag size="small" type="info">{{ scope.row.headCategory }}</el-tag>
+                    <el-tag v-if="scope.row.headCategory!=''" size="small" type="info">{{ scope.row.headCategory }}</el-tag>
                   </div>
               </template>
             </el-table-column>
@@ -215,7 +285,7 @@
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                    {{ scope.row.tail }}
-                    <el-tag size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
+                    <el-tag v-if="scope.row.tailCategory!=''" size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
                   </div>
               </template>
             </el-table-column>
@@ -224,10 +294,14 @@
                 <el-tag size="medium" type="danger">{{ scope.row.status }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="到来时间">
+            <el-table-column label="到达时间">
               <template slot-scope="scope">
-                <i class="el-icon-time"></i>
                 <span style="margin-left: 10px">{{ dateFormat(scope.row.time)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="来源">
+              <template slot-scope="scope">
+                <span>{{scope.row.source}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -235,10 +309,18 @@
               <template slot-scope="scope">
                 <el-button
                     size="warning" icon="el-icon-edit" circle
-                    @click="handleEdit(scope.$index, scope.row)"></el-button>
+                    @click="handleCandidateTripleEdit(scope.$index, scope.row)"></el-button>
+                <el-popconfirm
+                    confirm-button-text='好的'
+                    cancel-button-text='不用了'
+                    icon="el-icon-info"
+                    icon-color="red"
+                    title="确定删除该三元组吗？"
+                    @confirm="handleDeleteCandidateTriple(scope.$index, scope.row)"
+                >
                 <el-button
-                    type="danger" icon="el-icon-delete" circle
-                    @click="handleDelete(scope.$index, scope.row)"></el-button>
+                    type="danger" icon="el-icon-delete" circle slot="reference"></el-button>
+                </el-popconfirm>
               </template>
             </el-table-column>
           </el-table>
@@ -253,6 +335,32 @@
               :total="candidateTripleTotal"
               key="2">
           </el-pagination>
+          <el-dialog title="修改三元组信息" :visible.sync="dialogModification">
+            <el-row>
+              <span>头实体:</span>
+              <el-input v-model="tripleInfo.head"  class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>头实体类型:</span>
+              <el-input v-model="tripleInfo.head_type" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>关系:</span>
+              <el-input v-model="tripleInfo.rel" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>尾实体:</span>
+              <el-input v-model="tripleInfo.tail" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>尾实体类型:</span>
+              <el-input v-model="tripleInfo.tail_type" class="input_modify"></el-input>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogModification = false">取 消</el-button>
+              <el-button type="primary" @click="dialogModification = false;confirmUpdate()">确 定</el-button>
+            </div>
+          </el-dialog>
       </el-tab-pane>
       <el-tab-pane label="已选择" name="third">
         <el-dialog
@@ -339,14 +447,30 @@
     </el-tabs>
   </div>
 </template>
+<style>
+  .el-dialog__body{
+    padding-top: 0px;
+  }
+  .col-class{
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  .input_modify{
+    margin: 10px;
+    width: 70%;
+  }
+</style>
 <script>
   import $ from '../../../plugins/jquery.min.js';
   import moment from "moment";
   export default {
+    comments(){
+      synchronization
+    },
     data() {
       return {
         multipleSelection: [],
-        activeName: 'first',
+        activeName: 'second',
         tabSelection:'实体库',
         pickerOptions: {
           shortcuts: [{
@@ -383,8 +507,8 @@
             }
           }]
         },
-        value1: [new Date().getTime() - 3600 * 1000 * 24 * 1, new Date()],
-
+        // now: [new Date().getTime() - 3600 * 1000 * 24 * 1, new Date()],
+        now: [],
         //已选择三元组列表
         allTriplePageList:[],
         //已选三元组分页
@@ -432,7 +556,50 @@
         relationCurrentPage:1,
         relationPageSize:10,
         relationPageSizes: [10, 50, 100, 200],
-        relationTotal:0
+        relationTotal:0,
+        //同步的展示界面
+        synchronizationDisplay:false,
+        //时间间隔
+        timeOptions: [{
+          value: '5min',
+        }, {
+          value: '10min',
+
+        }, {
+          value: '15min',
+
+        }, {
+          value: '20min',
+
+        }, {
+          value: '25min',
+
+        }],
+        timeOption: '',
+        requestData: [{
+          code: 'dadasd31dr2f2f2',
+          time: '2023-2-15 16:32',
+          num: '13315',
+        }, {
+          code: 'dadasd31dr2f2f2',
+          time: '2023-2-15 16:35',
+          num: '13315',
+        },],
+        //来源
+        source:"null",
+        //是否条件搜搜
+        isConditionalSearch:false,
+        //修改表格
+        dialogModification:false,
+        //信息表格
+        tripleInfo:{
+          id:"",
+          head:"",
+          head_type:"暂无",
+          rel:"",
+          tail:"",
+          tail_type:"暂无",
+        }
       }
     },
     methods: {
@@ -481,12 +648,22 @@
       candidateTripleHandleSizeChange(val) {
         //修改当前分页大小
         this.candidateTriplePageSize = val;
-        //重新请求数据
-        this.get_candidate_triples(this.candidateTripleCurrentPage,val)
+        if(this.isConditionalSearch == false) {
+          //重新请求数据
+          this.get_candidate_triples(this.candidateTripleCurrentPage, val)
+        }
+        else{
+          this.get_candidate_triples_conditional(this.candidateTripleCurrentPage, val);
+        }
       },
       //翻页动作
       candidateTripleHandleCurrentChange(val) {
-        this.get_candidate_triples(val,this.candidateTriplePageSize)
+        if(this.isConditionalSearch == false){
+           this.get_candidate_triples(val,this.candidateTriplePageSize)
+        }
+        else{
+          this.get_candidate_triples_conditional(val,this.candidateTriplePageSize);
+        }
       },
       //向后端请求候选三元组数据
       get_candidate_triples(num, limit) {
@@ -507,6 +684,46 @@
           console.log(error)
         })
       },
+      //向后端有条件请求候选三元组数据
+      get_candidate_triples_conditional(num, limit) {
+        if(this.now.length==0){
+          //axios请求
+          axios.request({
+            method:"POST",
+            url:'/api/triples/getAllCandidateTriplesConditionally',
+            params:{page:num,limit:limit,source:this.source}
+          })
+              .then((response) => {
+                if (response.status == 200) {
+                  //修改数据
+                  this.candidateTriplePageList = response.data.data
+                  this.candidateTripleTotal = response.data.count
+                }
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+        }
+        else{
+          //axios请求
+          axios.request({
+            method:"POST",
+            url:'/api/triples/getAllCandidateTriplesConditionally',
+            params:{page:num,limit:limit,startTime:moment(this.now[0]).startOf('day').format('x'),endTime:moment(this.now[1]).startOf('day').format('x'),source:this.source}
+          })
+          .then((response) => {
+            if (response.status == 200) {
+              //修改数据
+              this.candidateTriplePageList = response.data.data
+              this.candidateTripleTotal = response.data.count
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        }
+      },
+      //该函数已弃用，目前使用handleSelectionChange进行多选控制
       onTableSelect(rows, row) {
         let selected = rows.length && rows.indexOf(row) !== -1
         //如果选中
@@ -517,6 +734,7 @@
             this.selectedTriplePageList.push(row);
           }
         }
+        //取消选中
         else {
           this.selectedTripleList = this.selectedTripleList.filter(function (item) {
                 return item != row;
@@ -528,6 +746,23 @@
           );
           this.selectedTripleTotal-=1;
         }
+      },
+      // 多选值的变化
+      handleSelectionChange(val){
+        // console.log(val);
+        //清空数组
+        this.selectedTripleList.splice(0,this.selectedTripleList.length);
+        val.forEach((item,index)=>{
+          this.selectedTripleList.push(item);
+        })
+        console.log(this.selectedTripleList)
+        //重新计算分页
+        this.selectedTriplePageList = this.selectedTripleList.slice(
+            (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
+            this.selectedTripleCurrentPage * this.selectedTriplePageSize
+        );
+
+        this.selectedTripleTotal = this.selectedTripleList.length;
       },
       getRowKeys(row) {
         return row.id
@@ -575,11 +810,13 @@
               this.selectedTriplePageList = []
               this.selectedTripleList = []
               this.candidateTriplePageList = []
+              //恢复到第二页并重新请求当页数据
+              // this.allTriplePageList=[]
+              // this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
               //重新请求数据
-              this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
-              this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
-              this.get_entities(this.entityCurrentPage,this.entityPageSize)
-              this.get_relations(this.relationCurrentPage,this.relationPageSize)
+              // this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize)
+              // this.get_entities(this.entityCurrentPage,this.entityPageSize)
+              // this.get_relations(this.relationCurrentPage,this.relationPageSize)
             }
             else{
               this.$message({
@@ -646,7 +883,7 @@
       },
       //时间格式化
       dateFormat(data) {
-        return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
+        return moment(new Date(data).getTime()).format('YYYY-MM-DD HH:mm');
       },
       //请求所有实体数据
       //向后端请求所有实体数据
@@ -709,6 +946,99 @@
       relationHandleCurrentChange(val){
         this.get_relations(val,this.relationPageSize)
       },
+      //根据所选关系过滤
+      filter(){
+        if(this.now==null&&this.source==""){
+          this.$message({
+            message: '请选择有效的筛选条件',
+            type: 'warning'
+          });
+        }
+        else{
+          this.isConditionalSearch = true;
+          //把当前页数置1,然后用附加条件重新请求
+          this.get_candidate_triples_conditional(this.candidateTripleCurrentPage,this.candidateTriplePageSize);
+        }
+      },
+      //重置筛选条件
+      reset(){
+        this.now = [];
+        this.source = "null";
+        //设置为false,设置分页第一页,然后重新请求,
+        this.isConditionalSearch = false;
+        this.candidateTripleCurrentPage = 1;
+        this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize);
+      },
+      handleDeleteCandidateTriple(index, row){
+        axios.post('/api/candidateKg/delete',{
+          id: row.id,
+        })
+        .then((response) => {
+          if (response.status == 200 && response.data.msg=="success") {
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              });
+              //删除成功后刷新该页面，判断是否正在条件查找
+              if(this.isConditionalSearch == false){
+                this.get_candidate_triples(this.candidateTripleCurrentPage,this.candidateTriplePageSize);
+              }
+              else{
+                this.get_candidate_triples_conditional(this.candidateTripleCurrentPage,this.candidateTriplePageSize);
+              }
+            }
+            else{
+              this.$message({
+                message: '删除失败',
+                type: 'danger'
+              });
+            }
+          })
+      .catch(function (error) {
+        console.log(error)
+      })
+      },
+      //修改三元组信息
+      handleCandidateTripleEdit(index,row) {
+        this.dialogModification = true;
+        this.tripleInfo.head = row.head;
+        if(row.headCategory != null) {
+          this.tripleInfo.head_type = row.headCategory;
+        }
+        if(row.tailCategory != null) {
+          this.tripleInfo.tail_type = row.tailCategory;
+        }
+        this.tripleInfo.rel = row.relation;
+        this.tripleInfo.tail = row.tail;
+        this.tripleInfo.id = row.id;
+      },
+      confirmUpdate(){
+        axios.post('/api/candidateKg/update', {
+          newTriple: this.tripleInfo,
+        })
+            .then((response) => {
+              if (response.status == 200 && response.data.msg == "success") {
+                this.$message({
+                  message: '更新成功',
+                  type: 'success'
+                });
+                //删除成功后刷新该页面，判断是否正在条件查找
+                if (this.isConditionalSearch == false) {
+                  this.get_candidate_triples(this.candidateTripleCurrentPage, this.candidateTriplePageSize);
+                } else {
+                  this.get_candidate_triples_conditional(this.candidateTripleCurrentPage, this.candidateTriplePageSize);
+                }
+              } else {
+                this.$message({
+                  message: '更新失败',
+                  type: 'danger'
+                });
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      }
     },
     mounted() {
       // this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
