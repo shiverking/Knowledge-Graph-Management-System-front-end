@@ -150,20 +150,21 @@
       <el-tooltip class="item" effect="dark" content="取消所有对齐选择" placement="top-start">
         <el-button type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
       </el-tooltip>
-      <el-button style="margin-top: 12px;" @click="mergeConfirmTableVisible = true">筛选确认</el-button>
+      <el-button style="margin-top: 12px;" @click="mergeConfirmTableVisible = true;getMergeConfirmTableData()">筛选确认</el-button>
       <el-card shadow="never" v-loading="simLoading" element-loading-text="正在计算相似度,请稍后...">
         <el-table
-            :data="simTableData"
+            :data="simKgTablePageData"
             tooltip-effect="dark"
             style="width: 100%"
             border
             @cell-click="handleCellClick">
           <el-table-column
-              label="实体(目标图谱)" :show-overflow-tooltip="true">
+              label="实体(核心图谱)" :show-overflow-tooltip="true">
             <template slot-scope="scope">
-              <div>{{ scope.row.to }}
+              <div>{{ scope.row.to}}
               <el-image
-                style="display:none;top:3px;width: 20px;height:20px"
+                v-show="scope.row.direction=='left'"
+                style="top:3px;width: 20px;height:20px"
                 src="../../../static/icon/right.png"
                 ></el-image>
               </div>
@@ -174,7 +175,8 @@
             <template slot-scope="scope">
               <div>{{ scope.row.from}}
                 <el-image
-                    style="display:none;top:3px;width: 20px;height:20px"
+                    v-show="scope.row.direction=='right'"
+                    style="top:3px;width: 20px;height:20px"
                     src="../../../static/icon/right.png"
                     ></el-image>
               </div>
@@ -196,7 +198,7 @@
         </el-pagination>
       </el-card>
       <el-dialog title="融合确认列表" :visible.sync="mergeConfirmTableVisible">
-        <el-table :data="mergeTable">
+        <el-table :data="mergeTablePageData">
           <el-table-column property="to" label="实体(目标图谱)" :show-overflow-tooltip="true" ></el-table-column>
           <el-table-column property="direction" width="50px">
             <template slot-scope="scope">
@@ -215,13 +217,12 @@
           <el-table-column property="from" label="实体(候选图谱)" :show-overflow-tooltip="true"></el-table-column>
         </el-table>
         <el-pagination
-            v-if="this.select_kg_active==1"
-            background
+            small
             layout="total,prev, pager, next"
-            @current-change="multipleCandidateKgHandleCurrentChange"
-            :current-page="multipleCandidateKgCurrentPage"
-            :page-size="multipleCandidateKgPageSize"
-            :total="multipleCandidateKgTotal">
+            @current-change="mergeConfirmHandleCurrentChange"
+            :current-page="mergeConfirmCurrentPage"
+            :page-size="mergeConfirmPageSize"
+            :total="mergeConfirmTotal">
         </el-pagination>
       </el-dialog>
     </div>
@@ -413,21 +414,9 @@ export default {
       //融合时主图谱和候选图谱切换
       kgType:"",
       options: [{
-        value: '最小编辑距离',
-        label: '最小编辑距离'
-      }, {
-        value: '余弦相似度',
-        label: '余弦相似度'
-      }, {
-        value: 'Difflib',
-        label: 'Difflib'
-      }, {
-        value: 'Fuzzywuzzy',
-        label: 'Fuzzywuzzy'
-      }, {
-        value: '加权混合',
-        label: '加权混合'
-      }],
+          value: 'Jaccard相似系数',
+          label: 'Jaccard相似系数'
+        }],
       algorithm:"",
       threshold:0.5,
       simLoading:false,
@@ -474,8 +463,12 @@ export default {
       simKgLoading:false,
       //融合图谱部分
       mergeTable:[],
-      mergeTableWithDirection:[],
+      mergeTablePageData:[],
       mergeConfirmTableVisible:false,
+      //融合确认的分页信息
+      mergeConfirmCurrentPage:1,
+      mergeConfirmPageSize:10,
+      mergeConfirmTotal:0,
       //开始融合确认
       comfirmMergeVisible:false,
       processPercentage:0,
@@ -506,6 +499,7 @@ export default {
       entityCount:0,
       relationTypeCount:0,
       relationCount:0,
+
     };
   },
   methods: {
@@ -566,6 +560,7 @@ export default {
             if(response.data.msg=="success"){
               this.simTableData= response.data.data
               this.simKgTotal = response.data.count
+              this.getSimKgTableData()
               this.$message({
                 showClose: true,
                 message: '相似度计算完成!',
@@ -793,52 +788,47 @@ export default {
     },
     //处理cell点击事件
     handleCellClick(row, column, cell, event){
-      //无显示
-      if($(cell).find(".el-image").css('display') === 'none'){
-        //隔壁有显示
-        if($(cell).siblings().find(".el-image").css('display') != 'none'){
-          //箭头转向
-          if(column.label=="实体(目标图谱)"){
-            this.mergeTable.forEach(function(element) {
-              if(element['to']==row.to&&element['from']==row.from){
-                  element['direction']="left";
-              }
-            });
-          }
-          else if(column.label=="实体(候选图谱)"){
-            this.mergeTable.forEach(function(element) {
-              if(element['to']==row.to&&element['from']==row.from){
-                element['direction']="right";
-              }
-            });
-          }
-          $(cell).find(".el-image").show()
-          $(cell).siblings().find(".el-image").hide()
+      //无显示隔壁也无显示
+      if(row.direction==null){
+        //新增
+        if(column.label=="实体(核心图谱)"){
+          row['direction']="left"
         }
-        //隔壁无显示
-        else if($(cell).siblings().find(".el-image").css('display') === 'none'){
-          //新增
-          if(column.label=="实体(目标图谱)"){
-            row['direction']="left"
-          }
-          else if(column.label=="实体(候选图谱)"){
-            row['direction']="right"
-          }
-          //新增
-          this.mergeTable.push(row)
-          $(cell).find(".el-image").show()
+        else if(column.label=="实体(候选图谱)"){
+          row['direction']="right"
+        }
+        //新增
+        this.mergeTable.push(row)
+      }
+      //无显示但隔壁有显示
+      else if(row.direction!=null&&((column.label=="实体(候选图谱)"&&row.direction=='left')||(column.label=="实体(核心图谱)"&&row.direction=='right'))){
+        //箭头转向
+        if(column.label=="实体(核心图谱)"){
+          this.mergeTable.forEach(function(element) {
+            if(element['to']==row.to&&element['from']==row.from){
+              element['direction']="left";
+            }
+          });
+        }
+        else if(column.label=="实体(候选图谱)"){
+          this.mergeTable.forEach(function(element) {
+            if(element['to']==row.to&&element['from']==row.from){
+              element['direction']="right";
+            }
+          });
         }
       }
       //有显示
-      else if($(cell).find(".el-image").css('display') != 'none'){
+      else if(row.direction!=null&&((column.label=="实体(候选图谱)"&&row.direction=='right')||(column.label=="实体(核心图谱)"&&row.direction=='left'))){
+        row.direction = null;
         //删除该条记录
         this.mergeTable = this.mergeTable.filter(item=>{
           if(item['to']!=row.to&&item['from']!=row.from){
-           return item
+            return item
           }
         })
-        $(cell).find(".el-image").hide()
       }
+      this.
     },
     //simKgTable的前端分页
     getSimKgTableData(){
@@ -863,6 +853,7 @@ export default {
       //置空表
       this.mergeTable = [];
       //取消所有箭头显示
+      $('table').find(".el-image").hide()
     },
     checkNecessaryInfo(){
       this.comfirmMergeVisible = true;
@@ -1023,7 +1014,21 @@ export default {
         message: '已取消该应用结果!',
         type: 'warning'
       });
-    }
+    },
+    //fromKgTable的前端分页
+    getMergeConfirmTableData(){
+      this.mergeConfirmTotal = this.mergeTable.length;
+      this.mergeTablePageData = this.mergeTable.slice(
+          (this.mergeConfirmCurrentPage - 1) * this.mergeConfirmPageSize,
+          this.mergeConfirmCurrentPage * this.mergeConfirmPageSize
+      );
+    },
+    // fromKgTable的前端分页改变动作
+    mergeConfirmHandleCurrentChange(val){
+      this.mergeConfirmCurrentPage = val
+      this.getMergeConfirmTableData()
+    },
+
   }
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({
