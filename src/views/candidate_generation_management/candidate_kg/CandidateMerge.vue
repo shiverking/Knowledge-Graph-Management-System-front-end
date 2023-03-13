@@ -51,13 +51,13 @@
         <el-col :span="1">
           <el-image
               style="width: auto; height: auto;position: relative;top: 10px;"
-              src='../../../static/icon/left-arrow.png'
+              :src='leftArrow'
               ></el-image>
         </el-col>
         <el-col :span="12">
           <el-card class="box-card" shadow="never" style="display:block;margin-bottom:10px;">
             候选图谱:
-            <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
+            <span v-for="(item,i) in multipleSelectionName" :key="i"><el-tag>{{item}}</el-tag>&nbsp;</span>
           </el-card>
           <!--显示要融合的图谱-->
           <el-table
@@ -245,7 +245,7 @@
               <div>{{ scope.row.to }}
               <el-image
                 style="display:none;top:3px;width: 20px;height:20px"
-                src="../../../static/icon/right.png"
+                :src="rightImg"
                 ></el-image>
               </div>
             </template>
@@ -256,7 +256,7 @@
               <div>{{ scope.row.from}}
                 <el-image
                     style="display:none;top:3px;width: 20px;height:20px"
-                    src="../../../static/icon/right.png"
+                    :src="rightImg"
                     ></el-image>
               </div>
             </template>
@@ -283,12 +283,12 @@
             <template slot-scope="scope">
             <el-image
                 style="top:3px;width: 20px;height:20px"
-                src="../../../static/icon/right-arrow.png"
+                :src="rightArrow"
                 v-if="scope.row.direction=='right'"
             ></el-image>
             <el-image
                 style="top:3px;width: 20px;height:20px"
-                src="../../../static/icon/left-arrow2.png"
+                :src="rightArrow2"
                 v-if="scope.row.direction=='left'"
             ></el-image>
             </template>
@@ -407,9 +407,17 @@
 <script>
 import moment from 'moment';
 import $ from "../../../plugins/jquery.min"
+import leftArrow from "@/assets/icon/left-arrow.png"
+import leftArrow2 from "@/assets/icon/left-arrow2.png"
+import rightArrow from "@/assets/icon/right-arrow.png"
+import rightImg from "@/assets/icon/right.png"
 export default {
   data() {
     return {
+      leftArrow:leftArrow,
+      leftArrow2:leftArrow2,
+      rightArrow:rightArrow,
+      rightImg:rightImg,
       active: 0,
       //融合时主图谱和候选图谱切换
       kgType:"",

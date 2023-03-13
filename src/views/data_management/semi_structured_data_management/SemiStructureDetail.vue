@@ -33,6 +33,7 @@
 
       <el-table-column
           v-for="key in keys"
+          :key="key"
           :prop="key"
           :label="key"
           >

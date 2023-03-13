@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 30px">
       <center>
-        <el-link v-for="(item,index) in listdata" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>
+        <el-link v-for="(item,index) in listdata" :key="index" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>
       </center>
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">导弹</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">舰船</el-link>-->
@@ -121,10 +121,20 @@
 <script>
 import SJson from "./s-json";
 import FileSaver from "file-saver";
+
 export default {
   components: {SJson},
   data() {
     return {
+      dataList: [
+        {
+          text: 'Parent node',
+          children: [
+            { text: 'Child node 1' },
+            { text: 'Child node 2' }
+          ]
+        }
+      ],
       currentIndex:0,
       listdata:['全部','飞机','导弹','火炮','爆炸物','舰船','人员'],
       ruleForm:[],

@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 30px">
       <center>
-        <el-link v-for="(item,index) in listdata" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>
+        <el-link v-for="(item,index) in listdata" :key="index" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>
       </center>
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">导弹</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">舰船</el-link>-->

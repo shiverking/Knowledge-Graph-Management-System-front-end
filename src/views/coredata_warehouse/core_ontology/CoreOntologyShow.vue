@@ -1,6 +1,8 @@
 <template>
   <div id="main" class="main">
-    <div id="show_ontology_like_graph" class="show_ontology" >
+    <VueCTree class="trees" :isEdit="true" v-if="ontology_data.length" :treeData="ontology_data" type="1" />
+    <G6Img class="gImg" />
+    <!-- <div id="show_ontology_like_graph" class="show_ontology" >
       <span class="desc">本体结构展示</span>
       <svg id="show_ontology_in_svg" width="100%" height="100%"></svg>
     </div>
@@ -129,49 +131,55 @@
           </el-form-item>
         </el-form>
       </el-drawer>
-    </el-card>
+    </el-card> -->
   </div>
 </template>
 
 <script>
+import VueCTree from '../../../components/vue_js_tree.vue';
+import G6Img from '../../../components/G6Img.vue';
 import * as d3 from '../../../plugins/d3.v5.min.js'
 import * as echarts from 'echarts';
 import * as jquery from '../../../plugins/jquery.min.js'
 import Panzoom from '@panzoom/panzoom';
 export default {
   name: 'OntologyShow',
+  components: {
+    VueCTree,
+    G6Img
+  },
   data() {
-    return{
-      dataset:{
+    return {
+      dataset: {
         name: "Thing",
         children: [
           {
             name: "Equipment",
             children: [
-              {name: "Land", value: 100},
+              { name: "Land", value: 100 },
               {
                 name: "Sea",
                 children: [
-                  {name: "Vessel", value: 100}
+                  { name: "Vessel", value: 100 }
                 ]
               },
               {
                 name: "Sky",
                 children: [
-                  {name: "Aircraft", value: 100}
+                  { name: "Aircraft", value: 100 }
                 ]
               },
               {
                 name: "Space",
                 children: [
-                  {name: "Misile", value: 100}
+                  { name: "Misile", value: 100 }
                 ]
               },
               {
                 name: "Weapon",
                 children: [
-                  {name: "Artillery", value: 100},
-                  {name: "Bomb", value: 100}
+                  { name: "Artillery", value: 100 },
+                  { name: "Bomb", value: 100 }
                 ]
               }
             ]
@@ -179,15 +187,15 @@ export default {
           {
             name: "GIS",
             children: [
-              {name: "Country", value: 100},
-              {name: "LongitudeAndLatitude", value: 100},
+              { name: "Country", value: 100 },
+              { name: "LongitudeAndLatitude", value: 100 },
             ]
           },
           {
             name: "Mechanism",
             children: [
-              {name: "Company", value: 100},
-              {name: "School", value: 100}
+              { name: "Company", value: 100 },
+              { name: "School", value: 100 }
             ]
           },
           {
@@ -196,7 +204,7 @@ export default {
               {
                 name: "Plan",
                 children: [
-                  {name: "Task", value: 100}
+                  { name: "Task", value: 100 }
                 ]
               }
             ]
@@ -204,15 +212,15 @@ export default {
           {
             name: "Person",
             children: [
-              {name: "Commander", value: 100},
+              { name: "Commander", value: 100 },
               {
                 name: "Experience",
                 children: [
-                  {name: "Education", value: 100},
-                  {name: "Resume", value: 100}
+                  { name: "Education", value: 100 },
+                  { name: "Resume", value: 100 }
                 ]
               },
-              {name: "OrdinarySoldier", value: 100}
+              { name: "OrdinarySoldier", value: 100 }
             ]
           }
         ]
@@ -222,75 +230,59 @@ export default {
         father: '',
         desc: ''
       },
-      addRelation:{
-        name:'',
-        classList:''
+      addRelation: {
+        name: '',
+        classList: ''
       },
-      updateClassButton:false,
-      updateRelationButton:false,
-      addClassButton:false,
-      addRelationButton:false
+      updateClassButton: false,
+      updateRelationButton: false,
+      addClassButton: false,
+      addRelationButton: false,
+      ontology_data: [],
     }
   },
-  methods:{
-    draw(){
-      let ROOT_PATH = 'test';
-      let chartDom = document.getElementById('show_ontology_like_graph');
-      let myChart = echarts.init(chartDom,);
-      let option;
-
-      myChart.showLoading();
-      // jquery.getJSON('../../data/ontology.json', {},,'json');
-      var ontology_data  = require('../../../data/ontology.json')
-      function initEcharts (data){
-        myChart.hideLoading();
-        data.children.forEach(function (datum, index) {
-          index % 2 === 0 && (datum.collapsed = true);
-        });
-        myChart.setOption(
-            (option = {
-              tooltip: {
-                trigger: 'item',
-                triggerOn: 'mousemove'
-              },
-              series: [
-                {
-                  type: 'tree',
-                  data: [data],
-                  top: '1%',
-                  left: '7%',
-                  bottom: '1%',
-                  right: '20%',
-                  symbolSize: 7,
-                  roam: true,
-                  label: {
-                    position: 'left',
-                    verticalAlign: 'middle',
-                    align: 'right',
-                    fontSize: 9
-                  },
-                  leaves: {
-                    label: {
-                      position: 'right',
-                      verticalAlign: 'middle',
-                      align: 'left'
-                    }
-                  },
-                  emphasis: {
-                    focus: 'descendant'
-                  },
-                  expandAndCollapse: true,
-                  animationDuration: 550,
-                  animationDurationUpdate: 750
-                }
-              ]
-            })
-        );
+  methods: {
+    renderTree(tree) {
+      for (let node of tree) {
+        console.log(node)
+        console.log(123123)
+        node.opened = false;
+        node.selected = false;
+        node.loading = false;
+        node.disabled = false;
+        node.name = node.className;
+        if (node.children) {
+          this.renderTree(node.children)
+        }
       }
-      initEcharts(ontology_data);
-      option && myChart.setOption(option);
     },
-    checkUpdateClass(){
+    getInit() {
+      axios.request({
+        method: 'get',
+        url: '/api/coreOntology/getTreeData'
+      }).then(response => {
+        console.log(response);
+        if (response.status == 200 && response.data.result) {
+          console.log('请求到的response6');
+          var list = [response.data.data]
+          // this.renderTree(list)
+          this.ontology_data = list;
+          console.log(this.ontology_data);
+        } else {
+          this.$message({
+            type: 'warning',
+            message: response.data.message
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    draw() {
+      this.ontology_data = [require('../../../data/ontology.json')]
+      console.log(this.ontology_data)
+    },
+    checkUpdateClass() {
       this.$alert('是否确认修改', '修改节点', {
         confirmButtonText: '确定',
         callback: action => {
@@ -301,7 +293,7 @@ export default {
         }
       });
     },
-    checkUpdateRelation(){
+    checkUpdateRelation() {
       this.$alert('是否确认修改', '修改关系', {
         confirmButtonText: '确定',
         callback: action => {
@@ -323,7 +315,7 @@ export default {
         }
       });
     },
-    checkAddRelation(){
+    checkAddRelation() {
       this.$alert('是否确认添加', '添加关系', {
         confirmButtonText: '确定',
         callback: action => {
@@ -335,8 +327,8 @@ export default {
       });
     },
   },
-  mounted(){
-    this.draw()
+  mounted() {
+    this.getInit()
   }
 }
 </script>
@@ -347,7 +339,20 @@ export default {
   height: 600px;
   width: 100%;
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.trees {
+  width: 30%;
+  margin-right: 30px;
+}
+
+.gImg {
+  flex: 1;
+}
+
 .show_ontology {
   float: left;
   height: 750px;
@@ -357,20 +362,22 @@ export default {
   /*overflow-x:scroll;*/
   /*overflow-y:scroll;*/
 }
-.desc{
+
+.desc {
   font-size: 16px;
   font-weight: 700;
 }
-.update_button{
+
+.update_button {
   /*margin-left: 150px;*/
   margin-top: 10px;
   /*float: right;*/
 }
+
 .class_info {
   float: left;
   margin-left: 20px;
   width: 30%;
   height: 110%;
   margin-top: 20px;
-}
-</style>
+}</style>
