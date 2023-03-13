@@ -119,11 +119,6 @@
                   <i class="el-icon-notebook-2"></i>爬虫列表
                 </el-menu-item>
               </router-link>
-              <router-link to="/data/crawler_management/CrawlerInfo" class="routerlink">
-                <el-menu-item index="1-4-3">
-                  <i class="el-icon-document"></i>爬虫信息
-                </el-menu-item>
-              </router-link>
             </el-submenu>
           </el-submenu>
           <el-submenu index="2" class="parent_submenu">
@@ -133,22 +128,18 @@
             </template>
             <el-submenu index="2-1">
               <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
-              <router-link to="/candidate/kg/ner" class="routerlink">
-                <el-menu-item index="2-1-1"><i class="el-icon-watermelon"></i>实体抽取</el-menu-item>
-              </router-link>
               <router-link to="/candidate/kg/triplesExtraction" class="routerlink">
-                <el-menu-item index="2-1-2"><i class="el-icon-grape"></i>三元组抽取</el-menu-item>
+                <el-menu-item index="2-1-1"><i class="el-icon-grape"></i>非结构文本抽取</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/build" class="routerlink">
-                <el-menu-item index="2-1-3"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
+                <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/merge" class="routerlink">
-                <el-menu-item index="2-1-5"><i class="el-icon-document-add"></i>候选图谱融合</el-menu-item>
+                <el-menu-item index="2-1-3"><i class="el-icon-document-add"></i>候选图谱融合</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/show" class="routerlink">
                 <el-menu-item index="2-1-4"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
               </router-link>
-
             </el-submenu>
             <el-submenu index="2-2">
               <template slot="title"><i class="el-icon-cloudy-and-sunny"></i>候选本体</template>

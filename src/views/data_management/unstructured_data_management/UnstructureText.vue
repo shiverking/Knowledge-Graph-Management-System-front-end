@@ -26,7 +26,6 @@
       </el-form-item>
 
     </el-form>
-    <el-button  type="primary" style="float: right ;margin-right: 50px">转换为候选三元组</el-button>
     <el-table
         ref="multipleTable"
         :data="tableData"

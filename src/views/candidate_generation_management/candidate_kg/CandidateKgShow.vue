@@ -23,6 +23,13 @@
               </el-option>
             </el-select>
             <el-button type="primary" style="margin-top: 10px;" @click="load_all()">查询</el-button>
+            <el-switch
+                v-model="switchValue"
+                style="float: right;margin-top:20px;"
+                active-text="原始图谱"
+                inactive-text="融合图谱"
+                @change="onSwitchChange">
+            </el-switch>
           </div>
           <el-table
               :data="candidateKgPageList"
@@ -82,10 +89,9 @@
           :key="item.candidateId"
           :label="item.title"
           :name="item.name"
-          :closable="item.close"
-      >
+          :closable="item.close">
         <keep-alive>
-            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId"></component>
+            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId" @delete="deleteCapture"></component>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -121,6 +127,8 @@ export default {
       candidateKgTotal: 0,
       candidateKgPageSize: 10,
       candidateKgPageSizes: [10, 50, 100, 200],
+      //选择原始图谱还是融合图谱
+      switchValue:false,
     }
   },
   methods: {
@@ -179,12 +187,10 @@ export default {
     },
     handleEdit(index, row) {
       console.log(index, row);
-    }
-    ,
+    },
     handleDelete(index, row) {
       console.log(index, row);
-    }
-    ,
+    },
     del_all() {
       for (var i = 0; i < this.multipleSelection.length; i++) {
         for (var j = 0; j < this.tableData.length; j++) {
@@ -192,8 +198,7 @@ export default {
             this.tableData.splice(j, 1)
         }
       }
-    }
-    ,
+    },
     getNowTime() {
       var date = new Date();
       //年 getFullYear()：四位数字返回年份
@@ -211,23 +216,19 @@ export default {
       var time = year + '-' + this.addZero(month) + '-' + this.addZero(day) + '-' + this.addZero(hour) + ':' + this.addZero(minute) + ':' + this.addZero(second);
       console.log(time)
       return time;
-    }
-    ,
+    },
     //小于10的拼接上0字符串
     addZero(s) {
       return s < 10 ? ('0' + s) : s;
-    }
-    ,
+    },
     //选择多行数据
     handleSelectionChange(val) {
       this.multipleSelection = val;
-    }
-    ,
+    },
     current_change(currentPage) { // 当前是第几页
       this.currentPage1 = currentPage
       this.currentChangePage(this.tableData, currentPage)
-    }
-    ,
+    },
     currentChangePage(list, currentPage) { // 分页方法(重点)
       let from = (currentPage - 1) * this.pageSize
       let to = currentPage * this.pageSize
@@ -237,8 +238,7 @@ export default {
           this.pageList.push(list[from])
         }
       }
-    }
-    ,
+    },
     //处理候选图谱分页事件
     candidateKgHandleSizeChange(val) {
       //修改当前分页大小
@@ -250,7 +250,7 @@ export default {
     candidateKgHandleCurrentChange(val) {
       this.get_candidate_kgs(val,this.candidateKgPageSize)
     },
-    //向后端请求候选三元组数据
+    //向后端请求候选图谱数据
     get_candidate_kgs(num, limit) {
       //axios请求
       axios.request({
@@ -269,10 +269,68 @@ export default {
             console.log(error)
           })
     },
+    //向后端请求已经融合过的候选图谱数据
+    get_old_candidate_kgs(num, limit) {
+      //axios请求
+      axios.request({
+        method:"POST",
+        url:'/api/candidateKg/getAllOldCandidateKg',
+        params:{page:num,limit:limit}
+      })
+          .then((response) => {
+            if (response.status == 200) {
+              //修改数据
+              this.candidateKgPageList = response.data.data
+              this.candidateKgTotal = response.data.count
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+    },
     //时间格式化
     dateFormat(data) {
       return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
 
+    },
+    //switch开关改变动作
+    onSwitchChange(val){
+      //查看已经被融合过的图谱
+      if(val==true){
+        this.get_old_candidate_kgs(0,this.candidateKgPageSize);
+      }
+      //查看还未被融合的图谱
+      else if(val==false){
+        this.get_candidate_kgs(0,this.candidateKgPageSize);
+      }
+    },
+    //删除整个候选图谱动作
+    deleteCapture(id,containerId){
+      axios.post('/api/candidateKg/deleteKg',{
+           id:id,
+      })
+      .then((response) => {
+        if (response.status == 200&&response.data.msg=="success") {
+            //关闭标签页
+            this.removeTab(containerId);
+            //提示
+            this.$message({
+              message: '候选图谱删除成功',
+              type: 'success'
+            });
+            //重新请求当页数据
+            this.get_candidate_kgs(this.candidateKgCurrentPage,this.candidateKgPageSize);
+          }
+        else{
+          this.$message({
+            message: '候选图谱删除失败',
+            type: 'danger'
+          });
+        }
+        })
+      .catch(function (error){
+        console.log(error)
+      })
     }
   },
   mounted() {

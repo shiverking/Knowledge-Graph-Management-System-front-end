@@ -16,29 +16,20 @@
       <el-button id="detailButton" type="primary" class="detail" @click="cacheDisplay=true">详情</el-button>
     </el-card>
     <!--对话框内容-->
-    <el-dialog title="缓存表内容" :visible.sync="cacheDisplay" width="1000px" >
-      <el-tabs v-model="activeName" type="card" v-loading="dialogLoading" element-loading-text="版本提交中....." >
+    <el-dialog title="缓存表" :visible.sync="cacheDisplay" width="70%" >
+      <el-tabs v-model="activeName" v-loading="dialogLoading" element-loading-text="版本提交中....." >
         <!--融合改动-->
         <el-tab-pane label="融合改动" name="first">
-          <el-popover
-              placement="top"
-              v-model="mergeDeleteVisible">
-            <p>确定要删除缓存表中关于融合的修改吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="mergeDeleteVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="mergeDeleteVisible = false">确定</el-button>
-            </div>
-          <el-button type="danger" slot="reference">删除</el-button>
-          </el-popover>
-          <el-table :data="mergeCacheData" height="400" style="margin-top:0vh">
-            <el-table-column property="id" label="id" ></el-table-column>
-            <el-table-column property="head" label="头实体"></el-table-column>
-            <el-table-column property="head_from" label="From"></el-table-column>
-            <el-table-column property="relation" label="关系" ></el-table-column>
-            <el-table-column property="tail" label="尾实体" ></el-table-column>
-            <el-table-column property="tail_from" label="From"></el-table-column>
-            <el-table-column property="score" label="置信评分"></el-table-column>
-            <el-table-column label="操作">
+          <el-table :data="mergeCacheData" height="500" style="margin-top:0vh" border>
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
+            <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
+            <el-table-column property="head_from" label="From" show-overflow-tooltip></el-table-column>
+            <el-table-column property="relation" label="关系"show-overflow-tooltip></el-table-column>
+            <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
+            <el-table-column property="tail_from" label="From" show-overflow-tooltip></el-table-column>
+            <el-table-column property="score" label="置信评分" show-overflow-tooltip></el-table-column>
+            <el-table-column label="处理结果">
               <template slot-scope="scope">
                   <span>
                   <el-tag type="success" v-if="scope.row.operation=='插入'">{{ scope.row.operation}}</el-tag>
@@ -47,7 +38,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="操作时间">
-              <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+              <template slot-scope="scope">{{ timeProcess(scope.row.time)}}</template>
             </el-table-column>
           </el-table>
           <el-pagination
@@ -62,22 +53,13 @@
         </el-tab-pane>
         <!--补全改动-->
         <el-tab-pane label="补全改动" name="second">
-          <el-popover
-              placement="top"
-              v-model="completionDeleteVisible">
-            <p>确定要删除缓存表中关于补全的修改吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="completionDeleteVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="completionDeleteVisible = false">确定</el-button>
-            </div>
-            <el-button type="danger" slot="reference">删除</el-button>
-          </el-popover>
-          <el-table :data="completionCacheData">
-            <el-table-column property="id" label="id" ></el-table-column>
-            <el-table-column property="head" label="头实体"></el-table-column>
-            <el-table-column property="rel" label="关系" ></el-table-column>
-            <el-table-column property="tail" label="尾实体" ></el-table-column>
-            <el-table-column property="pred_prob" label="评分"></el-table-column>
+          <el-table :data="completionCacheData" height="500" border>
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
+            <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
+            <el-table-column property="rel" label="关系" show-overflow-tooltip></el-table-column>
+            <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
+            <el-table-column property="pred_prob" label="评分" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                   <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
@@ -99,19 +81,10 @@
         </el-pagination>
         </el-tab-pane>
         <!--质量评估改动-->
-        <el-tab-pane label="质量评估改动" name="third">
-          <el-popover
-              placement="top"
-              v-model="evaluationDeleteVisible">
-            <p>确定要删除缓存表中关于质量评估的修改吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="evaluationDeleteVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="evaluationDeleteVisible = false">确定</el-button>
-            </div>
-            <el-button type="danger" slot="reference">删除</el-button>
-          </el-popover>
-          <el-table :data="evaluationCacheData"  height="250" >
-            <el-table-column property="id" label="id" ></el-table-column>
+        <el-tab-pane label="质量评估改动" name="third" border>
+          <el-table :data="evaluationCacheData"  height="500" >
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column property="id" label="id" width="70"></el-table-column>
             <el-table-column property="head" label="头实体" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column property="head_new" label="新头实体" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column property="head_typ" label="类型" :show-overflow-tooltip="true"></el-table-column>
@@ -149,15 +122,18 @@
       </el-tabs>
       <!--footer-->
       <span slot="footer" class="dialog-footer">
+        <el-tooltip class="item" effect="dark" content="批量删除" placement="top-start">
+          <el-button type="danger" icon="el-icon-delete" plain>批量删除</el-button>
+        </el-tooltip>
         <el-popover
             placement="top"
             v-model="deleteVisible">
-            <p>确定要将缓存表中的所有更新清除吗？</p>
+            <p>确定要将缓存表中的所有更新(融合,补全,质量评估)清除并删除此次更新吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="text" @click="deleteVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="deleteVisible = false">确定</el-button>
+              <el-button type="primary" size="mini" @click="deleteVisible = false;deleteAll()">确定</el-button>
             </div>
-            <el-button type="danger" slot="reference">重置</el-button>
+            <el-button type="danger" slot="reference" plain icon="el-icon-delete">全部删除</el-button>
         </el-popover>
         <el-popover
             placement="top"
@@ -167,7 +143,7 @@
               <el-button size="mini" type="text" @click="submitVisible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="submitVisible = false;submit()">确定</el-button>
             </div>
-            <el-button type="success" slot="reference">提交版本</el-button>
+            <el-button type="success" slot="reference" icon="el-icon-upload2" plain>提交版本</el-button>
         </el-popover>
       </span>
     </el-dialog>
@@ -345,6 +321,42 @@ export default {
     dateFormat(data) {
       return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
     },
+    //处理时间格式问题
+    timeProcess(time){
+      var res = "";
+      for(var i=0;i<3;i++){
+        res+=time[i];
+        if(i<2){
+          res+="-";
+        }
+      }
+      return res;
+    },
+    //删除所有
+    deleteAll(){
+      axios.post('/api/version/deleteAllCache',{})
+          .then((response) => {
+            if (response.status == 200 && response.data.msg=="success"){
+                this.$notify({
+                  title: '成功',
+                  message: '删除成功!',
+                  type: 'success'
+                });
+                this.cacheDisplay = false;
+                this.mergeUpdate=false;
+                this.completionUpdate=false;
+                this.evaluationUpdate=false;
+            }
+          })
+          .catch(function (error) {
+            this.$notify({
+              title: '失败',
+              message: '删除失败!',
+              type: 'danger'
+            });
+            console.log(error)
+          })
+    }
   },
   mounted() {
     this.get_merge_cache(this.mergeCacheCurrentPage,this.mergeCachePageSize);
@@ -363,5 +375,8 @@ export default {
   float: right;
   bottom: 8px;
   position: relative;
+}
+.el-tabs__header{
+  margin: 0px;
 }
 </style>

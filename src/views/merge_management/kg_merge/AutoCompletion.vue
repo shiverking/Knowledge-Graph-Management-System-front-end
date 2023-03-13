@@ -6,8 +6,6 @@
     </el-steps>
     <cache></cache>
     <!--概览dialog-->
-    <el-button @click="overviewVisible=true;get_overview_of_completion()">概览</el-button>
-    <el-dialog title="概览" :visible.sync="overviewVisible" fullscreen="true">
       <el-row :gutter="12" style="margin-bottom:10px">
         <el-col :span="8">
           <el-card shadow="hover">
@@ -45,41 +43,36 @@
           </el-card>
         </el-col>
       </el-row>
-    </el-dialog>
+    </el-dialog> -->
     <!--模型管理dialog-->
-    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu()">模型管理</el-button>
+    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
     <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
+      <el-button type="primary" @click="open()">新建训练</el-button>
       <el-table
-          :data="tableData4"
-          style="width: 100%; "
-          border
-          max-height="350">
+        :data="tableData4"
+        border
+        style="width: 100%; margin-top:10px">
         <el-table-column
-            prop="time"
-            label="创建时间"
-            width="250">
+          prop="create_time"
+          label="创建时间"
+          width="180">
         </el-table-column>
         <el-table-column
-            prop="stem"
-            label="模型名称"
-            width="200">
+          prop="model_name"
+          label="模型名称"
+          width="180">
         </el-table-column>
+          <el-table-column
+          label="训练状态">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" v-if="scope.row.train_status == true" :loading="scope.row.train_status">训练中</el-button>
+              <el-button type="success" size="mini" v-if="scope.row.train_status != true">已训练</el-button>
+            </template>
+          </el-table-column>
         <el-table-column
-            prop="train_set"
-            label="训练数据"
-            width="200">
-        </el-table-column>
-        <el-table-column
-            label="操作"
-            width="">
-          <template slot-scope="scope">
-            <el-button
-                @click.native.prevent="deleteRow(scope.$index, modelSelectionTable)"
-                type="text"
-                size="small">
-              移除
-            </el-button>
-          </template>
+          prop="address"
+          label="操作">
+          <el-button type="danger" size="mini" @click="fun()">删除</el-button>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -95,20 +88,20 @@
       </el-pagination>
       <el-card id="gpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
       <el-card id="cpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
-      <el-card shadow="hover" style="margin-top:10px; width:auto; height:360px;" v-loading="trainLoading" element-loading-text="拼命训练中">
+      <el-dialog title="新建训练" append-to-body :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="form" label-width="80px">
           <b>训练新模型</b>
           <el-form-item label="选择模型" style="margin-top:15px">
-            <el-select v-model="form.model" placeholder="图谱嵌入模型">
+            <el-select disabled v-model="form.model" placeholder="图谱嵌入模型">
               <el-option label="ConvE" value="shanghai"></el-option>
               <el-option label="SE-GNN" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="新模型名称">
+          <el-form-item label="模型名称">
             <el-input v-model="form.name" style="width:300px;"></el-input>
           </el-form-item>
-          <el-form-item label="数据集路径">
-            <el-input v-model="form.path" style="width:400px;"></el-input>
+          <el-form-item label="选择数据">
+            <el-input disabled v-model="form.path" style="width:400px;"></el-input>
           </el-form-item>
           <el-row>
             <el-col :span="8">
@@ -123,38 +116,78 @@
             </el-col>
           </el-row>
         </el-form>
-        <el-button type="primary" @click="train_model();get_updating_train_log();">开始训练</el-button>
-      </el-card>
-      <el-card shadow="hover"  class="ner_card" v-loading="loading">
-        <h4 class="ner_label">训练日志</h4>
-        <el-input
-            style="display: block;margin-top:10px;"
-            type="textarea"
-            :rows="5"
-            placeholder="没有训练进行..."
-            v-model="resultAfterTrainNewModel"
-        >
-        </el-input>
-      </el-card>
+        <el-button type="primary" @click="close();add_model_to_lpm_table();">开始训练</el-button>
+      </el-dialog>
     </el-dialog>
     <div v-if="this.active==0">
-      <el-button type="primary" @click="link_prediction" style="margin: 0px;">开始识别</el-button>
-      <el-button type="danger" @click="CleanLinkPredictionResult" style="margin: 0px;">重置</el-button>
+      <div style="margin-top:10px">
+        <p><b>选择待预测的实体和关系</b></p>
+          <el-row class="demo-autocomplete">
+              <el-select v-model="select1" placeholder="请选择模型">
+                <el-option
+                  v-for="item in mod_set"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              <el-autocomplete
+                class="inline-input"
+                v-model="state1"
+                clearable
+                :fetch-suggestions="querySearch"
+                placeholder="请选择实体"
+                @select="handleSelect"
+              ></el-autocomplete>
+              <el-autocomplete
+                class="inline-input"
+                v-model="state2"
+                clearable
+                :fetch-suggestions="querySearch2"
+                placeholder="请选择关系"
+                @select="handleSelect2"
+              ></el-autocomplete>
+              <el-button plain @click="comm_entRel_pair">确定</el-button>
+          </el-row>
+      </div>
+      <el-table
+        :data="tableData1"
+        border
+        style="width: 100%; margin-top: 20px">
+        <!-- <el-table-column
+          prop="date"
+          label="日期"
+          width="180">
+        </el-table-column> -->
+        <el-table-column
+          prop="ent"
+          label="实体"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="rel"
+          label="关系">
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        @size-change="sizeChange"
+        @current-change="currentChange"
+        :current-page="tableData1_page"
+        :page-size="tableData1_size"
+        :page-sizes="pageSizes"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData1_total"
+        style="margin-top: 10px;">
+      </el-pagination>
+      <el-button type="primary" @click="link_prediction" style="margin-top: 20px">开始识别</el-button>
       <el-tooltip class="item" effect="dark" content="预提交选择好的链接预测结果" placement="top-start">
         <el-button type="success" @click="applyResult" style="margin: 0px;">应用</el-button>
       </el-tooltip>
-      <el-input
-      style="display: block;margin-top:10px;"
-      type="textarea"
-      :autosize="{ minRows: 2, maxRows: 20}"
-      placeholder="请输入内容"
-      v-model="TriplesBeforeLinkPrediction"
-      >
-      </el-input>
       <el-table
-          :data="predTable"
+          :data="tableData2"
           border
-          style="width: 100%">
+          style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="head"
             label="头实体"
@@ -190,10 +223,21 @@
             label="时间">
         </el-table-column>
       </el-table>
+      <el-pagination
+        @size-change="sizeChange2"
+        @current-change="currentChange2"
+        :current-page="tableData2_page"
+        :page-size="tableData2_size"
+        :page-sizes="pageSizes"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData2_total"
+        style="margin-top: 10px;">
+      </el-pagination>
       <el-dialog
           title="预测概览"
           :visible.sync="tailDetailVisible">
-        <el-table :data="temporaryTailDataTable">
+        <el-table :data="tableData3">
           <el-table-column label="尾实体">
             <template slot-scope="scope">
               {{scope.row.tail}}
@@ -204,12 +248,28 @@
               {{scope.row.pred_prob}}
             </template>
           </el-table-column>
+          <el-table-column label="链接状态">
+            <!-- <template slot-scope="scope">
+              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
+            </template> -->
+          </el-table-column>
           <el-table-column label="选择尾实体">
             <template slot-scope="scope">
               <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          @size-change="sizeChange3"
+          @current-change="currentChange3"
+          :current-page="tableData3_page"
+          :page-size="tableData3_size"
+          :page-sizes="pageSizes"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData3_total"
+          style="margin-top: 10px;">
+        </el-pagination>
         <span slot="footer" class="tailDetail-footer">
             <el-button @click="tailDetailVisible = false">取 消</el-button>
             <el-button type="primary" @click="tailDetailVisible = false">确 定</el-button>
@@ -264,7 +324,7 @@
         </div>
         <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==1" slot="reference" @click="nextStepVisible=true;">提交</el-button>
       </el-popover>
-      <el-button type="primary" style="margin-top: 12px;" v-if="this.active==0"@click="next">下一步</el-button>
+      <el-button type="primary" style="margin-top: 12px;" v-if="this.active==0" @click="next">下一步</el-button>
     </div>
   </div>
 </template>
@@ -301,8 +361,18 @@ p {
     },
     data() {
       return {
+        mod_set: [], //模型集合，存储“选择框1”的内容
+        ent_set: [], //实体集合，存储“可搜索查找1”的内容
+        rel_set: [], //关系集合，存储“可搜索查找2”的内容
+        select1: '', //“选择框1”已选内容
+        state1: '', //“可搜索查找1”已选内容
+        state2: '', //“可搜索查找2”已选内容
+        entRel_pair_selected:[], //已选择的、待预测的“实体-关系对”数组
+        tmpTable:[], //一个临时数组，用来存储entRel_pair_selected的值
+        dialogFormVisible: false, 
+        lpm_table: [],
         // 右侧三元组显示
-        triplesPageList:[],
+        triplesPageList:[], 
         triplesCurrentPage: 1,
         triplesTotal: 0,
         triplesPageSize: 10,
@@ -313,7 +383,6 @@ p {
         currentRow: null, //补全模型的选中行
         loading :false,
         triplesBeforeInsert:[],
-        resultAfterInsert:[],
         //展示候选图谱的分页
         candidateKgPageList:[],
         candidateKgCurrentPage: 1,
@@ -342,24 +411,14 @@ p {
         tableData4 : [],
         tableData5 : [],
         pageSizes:[5,10,20,30,40,50,60],
-        allTriplesBeforeCheck:[],
-        gridData:[],
-        datasets_path: 'E:/KG_system_service/candidate_datasets',
-        saved_model_path: 'E:/KG_system_service/KGtest/ConvE/models',
         dialogTableVisible: false,
-        model_name:'ConvE_2022_10_7_9_45.h5',
         multipleSelection: [],
         selectedDatasets:[],
-        TriplesBeforeLinkPrediction:"育空号补给舰,制造厂\n尼米兹号航空母舰,执行官\n马修·托德,同事\n大卫·凯悦,同事\n以赛亚·因凡特,家庭信息\n邦克山号导弹巡洋舰,指挥军士长\n第9驱逐舰中队,巡洋舰\n约书亚 B.乔纳,家庭信息\n亚伦·温伯利,国籍\n普林斯顿号导弹巡洋舰,指挥官",
-        LinkPredictionResult: '',
-        trainingVisible: false,
-        trainLoading: false,
-        train_success: false,
         resultAfterTrainNewModel: '',
         form: {
           name: 'ConvE_2022_11_16',
           model: 'ConvE',
-          path:'E:/KG_system_service/candidate_datasets/',
+          path:'核心图谱全部三元组',
           batch:'128',
           epoch: '600'
         },
@@ -394,6 +453,12 @@ p {
       }
     },
     methods: {
+      open(){
+        this.dialogFormVisible = true
+      },
+      close(){
+        this.dialogFormVisible = false;
+      },
       next() {
         if(this.active==0){
           this.active++;
@@ -456,11 +521,11 @@ p {
       //tableData1获取表格数据，自行分页
       getTableData(){
         //allData为全部数据
-        this.tableData1 = this.allTriplesBeforeCheck.slice(
+        this.tableData1 = this.entRel_pair_selected.slice(
           (this.tableData1_page - 1) * this.tableData1_size,
           this.tableData1_page * this.tableData1_size
         );
-        this.tableData1_total = this.allTriplesBeforeCheck.length
+        this.tableData1_total = this.entRel_pair_selected.length
       },
       currentChange(val){
         this.tableData1_page = val
@@ -474,11 +539,11 @@ p {
       //tableData2获取表格数据，自行分页
       getTableData2(){
         //allData为全部数据
-        this.tableData2 = this.triplesBeforeInsert.slice(
+        this.tableData2 = this.predTable.slice(
           (this.tableData2_page - 1) * this.tableData2_size,
           this.tableData2_page * this.tableData2_size
         );
-        this.tableData2_total = this.triplesBeforeInsert.length
+        this.tableData2_total = this.predTable.length
       },
       currentChange2(val){
         this.tableData2_page = val
@@ -492,11 +557,11 @@ p {
       //tableData3获取表格数据，自行分页
       getTableData3(){
         //allData为全部数据
-        this.tableData3 = this.resultAfterInsert.slice(
+        this.tableData3 = this.temporaryTailDataTable.slice(
           (this.tableData3_page - 1) * this.tableData3_size,
           this.tableData3_page * this.tableData3_size
         );
-        this.tableData3_total = this.resultAfterInsert.length
+        this.tableData3_total = this.temporaryTailDataTable.length
       },
       currentChange3(val){
         this.tableData3_page = val
@@ -510,11 +575,11 @@ p {
       //tableData4获取表格数据，自行分页
       getTableData4(){
         //allData为全部数据
-        this.tableData4 = this.modelSelectionTable.slice(
+        this.tableData4 = this.lpm_table.slice(
           (this.tableData4_page - 1) * this.tableData4_size,
           this.tableData4_page * this.tableData4_size
         );
-        this.tableData4_total = this.modelSelectionTable.length
+        this.tableData4_total = this.lpm_table.length
       },
       currentChange4(val){
         this.tableData4_page = val
@@ -557,149 +622,21 @@ p {
             console.log(error)
           })
       },  
-      //送给后端质检服务
-      send_for_quality_inspection(){
-        //如果为空，提示
-        //triplesPageList
-        if(this.triplesPageList.length == 0){
-          this.$message({
-            type: 'warning',
-            message: '请输入信息'
-          });
-        }
-        else{
-          this.loading = true;
-          //axios请求
-          axios.post('/pythonApi/triple_classification',{
-            //triplesPageList
-            data: this.triplesPageList,
-          })
-          .then((response)=>{
-            if (response.status == 200) {
-              const h = this.$createElement;
-              this.$notify({
-                title: '置信度检测完毕',
-                message: h('i', { style: 'color: teal'}, '已选三元组置信度检测完毕！'),
-                offset: 100
-              });
-              //赋值给表格
-              this.triplesBeforeInsert = response.data.data;
-              this.getTableData2();
-              //设置文本高亮
-              this.loading = false;
-              }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-        }
-      }, 
-      //插入图谱服务
-      insert_triples_to_neo4j(){
-        //如果为空，提示
-        if(this.triplesBeforeInsert.length == 0){
-          this.$message({
-            type: 'warning',
-            message: '请输入信息'
-          });
-        }
-        else{
-          this.loading = true;
-          //axios请求
-          axios.post('/pythonApi/insert_triples_to_neo4j',{
-            data: this.triplesBeforeInsert,
-          })
-          .then((response)=>{
-            if (response.status == 200) {
-              const h = this.$createElement;
-              this.$notify({
-                title: '插入完毕',
-                message: h('i', { style: 'color: teal'}, '通过质检的三元组已插入图谱！'),
-                offset: 100
-              });
-              //赋值给表格
-              this.resultAfterInsert = response.data.data;
-              this.getTableData3();
-               //设置文本高亮
-              this.loading = false;
-              }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-        }
-      },
-      //读取候选数据集的三元组数目
-      get_candidate_datasets(){
-        let content = this.datasets_path;
-        //如果为空，提示
-        if(content==""){
-          this.$message({
-            type: 'warning',
-            message: '请输入信息'
-          });
-        }
-        else{
-          this.loading = true;
-          //axios请求
-          axios.post('/pythonApi/get_candidate_datasets',{})
-          .then((response)=>{
-            if (response.status == 200) {
-              //赋值给表格
-              this.gridData= response.data.data;
-               //设置文本高亮
-              // this.setHeightKeyWord(arr);
-              this.loading = false;
-              }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-        }
-      },
-      //读取保存好的模型
-      get_saved_models_list(){
-        let content = this.saved_model_path;
-        //如果为空，提示
-        if(content==""){
-          this.$message({
-            type: 'warning',
-            message: '请输入信息'
-          });
-        }
-        else{
-          this.loading = true;
-          //axios请求
-          axios.post('/pythonApi/get_saved_models_list',{})
-          .then((response)=>{
-            if (response.status == 200) {
-              //赋值给表格
-              this.modelSelectionTable = response.data.data;
-               //设置文本高亮
-              this.loading = false;
-              this.getTableData4();
-              }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-        }
-      },
       //请求链接预测服务
       link_prediction(){
-        let content = this.TriplesBeforeLinkPrediction;
+        let content = this.entRel_pair_selected;
         //如果为空，提示
         if(content==""){
           this.$message({
             type: 'warning',
-            message: '请输入待预测三元组！'
+            message: '请选择待预测三元组！'
           });
         }
         else{
           this.loading = true;
           //axios请求
           axios.post('/pythonApi/link_prediction',{
-            data: this.TriplesBeforeLinkPrediction,
+            data: this.entRel_pair_selected,
           })
           .then((response)=>{
             if (response.status == 200) {
@@ -709,15 +646,12 @@ p {
                 message: h('i', { style: 'color: teal'}, '链接预测结果已加载！'),
                 offset: 100
               });
-              //赋值给表格
-              this.LinkPredictionResult = ""
-              for (var i = 0; i <response.data.data.res_str.length; i ++){
-                this.LinkPredictionResult += response.data.data.res_str[i] + '\n'
-              }
-              this.extract_table= response.data.data.preds;
+              this.tmpTable = this.entRel_pair_selected
+              this.entRel_pair_selected = [];
+              this.getTableData();
               this.loading = false;
               //解析数据到表格显示
-              this.decode_data(this.TriplesBeforeLinkPrediction,response.data.data.preds);
+              this.decode_data(this.tmpTable,response.data.data.preds);
               }
           })
           .catch(function (error) {
@@ -730,12 +664,10 @@ p {
       decode_data(data,preds){
           var res =[];
           var decodedData = [];
-          //解析字符串
-          var data1 = data.split('\n')
-          data1.forEach(function(element) {
-            var tmp = element.split(',');
-            decodedData.push([tmp[0],tmp[1]]);
-          })
+          for(var i = 0; i < data.length; i++){
+            decodedData.push([data[i]['ent'],data[i]['rel']]);
+            console.log(data[i]['ent'],data[i]['rel'])
+          }
           for(var i =0;i<preds.length;i++){
             var origin = decodedData[i];
             var pred_res = [];
@@ -745,6 +677,7 @@ p {
             res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":0,"pred_res":pred_res});
           }
           this.predTable = res;
+          this.getTableData2();
       },
       //请求训练模型服务
       train_model(){
@@ -757,23 +690,19 @@ p {
           });
         }
         else{
-          this.trainLoading = true;
-          this.train_success = false;
           //axios请求
           axios.post('/pythonApi/train_new_model',{
             data: this.form,
           })
           .then((response)=>{
             if (response.status == 200) {
+              this.learning_finish(this.form['name'])
               const h = this.$createElement;
               this.$notify({
                 title: '训练完毕',
                 message: h('i', { style: 'color: teal'}, '训练成功，模型已保存！'),
                 offset: 100
               });
-              this.trainLoading = false;
-              this.train_success = true;
-              this.get_saved_models_list();
               }
           })
           .catch(function (error) {
@@ -781,34 +710,73 @@ p {
           })
         }
       },
-      //轮询请求日志
-      get_updating_train_log(){
-        var _time; 
-        _time = setInterval(() => {
-          axios.post('/pythonApi/get_train_log',{
-          }).then((response)=>{
-            if (response.status == 200) {
-              this.resultAfterTrainNewModel = response.data.data;
-              }
+      add_model_to_lpm_table(){
+        let content = this.form['name'];
+        //如果为空，提示
+        if(content==""){
+          this.$message({
+            type: 'warning',
+            message: '请输入训练参数！'
           });
-          if(this.train_success == true){
-            clearInterval(_time);
+        }else{
+        //axios请求
+         axios.post('/pythonApi/add_model_to_lpm_table',{
+          data: this.form,
+        })
+        .then((response)=>{
+          if (response.status == 200) {
+            //设置文本高亮
+            this.get_lpm_table();
+            this.train_model(this.form['name'])
           }
-        },1000)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        }
       },
-      //重置整个流程中的内容
-      reset(){
-        this.tableData1 = [],
-        this.tableData2 = [],
-        this.tableData3 = [],
-        this.allTriplesBeforeCheck = [],
-        this.triplesBeforeInsert = [],
-        this.resultAfterInsert = []
+      learning_finish(name){
+        //axios请求
+         axios.post('/pythonApi/learning_finish',{
+          data: name,
+        })
+        .then((response)=>{
+          if (response.status == 200) {
+            //设置文本高亮
+            this.get_lpm_table();
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       },
-      //重置链接预测输入和结果
-      CleanLinkPredictionResult(){
-        this.LinkPredictionResult = '',
-        this.TriplesBeforeLinkPrediction = []
+      //轮询请求日志
+      get_lpm_table(){
+         //axios请求
+         axios.post('/pythonApi/get_lpm_table',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.lpm_table = response.data.data;
+            this.getTableData4();
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        // var _time; 
+        // _time = setInterval(() => {
+        //   axios.post('/pythonApi/get_lpm_table',{
+        //   }).then((response)=>{
+        //     if (response.status == 200) {
+        //       this.lpm_table = response.data.data;
+        //       }
+        //   });
+        //   if(this.train_success == true){
+        //     clearInterval(_time);
+        //   }
+        // },1000)
       },
       //删除模型操作
       deleteRow(index, rows) {
@@ -1261,6 +1229,7 @@ p {
       //点击详情后将数据赋值给临时表，在dialog上显示
       displayTailDetailTable(row){
         this.temporaryTailDataTable = row.pred_res;
+        this.getTableData3();
         this.tailDetailVisible = true;
         this.selectedRow = row;
       },
@@ -1270,7 +1239,6 @@ p {
       },
       //应用链接预测结果
       applyResult(){
-        //先置空
         var newConfirmedDataTable=[];
         this.predTable.forEach(function (element){
             if(element.tail!=null){
@@ -1286,6 +1254,10 @@ p {
           message: '应用链接预测结果成功!',
           type: 'success'
         });
+        this.predTable = [];
+        this.entRel_pair_selected = [];
+        this.getTableData2();
+        this.select1 = '';
       },
       //将结果提交至缓存表
       submitToCache(){
@@ -1309,14 +1281,111 @@ p {
         .catch(function (error) {
           console.log(error)
         })
-      }
+      },
+      querySearch(queryString, cb) {
+        var ent_set = this.ent_set;
+        var results = queryString ? ent_set.filter(this.createFilter(queryString)) : ent_set;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (ent_set) => {
+          return (ent_set.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      querySearch2(queryString, cb) {
+        var rel_sets = this.rel_sets;
+        var results = queryString ? rel_sets.filter(this.createFilter2(queryString)) : rel_sets;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter2(queryString) {
+        return (rel_set) => {
+          return (rel_set.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      load_entSet() {
+        //axios请求
+        axios.post('/pythonApi/get_entSet',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.ent_set = response.data.data;
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      load_relSet() {
+        //axios请求
+        axios.post('/pythonApi/get_relSet',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.rel_sets = response.data.data;
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      load_modSet() {
+        //axios请求
+        axios.post('/pythonApi/get_modSet',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.mod_set = response.data.data;
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      handleSelect2(item) {
+        console.log(item);
+      },  
+      open_when_input_isIncomplete() {
+        this.$message({
+          showClose: true,
+          message: '警告哦，这是一条警告消息',
+          type: 'warning'
+        });
+      },
+      open_when_input_isRepeat() {
+        this.$message({
+          showClose: true,
+          message: '这是一条消息提示'
+        });
+      },
+      comm_entRel_pair(){
+        if (this.state1 != '' && this.state2 != ''){
+          var entRel_pair = {'ent': this.state1, 'rel': this.state2 }
+          this.entRel_pair_selected.push(entRel_pair)
+          this.getTableData()
+          // }
+        }else{
+          this.open_when_input_isIncomplete();
+        }
+        this.state1 = '';
+        this.state2 = '';
+      }    
     },
     mounted(){
-      // this.get_saved_models_list();
       this.get_overview_of_completion()
     },
     created(){
-      // this.get_saved_models_list();
-    }
+      this.load_entSet(); //加载实体集合
+      this.load_relSet(); //加载关系集合
+      this.load_modSet(); //加载模型集合
+    },
+
   }
 </script>

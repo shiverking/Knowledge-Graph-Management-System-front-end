@@ -10,23 +10,19 @@
     <div v-if="this.active==0">
       <div>
         <!-- 加载所有候选图谱-->
-        <el-button  @click="dialogAllKGVisible = true;loadMultipleSelectCandidateData(multipleCandidateKgCurrentPage,multipleCandidateKgPageSize)" class="operation_button" type="primary">选择图谱</el-button>
-        <el-button  class="operation_button" type="danger" @click="allClear">全部清空</el-button>
-        <el-button  class="operation_button" type="primary" @click="importData">开始导入</el-button>
+        <el-button  @click="dialogAllKGVisible = true;loadMultipleSelectCandidateData(multipleCandidateKgCurrentPage,multipleCandidateKgPageSize)" class="operation_button" type="primary" icon="el-icon-circle-plus-outline" plain>选择图谱</el-button>
+        <el-button  class="operation_button" type="danger" @click="allClear" icon="el-icon-delete" plain>清空</el-button>
+        <el-button type="info" v-show="description" @click="displayPreview()" icon="el-icon-zoom-in" plain>预览</el-button>
         <span>
           已选择的候选图谱:
           <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
         </span>
       </div>
-      <el-descriptions title="导入图谱信息" v-show="description">
-        <el-descriptions-item label="编号">000001</el-descriptions-item>
-        <el-descriptions-item label="三元组数量">1810</el-descriptions-item>
-        <el-descriptions-item label="实体数量">2000</el-descriptions-item>
-        <el-descriptions-item label="关系数量">300</el-descriptions-item>
-        <el-descriptions-item label="来源">
-          <el-tag size="small">openkg</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="生成时间">2022/11/2</el-descriptions-item>
+      <el-descriptions title="图谱信息" v-show="description">
+        <el-descriptions-item label="三元组数量">{{tripleCount}}</el-descriptions-item>
+        <el-descriptions-item label="实体数量">{{entityCount}}</el-descriptions-item>
+        <el-descriptions-item label="关系种类数量">{{relationTypeCount}}</el-descriptions-item>
+        <el-descriptions-item label="关系数量">{{relationCount}}</el-descriptions-item>
       </el-descriptions>
       <!--显示要融合的图谱-->
       <el-table
@@ -37,22 +33,22 @@
         <el-table-column
             prop="head"
             label="头实体"
-            width="180"
-            :show-overflow-tooltip="true">
+            show-overflow-tooltip>
         </el-table-column>
         <el-table-column
             prop="relation"
             label="关系"
-            width="180"
-            :show-overflow-tooltip="true">
+            show-overflow-tooltip>
         </el-table-column>
         <el-table-column
             prop="tail"
             label="尾实体"
-            :show-overflow-tooltip="true">
+            show-overflow-tooltip>
         </el-table-column>
         <el-table-column
-            prop="candidateId"
+            prop="candidateName"
+            width="200"
+            show-overflow-tooltip
             label="所属图谱">
         </el-table-column>
       </el-table>
@@ -65,22 +61,17 @@
           layout="total,sizes, prev, pager, next,jumper"
           :total="fromKgTotal">
       </el-pagination>
-      <el-popover
-          placement="top"
-          v-model="displayPreviewView">
-        <p>是否要查看导入数据的预览？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="displayPreviewView = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="displayPreviewView = false;displayPreview()">确定</el-button>
-        </div>
-      <el-button type="primary" slot="reference" v-show="description">预览</el-button>
-      <el-button type="danger" slot="reference" v-show="closeDescription" @click="closeDisplayPreview">关闭预览</el-button>
-      </el-popover>
-      <!--展示预览的地方-->
-      <component :is="confirmPreview" :previewData="JSON.stringify(previewData)"></component>
+      <el-dialog
+          title="预览"
+          :visible.sync="previewVisible"
+          width="70%"
+          destroy-on-close>
+        <!--展示预览-->
+        <component :is="confirmPreview" :previewData="JSON.stringify(previewData)"></component>
+      </el-dialog>
+
       <!--选择图谱对话框-->
-      <el-dialog :visible.sync="dialogAllKGVisible"  :show-close='false'>
-        <h4>选择候选图谱</h4>
+      <el-dialog title="选择候选图谱" :visible.sync="dialogAllKGVisible"  :show-close='false'>
         <!--选择目标图谱-->
         <div style="text-align: center;">
         <el-table
@@ -132,8 +123,8 @@
           </el-pagination>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="handleSelectKgClose">取消</el-button>
-          <el-button id="nextStep" type="primary" @click="dialogAllKGVisible = false">完成</el-button>
+          <el-button type="danger" @click="handleSelectKgClose" plain>取消</el-button>
+          <el-button  class="operation_button" type="success" @click="importData();dialogAllKGVisible = false" icon="el-icon-download" plain>导入</el-button>
         </div>
     </el-dialog>
     </div>
@@ -235,18 +226,9 @@
       </el-dialog>
     </div>
     <div v-if="this.active==2">
-      <el-button @click="confidenceDectection">开始检测</el-button>
-      <el-popover
-          placement="top"
-          v-model="confidenceDectectionApplicationVisible">
-        <p>确定应用该检测结果吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="confidenceDectectionApplicationVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="confidenceDectectionApplicationVisible = false;confirmConfidenceDectection()">确定</el-button>
-        </div>
-        <el-button type="primary" slot="reference" @click="confidenceDectectionApplicationVisible = true">应用</el-button>
-      </el-popover>
-      <el-button type="danger" @click="cancelConfidenceDectection()">取消应用</el-button>
+      <el-button  class="operation_button" @click="confidenceDectection">开始检测</el-button>
+      <el-button class="operation_button" type="success" slot="reference" @click="confirmConfidenceDectection();confidenceDectectionConfirm=true" v-if="confidenceDectectionConfirm==false"plain>应用</el-button>
+      <el-button class="operation_button" type="danger" @click="cancelConfidenceDectection();confidenceDectectionConfirm=false" v-if="confidenceDectectionConfirm==true" plain>取消应用</el-button>
       <el-table
           v-loading = "confidenceLoading"
           :data="confidenceDectectionTablePageData"
@@ -334,14 +316,15 @@
         <el-descriptions-item label="候选占比"></el-descriptions-item>
         <el-descriptions-item label="对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
         <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
-        <el-descriptions-item label="操作人员"></el-descriptions-item>
+        <el-descriptions-item label="操作人员">admin</el-descriptions-item>
       </el-descriptions>
       <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略">
         <el-option
           v-for="item in mergeStrategyOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
+          :value="item.value"
+          >
           </el-option>
           </el-select>
           <el-popover
@@ -365,9 +348,9 @@
       </transition>
     </div>
     <div style="text-align: right;">
-      <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
-      <el-button type="primary" style="margin-top: 12px;" v-if="this.active<=2"@click="next">下一步</el-button>
-      <el-button type="primary" style="margin-top: 12px;" v-if="this.active==3"@click="jumpToNext">下一步</el-button>
+      <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous" plain>上一步</el-button>
+      <el-button type="primary" style="margin-top: 12px;" v-if="this.active<=2"@click="next" plain>下一步</el-button>
+      <el-button type="primary" style="margin-top: 12px;" v-if="this.active==3"@click="jumpToNext" plain>下一步</el-button>
     </div>
   </div>
 </template>
@@ -375,7 +358,6 @@
 .text {
   font-size: 14px;
 }
-
 .item {
   margin-bottom: 18px;
 }
@@ -389,7 +371,11 @@
 }
 .el-dialog__header {
   /*display: none;*/
-  padding: 10px;
+  padding: 7px;
+}
+.el-dialog__body {
+  /*display: none;*/
+  padding: 8px 8px;
 }
 .dj-dialog-content {
   padding: 0;
@@ -404,9 +390,8 @@
 }
 .operation_button{
   display: inline-block;
-  margin-top: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 .choose_targetKg_pagination{
   margin-top: 10px;
@@ -456,13 +441,10 @@ export default {
       mergeStrategyOptions: [
       {
         value: '1',
-        label: '不保留候选图谱'
-      }, {
-        value: '2',
         label: '保留候选图谱'
       }],
-      selectedMergeStrategy: '',
-      newKgComment:"",
+      selectedMergeStrategy:'',
+      newKgComment:'',
       //选择图谱可视化
       dialogAllKGVisible:false,
       //目标图谱分页数据
@@ -507,8 +489,6 @@ export default {
       //展开详细信息
       description:false,
       closeDescription:false,
-      //预览部分的数据传递
-      displayPreviewView:false,
       confirmPreview:"",
       previewData:[],
       nextStepVisible:false,
@@ -522,9 +502,16 @@ export default {
       confidenceDectectionLoading:false,
       confidenceLoading:false,
       //置信检测的结果应用
-      confidenceDectectionApplicationVisible:false,
+      confidenceDectectionConfirm:false,
       //是否应用置信度检测结果
       ifApplyConfidence:false,
+      //融合第一步，预览
+      previewVisible:false,
+      //图谱信息
+      tripleCount:0,
+      entityCount:0,
+      relationTypeCount:0,
+      relationCount:0,
     };
   },
   methods: {
@@ -643,7 +630,7 @@ export default {
           })
     },
     //翻页动作
-    multipleCandidateKgHandleCurrentChange(){
+    multipleCandidateKgHandleCurrentChange(val){
       this.loadMultipleSelectCandidateData(val,this.multipleCandidateKgPageSize)
     },
     //选择候选图谱时的多选框动作
@@ -651,9 +638,10 @@ export default {
       this.multipleSelection = val;
       if(val.length>2){
         this.$message({
-          message: '最多选择两个融合图谱',
+          message: '最多选择两个融合图谱,若超出只有前两个图谱有效',
           type: 'warning'
         });
+
       }
       else{
         var selectionName=[];
@@ -682,6 +670,10 @@ export default {
     },
     //开始导入数据
     async importData() {
+      this.tripleCount=0;
+      this.entityCount=0;
+      this.relationTypeCount=0;
+      this.relationCount=0;
       if (this.multipleSelection.length == 0) {
         this.$message({
           message: '请选择候选图谱!',
@@ -695,6 +687,24 @@ export default {
         this.fromKgTablePageData = [];
         this.fromKgCurrentPage = 1;
         for (const item of this.multipleSelection) {
+          //请求Info数据
+          await axios.post('/api/candidateKg/info',{
+            id: item.id
+          })
+          .then((response) => {
+            if (response.status == 200&&response.data.msg=="success") {
+              if(response.data.msg=="success"){
+                this.tripleCount+=response.data.data.tripleCount;
+                this.entityCount+=response.data.data.entityCount;
+                this.relationTypeCount+=response.data.data.relationTypeCount;
+                this.relationCount+=response.data.data.relationCount;
+              }
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          //请求三元组数据
           await axios.request({
             method: "POST",
             url: '/api/triples/getTriplesFromSameKgNotByPage',
@@ -869,12 +879,17 @@ export default {
         this.processPercentage =0;
         this.successShow= false;
         var flag = false;
+        var selectedIds = [];
+        this.multipleSelection.forEach((ele,index)=>{
+          selectedIds.push(ele.id);
+        })
+      console.log(selectedIds);
       //如果进行了置信度检测,则发送请求1
       if(this.ifApplyConfidence==true){
         //axios请求
         axios.post('/api/triples/mergeCoreKg',{
           strategy:this.selectedMergeStrategy,
-          oldKgId:this.multipleSelection,
+          oldKgId:selectedIds,
           kg:this.confidenceDetectionData,
         })
             .then((response) => {
@@ -893,19 +908,19 @@ export default {
         //axios请求
         axios.post('/api/triples/mergeCoreKg',{
           strategy:this.selectedMergeStrategy,
-          oldKgId:this.multipleSelection,
+          oldKgId:selectedIds,
           kg:this.fromKgTableData,
         })
-            .then((response) => {
-              if (response.status == 200) {
-                if(response.data.msg=="success"){
-                  flag = true;
-                }
-              }
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
+        .then((response) => {
+          if (response.status == 200) {
+            if(response.data.msg=="success"){
+              flag = true;
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
       var timerId = setInterval(() => {
         this.processPercentage++;
@@ -929,6 +944,7 @@ export default {
       this.confirmPreview = KgPreview;
       this.previewData = this.fromKgTableData;
       this.closeDescription = true;
+      this.previewVisible = true;
     },
     //关闭预览
     closeDisplayPreview(){
