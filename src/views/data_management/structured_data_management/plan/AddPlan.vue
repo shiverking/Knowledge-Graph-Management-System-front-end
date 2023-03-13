@@ -31,6 +31,7 @@
             <el-select style="width:500px;" v-model="form.person_id"  placeholder="请选择">
               <el-option
                 v-for="item in options1"
+                :key="item.id"
                 :label="item.name_cn"
                 :value="item.id">
               </el-option>

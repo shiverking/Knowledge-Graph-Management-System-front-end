@@ -1,21 +1,19 @@
 <template>
-  <div class="common-layout" style="height: 120vh">
-    <el-header class="homeHeader" id="boxFixed" :class="{ is_fixed: isFixed}">
+  <div class="common-layout">
+    <el-header class="homeHeader" id="boxFixed" :class="{ is_fixed: isFixed }">
       <div class="header_left">
-        <el-avatar src="../../static/icon/01.png"
-                   style="vertical-align:middle;margin: 9px;background-color: #063a6b;"></el-avatar>
+        <el-avatar :src="logo"
+          style="vertical-align:middle;margin: 9px;background-color: #063a6b;"></el-avatar>
         <div class="title">知识图谱管理系统</div>
       </div>
       <div class="header_right">
         <el-autocomplete placeholder="请输入要查找的页面" v-model="state" class="inline-input"
-                         style="position: relative;width: 33%;left: 2%" :fetch-suggestions="querySearch"
-                         :trigger-on-focus="false"
-                         @select="handleSelect">
+          style="position: relative;width: 33%;left: 2%" :fetch-suggestions="querySearch" :trigger-on-focus="false"
+          @select="handleSelect">
         </el-autocomplete>
         <el-dropdown class="dropdown">
           <div>
-            <el-avatar src="../../static/avatar/default2.png"
-                       style="vertical-align:middle;margin: 10px"></el-avatar>
+            <el-avatar :src="avatar" style="vertical-align:middle;margin: 10px"></el-avatar>
             <span style="color: azure;font-size: large;vertical-align:middle;">{{ username }}</span>
             <i class="el-icon-arrow-down" style="color: #000000;font-size: large;vertical-align:middle;"></i>
             <el-dropdown-menu>
@@ -31,14 +29,10 @@
         </el-dropdown>
       </div>
     </el-header>
-    <el-container style="height: 100%;">
-      <el-aside width="230px" style="background-color: rgb(238, 241, 246)" id="navFixed"
-                :class="{ is_fixed_nav_left: isNavLeftFixed}">
-        <el-menu
-            :default-active="$route.path"
-            class="el-menu-vertical-demo"
-            active-text-color="#ffd04b"
-        >
+    <el-container style="height: calc(100% - 60px)">
+      <el-aside width="230px;height:100%" style="background-color: rgb(238, 241, 246)" id="navFixed"
+        :class="{ is_fixed_nav_left: isNavLeftFixed }">
+        <el-menu :default-active="$route.path" class="el-menu-vertical-demo" active-text-color="#ffd04b">
           <el-submenu index="1" class="parent_submenu">
             <template slot="title">
               <i class="el-icon-edit-outline"></i>
@@ -50,10 +44,10 @@
                 非结构化数据管理
               </template>
               <router-link to="/data/unstructure/UnstructureText" class="routerlink">
-                <el-menu-item index="1-1-1"><i class = "el-icon-document"></i>非结构文档</el-menu-item>
+                <el-menu-item index="1-1-1"><i class="el-icon-document"></i>非结构文档</el-menu-item>
               </router-link>
               <router-link to="/data/unstructure/UnstructureAlbum" class="routerlink">
-                <el-menu-item index="1-1-2"><i class = "el-icon-money"></i>非结构图片</el-menu-item>
+                <el-menu-item index="1-1-2"><i class="el-icon-money"></i>非结构图片</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="1-2">
@@ -62,7 +56,7 @@
                 半结构化数据管理
               </template>
               <router-link to="/data/semistructure/SemiStructureShow" class="routerlink">
-                <el-menu-item index="1-2-1"><i class = 'el-icon-document-copy'></i>半结构化数据展示</el-menu-item>
+                <el-menu-item index="1-2-1"><i class='el-icon-document-copy'></i>半结构化数据展示</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="1-3">
@@ -110,12 +104,12 @@
                 </router-link>
               </el-submenu>
             </el-submenu>
-            <el-submenu index="1-4" >
+            <el-submenu index="1-4">
               <template slot="title">
                 <i class="el-icon-cpu"></i>
                 <span slot="title">爬虫管理</span>
               </template>
-              <router-link  to="/data/crawler_management/CrawlerMonitor" class="routerlink">
+              <router-link to="/data/crawler_management/CrawlerMonitor" class="routerlink">
                 <el-menu-item index="1-4-1">
                   <i class="el-icon-view"></i>爬虫监控
                 </el-menu-item>
@@ -154,6 +148,15 @@
               </router-link>
               <router-link to="/candidate/ontology/build" class="routerlink">
                 <el-menu-item index="2-2-2"><i class="el-icon-moon-night"></i>候选本体构建</el-menu-item>
+              </router-link>
+            </el-submenu>
+            <el-submenu index="2-3">
+              <template slot="title"><i class="el-icon-cloudy-and-sunny"></i>结构化候选数据</template>
+              <router-link to="/candidate/structured/ontology" class="routerlink">
+                <el-menu-item index="2-3-1"><i class="el-icon-moon"></i>本体数据</el-menu-item>
+              </router-link>
+              <router-link to="/candidate/structured/triples" class="routerlink">
+                <el-menu-item index="2-3-2"><i class="el-icon-moon-night"></i>三元组数据</el-menu-item>
               </router-link>
             </el-submenu>
           </el-submenu>
@@ -292,20 +295,20 @@
               <i class="el-icon-house"></i>
               <span slot="title">系统管理</span>
             </template>
-            <router-link  to="/system_management/authority" class="routerlink">
-            <el-menu-item index="6-1">
+            <router-link to="/system_management/authority" class="routerlink">
+              <el-menu-item index="6-1">
                 <i class="el-icon-lock"></i>权限管理
-            </el-menu-item>
+              </el-menu-item>
             </router-link>
             <router-link to="/system_management/role" class="routerlink">
               <el-menu-item index="6-2">
-                  <i class="el-icon-s-custom"></i>角色管理
+                <i class="el-icon-s-custom"></i>角色管理
               </el-menu-item>
             </router-link>
             <router-link to="/system_management/setting" class="routerlink">
-            <el-menu-item index="6-3">
+              <el-menu-item index="6-3">
                 <i class="el-icon-setting"></i>设置
-            </el-menu-item>
+              </el-menu-item>
             </router-link>
             <router-link to="/system_management/personal" class="routerlink">
               <el-menu-item index="6-4">
@@ -316,21 +319,24 @@
         </el-menu>
       </el-aside>
       <el-main class="main_area">
-        <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path=='/'"></el-empty>
+        <el-empty description="欢迎来到知识图谱管理系统!" v-if="this.$router.currentRoute.path == '/'"></el-empty>
         <div class="breadcrumb" style="margin:10px;">
-          <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path!='/'">
+          <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path != '/'">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>{{ this.$router.currentRoute.name }}</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <router-view>
-
-        </router-view>
+        <router-view class="mainRouter"></router-view>
       </el-main>
     </el-container>
   </div>
 </template>
 <style>
+.common-layout {
+  width: 100%;
+  height: 100%;
+}
+
 .el-main {
   overflow: visible;
 }
@@ -345,7 +351,10 @@
 }
 
 .homeHeader {
-  padding: 0px;
+  padding: 0px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .title {
@@ -362,7 +371,9 @@
 }
 
 .header_left {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 230px;
   height: inherit;
   margin: 0px;
@@ -370,33 +381,45 @@
 }
 
 .header_right {
-  position: relative;
-  display: inline-block;
+  /* position: relative; */
+  display: block;
   height: inherit;
   margin: 0px;
-  left: -5px;
-  width: calc(100% - 230px);
+  /* width: calc(100% - 230px); */
+  flex: 1;
   background-color: #e3e7ea;
+}
+.el-aside{
+  width: 230px!important;
 }
 
 .is_fixed {
-  position: fixed;
+  /* position: fixed;
   top: 0px;
   z-index: 999;
-  width: 100%;
+  width: 100%; */
 }
 
 .is_fixed_nav_left {
-  position: fixed;
-  top: 60px;
+  /* position: fixed; */
+  /* top: 60px; */
   z-index: 999;
   /*width: 230px;*/
 }
 
 .main_area {
-  position: absolute;
-  left: 230px;
+  /* position: absolute; */
+  /* left: 230px; */
   width: calc(100% - 230px);
+  height: 100%;
+  /* padding: 20px 0 20px 20px!important; */
+  /* overflow: hidden!important; */
+  
+}
+.mainRouter{
+  height: calc(100% - 14px);
+  /* overflow: hidden;
+  overflow-y: scroll; */
 }
 
 .parent_submenu {
@@ -435,7 +458,7 @@
 /*全局滚动条*/
 body {
   height: 100%;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   white-space: nowrap;
   /*overflow: scroll;*/
 }
@@ -461,9 +484,26 @@ body::-webkit-scrollbar-thumb:hover {
 body::-webkit-scrollbar-corner {
   background-color: rgba(255, 255, 255, 0);
 }
+ /*滚动条样式*/
+.main_area::-webkit-scrollbar {
+    width: 4px;    
+}
+.main_area::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.main_area::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+
+}
 </style>
 <script>
 import store from "../store";
+import logo from "@/assets/icon/01.png";
+import avatar from "@/assets/avatar/default2.png";
 import $ from '../plugins/jquery.min.js';
 
 export default {
@@ -480,20 +520,22 @@ export default {
       isNavLeftFixed: false,
       searchPages: [],
       //输入框初始状态
-      state:'',
+      state: '',
+      logo:logo,
+      avatar:avatar
     }
   },
   created() {
     this.session = JSON.parse(window.sessionStorage.getItem('userInfo'))
-    this.username = this.session.username
-    this.headurl = this.session.headurl
+    this.username = this.session != null ? this.session.username:''
+    this.headurl = this.session != null ? this.session.headurl:''
 
   },
   methods: {
     handleLogout() {
       axios.post('/api/user/logout', this.$qs.stringify({
         token: store.state.token
-      }), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then((response) => {
+      }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then((response) => {
         //登出成功
         if (response.data.code == 200) {
           //删除token
@@ -513,55 +555,56 @@ export default {
     },
     initHeight() {
       var scrollTop =
-          window.pageYOffset ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop //计算滚动条距离顶部的距离
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop //计算滚动条距离顶部的距离
       this.isFixed = scrollTop > this.offsetTop ? true : false//当滚动条大于吸顶距离顶部的距离试,就加上css样式
       this.isNavLeftFixed = scrollTop > this.offsetTop ? true : false
     },
     //搜索页面功能
     loadAll() {
       return [
-        {"value": "主页", "location":"/"},
-        {"value": "/数据管理/结构化数据管理/数据分析", "location":"/data/structure/analysis"},
-        {"value": "/数据管理/半结构化数据管理", "location":"/data/semistructure"},
-        {"value": "/候选生成管理/候选图谱/候选图谱展示", "location":"/candidate/kg/show"},
-        {"value": "/候选生成管理/候选图谱/候选图谱构建", "location":"/candidate/kg/build"},
-        {"value": "/候选生成管理/候选图谱/候选融合", "location":"/candidate/kg/merge"},
-        {"value": "/候选生成管理/候选图谱/非结构文本抽取", "location":"/candidate/kg/triplesExtraction"},
-        {"value": "/候选生成管理/候选本体/候选本体展示", "location":"/candidate/ontology/show"},
-        {"value": "/候选生成管理/候选本体/候选本体构建", "location":"/candidate/ontology/build"},
-        {"value": "/融合管理/图谱融合/融合", "location":"/merge/kg/merge"},
-        {"value": "/融合管理/图谱融合/图谱补全", "location":"/merge/kg/completion"},
-        {"value": "/融合管理/图谱融合/质量评估", "location":"/merge/kg/evaluation"},
-        {"value": "/融合管理/图谱融合/版本控制", "location":"/merge/kg/versionControl"},
-        {"value": "/融合管理/本体融合/融合", "location":"/merge/onotology/merge"},
-        {"value": "/融合管理/本体融合/本体补全", "location":"/merge/ontology/completion"},
-        {"value": "/融合管理/本体融合/版本记录", "location":"/merge/ontology/versionControl"},
-        {"value": "/核心数仓管理/核心图谱/核心图谱展示", "location":"/coredata/mainkg/display"},
-        {"value": "/核心数仓管理/核心图谱/主题图谱", "location":"/coredata/mainkg/topic"},
-        {"value": "/核心数仓管理/核心图谱/态势认知图谱", "location":"/coredata/mainkg/situation"},
-        {"value": "/核心数仓管理/核心本体/核心本体展示", "location":"/coredata/mainontology/display"},
-        {"value": "/系统管理/权限管理", "location":"/system_management/authority"},
-        {"value": "/系统管理/角色管理", "location":"/system_management/role"},
-        {"value": "/系统管理/设置", "location":"/system_management/setting"},
-        {"value": "/系统管理/个人中心", "location":"/system_management/personal"},
-        {"value": "/场景应用管理/接口管理/元数据", "location":"/applicationmanagement/interface/meta"},
-        {"value": "/场景应用管理/接口管理/认知推理", "location":"/applicationmanagement/interface/cognize"},
-        {"value": "/场景应用管理/接口管理/前端", "location":"/applicationmanagement/interface/display"},
-        {"value": "/场景应用管理/知识推理管理/推理集成", "location":"/applicationmanagement/reason/integration"},
-        {"value": "/场景应用管理/知识推理管理/推理验证", "location":"/applicationmanagement/reason/verify"},
-        {"value": "/场景应用管理/知识推理管理/攻击预测", "location":"/applicationmanagement/reason/attack"},
-        {"value": "/场景应用管理/知识推理管理/时间预测", "location":"/applicationmanagement/reason/event"},
-        {"value": "/场景应用管理/知识推理管理/超图预测", "location":"/applicationmanagement/reason/hypergraph"},
-        {"value": "/场景应用管理/态势认知构建/态势认知构建", "location":"/applicationmanagement/decision/build"},
-        {"value": "/场景应用管理/态势认知构建/态势认知分析", "location":"/applicationmanagement/decision/situationAnalysis"},
-        {"value": "/场景应用管理/态势认知构建/态势要图展示", "location":"/applicationmanagement/decision/map"},
-        {"value": "/场景应用管理/态势认知构建/态势评估", "location":"/applicationmanagement/decision/evaluation"},
-        {"value": "/场景应用管理/态势认知构建/认知决策验证", "location":"/applicationmanagement/decision/cognitiveDecision"},
-        {"value": "/爬虫管理/爬虫监控", "location":"/crawler_management/CrawlerMonitor"},
-        {"value": "/爬虫管理/爬虫列表", "location":"/crawler_management/CrawlerList"},
-        {"value": "/爬虫管理/任务列表", "location":"/crawler_management/TaskList"},
+        { "value": "主页", "location": "/" },
+        { "value": "/数据管理/结构化数据管理/数据分析", "location": "/data/structure/analysis" },
+        { "value": "/数据管理/半结构化数据管理", "location": "/data/semistructure" },
+        { "value": "/候选生成管理/候选图谱/候选图谱展示", "location": "/candidate/kg/show" },
+        { "value": "/候选生成管理/候选图谱/候选图谱构建", "location": "/candidate/kg/build" },
+        { "value": "/候选生成管理/候选图谱/候选融合", "location": "/candidate/kg/merge" },
+        { "value": "/候选生成管理/候选图谱/实体抽取", "location": "/candidate/kg/ner" },
+        { "value": "/候选生成管理/候选图谱/三元组抽取", "location": "/candidate/kg/triplesExtraction" },
+        { "value": "/候选生成管理/候选本体/候选本体展示", "location": "/candidate/ontology/show" },
+        { "value": "/候选生成管理/候选本体/候选本体构建", "location": "/candidate/ontology/build" },
+        { "value": "/融合管理/图谱融合/融合", "location": "/merge/kg/merge" },
+        { "value": "/融合管理/图谱融合/图谱补全", "location": "/merge/kg/completion" },
+        { "value": "/融合管理/图谱融合/质量评估", "location": "/merge/kg/evaluation" },
+        { "value": "/融合管理/图谱融合/版本控制", "location": "/merge/kg/versionControl" },
+        { "value": "/融合管理/本体融合/融合", "location": "/merge/onotology/merge" },
+        { "value": "/融合管理/本体融合/本体补全", "location": "/merge/ontology/completion" },
+        { "value": "/融合管理/本体融合/版本记录", "location": "/merge/ontology/versionControl" },
+        { "value": "/核心数仓管理/核心图谱/核心图谱展示", "location": "/coredata/mainkg/display" },
+        { "value": "/核心数仓管理/核心图谱/主题图谱", "location": "/coredata/mainkg/topic" },
+        { "value": "/核心数仓管理/核心图谱/态势认知图谱", "location": "/coredata/mainkg/situation" },
+        { "value": "/核心数仓管理/核心本体/核心本体展示", "location": "/coredata/mainontology/display" },
+        { "value": "/系统管理/权限管理", "location": "/system_management/authority" },
+        { "value": "/系统管理/角色管理", "location": "/system_management/role" },
+        { "value": "/系统管理/设置", "location": "/system_management/setting" },
+        { "value": "/系统管理/个人中心", "location": "/system_management/personal" },
+        { "value": "/场景应用管理/接口管理/元数据", "location": "/applicationmanagement/interface/meta" },
+        { "value": "/场景应用管理/接口管理/认知推理", "location": "/applicationmanagement/interface/cognize" },
+        { "value": "/场景应用管理/接口管理/前端", "location": "/applicationmanagement/interface/display" },
+        { "value": "/场景应用管理/知识推理管理/推理集成", "location": "/applicationmanagement/reason/integration" },
+        { "value": "/场景应用管理/知识推理管理/推理验证", "location": "/applicationmanagement/reason/verify" },
+        { "value": "/场景应用管理/知识推理管理/攻击预测", "location": "/applicationmanagement/reason/attack" },
+        { "value": "/场景应用管理/知识推理管理/时间预测", "location": "/applicationmanagement/reason/event" },
+        { "value": "/场景应用管理/知识推理管理/超图预测", "location": "/applicationmanagement/reason/hypergraph" },
+        { "value": "/场景应用管理/态势认知构建/态势认知构建", "location": "/applicationmanagement/decision/build" },
+        { "value": "/场景应用管理/态势认知构建/态势认知分析", "location": "/applicationmanagement/decision/situationAnalysis" },
+        { "value": "/场景应用管理/态势认知构建/态势要图展示", "location": "/applicationmanagement/decision/map" },
+        { "value": "/场景应用管理/态势认知构建/态势评估", "location": "/applicationmanagement/decision/evaluation" },
+        { "value": "/场景应用管理/态势认知构建/认知决策验证", "location": "/applicationmanagement/decision/cognitiveDecision" },
+        { "value": "/爬虫管理/爬虫监控", "location": "/crawler_management/CrawlerMonitor" },
+        { "value": "/爬虫管理/爬虫列表", "location": "/crawler_management/CrawlerList" },
+        { "value": "/爬虫管理/任务列表", "location": "/crawler_management/TaskList" },
       ];
     },
     querySearch(queryString, cb) {
@@ -590,15 +633,15 @@ export default {
     this.$nextTick(() => {
       this.offsetTop = document.querySelector('#boxFixed').offsetTop //吸顶距离顶部的距离
     }),
-    //点击导航栏按钮时将页面置顶
-    $(".routerlink").click(function () {
-      $('body,html').animate({scrollTop: 0}, 10);
-      let parent = $(this).closest('.el-submenu');
-      $(parent).siblings().children("ul").hide();
-      let top_parent = $(this).closest('.parent_submenu');
-      $(top_parent).siblings().children("ul").hide();
-    })
-    this.searchPages= this.loadAll();
+      //点击导航栏按钮时将页面置顶
+      $(".routerlink").click(function () {
+        $('body,html').animate({ scrollTop: 0 }, 10);
+        let parent = $(this).closest('.el-submenu');
+        $(parent).siblings().children("ul").hide();
+        let top_parent = $(this).closest('.parent_submenu');
+        $(top_parent).siblings().children("ul").hide();
+      })
+    this.searchPages = this.loadAll();
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll) //在销毁的生命周期取消监听事件,提高性能

@@ -282,6 +282,7 @@
           </el-table-column>
           <el-table-column
               v-for ="(value,key,index) in tableData1[0]"
+              :key="index"
               :prop="key"
               :label="key"
           >

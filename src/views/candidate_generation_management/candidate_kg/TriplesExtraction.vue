@@ -58,7 +58,8 @@
       </el-card>
       <el-card shadow="always"  class="triples_card_bottom_half">
         <h4 class="triples_label">三元组预览</h4>
-        <div id="triples_show" style="height: 500px;width: auto" ><el-empty description="暂无预览" image="../../static/icon/no_data.png"></el-empty></div>
+        <div id="triples_show" style="height: 500px;width: auto" >
+          <el-empty description="暂无预览" :image="noData"></el-empty></div>
       </el-card>
     </el-dialog>
     <!--内容预览-->
@@ -158,9 +159,11 @@
 </style>
 <script>
   import * as echarts from 'echarts';
+  import noData from "@/assets/icon/no_data.png"
   export default {
     data() {
       return {
+        noData:noData,
         //加载
         loading:false,
         activeName: 'first',
