@@ -32,7 +32,7 @@
             key="version_table"
         >
           <el-table-column
-              prop="id"
+              prop="cid"
               label="ID"
           >
           </el-table-column>
@@ -47,49 +47,55 @@
           >
           </el-table-column>
           <el-table-column
-              prop="lruntime"
-              label="上次运行时间"
-          >
-          </el-table-column>
-          <el-table-column
-              prop="lrunstatus"
+              prop="status"
               label="上次运行状态"
           >
-          </el-table-column>
-          <el-table-column
-              prop="regulartime"
-              label="爬取间隔时间"
-          >
-          </el-table-column>
-          <el-table-column
-              label="定时启用/关闭"
-          >
             <template slot-scope="scope">
-            <el-switch
-                v-model="scope.row.regularstatus"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                :active-value=true
-                :inactive-value=false>
-            </el-switch>
+              <span v-if="scope.row.status== 1 ">
+                 <el-tag type="warning">运行中</el-tag>
+              </span>
+              <span v-if="scope.row.status== 0">
+                 <el-tag >正常</el-tag>
+              </span>
+              <span v-if="scope.row.status== -1">
+                 <el-tag type="danger">异常</el-tag>
+              </span>
             </template>
           </el-table-column>
+          <el-table-column
+              prop="cron"
+              label="定时表达式"
+          >
+          </el-table-column>
+<!--          <el-table-column-->
+<!--              label="定时启用/关闭"-->
+<!--          >-->
+<!--            <template slot-scope="scope">-->
+<!--            <el-switch-->
+<!--                v-model="scope.row.regularstatus"-->
+<!--                active-color="#13ce66"-->
+<!--                inactive-color="#ff4949"-->
+<!--                :active-value=true-->
+<!--                :inactive-value=false>-->
+<!--            </el-switch>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
           <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
               <el-button
                   size="mini"
-                  type="primary" @click="start_crawl()"
-                  v-if="start_stop">
+                  type="primary" @click="start_crawl(scope.row)"
+                  v-if="scope.row.status!=1">
                 <i class="el-icon-video-play" style="font-size: 18px"></i>
               </el-button>
               <el-button
                   size="mini"
-                  type="primary" @click="stop_crawl()"
-                  v-if="!start_stop">
-                <i class="el-icon-video-pause" style="font-size: 18px"></i>
+                  type="info" @click="stop_crawl(scope.row)"
+                  v-if="scope.row.status===1">
+                <i class="el-icon-video-pause" style="font-size: 18px "></i>
               </el-button>
               <el-button
-                  size="mini" @click="crawldetail">
+                  size="mini" @click="crawldetail(scope.row)">
                 <i class="el-icon-zoom-in" style="font-size: 18px"></i>
               </el-button>
               <el-button
@@ -123,6 +129,7 @@ export default {
 
   data() {
     return {
+      pageSize:10,
       start_stop:true,
       editableTabsValue: '1',
       editableTabs: [{
@@ -141,51 +148,6 @@ export default {
         regulartime: '1周',
         regularstatus: true,
       },
-        {
-          id: '2',
-          name: 'system.net',
-          remark: '无',
-          lruntime: '2022-08-26',
-          lrunstatus: '正常',
-          regulartime: '1周',
-          regularstatus: true,
-        },
-        {
-          id: '3',
-          name: '台湾海军官网',
-          remark: '无',
-          lruntime: '2022-08-27',
-          lrunstatus: '正常',
-          regulartime: '1周',
-          regularstatus: true,
-        },
-        {
-          id: '4',
-          name: '日本防卫省自卫队官网',
-          remark: '无',
-          lruntime: '2022-08-27',
-          lrunstatus: '正常',
-          regulartime: '1周',
-          regularstatus: true,
-        },
-        {
-          id: '5',
-          name: '多源轨迹关联数据',
-          remark: '无',
-          lruntime: '2022-08-27',
-          lrunstatus: '正常',
-          regulartime: '1周',
-          regularstatus: true,
-        },
-        {
-          id: '6',
-          name: 'GDELT全球事件集',
-          remark: '无',
-          lruntime: '2022-08-28',
-          lrunstatus: '正常',
-          regulartime: '1周',
-          regularstatus: true,
-        },
       ],
 
       options: [{
@@ -208,22 +170,32 @@ export default {
     }
   },
   methods: {
-    start_crawl(){
+    start_crawl(row){
       const _this =this
-      this.start_stop=false
-      this.axios.get('/api/crawl/start').then(function(resp){
+      row.status=1
+      this.axios.get('/api/crawl/start/'+row.cid).then(function(resp){
+        if (resp.data===1){
+          row.status=-1
+        }
+        else{
+          row.status=0
+        }
+      })
+    },
+    stop_crawl(row){
+      const _this =this
+      row.status=0
+      this.axios.get('/api/crawl/stop/'+row.cid).then(function(resp){
         console.log(resp)
       })
     },
-    stop_crawl(){
-      const _this =this
-      this.start_stop=true
-      this.axios.get('/api/crawl/stop').then(function(resp){
-        console.log(resp)
+    crawldetail(row){
+      this.$router.push({
+        path: "/data/crawler_management/CrawlerInfo",
+        query: {
+          cid: row.cid
+        }
       })
-    },
-    crawldetail(){
-      this.$router.push({path:"/data/crawler_management/CrawlerInfo"})
     },
     addTab(targetName) {
       let newTabName = ++this.tabIndex + '';
@@ -251,10 +223,34 @@ export default {
       this.editableTabsValue = activeName;
       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
     }
+  },
+  created() {
+    const _this = this
+    _this.axios.get('/api/crawl/list/0/10').then(function(resp){
+      console.log(resp)
+      _this.tableData = resp.data.data
+      _this.total = resp.data.count
+      _this.pageSize=resp.data.data.length
+    })
   }
 }
 </script>
 
 <style scoped>
+.status-icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  margin-right: 5px;
+  position: relative;
+  left: 10px;
+  bottom: -15px;
+}
+.icon1 {
+  background-color: #19be6b;
+}
+.icon0 {
+  background-color: #eb194d;
+}
 
 </style>

@@ -41,34 +41,35 @@
           key="version_table"
       >
         <el-table-column
-            prop="id"
-            label="ID"
+            prop="_id"
+            label="id"
         >
         </el-table-column>
         <el-table-column
-            prop="ip"
-            label="IP"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="starttime"
+            prop="start_time"
             label="开始时间"
         >
         </el-table-column>
         <el-table-column
-            prop="endtime"
+            prop="end_time"
             label="结束时间"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="duration"
-            label="运行时长(秒)"
         >
         </el-table-column>
         <el-table-column
             prop="status"
             label="状态"
         >
+          <template slot-scope="scope">
+              <span v-if="scope.row.status== 1 ">
+                 <el-tag type="warning">运行中</el-tag>
+              </span>
+            <span v-if="scope.row.status== 0">
+                 <el-tag >正常</el-tag>
+              </span>
+            <span v-if="scope.row.status== -1">
+                 <el-tag type="danger">异常</el-tag>
+              </span>
+          </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -88,7 +89,7 @@
           :page-sizes=pageSizes
           :page-size=pageSize
           layout="total, sizes, prev, pager, next, jumper"
-          :total=total
+          :total=total1
           style="margin-top: 10px">
       </el-pagination>
     </el-card>
@@ -99,7 +100,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <strong>半结构化数据</strong>
-            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+<!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
           </div>
             <el-table
                 ref="multipleTable"
@@ -111,15 +112,117 @@
                   type="selection"
               >
               </el-table-column>
-
               <el-table-column
-                  v-for="key in keys"
-                  :prop="key"
-                  :label="key"
+                  prop="name"
+                  label="名称"
                   width="100px"
                   :show-overflow-tooltip="true"
               >
-
+              </el-table-column>
+                <el-table-column
+                    prop="max_speed"
+                    label="最大速度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="weight"
+                    label="重量"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="create_time"
+                    label="创建时间"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="length"
+                    label="长度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="width"
+                    label="宽度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="height"
+                    label="高度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="crew"
+                    label="乘员"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="range"
+                    label="飞行/发射范围"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="draught"
+                    label="吃水"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="displacement"
+                    label="排水量"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="service_year"
+                    label="服役年份"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="origin"
+                    label="来源"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="horsepower"
+                    label="马力"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="manufacturer"
+                    label="生产商"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="ceiling"
+                    label="飞行高度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
               </el-table-column>
 <!--              <el-table-column-->
 <!--                  fixed="right"-->
@@ -143,7 +246,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <strong>非结构文本</strong>
-            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+<!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
           </div>
           <el-table
               ref="multipleTable"
@@ -327,36 +430,52 @@ export default {
     }
   },
   created(){
-    const _this =this
-    const keys = new Set()
-    const keys3 = new Set()
-    try{
-      this.jsonData   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\militory_text.json")
-      this.jsonData3   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\text.json")
-    }
-    catch (error){
-    }
-    console.log(this.jsonData3)
-    for(var i=0; i<_this.jsonData.length; i++){
-      for(var key in _this.jsonData[i]){
-        if (key != "图片" & key != "简介" & key != "content" & key != "variant" & key != "data_origin"){
-          keys.add(key)
-        }
-
-      }
-    }
-    for(var j=0; j<_this.jsonData3.length; j++){
-      for(var key3 in _this.jsonData3[j]){
-        if (key3 != "图片" & key3 != "简介"  & key3 != "variant" & key3 != "data_origin"){
-          keys3.add(key3)
-        }
-
-      }
-    }
-    this.keys=keys
-    this.keys3=keys3
-    this.getTableData()
-    this.getTableData3()
+    // const _this =this
+    // const keys = new Set()
+    // const keys3 = new Set()
+    // try{
+    //   this.jsonData   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\militory_text.json")
+    //   this.jsonData3   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\text.json")
+    // }
+    // catch (error){
+    // }
+    // console.log(this.jsonData3)
+    // for(var i=0; i<_this.jsonData.length; i++){
+    //   for(var key in _this.jsonData[i]){
+    //     if (key != "图片" & key != "简介" & key != "content" & key != "variant" & key != "data_origin"){
+    //       keys.add(key)
+    //     }
+    //
+    //   }
+    // }
+    // for(var j=0; j<_this.jsonData3.length; j++){
+    //   for(var key3 in _this.jsonData3[j]){
+    //     if (key3 != "图片" & key3 != "简介"  & key3 != "variant" & key3 != "data_origin"){
+    //       keys3.add(key3)
+    //     }
+    //
+    //   }
+    // }
+    // this.keys=keys
+    // this.keys3=keys3
+    // this.getTableData()
+    // this.getTableData3()
+    const _this = this
+    _this.axios.get('/api/crawl/findrecordbycid/0/10/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData1 = resp.data.data
+      _this.total1 = resp.data.count
+    })
+    _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData = resp.data.data
+      _this.total = resp.data.count
+    })
+    _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData3 = resp.data.data
+      _this.total3 = resp.data.count
+    })
   }
 
 }
