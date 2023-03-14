@@ -102,7 +102,7 @@
 import Detail from "../../../components/candidate_kg/Detail";
 import DataSource from "../../../components/data_source/DataSource";
 import Vue from 'vue'
-import {create} from "http-proxy-middleware/lib/path-rewriter";
+// import {create} from "http-proxy-middleware/lib/path-rewriter";
 import moment from "moment";
 export default {
   components: {

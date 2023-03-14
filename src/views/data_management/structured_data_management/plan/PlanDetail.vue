@@ -22,6 +22,7 @@
                         <el-select v-model="item.id"  placeholder="请选择">
                           <el-option
                             v-for="item1 in options1"
+                            :key="item1.id"
                             :label="item1.name_cn"
                             :value="item1.id">
                           </el-option>
@@ -60,6 +61,7 @@
                         <el-select v-model="item.id"  placeholder="请选择">
                           <el-option
                             v-for="item1 in options2"
+                            :key="item1.id"
                             :label="item1.name"
                             :value="item1.id">
                           </el-option>

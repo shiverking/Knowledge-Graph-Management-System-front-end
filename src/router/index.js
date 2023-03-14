@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+Vue.use(Router)
 //全局组件
 import Register from "../views/Register";
 import Login from "../views/Login";
@@ -55,6 +57,9 @@ import CandidateKgShow from "../views/candidate_generation_management/candidate_
 import CandidateOntology from "../views/candidate_generation_management/candidate_ontology/CandidateOntology";
 import CandidateOntologyShow from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyShow";
 import CandidateOntologyBuild from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyBuild";
+import CandidateStructuredData from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredData";
+import CandidateStructuredOntology from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredOntology";
+import CandidateStructuredTriples from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredTriples";
 import NamedEntityRecognition from "../views/candidate_generation_management/candidate_kg/NamedEntityRecognition"
 import TriplesExtraction from "../views/candidate_generation_management/candidate_kg/TriplesExtraction"
 import CandidateMerge from "../views/candidate_generation_management/candidate_kg/CandidateMerge";
@@ -97,11 +102,13 @@ import Personal from "../views/system_management/Personal";
 import Setting from "../views/system_management/Setting";
 import Authority from "../views/system_management/Authority";
 import Role from "../views/system_management/Role";
+import candidateStructuredTriples
+  from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredTriples";
 
-Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
+  scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
       path: '/login',
@@ -430,6 +437,26 @@ export default new Router({
               path:'/candidate/ontology/build',
               name:'候选本体构建',
               component:CandidateOntologyBuild,
+              show: true
+            }
+          ]
+        },
+        {
+          path: '/candidate/structured',
+          name: '结构化数据',
+          component: CandidateStructuredData,
+          show: true,
+          children: [
+            {
+              path: '/candidate/structured/ontology',
+              name: '本体数据',
+              component: CandidateStructuredOntology,
+              show: true
+            },
+            {
+              path: '/candidate/structured/triples',
+              name: '三元组数据',
+              component: candidateStructuredTriples,
               show: true
             }
           ]
