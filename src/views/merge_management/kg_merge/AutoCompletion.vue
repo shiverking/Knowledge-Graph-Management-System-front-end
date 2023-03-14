@@ -6,6 +6,7 @@
     </el-steps>
     <cache></cache>
     <!--概览dialog-->
+    <el-dialog>
       <el-row :gutter="12" style="margin-bottom:10px">
         <el-col :span="8">
           <el-card shadow="hover">
@@ -43,7 +44,7 @@
           </el-card>
         </el-col>
       </el-row>
-    </el-dialog> -->
+    </el-dialog>
     <!--模型管理dialog-->
     <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
     <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">

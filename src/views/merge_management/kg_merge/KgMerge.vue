@@ -10,9 +10,9 @@
     <div v-if="this.active==0">
       <div>
         <!-- 加载所有候选图谱-->
-        <el-button  @click="dialogAllKGVisible = true;loadMultipleSelectCandidateData(multipleCandidateKgCurrentPage,multipleCandidateKgPageSize)" class="operation_button" type="primary" icon="el-icon-circle-plus-outline" plain>选择图谱</el-button>
-        <el-button  class="operation_button" type="danger" @click="allClear" icon="el-icon-delete" plain>清空</el-button>
-        <el-button type="info" v-show="description" @click="displayPreview()" icon="el-icon-zoom-in" plain>预览</el-button>
+        <el-button @click="dialogAllKGVisible = true;loadMultipleSelectCandidateData(multipleCandidateKgCurrentPage,multipleCandidateKgPageSize)" class="operation_button" type="primary" icon="el-icon-circle-plus-outline" plain>选择图谱</el-button>
+        <el-button class="operation_button" type="danger" @click="allClear" icon="el-icon-delete" plain>清空</el-button>
+        <el-button class="operation_button" type="info" v-show="description" @click="displayPreview()" icon="el-icon-zoom-in" plain>预览</el-button>
         <span>
           已选择的候选图谱:
           <span v-for="(item,i) in multipleSelectionName"><el-tag>{{item}}</el-tag>&nbsp;</span>
@@ -123,7 +123,7 @@
           </el-pagination>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="handleSelectKgClose" plain>取消</el-button>
+          <el-button class="operation_button" type="danger" @click="handleSelectKgClose" plain>取消</el-button>
           <el-button  class="operation_button" type="success" @click="importData();dialogAllKGVisible = false" icon="el-icon-download" plain>导入</el-button>
         </div>
     </el-dialog>
@@ -137,7 +137,7 @@
             :value="item.value">
         </el-option>
       </el-select>
-      <el-input-number v-model="threshold" :step="0.01" :min=0.1 :max="1"></el-input-number>
+      <el-input-number v-model="threshold" :step="0.01" :min=0.1 :max="1" style="margin-left:8px;"></el-input-number>
       <el-popover
           placement="top-start"
           title="请调节阈值"
@@ -146,7 +146,7 @@
         <div>范围为0-1,越接近1表示两个实体越相同,反之亦然，算法计算结果仅供参考(点击以选择要保留的实体，不选择默认同时保留)</div>
         <i class="el-icon-warning-outline" slot="reference"></i>
       </el-popover>
-      <el-button style="margin-top: 12px;" @click="calculate">开始计算</el-button>
+      <el-button style="margin-top: 12px; margin-left: 8px;" @click="calculate">开始计算</el-button>
       <el-tooltip class="item" effect="dark" content="取消所有对齐选择" placement="top-start">
         <el-button type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
       </el-tooltip>
@@ -335,10 +335,10 @@
               trigger="manual">
         <p>融合开始之后不可撤销,且融合后结果被提交至缓存,是否继续？</p>
         <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="comfirmMergeVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="comfirmMergeVisible = false;startMerge()">确定</el-button>
+          <el-button size="mini" type="text"  class="operation_button" @click="comfirmMergeVisible = false">取消</el-button>
+          <el-button type="primary" size="mini" class="operation_button" @click="comfirmMergeVisible = false;startMerge()">确定</el-button>
         </div>
-        <el-button type="primary" style="margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">融合并提交</el-button>
+        <el-button type="primary" style="margin-left: 8px;margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">融合并提交</el-button>
       </el-popover>
       <el-progress :text-inside="false" :stroke-width="15" :percentage="processPercentage" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
       <transition name="el-fade-in-linear">
@@ -391,8 +391,9 @@
 }
 .operation_button{
   display: inline-block;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  margin-right: 8px !important;
 }
 .choose_targetKg_pagination{
   margin-top: 10px;
@@ -438,14 +439,14 @@ export default {
       dialogAllKGVisible:false,
       //目标图谱分页数据
       candidateKgPageSize:10,
-      candidateKgTotal:'',
+      candidateKgTotal:0,
       candidateKgCurrentPage:1,
       //目标图谱数据表
       mergeKgTable:[],
       //多选候选图谱表格
       multipleMergeKgTable:[],
       multipleCandidateKgPageSize:10,
-      multipleCandidateKgTotal:'',
+      multipleCandidateKgTotal:0,
       multipleCandidateKgCurrentPage:1,
       multipleSelection: [],
       multipleSelectionName: [],
@@ -505,7 +506,8 @@ export default {
       entityCount:0,
       relationTypeCount:0,
       relationCount:0,
-
+      //
+      toKgTotal:0
     };
   },
   methods: {
@@ -834,7 +836,6 @@ export default {
           }
         })
       }
-      this.
     },
     //simKgTable的前端分页
     getSimKgTableData(){

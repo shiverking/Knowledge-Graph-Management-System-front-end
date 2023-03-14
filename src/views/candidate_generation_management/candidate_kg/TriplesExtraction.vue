@@ -8,19 +8,19 @@
           :value="item.value">
       </el-option>
     </el-select>
-    <el-button type="primary" @click="triples_extraction" style="margin:0px;" plain>开始抽取</el-button>
-    <el-button type="info" plain icon="el-icon-zoom-in" style="margin:0px;" @click="viewResult()">预览</el-button>
+    <el-button type="primary" @click="triples_extraction" style="margin:5px;" plain>开始抽取</el-button>
+    <el-button type="info" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">预览</el-button>
     <el-popover
         placement="top"
         v-model="confirmExportVisible">
       <p>要将抽取结果导出至候选三元组库吗？</p>
-      <div style="text-align: right; margin: 0">
+      <div style="text-align: right; margin: 5px;">
         <el-button size="mini" type="text" @click="confirmExportVisible = false">取消</el-button>
         <el-button type="success" size="mini" @click="confirmExportVisible = false;confirmExport()">确定</el-button>
       </div>
-    <el-button  plain type="success" icon="el-icon-upload2" style="margin:0px;" slot="reference">结果导出</el-button>
+    <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;" slot="reference">结果导出</el-button>
     </el-popover>
-    <el-button  plain type="danger"  style="margin:0px;" @click="isStop=true">停止抽取</el-button>
+    <el-button  plain type="danger"  style="margin:5px;" @click="isStop=true">停止抽取</el-button>
     <el-progress v-show="progressBarVisible" :percentage="progressBarValue" :format="format"></el-progress>
     <el-dialog
         title="抽取结果"
@@ -64,7 +64,7 @@
     </el-dialog>
     <!--内容预览-->
     <el-dialog title="内容" :visible.sync="contentVisible" top="7vh" width="70%">
-      <el-input :rows="20" v-model="content" type="textarea" style="width: 100%" :readonly="read" ></el-input>
+      <el-input :rows="20" v-model="content" type="textarea" style="width: 100%" :readonly="true" ></el-input>
     </el-dialog>
     <el-table
         ref="multipleTable"
@@ -100,9 +100,9 @@
           show-overflow-tooltip>
         <template slot-scope="scope">
           <el-image v-if="scope.row.status=='未抽取'" style="width: 25px; height: 25px;overflow: initial"
-                    src="/static/icon/discard.png" :fit="fit"></el-image>
+                    :src="discard" ></el-image>
           <el-image v-if="scope.row.status=='已抽取'"style="width: 25px; height: 25px;overflow: initial"
-                    src="/static/icon/success.png" :fit="fit"></el-image>
+                    :src="success" ></el-image>
           {{ scope.row.status}}
         </template>
       </el-table-column>
@@ -160,9 +160,13 @@
 <script>
   import * as echarts from 'echarts';
   import noData from "@/assets/icon/no_data.png"
+  import discard from "@/assets/icon/discard.png"
+  import success from "@/assets/icon/success.png"
   export default {
     data() {
       return {
+        success:success,
+        discard:discard,
         noData:noData,
         //加载
         loading:false,

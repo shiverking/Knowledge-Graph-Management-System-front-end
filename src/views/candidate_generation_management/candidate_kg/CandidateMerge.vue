@@ -315,7 +315,7 @@
         <el-descriptions-item label="实体对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
         <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
       </el-descriptions>
-      <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略" style="width: 330px;">
+      <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略">
         <el-option
             v-for="item in mergeStrategyOptions"
             :key="item.value"
@@ -347,7 +347,7 @@
           <el-button size="mini" type="text" @click="comfirmMergeVisible = false">取消</el-button>
           <el-button type="primary" size="mini" @click="comfirmMergeVisible = false;startMerge()">确定</el-button>
         </div>
-        <el-button type="primary" style="margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">开始融合</el-button>
+        <el-button type="primary" style="margin-top: 12px;margin-left:8px;" slot="reference" @click="checkNecessaryInfo">开始融合</el-button>
       </el-popover>
       <el-progress :text-inside="false" :stroke-width="15" :percentage="processPercentage" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
       <transition name="el-fade-in-linear">
@@ -359,7 +359,7 @@
     </div>
     <div style="text-align: right;">
       <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
-      <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+      <el-button v-if="active<2" style="margin-top: 12px;" @click="next">下一步</el-button>
     </div>
   </div>
 </template>
@@ -456,7 +456,7 @@ export default {
       dialogAllKGVisible:false,
       //目标图谱分页数据
       candidateKgPageSize:10,
-      candidateKgTotal:'',
+      candidateKgTotal:0,
       candidateKgCurrentPage:1,
       //目标图谱数据表
       mergeKgTable:[],
@@ -466,7 +466,7 @@ export default {
       //多选候选图谱表格
       multipleMergeKgTable:[],
       multipleCandidateKgPageSize:10,
-      multipleCandidateKgTotal:'',
+      multipleCandidateKgTotal:0,
       multipleCandidateKgCurrentPage:1,
       multipleSelection: [],
       multipleSelectionName: [],
@@ -684,7 +684,6 @@ export default {
     //选择候选图谱时的多选框动作
     multipleCandidateKgHandleSelectionChange(val){
       this.multipleSelection = val;
-      console.log(val);
       if(val.length>2){
         this.$message({
           message: '最多选择两个融合图谱',
