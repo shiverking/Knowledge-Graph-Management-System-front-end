@@ -123,7 +123,7 @@
       <!--footer-->
       <span slot="footer" class="dialog-footer">
         <el-tooltip class="item" effect="dark" content="批量删除" placement="top-start">
-          <el-button type="danger" icon="el-icon-delete" plain>批量删除</el-button>
+          <el-button type="danger" icon="el-icon-delete" class="operation_button" plain>批量删除</el-button>
         </el-tooltip>
         <el-popover
             placement="top"
@@ -133,7 +133,7 @@
               <el-button size="mini" type="text" @click="deleteVisible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="deleteVisible = false;deleteAll()">确定</el-button>
             </div>
-            <el-button type="danger" slot="reference" plain icon="el-icon-delete">全部删除</el-button>
+            <el-button type="danger" class="operation_button" slot="reference" plain icon="el-icon-delete">全部删除</el-button>
         </el-popover>
         <el-popover
             placement="top"
@@ -143,13 +143,17 @@
               <el-button size="mini" type="text" @click="submitVisible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="submitVisible = false;submit()">确定</el-button>
             </div>
-            <el-button type="success" slot="reference" icon="el-icon-upload2" plain>提交版本</el-button>
+            <el-button type="success" slot="reference" class="operation_button" icon="el-icon-upload2" plain>提交版本</el-button>
         </el-popover>
       </span>
     </el-dialog>
   </div>
 </template>
-
+<style>
+.operation_button{
+  margin: 8px;
+}
+</style>
 <script>
 import moment from 'moment';
 import $ from "../../plugins/jquery.min";

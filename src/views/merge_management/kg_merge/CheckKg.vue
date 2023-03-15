@@ -40,9 +40,9 @@
               label="是否同步">
             <template slot-scope="scope">
               <el-image v-if="scope.row.synchronization==0" style="width: 25px; height: 25px"
-                        src="/static/icon/discard.png" :fit="fit"></el-image>
+                        :src="discard"></el-image>
               <el-image v-if="scope.row.synchronization==1"style="width: 25px; height: 25px"
-                        src="/static/icon/success.png" :fit="fit"></el-image>
+                        :src="success"></el-image>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -66,7 +66,7 @@
         <!--详情-->
         <div v-show="!showDetail">
           <el-button @click="showDetail=true">返回</el-button>
-          <el-tabs v-model="activeName" @tab-click="handleTabChange" >
+          <el-tabs v-model="activeName" >
             <!--融合改动-->
             <el-tab-pane label="融合改动" name="first">
               <el-table border :data="mergeData" style="margin-top:0vh">
@@ -169,6 +169,8 @@
 <script>
 import moment from 'moment';
 import $ from "../../../plugins/jquery.min"
+import discard from "@/assets/icon/discard.png"
+import success from "@/assets/icon/success.png"
 export default {
   data() {
     return {
@@ -179,6 +181,8 @@ export default {
       input2: '',
       input3: '',
       select: '',
+      success:success,
+      discard:discard,
       //tab页默认激活
       activeName:"first",
       //是否展示界面
@@ -444,6 +448,7 @@ export default {
 }
 .search_button{
   display: inline-block;
+  margin-left: 8px !important;
 }
 .pagination{
   margin-top: 10px;

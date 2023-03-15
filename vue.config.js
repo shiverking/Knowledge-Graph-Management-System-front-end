@@ -18,7 +18,7 @@ module.exports = defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8081', // 需要跨域请求的地址或者IP
+        target: 'http://127.0.0.1:12345', // 需要跨域请求的地址或者IP
         // target: 'https://702yl78416.zicp.fun', // 需要跨域请求的地址或者IP
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {
@@ -26,10 +26,17 @@ module.exports = defineConfig({
         }
       },
       '/pythonApi': {
-        target: 'http://103.46.128.53:11632',
+        target: 'http://172.20.10.4:3389',
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {
-          '^/pythonApi': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
+          '^/pythonApi': '' //本身的接口地址没有 '/pythonApi' 这种通用前缀，所以要rewrite，如果本身有则去掉
+        }
+      },
+      '/python': {
+        target: 'http://127.0.0.1:8088',
+        changeOrigin: true, //  表示是否跨域
+        pathRewrite: {
+          '^/python': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
         }
       }
     },
