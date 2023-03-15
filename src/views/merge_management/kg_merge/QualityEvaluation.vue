@@ -66,7 +66,7 @@
               <el-button size="mini" type="text" @click="isJoin = false">取消</el-button>
               <el-button type="primary" size="mini" @click="isJoin = false; join_submission_form(); link_modified_successfully();">确定</el-button>
             </div>
-            <el-button type="success" slot="reference" style="margin-top: 10px;">应用</el-button>
+            <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
           </el-popover>
           <keep-alive>
             <el-table
@@ -238,7 +238,7 @@
             <el-button size="mini" type="text" @click="isJoin = false">取消</el-button>
             <el-button type="primary" size="mini" @click="isJoin = false; join_submission_form_of_attr(); link_modified_successfully();">确定</el-button>
           </div>
-          <el-button type="success" slot="reference" style="margin-top: 10px;">应用</el-button>
+          <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
         </el-popover>
         <keep-alive>
           <el-table
@@ -493,13 +493,13 @@
           <p>确定保存当前操作记录并提交至缓存表吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
+            <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();handoff=true;">确定</el-button>
           </div>
-          <el-button type="primary" style="margin-top: 12px;"  slot="reference">提交</el-button>
+          <el-button type="primary" style="margin-top: 12px; margin-left: 10px;" slot="reference">提交</el-button>
         </el-popover>
       </div>
         </el-tab-pane>
-        <el-tab-pane label="基于智能匹配检测" name="fourth">
+        <el-tab-pane disabled="handoff" label="基于智能匹配检测" name="fourth">
           <el-table
             :data="tableData1"
             border
@@ -573,6 +573,7 @@
     },
     data() {
       return {
+        handoff:false,
         isJoin: false, //是否应用链接异常修改的flag
         activeName: 'first', //基于本体or基于算法选项卡flag
         abnormal_from_kgist:[], //kgist（算法）检测到的异常list
