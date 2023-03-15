@@ -25,7 +25,7 @@
             <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
             <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
             <el-table-column property="head_from" label="From" show-overflow-tooltip></el-table-column>
-            <el-table-column property="relation" label="关系"show-overflow-tooltip></el-table-column>
+            <el-table-column property="relation" label="关系" show-overflow-tooltip></el-table-column>
             <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
             <el-table-column property="tail_from" label="From" show-overflow-tooltip></el-table-column>
             <el-table-column property="score" label="置信评分" show-overflow-tooltip></el-table-column>
@@ -62,8 +62,8 @@
             <el-table-column property="pred_prob" label="评分" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                  <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
-                  <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+                  <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+                  <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
               </template>
             </el-table-column>
             <el-table-column label="操作时间">
