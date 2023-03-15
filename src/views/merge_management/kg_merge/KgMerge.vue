@@ -157,15 +157,16 @@
             tooltip-effect="dark"
             style="width: 100%"
             border
+            :key="tableKey"
             @cell-click="handleCellClick">
           <el-table-column
               label="实体(核心图谱)" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div>{{ scope.row.to}}
               <el-image
-                v-show="scope.row.direction=='left'"
+                v-if="scope.row.direction=='left'"
                 style="top:3px;width: 20px;height:20px"
-                src="../../../static/icon/right.png"
+                :src="rightImg"
                 ></el-image>
               </div>
             </template>
@@ -175,9 +176,9 @@
             <template slot-scope="scope">
               <div>{{ scope.row.from}}
                 <el-image
-                    v-show="scope.row.direction=='right'"
+                    v-if="scope.row.direction=='right'"
                     style="top:3px;width: 20px;height:20px"
-                    src="../../../static/icon/right.png"
+                    :src="rightImg"
                     ></el-image>
               </div>
             </template>
@@ -209,7 +210,7 @@
             ></el-image>
             <el-image
                 style="top:3px;width: 20px;height:20px"
-                :src="rightArrow2"
+                :src="leftArrow"
                 v-if="scope.row.direction=='left'"
             ></el-image>
             </template>
@@ -406,17 +407,21 @@ import $ from "../../../plugins/jquery.min"
 import Cache from "../../../components/merge_kg/Cache";
 import rightImg from "@/assets/icon/right.png"
 import rightArrow from "@/assets/icon/right-arrow.png"
-import rightArrow2 from "@/assets/icon/right-arrow.png"
+import leftArrow from "@/assets/icon/left-arrow2.png"
 export default {
   components:{
     KgPreview,
-    Cache
+    Cache,
+    rightImg,
+    rightArrow,
+    leftArrow,
   },
   data() {
     return {
       rightImg:rightImg,
       rightArrow:rightArrow,
-      rightArrow2:rightArrow2,
+      leftArrow:leftArrow,
+      tableKey:0,
       active:0,
       //融合时主图谱和候选图谱切换
       kgType:"",
@@ -555,7 +560,7 @@ export default {
       }
       else{
         this.simLoading=true
-        axios.post('/pythonApi/calculateEntitySimilarityFromCoreKg',{
+        axios.post('/python/calculateEntitySimilarityFromCoreKg',{
           secondEntity : this.fromKgTableData,
           threshold :this.threshold,
           algorithm:this.algorithm
@@ -831,11 +836,27 @@ export default {
         row.direction = null;
         //删除该条记录
         this.mergeTable = this.mergeTable.filter(item=>{
-          if(item['to']!=row.to&&item['from']!=row.from){
+          if(item['fromId']!=row.fromId){
             return item
           }
+          // if(item['to']!=row.to&&item['from']!=row.from){
+          //   return item
+          // }
         })
       }
+      this.tableKey +=1;
+    },
+    //
+    clearAllAlignSelection(){
+      //置空表
+      this.mergeTable = [];
+      //取消所有箭头显示
+      $('table').find(".el-image").hide();
+      //去掉所有direction
+      this.simTableData.forEach((ele,index)=>{
+        ele.direction = null;
+      })
+      this.getSimKgTableData();
     },
     //simKgTable的前端分页
     getSimKgTableData(){
@@ -855,13 +876,7 @@ export default {
       this.simKgPageSize = val
       this.getSimKgTableData()
     },
-    //
-    clearAllAlignSelection(){
-      //置空表
-      this.mergeTable = [];
-      //取消所有箭头显示
-      $('table').find(".el-image").hide()
-    },
+
     checkNecessaryInfo(){
       this.comfirmMergeVisible = true;
     },
@@ -882,6 +897,7 @@ export default {
           strategy:this.selectedMergeStrategy,
           oldKgId:selectedIds,
           kg:this.confidenceDetectionData,
+          mergeTable:this.mergeTable,
         })
             .then((response) => {
               if (response.status == 200) {
@@ -901,6 +917,7 @@ export default {
           strategy:this.selectedMergeStrategy,
           oldKgId:selectedIds,
           kg:this.fromKgTableData,
+          mergeTable:this.mergeTable,
         })
         .then((response) => {
           if (response.status == 200) {

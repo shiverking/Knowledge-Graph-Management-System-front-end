@@ -26,10 +26,17 @@ module.exports = defineConfig({
         }
       },
       '/pythonApi': {
-        target: 'http://103.46.128.53:11632',
+        target: 'http://172.20.10.4:3389',
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {
-          '^/pythonApi': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
+          '^/pythonApi': '' //本身的接口地址没有 '/pythonApi' 这种通用前缀，所以要rewrite，如果本身有则去掉
+        }
+      },
+      '/python': {
+        target: 'http://127.0.0.1:8088',
+        changeOrigin: true, //  表示是否跨域
+        pathRewrite: {
+          '^/python': '' //本身的接口地址没有 '/api' 这种通用前缀，所以要rewrite，如果本身有则去掉
         }
       }
     },
