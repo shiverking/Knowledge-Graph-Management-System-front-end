@@ -463,11 +463,11 @@
               label="更新方式"
               >
               <template slot-scope="scope">
-                <span v-if="scope.row.rel_radio==0">删除链接</span>
-                <span v-if="scope.row.rel_radio==1">修改实体类别</span>
-                <span v-if="scope.row.rel_radio==2">修改链接</span>
-                <span v-if="scope.row.rel_radio==3">删除属性值</span>
-                <span v-if="scope.row.rel_radio==4">修改属性值</span>
+                <span v-if="scope.row.update_form==0">删除链接</span>
+                <span v-if="scope.row.update_form==1">修改实体类别</span>
+                <span v-if="scope.row.update_form==2">修改链接</span>
+                <span v-if="scope.row.update_form==3">删除属性值</span>
+                <span v-if="scope.row.update_form==4">修改属性值</span>
               </template>
             </el-table-column>    
           </el-table>
@@ -741,6 +741,7 @@
       //提交到缓存
       submitToCache(){
         this.submitLoading = true;
+        console.log(this.data_to_be_submitted)
         axios.post('/api/triples/evaluationCoreKg',{
           res:this.data_to_be_submitted,
         })
@@ -785,8 +786,8 @@
           if(key in row_of_relation_error_modification)
           row_of_relation_error_modification[key] = this.selectedRowOfRelError[key]
         }
-        row_of_relation_error_modification['rel_radio'] = this.form_of_relation_error.rel_radio
-        if(row_of_relation_error_modification['rel_radio'] != 0){
+        row_of_relation_error_modification['update_form'] = this.form_of_relation_error.rel_radio
+        if(row_of_relation_error_modification['update_form'] != 0){
           row_of_relation_error_modification['head_new'] = this.form_of_relation_error.head;
           row_of_relation_error_modification['head_typ_new'] = this.form_of_relation_error.head_typ;
           row_of_relation_error_modification['rel_new'] = this.form_of_relation_error.rel;
@@ -829,8 +830,8 @@
         row_of_attribute_error_modification['head_typ'] = this.selectedRowOfAttrError.ent_typ;
         row_of_attribute_error_modification['rel'] = this.selectedRowOfAttrError.attribute;
         row_of_attribute_error_modification['tail'] = this.selectedRowOfAttrError.attribute_val;        
-        row_of_attribute_error_modification['rel_radio'] = this.form_of_attribute_error.attr_radio
-        if(row_of_attribute_error_modification['rel_radio'] != 3){
+        row_of_attribute_error_modification['update_form'] = this.form_of_attribute_error.attr_radio
+        if(row_of_attribute_error_modification['update_form'] != 3){
           row_of_attribute_error_modification['head_new'] = this.selectedRowOfAttrError.ent;
           row_of_attribute_error_modification['head_typ_new'] = this.selectedRowOfAttrError.ent_typ;
           row_of_attribute_error_modification['rel_new'] = this.selectedRowOfAttrError.attribute;

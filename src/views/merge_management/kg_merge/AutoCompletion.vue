@@ -155,6 +155,7 @@
       <el-table
           :data="tableData2"
           border
+          :key="tableData2Key"
           style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="head"
@@ -182,8 +183,8 @@
         <el-table-column
             label="链接状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.linked_status=='0'">“实体-关系”链接存在</span>
-            <span v-if="scope.row.linked_status=='1'">“实体-关系”链接不存在</span>
+            <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+            <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -265,8 +266,8 @@
         <el-table-column
             label="预测类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
-            <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+            <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+            <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -329,6 +330,7 @@ p {
     },
     data() {
       return {
+        tableData2Key: 0,
         activeName: 'first', //基于本体or基于算法选项卡flag
         mod_set: [], //模型集合，存储“选择框1”的内容
         ent_set: [], //实体集合，存储“可搜索查找1”的内容
@@ -643,7 +645,7 @@ p {
             preds[i].forEach(function(element) {
               pred_res.push({"tail":element[0],"pred_prob":element[2]});
             })
-            res.push({"head":origin[0],"rel":origin[1], "linked_status": linked_status,"time":this.dateFormat(new Date()),"pred_form":0,"pred_res":pred_res});
+            res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":linked_status,"pred_res":pred_res});
           }
           this.predTable = res;
           this.getTableData2();
@@ -1188,6 +1190,8 @@ p {
       chooseTail(row){
         this.selectedRow.tail = row.tail;
         this.selectedRow.pred_prob= row.pred_prob;
+        // this.getTableData2();
+        this.tableData2Key += 1;
       },
       //应用链接预测结果
       applyResult(){
