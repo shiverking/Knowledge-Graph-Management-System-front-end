@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div style="margin-bottom: 30px">
-      <center>
-        <el-link v-for="(item,index) in listdata" :key="index" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>
-      </center>
+<!--    <div style="margin-bottom: 30px">-->
+<!--      <center>-->
+<!--        <el-link v-for="(item,index) in listdata" :key="index" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>-->
+<!--      </center>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">导弹</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">舰船</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">火炮</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">爆炸物</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">人员</el-link>-->
-    </div>
+<!--    </div>-->
     <el-form ref="formInline" :inline="true" :model="ruleForm" class="demo-form-inline" style="float: left">
 
       <el-form-item >
@@ -17,15 +17,25 @@
       </el-form-item >
       <el-form-item>
         <el-button type="primary" icon="el-icon-search"  style = "float: left ;margin-right: 50px">搜索</el-button>
-        <el-upload
-            class="upload-demo"
-            accept = ".jpg,.jpeg,.png"
-            list-type="picture">
-          <el-button  type="primary">导入文件</el-button>
-        </el-upload>
+<!--        <el-upload-->
+<!--            class="upload-demo"-->
+<!--            accept = ".jpg,.jpeg,.png"-->
+<!--            list-type="picture">-->
+<!--          <el-button  type="primary">导入文件</el-button>-->
+<!--        </el-upload>-->
       </el-form-item>
-
+      <span style="color: deepskyblue">数据来源：</span>
+      <el-select v-model="value" placeholder="请选择" @change="selectTrigger(value)">
+        <el-option
+            v-for="item in options"
+            :label="item.name"
+            :value="item.cid"
+        >
+        </el-option>
+      </el-select>
     </el-form>
+<!--    <el-button type="success" icon="el-icon-download" style="float: right;margin-right: 50px">文件导出</el-button>-->
+
     <el-table
         ref="multipleTable"
         :data="tableData"
@@ -34,48 +44,46 @@
         @selection-change="handleSelectionChange">
       <el-table-column
           type="selection"
-          width="55">
-      </el-table-column>
-      <el-table-column
-          prop="date"
-          label="创建日期"
-          sortable
-          column-key="date"
-          :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-          :filter-method="filterHandler"
       >
       </el-table-column>
       <el-table-column
-          prop="name"
-          label="名称"
-          width="180">
+          label="标题"
+          width="200"
+          show-overflow-tooltip>
+        <template slot-scope="scope">{{ scope.row.title}}</template>
+      </el-table-column>
+      <el-table-column
+          label="作者"
+          width="200"
+          show-overflow-tooltip>
+        <template slot-scope="scope">{{ scope.row.author}}</template>
+      </el-table-column>
+      <el-table-column
+          label="内容"
+          width="300"
+          show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-link :href="scope.row.url" type="primary" target="_blank">{{scope.row.name}}</el-link>
+          {{scope.row.content}}</template>
+      </el-table-column>
+      <el-table-column
+          label="创建时间"
+          show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span v-if="scope.row.create_time!=null">{{scope.row.create_time}}</span>
+          <span v-if="scope.row.create_time==null">暂无</span>
         </template>
       </el-table-column>
       <el-table-column
-          prop="remark"
-          label="备注">
-      </el-table-column>
-      <el-table-column
-          prop="type"
-          label="分类">
-      </el-table-column>
-      <el-table-column
-          prop="user"
-          label="创建者">
-      </el-table-column>
-      <el-table-column
-          prop="tag"
-          label="标签"
-          :filters="[{ text: '未抽取', value: '未抽取' }, { text: '已抽取', value: '已抽取' }]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end">
+          label="发布时间"
+          show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-tag
-              :type="scope.row.tag === '未抽取' ? 'primary' : 'success'"
-              disable-transitions>{{scope.row.tag}}</el-tag>
+          <span v-if="scope.row.create_time!=null">{{scope.row.publish_time}}</span>
+          <span v-if="scope.row.create_time==null">暂无</span>
         </template>
+      </el-table-column>
+      <el-table-column
+          label="来源" show-overflow-tooltip>
+        <template slot-scope="scope">{{ scope.row.origin}}</template>
       </el-table-column>
       <el-table-column
           fixed="right"
@@ -83,7 +91,7 @@
           width="200px"
       >
         <template slot-scope="scope">
-          <el-button @click="textdetail(scope.row)" type="text" size="big" >详情</el-button>
+          <el-button @click="textdetail(scope.row,scope.$index)" type="text" size="big" >详情</el-button>
           <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>
           <el-button @click="downloadTxt()" type="text" size="big" >下载</el-button>
           <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>
@@ -124,10 +132,11 @@ import { saveAs } from 'file-saver';
 export default {
   data() {
     return {
+      crawlid:2,
       textData:'',
       page:1,
       size:10,
-      total:10,
+      total:5000,
       currentIndex:0,
       listdata:['全部','飞机','导弹','火炮','爆炸物','舰船','人员'],
       ruleForm:[],
@@ -174,6 +183,34 @@ export default {
     }
   },
   methods: {
+    currentChange(currentPage){
+      axios.request({
+        method:"POST",
+        url:'/api/unstructure/getAllTextByPage',
+        params:{page:currentPage,limit:10}
+      })
+          .then((response) => {
+            if (response.status == 200) {
+              //修改数据
+              console.log(response)
+              this.tableData = response.data.data
+              this.total = response.data.count
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+    },
+    selectTrigger(id) {
+      const _this = this
+      _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/' + id).then(function (resp) {
+        console.log(resp)
+        _this.tableData = resp.data.data
+        _this.total = resp.data.count
+        _this.pagesize = resp.data.data.length
+      })
+      _this.crawlid=id
+    },
     getTableData() {
       this.tableData = this.textData.slice(
           (this.page - 1) * this.size,
@@ -181,19 +218,21 @@ export default {
       );
       this.total=this.textData.length
     },
-    currentChange(val) {
-      console.log(val)
-      this.page=val
-      this.getTableData()
-    },
+    // currentChange(val) {
+    //   console.log(val)
+    //   this.page=val
+    //   this.getTableData()
+    // },
     change(index){
       this.currentIndex=index
     },
-    textdetail(row) {
+    textdetail(row,id) {
+      const _this=this
       this.$router.push({
         path: '/data/unstructure/UnstructureTextDetail',
         query: {
-          content: row.content
+          content: row.content,
+          id:10*(_this.page-1)+id,
         }
       })
     },
@@ -218,13 +257,47 @@ export default {
   },
 
 created(){
-  this.textData   = require('../../../data/unstructure.json')
-  this.getTableData()
+  // this.textData   = require('../../../data/unstructure.json')
+  // this.getTableData()
+  const _this = this
+  _this.axios.get('/api/crawl/findAllnopage').then(function(resp){
+    console.log(resp)
+    _this.options = resp.data
+    _this.value= resp.data[1].cid
+    console.log(_this.value)
+
+  })
+  axios.request({
+    method:"POST",
+    url:'/api/unstructure/getAllTextByPage',
+    params:{page:0,limit:10}
+  })
+      .then((response) => {
+        if (response.status == 200) {
+          //修改数据
+          console.log(response)
+          this.tableData = response.data.data
+          this.total = response.data.count
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
 },
 }
 </script>
-<style scoped>
-.active{
-  color: blue;
+
+<style scoped lang="scss">
+::v-deep .el-input__inner {
+  width: 200px!important;
+}
+
+::v-deep .el-input {
+  width: 200px!important;
+}
+
+::v-deep .my-select{
+  display: block!important;;
+  width: 200px!important;
 }
 </style>
