@@ -67,7 +67,7 @@
               </template>
             </el-table-column>
             <el-table-column label="操作时间">
-              <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+              <template slot-scope="scope">{{timeProcess(scope.row.time)}}</template>
             </el-table-column>
           </el-table>
           <el-pagination
@@ -299,8 +299,7 @@ export default {
         evaluationNumber:this.evaluationCacheTotal,
       })
       .then((response) => {
-        if (response.status == 200) {
-          if(response.data.msg=="success"){
+        if (response.status == 200 && response.data.msg=="success") {
             this.dialogLoading=false
             this.$notify({
               title: '成功',
@@ -309,7 +308,6 @@ export default {
             });
             //跳转到版本记录
             this.$router.push('/merge/kg/versionControl');
-          }
         }
       })
       .catch(function (error) {

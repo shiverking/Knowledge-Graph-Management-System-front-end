@@ -27,7 +27,7 @@
               :show-overflow-tooltip="true">
           </el-table-column>
           <el-table-column
-              label="提交日期">
+              label="提交时间">
             <template slot-scope="scope">
               <span>{{dateFormat(scope.row.submit_time)}}</span>
             </template>
@@ -402,7 +402,7 @@ export default {
       this.showDetail = !this.showDetail;
     },
     //时间格式化
-    dateFormat(data) {return moment(new Date(data).getTime()).format('YYYY-MM-DD');},
+    dateFormat(data) {return moment(new Date(data).getTime()).format('YYYY-MM-DD HH:MM:SS');},
     //同步图数据库
     synchronize(){
       this.synchronizationLoading = true;
