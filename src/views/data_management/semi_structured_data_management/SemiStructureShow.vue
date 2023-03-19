@@ -1,82 +1,163 @@
 <template>
-  <div>
-    <div style="margin-bottom: 30px">
-      <center>
-        <el-link v-for="(item,index) in listdata" :key="index" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>
-      </center>
+  <div >
+<!--    <div style="margin-bottom: 30px">-->
+<!--      <center>-->
+<!--        <el-link v-for="(item,index) in listdata" :key="index" @click="change(index)" :underline="false" style="margin-right: 10px;font-size: 20px;" :class="{active:currentIndex === index}">{{ item }}</el-link>-->
+<!--      </center>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">导弹</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">舰船</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">火炮</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">爆炸物</el-link>-->
       <!--      <el-link :underline="false" style="margin-right: 10px;font-size: 20px;">人员</el-link>-->
-    </div>
+<!--    </div>-->
     <el-form ref="formInline" :inline="true" :model="ruleForm" class="demo-form-inline" style="float: left">
 
       <el-form-item >
         <el-input  v-model="ruleForm.value" placeholder="请输入名称" style = "width: 300px"></el-input>
       </el-form-item >
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search"  style = "float: left ;margin-right: 50px">搜索</el-button>
-        <el-upload
-            class="upload-demo"
-            accept = ".jpg,.jpeg,.png"
-            list-type="picture">
-          <el-button  type="primary">导入文件</el-button>
-        </el-upload>
+      <el-form-item >
+        <el-button  type="primary" icon="el-icon-search"  style = "margin-right: 50px">搜索</el-button>
+<!--        <el-upload-->
+<!--            class="upload-demo"-->
+<!--            accept = ".jpg,.jpeg,.png"-->
+<!--            list-type="picture">-->
+<!--          <el-button  type="primary">导入文件</el-button>-->
+<!--        </el-upload>-->
       </el-form-item>
-
+      <span style="color: deepskyblue">数据来源：</span>
+      <el-select v-model="value" placeholder="请选择" @change="selectTrigger(value)">
+        <el-option
+            v-for="item in options"
+            :label="item.name"
+            :value="item.cid"
+        >
+        </el-option>
+      </el-select>
     </el-form>
-    <el-button  type="primary" style="float: right ;margin-right: 50px">转换为候选三元组</el-button>
+    <el-button type="success" icon="el-icon-download" style="float: right;margin-right: 50px">文件导出</el-button>
+<!--    <el-button  type="primary" style="float: right ;margin-right: 50px">转换为候选三元组</el-button>-->
     <el-table
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange">
+
       <el-table-column
           type="selection"
-          width="55">
-      </el-table-column>
-      <el-table-column
-          prop="date"
-          label="创建日期"
-          sortable
-          column-key="date"
-          :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-          :filter-method="filterHandler"
       >
       </el-table-column>
       <el-table-column
           prop="name"
           label="名称"
-          width="180">
-        <template slot-scope="scope">
-          <el-link :href="scope.row.url" type="primary" target="_blank">{{scope.row.name}}</el-link>
-        </template>
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
-          prop="remark"
-          label="备注">
+          prop="max_speed"
+          label="最大速度"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
-          prop="type"
-          label="分类">
+          prop="weight"
+          label="重量"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
-          prop="user"
-          label="创建者">
+          prop="create_time"
+          label="创建时间"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
-          prop="tag"
-          label="标签"
-          :filters="[{ text: '未抽取', value: '未抽取' }, { text: '已抽取', value: '已抽取' }]"
-          :filter-method="filterTag"
-          filter-placement="bottom-end">
-        <template slot-scope="scope">
-          <el-tag
-              :type="scope.row.tag === '未抽取' ? 'primary' : 'success'"
-              disable-transitions>{{scope.row.tag}}</el-tag>
-        </template>
+          prop="length"
+          label="长度"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="width"
+          label="宽度"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="height"
+          label="高度"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="crew"
+          label="乘员"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="range"
+          label="飞行/发射范围"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="draught"
+          label="吃水"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="displacement"
+          label="排水量"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="service_year"
+          label="服役年份"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="origin"
+          label="来源"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="horsepower"
+          label="马力"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="manufacturer"
+          label="生产商"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="ceiling"
+          label="飞行高度"
+          width="100px"
+          :show-overflow-tooltip="true"
+      >
       </el-table-column>
       <el-table-column
           fixed="right"
@@ -84,16 +165,16 @@
           width="200px"
       >
         <template slot-scope="scope">
-          <el-button @click="jsondetail(scope.row)" type="text" size="big" >详情</el-button>
           <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>
-          <el-button @click="downloadTxt()" type="text" size="big" >下载</el-button>
           <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-        layout="prev, pager, next"
-        :total="50">
+        @current-change="currentChange"
+        :current-page="page" :page-size="pagesize"
+        layout="total,prev, pager, next"
+        :total="total">
     </el-pagination>
     <!--    <el-dialog-->
     <!--        :visible.sync="dialogPreviewJSON"-->
@@ -126,18 +207,24 @@ export default {
   components: {SJson},
   data() {
     return {
+      crawlid:1,
+      total: 10,
+      page: 1,
+      pagesize: 20,
+      value: '',
+      options: [],
       dataList: [
         {
           text: 'Parent node',
           children: [
-            { text: 'Child node 1' },
-            { text: 'Child node 2' }
+            {text: 'Child node 1'},
+            {text: 'Child node 2'}
           ]
         }
       ],
-      currentIndex:0,
-      listdata:['全部','飞机','导弹','火炮','爆炸物','舰船','人员'],
-      ruleForm:[],
+      currentIndex: 0,
+      listdata: ['全部', '飞机', '导弹', '火炮', '爆炸物', '舰船', '人员'],
+      ruleForm: [],
       jsonData: [
         {
           "名称": "500MD反潛直升機",
@@ -175,40 +262,40 @@ export default {
       ],
       dialogPreviewJSON: false,
       tableData: [{
-        id:1,
+        id: 1,
         date: '2022-05-02 10:40:00',
         name: 'milltory_factory',
         origin: 'Militaryfactory ',
-        url:'https://www.militaryfactory.com/aircraft/detail.php?aircraft_id=1509',
+        url: 'https://www.militaryfactory.com/aircraft/detail.php?aircraft_id=1509',
         remark: '',
         tag: '未抽取',
         type: '飞机 ; 导弹',
         user: '用户1',
       }, {
-        id:2,
+        id: 2,
         date: '2022-05-03 9:32:00',
         name: '台湾海军',
         origin: '台湾海军官网',
-        url:'https://navy.mnd.gov.tw/AboutUs/Other_List.aspx?ID=1',
+        url: 'https://navy.mnd.gov.tw/AboutUs/Other_List.aspx?ID=1',
         remark: '数据为繁体字',
         tag: '已抽取',
         type: '飞机 ; 火炮',
         user: '用户1',
       }, {
-        id:3,
+        id: 3,
         date: '2022-05-04 13:57:00',
         name: '台湾海军',
         origin: '台湾海军官网',
-        url:'https://navy.mnd.gov.tw/AboutUs/Other_List.aspx?ID=1',
+        url: 'https://navy.mnd.gov.tw/AboutUs/Other_List.aspx?ID=1',
         remark: '数据转换为简体字',
         tag: '未抽取',
         type: '飞机 ; 火炮',
         user: '用户1',
       }, {
-        id:4,
+        id: 4,
         date: '2022-05-05 20:35:00',
         name: '美国飞机与导弹',
-        url:'http://www.designation-systems.info/usmilav/index.html',
+        url: 'http://www.designation-systems.info/usmilav/index.html',
         origin: 'System.net',
         remark: '',
         tag: '已抽取',
@@ -218,19 +305,39 @@ export default {
     }
   },
   methods: {
-    change(index){
-      this.currentIndex=index
+    currentChange(currentPage){
+      const _this = this
+        _this.axios.get('/api/semistructure/getSemistructuredDataBycid/'+(currentPage)+'/10/'+_this.crawlid).then(function(resp) {
+          console.log(resp)
+          _this.tableData = resp.data.data
+          _this.pageSize = resp.data.data.length
+          _this.total = resp.data.count
+        })
+            },
+    selectTrigger(id) {
+      const _this = this
+      _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/' + id).then(function (resp) {
+        console.log(resp)
+        _this.tableData = resp.data.data
+        _this.total = resp.data.count
+        _this.pagesize = resp.data.data.length
+      })
+      this.crawlid=id
     },
-    downloadjson(){
+
+    change(index) {
+      this.currentIndex = index
+    },
+    downloadjson() {
       let data = JSON.stringify(this.jsonData);
-      let blob = new Blob([data], { type: "application/json" });
+      let blob = new Blob([data], {type: "application/json"});
       FileSaver.saveAs(blob, `半结构化数据.json`);
     },
-    jsondetail(row){
+    jsondetail(row) {
       this.$router.push({
         path: '/data/semistructure/SemiStructureDetail',
-        query:{
-          id:row.id
+        query: {
+          id: row.id
         }
       })
     },
@@ -247,11 +354,38 @@ export default {
       const property = column['property'];
       return row[property] === value;
     }
+  },
+
+  created() {
+    const _this = this
+    _this.axios.get('/api/crawl/findAllnopage').then(function(resp){
+      console.log(resp)
+      _this.options = resp.data
+      _this.value= resp.data[0].cid
+      console.log(_this.value)
+
+    })
+    _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/1').then(function(resp){
+      console.log(resp)
+      _this.tableData = resp.data.data
+      _this.total=resp.data.count
+      _this.pagesize=resp.data.data.length
+    })
   }
 }
+
 </script>
-<style scoped>
-.active{
-  color: blue;
+<style scoped lang="scss">
+::v-deep .el-input__inner {
+  width: 200px!important;
+}
+
+::v-deep .el-input {
+  width: 200px!important;
+}
+
+::v-deep .my-select{
+  display: block!important;;
+  width: 200px!important;
 }
 </style>
