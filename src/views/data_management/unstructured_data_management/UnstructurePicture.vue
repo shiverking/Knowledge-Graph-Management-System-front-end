@@ -1,14 +1,16 @@
 <template>
-  <div id="main">
+  <div>
     <!-- 顶部菜单 ref:组件对象，获取高度 horizontal:横向导航栏-->
     <el-menu :default-active="activeIndex" ref="top_menu" mode="horizontal" @select="handleSelect"
-             background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :style="displayTopMenu">
+             background-color="#545c64" text-color="#fff" active-text-color="#ffd04b"  :style="displayTopMenu" >
+<!--    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
+
       <el-menu-item index="all">全 部 图 片</el-menu-item>
-      <el-submenu index="type" style="width:130px;">
+      <el-submenu index="type" >
         <template slot="title">{{ typeTitle }}</template>
         <el-menu-item v-for="(item, index) in imageTypes " :key="index" :index="item">{{ item }}</el-menu-item>
       </el-submenu>
-      <el-submenu index="time" style="width:130px">
+      <el-submenu index="time" >
         <template slot="title">{{ timeTitle }}</template>
         <el-menu-item v-for="(item, index) in imageTimes" :key="index" :index="item">{{ item }}</el-menu-item>
       </el-submenu>
@@ -75,7 +77,7 @@
           </el-checkbox>
         </el-checkbox-group>
 
-        <el-image :src="serviceurl+item.imageUrl" :preview-src-list="previewImageUrL" class="image">
+        <el-image :src="serviceurl+item.path" :preview-src-list="previewImageUrL" class="image">
           <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"
                style="margin-top:40%">
           </div>
@@ -92,8 +94,8 @@
         </el-pagination>
       </div>
     </div>
-
   </div>
+
 </template>
 
 <script>
@@ -109,10 +111,10 @@ export default {
       loading: false,
       token: '',  //token凭证
       serveUrL: this.$serveUrL,
-      serviceurl:"http://localhost:8081/picture/",
+      serviceurl:"http://localhost:12345/picture/",
       // 顶部菜单
       activeIndex: 'all',
-      timeTitle: '服 役 年 份',
+      timeTitle: '新 增 图 片',
       typeTitle: '图 片 类 别',
       arrPath: ['all'],   //存放当前菜单路径
       placeholder: '请输入关键词查询图片',
@@ -157,7 +159,7 @@ export default {
         height: '29%',
       },
       imageTypes: ['战斗机', '舰载电子战斗机', '预警机','直升机','运输机'],//所有图片类型
-      imageTimes: ['2011年', '2013年', '2015年'],  //所有图片时间
+      imageTimes: ['一周内', '一个月内', '三个月内'],  //所有图片时间
 
       //复选框
       checkAll: false,       //是否全选
@@ -178,23 +180,35 @@ export default {
 
     };
   },
-  created() {
-
-    var _this = this;
-    this.axios.get('/api/album/findbyalbum/' + this.$route.query.albumId ).then(function (resp) {
-      _this.images = resp.data;
-      _this.typeimages = resp.data;
-      for (var i =0;i<_this.images.length;i++){
-        _this.previewImageUrL.push(_this.serviceurl+_this.images[i]['imageUrl'])
-      }
-
-    })
-    console.log(this.previewImageUrL)
-  },
+  // created() {
+  //
+  //   var _this = this;
+  //   this.axios.get('/api/album/findbyalbum/' + this.$route.query.albumId ).then(function (resp) {
+  //     _this.images = resp.data;
+  //     _this.typeimages = resp.data;
+  //     for (var i =0;i<_this.images.length;i++){
+  //       _this.previewImageUrL.push(_this.serviceurl+_this.images[i]['imageUrl'])
+  //     }
+  //
+  //   })
+  //   console.log(this.previewImageUrL)
+  // },
   mounted() {
-
-    this.selectAllTimeType();
-    this.selectAllImage();
+    const _this = this
+    _this.axios.get('/api/image/getimage/0/24/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.typeimages = resp.data.data
+      _this.images=resp.data.data
+      _this.totalCount=resp.data.count
+      _this.pageSize=resp.data.data.length
+    })
+    _this.axios.get('/api/image/getimagetype/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.imageTypes = resp.data
+    })
+    //
+    // this.selectAllTimeType();
+    // this.selectAllImage();
   },
   methods: {
     // 添加到相册表格方法
@@ -346,18 +360,19 @@ export default {
       })
     },
     handleSelect(value, path) {
+      console.log(path)
       this.arrPath = path;
-      value
+      // value
       switch (path[0]) {
         case "all": {
           this.selectAllImage('', '');
-          this.timeTitle = '服 役 年 份';
+          this.timeTitle = '新 增 图 片';
           this.typeTitle = '图 片 类 别';
           break;
         }
         case "type": {
           this.typeTitle = path[1];
-          this.timeTitle = '服 役 年 份';
+          this.timeTitle = '新 增 图 片';
           this.selectAllImage('type', path[1]);
           break;
         }
@@ -382,23 +397,31 @@ export default {
       formData.append("token", this.token);
 
       if (mode == "type") {
+        const _this = this
+        _this.axios.get('/api/image/getimagebytype/0/24/'+this.$route.query.cid+"/"+value).then(function(resp){
+          console.log(resp)
+          _this.typeimages = resp.data.data
+          // _this.images=resp.data.data
+          _this.totalCount=resp.data.count
+          _this.pageSize=resp.data.data.length
+        })
         // formData.append("imageType", value);
         // requestApi = '/image/selectAllByType';
-        if (value=="战斗机"){
-          _this.typeimages=_this.images.slice(0,4)
-        }
-        if (value=="舰载电子战斗机"){
-          _this.typeimages=_this.images.slice(4,8)
-        }
-        if (value=="预警机"){
-          _this.typeimages=_this.images.slice(8,12)
-        }
-        if (value=="直升机"){
-          _this.typeimages=_this.images.slice(12,16)
-        }
-        if (value=="运输机"){
-          _this.typeimages=_this.images.slice(16,20)
-        }
+        // if (value=="战斗机"){
+        //   _this.typeimages=_this.images.slice(0,4)
+        // }
+        // if (value=="舰载电子战斗机"){
+        //   _this.typeimages=_this.images.slice(4,8)
+        // }
+        // if (value=="预警机"){
+        //   _this.typeimages=_this.images.slice(8,12)
+        // }
+        // if (value=="直升机"){
+        //   _this.typeimages=_this.images.slice(12,16)
+        // }
+        // if (value=="运输机"){
+        //   _this.typeimages=_this.images.slice(16,20)
+        // }
       }
       else if (mode == "time") {
         // formData.append("imageDate", value);
@@ -563,8 +586,8 @@ export default {
 #image-content {
   margin-left: 1.6em;
   margin-top: 2em;
-  width: 1300px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
 
 }
 

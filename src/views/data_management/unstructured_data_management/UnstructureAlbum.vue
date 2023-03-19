@@ -1,5 +1,5 @@
 <template>
-  <div id="main" :style="mainStyle">
+  <div >
 
     <!-- 隐藏菜单 -->
     <div id="check_menu" :style="displayCheckedMenu">
@@ -52,10 +52,12 @@
               <el-checkbox :label="index">
               </el-checkbox>
             </el-checkbox-group>
-            <img class="album-el-img" :src="serviceurl + item.albumImg" @click="openAblum(index)">
+            <img class="album-el-img" :src="crawlpicture" @click="openAblum(item.cid)">
             <div class="album-el-txt">
-              <span>{{ item.albumName }}</span>
-              <div>图片数量:<a> {{ item.imageNumber }}张</a>
+              <span>{{ item.name }}</span>
+              <div v-if="item.imagecount!=null">图片数量:<a > {{item.imagecount }}张</a>
+              </div>
+              <div v-else>暂无图片
               </div>
             </div>
           </el-card>
@@ -66,9 +68,12 @@
 
 </template>
 <script>
+import crawlpicture from "@/assets/unstructured_picture/crawl.png";
 export default {
   data() {
     return {
+      statistic:[],
+      crawlpicture:crawlpicture,
       serviceurl:"http://localhost:8081/picture/",
       albumName: '好吃的汉堡',
       ImageNumber: 100,
@@ -129,8 +134,8 @@ export default {
       displayCheckedMenu: '',  //隐藏
     };
   },
-  mounted() {
-  this.selectAlbums();
+  // mounted() {
+  // this.selectAlbums();
   // let h = window.document.body.clientHeight;
   // this.mainStyle.height = (h * 0.75) + 'px';
   // window.onresize = () => {
@@ -143,19 +148,32 @@ export default {
   //     this.mainStyle.height = (h * 0.75) + 'px';
   //   }, 500)
   // };
-},
+// },
+  created() {
+    const _this = this
+    _this.axios.get('/api/crawl/findAllnopage').then(function(resp){
+      console.log(resp)
+      _this.albumData = resp.data
+
+    })
+    _this.axios.get('/api/image/statistic').then(function(resp){
+      console.log(resp)
+      _this.statistic = resp.data
+
+    })
+  },
   methods: {
 
     //打开相册
     openAblum(id) {
-      let name = this.albumData[id].albumName;
-      this.currentAlbumId = this.albumData[id].albumId;
+      // let name = this.albumData[id].albumName;
+      // this.currentAlbumId = this.albumData[id].albumId;
       console.log(id)
       this.$message({
         type: 'success',
         message: '打开成功 '
       });
-      this.$router.push({ path: '/data/unstructure/UnstructurePicture', query: { albumId: this.currentAlbumId, albumName: name } });
+      this.$router.push({ path: '/data/unstructure/UnstructurePicture', query: { cid:  id} });
     },
     // 查询所有相册
     selectAlbums() {

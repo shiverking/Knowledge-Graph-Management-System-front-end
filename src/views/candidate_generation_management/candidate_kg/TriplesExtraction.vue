@@ -411,6 +411,7 @@
         .then((response) => {
           if (response.status == 200) {
             //修改数据
+            console.log(response)
             this.unstructuredTextPageList = response.data.data
             this.unstructuredTextTotal = response.data.count
           }
