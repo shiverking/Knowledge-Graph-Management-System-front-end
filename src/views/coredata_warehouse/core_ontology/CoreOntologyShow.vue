@@ -1,6 +1,7 @@
 <template>
-  <div id="main" class="main">
-    <VueCTree class="trees" :isEdit="true" v-if="ontology_data.length" :treeData="ontology_data" type="1" />
+  <div id="main" class="main" v-if="isReloadData">
+    <VueCTree class="trees" :isEdit="true" v-if="ontology_data.length" :treeData="ontology_data" type="1"
+      :refresh="refresh" @setRefresh="setRefresh" />
     <G6Img class="gImg" />
     <!-- <div id="show_ontology_like_graph" class="show_ontology" >
       <span class="desc">本体结构展示</span>
@@ -150,6 +151,7 @@ export default {
   },
   data() {
     return {
+      isReloadData: true,
       dataset: {
         name: "Thing",
         children: [
@@ -242,10 +244,37 @@ export default {
     }
   },
   methods: {
+    setRefresh(res) {
+      console.log(res, 'res');
+      this.getInit()
+ 
+      axios.request({
+        method: 'get',
+        url: '/api/coreOntology/getTreeData'
+      }).then(response => {
+        console.log(response);
+        if (response.status == 200 && response.data.result) {
+          console.log('请求到的response6');
+          var list = [response.data.data]
+          // this.renderTree(list)
+          this.ontology_data = list;
+          console.log(this.ontology_data);
+          this.isReloadData = false
+      this.$nextTick(() => {
+        this.isReloadData = true
+      })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: response.data.message
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
     renderTree(tree) {
       for (let node of tree) {
-        console.log(node)
-        console.log(123123)
         node.opened = false;
         node.selected = false;
         node.loading = false;
@@ -380,4 +409,5 @@ export default {
   width: 30%;
   height: 110%;
   margin-top: 20px;
-}</style>
+}
+</style>

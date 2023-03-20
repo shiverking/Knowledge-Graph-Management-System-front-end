@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <VueCTree class="trees"  :isEdit="true" :treeData="leftTreeData"/>
+    <VueCTree class="trees"  :isEdit="true" :treeData="leftTreeData" />
     <G6Img class="gImg"/>
     <!-- <VueJstree class="tree" v-if="leftTreeDataFlag" text-field-name="name" value-field-name="id" :data="leftTreeData"
       @item-click="itemClick"></VueJstree> -->
@@ -234,10 +234,13 @@ export default {
         console.log(error);
       })
     },
+    setRefresh(){
+      console.log('刷新');
+    }
   },
   mounted() {
     this.getTreeDataByCandidateOntologyId();
-  }
+  },
 }
 </script>
 <style>
@@ -248,10 +251,12 @@ export default {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
+ 
 }
 .trees{
-  width: 30%;
-  margin-right: 30px;
+  width: 20% !important;
+  height: calc(100vh - 200px );
+  overflow-y: auto;
 }
 .gImg{
   flex:1;
