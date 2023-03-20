@@ -185,6 +185,7 @@
             </el-table-column>
             <el-table-column label="状态">
               <template slot-scope="scope">
+
                 <el-tag size="medium" type="success">{{ scope.row.status}}</el-tag>
               </template>
             </el-table-column>
@@ -457,7 +458,7 @@
   }
   .input_modify{
     margin: 10px;
-    width: 70%;
+    width: 70% !important;
   }
 </style>
 <script>
@@ -755,7 +756,6 @@
         val.forEach((item,index)=>{
           this.selectedTripleList.push(item);
         })
-        console.log(this.selectedTripleList)
         //重新计算分页
         this.selectedTriplePageList = this.selectedTripleList.slice(
             (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
@@ -770,6 +770,13 @@
       selectedTripleHandleCurrentChange(val){
         this.selectedTripleCurrentPage = val 
         //allData为全部数据
+        this.selectedTriplePageList = this.selectedTripleList.slice(
+            (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
+            this.selectedTripleCurrentPage * this.selectedTriplePageSize
+        );
+      },
+      selectedTripleHandleSizeChange(val){
+        this.selectedTriplePageSize = val;
         this.selectedTriplePageList = this.selectedTripleList.slice(
             (this.selectedTripleCurrentPage - 1) * this.selectedTriplePageSize,
             this.selectedTripleCurrentPage * this.selectedTriplePageSize

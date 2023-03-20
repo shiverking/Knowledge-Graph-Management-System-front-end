@@ -1,49 +1,12 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-steps :active="active" finish-status="success" simple>
-      <el-step title="链接预测"></el-step>
-      <el-step title="预测提交"></el-step>
-    </el-steps>
     <cache></cache>
-    <!--概览dialog-->
-      <el-row :gutter="12" style="margin-bottom:10px">
-        <el-col :span="8">
-          <el-card shadow="hover">
-            结点数目
-            <span style="fontSize:20px; color:blue">{{node_count}}</span>
-          </el-card>
-        </el-col>
-        <el-col :span="8">
-          <el-card shadow="hover">
-            关系数目
-            <span style="fontSize:20px; color:blue">{{edge_count}}</span>
-          </el-card>
-        </el-col>
-        <el-col :span="8">
-          <el-card shadow="hover">
-            实体类别数
-            <span style="fontSize:20px; color:blue">{{node_label_count}}</span>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row :gutter="12">
-        <el-col :span="8">
-          <el-card shadow="hover">
-            <div id="entity_type_bar" style="height:400px; width:500px; display:inline-block;"></div>
-          </el-card>
-        </el-col>
-        <el-col :span="8">
-          <el-card shadow="hover">
-            <div id="relation_bar" style="height:400px; width:500px; display:inline-block;"></div>
-          </el-card>
-        </el-col>
-        <el-col :span="8">
-          <el-card shadow="hover">
-            <div id="evaluation_lines" style="height:400px; width:500px; display:inline-block;"></div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-dialog> -->
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+    <el-tab-pane label="基于智能匹配检测" name="first">
+    <el-steps :active="active" finish-status="success" simple>
+    <el-step title="链接预测"></el-step>
+    <el-step title="预测提交"></el-step>
+    </el-steps>
     <!--模型管理dialog-->
     <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
     <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
@@ -123,7 +86,7 @@
       <div style="margin-top:10px">
         <p><b>选择待预测的实体和关系</b></p>
           <el-row class="demo-autocomplete">
-              <el-select v-model="select1" placeholder="请选择模型">
+              <el-select v-model="select1" style="margin-top:10px" placeholder="请选择模型">
                 <el-option
                   v-for="item in mod_set"
                   :key="item.value"
@@ -137,6 +100,7 @@
                 clearable
                 :fetch-suggestions="querySearch"
                 placeholder="请选择实体"
+                style="margin-left:10px"
                 @select="handleSelect"
               ></el-autocomplete>
               <el-autocomplete
@@ -145,9 +109,13 @@
                 clearable
                 :fetch-suggestions="querySearch2"
                 placeholder="请选择关系"
+                style="margin-left:10px"
                 @select="handleSelect2"
               ></el-autocomplete>
-              <el-button plain @click="comm_entRel_pair">确定</el-button>
+              <el-button 
+              plain
+              style="margin-left:10px" 
+              @click="comm_entRel_pair">确定</el-button>
           </el-row>
       </div>
       <el-table
@@ -180,13 +148,14 @@
         :total="tableData1_total"
         style="margin-top: 10px;">
       </el-pagination>
-      <el-button type="primary" @click="link_prediction" style="margin-top: 20px">开始识别</el-button>
+      <el-button type="primary" @click="link_prediction" style="margin-top: 20px;">开始识别</el-button>
       <el-tooltip class="item" effect="dark" content="预提交选择好的链接预测结果" placement="top-start">
-        <el-button type="success" @click="applyResult" style="margin: 0px;">应用</el-button>
+        <el-button type="success" @click="applyResult" style="margin: 0px;margin-left:10px">应用</el-button>
       </el-tooltip>
       <el-table
           :data="tableData2"
           border
+          :key="tableData2Key"
           style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="head"
@@ -212,10 +181,10 @@
         </template>
         </el-table-column>
         <el-table-column
-            label="预测类型">
+            label="链接状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
-            <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+            <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+            <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -247,11 +216,6 @@
             <template slot-scope="scope">
               {{scope.row.pred_prob}}
             </template>
-          </el-table-column>
-          <el-table-column label="链接状态">
-            <!-- <template slot-scope="scope">
-              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
-            </template> -->
           </el-table-column>
           <el-table-column label="选择尾实体">
             <template slot-scope="scope">
@@ -302,8 +266,8 @@
         <el-table-column
             label="预测类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
-            <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+            <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+            <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -313,7 +277,7 @@
       </el-table>
       </div>
     <div style="text-align: right;">
-      <el-button style="margin-top: 12px;" v-if="this.active==1" @click="previous">上一步</el-button>
+      <el-button style="margin-top: 12px;" v-if="this.active==1" @click="previous" >上一步</el-button>
       <el-popover
           placement="left"
           v-model="nextStepVisible">
@@ -322,10 +286,15 @@
           <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
           <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
         </div>
-        <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==1" slot="reference" @click="nextStepVisible=true;">提交</el-button>
+        <el-button type="primary" style="margin-top: 12px; margin-left:10px"  v-if="this.active==1" slot="reference" @click="nextStepVisible=true;">提交</el-button>
       </el-popover>
       <el-button type="primary" style="margin-top: 12px;" v-if="this.active==0" @click="next">下一步</el-button>
     </div>
+  </el-tab-pane>
+  <el-tab-pane disabled="handoff" label="基于本体规则检测" name="fourth">
+
+  </el-tab-pane>
+</el-tabs>
   </div>
 </template>
 <style>
@@ -361,6 +330,8 @@ p {
     },
     data() {
       return {
+        tableData2Key: 0,
+        activeName: 'first', //基于本体or基于算法选项卡flag
         mod_set: [], //模型集合，存储“选择框1”的内容
         ent_set: [], //实体集合，存储“可搜索查找1”的内容
         rel_set: [], //关系集合，存储“可搜索查找2”的内容
@@ -651,7 +622,7 @@ p {
               this.getTableData();
               this.loading = false;
               //解析数据到表格显示
-              this.decode_data(this.tmpTable,response.data.data.preds);
+              this.decode_data(this.tmpTable,response.data.data.preds, response.data.data.linked_status);
               }
           })
           .catch(function (error) {
@@ -661,7 +632,7 @@ p {
       },
       //解析返回的结果,用于表格显示
       //输入第一个为预测字符串(先用这种形式)，第二个列表为预测结果preds[]
-      decode_data(data,preds){
+      decode_data(data,preds,linked_status){
           var res =[];
           var decodedData = [];
           for(var i = 0; i < data.length; i++){
@@ -674,7 +645,7 @@ p {
             preds[i].forEach(function(element) {
               pred_res.push({"tail":element[0],"pred_prob":element[2]});
             })
-            res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":0,"pred_res":pred_res});
+            res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":linked_status,"pred_res":pred_res});
           }
           this.predTable = res;
           this.getTableData2();
@@ -744,6 +715,7 @@ p {
           if (response.status == 200) {
             //设置文本高亮
             this.get_lpm_table();
+            this.load_modSet(); //加载模型集合
             }
         })
         .catch(function (error) {
@@ -787,6 +759,7 @@ p {
         var chartDom = document.getElementById('gpu_status');
         var myChart = echarts.init(chartDom);
         var option;
+        var _this = this;
         //请求cpu占用数据
         function get_status_of_gpu(callback){
           //axios请求
@@ -882,22 +855,24 @@ p {
             }
           ]
         };
-        
-        setInterval(function () {
-            get_status_of_gpu(function(arr){
-                if(60 < data.length) 
+        var _time =setInterval(function () {
+            get_status_of_gpu((arr)=>{
+                if(60 < data.length)
                   data.shift();
-                data.push(randomData(arr));
-                myChart.setOption({
-                series: [
-                  {
-                    data: data
-                  }
-                ]
-              });
+                  data.push(randomData(arr));
+                  myChart.setOption({
+                    series: [
+                      {
+                        data: data
+                      }
+                    ]
+                  });
+                //如果关闭窗口，则停止请求
+              if(_this.stop_read_gpu_cpu == true) {
+                clearInterval(_time);
+              }
             });
         }, 2000);
-
         option && myChart.setOption(option);
       },
       //获取cpu状态:每2秒请求一次
@@ -905,6 +880,7 @@ p {
         var chartDom = document.getElementById('cpu_status');
         var myChart = echarts.init(chartDom);
         var option;
+        var _this = this;
         //请求cpu占用数据
         function get_status_of_cpu(callback){
           //axios请求
@@ -1000,8 +976,7 @@ p {
             }
           ]
         };
-        
-        setInterval(function () {
+        var _time =setInterval(function () {
             get_status_of_cpu(function(arr){
                 if(60 < data.length) 
                   data.shift();
@@ -1013,23 +988,31 @@ p {
                   }
                 ]
               });
+              if(_this.stop_read_gpu_cpu == true) {
+                clearInterval(_time);
+              }
             });
         }, 2000);
-
         option && myChart.setOption(option);
       },
-      //处理tab页展开事件
-      handleTabChange(tab, event) {
-        if(tab.label=="模型管理"){
+      //处理模型管理界面打开事件
+      startToGetGpuAndCpu() {
+        setTimeout(()=>{
           this.get_gpu_status()
+        },100)
+        setTimeout(()=>{
           this.get_cpu_status()
-        }
+        },100)
+      },
+      //关闭模型管理界面回调
+      closeModelView(done){
+          this.stop_read_gpu_cpu = true;
+          done();
       },
       getRelationBar(){
         var chartDom = document.getElementById('relation_bar');
         var myChart = echarts.init(chartDom);
         var option;
-
         option = {
           title: {
             text: '关系排行'
@@ -1069,7 +1052,6 @@ p {
             },
           ]
         };
-
         option && myChart.setOption(option);
       },
       getEntityTypeBar(){
@@ -1089,7 +1071,6 @@ p {
         //   .catch(function (error) {
         //     console.log(error)
         //   })
-
         option = {
           title: {
             text: '实体类型对应的实例排行'
@@ -1130,46 +1111,29 @@ p {
             }
           ]
         };
-
         option && myChart.setOption(option);
       },
       getBoxPlot(){
         var chartDom = document.getElementById('evaluation_lines');
         var myChart = echarts.init(chartDom);
         var option;
-
         option = {
           title: {
             text: '图谱嵌入指标'
           },
-          tooltip: {
-            trigger: 'axis'
-          },
           legend: {
             top: "7%",
-            data: ['MRR', 'Hits@1', 'Hits@3', 'Hits@10']
+            data: ['MRR', 'Hits@1', 'Hits@10']
           },
-          // grid: {
-          //   left: '3%',
-          //   right: '4%',
-          //   bottom: '3%',
-          //   containLabel: true
-          // },
           grid:{
             top:60,
             x:45,
             x2:50,
             y2:30,
           },
-          toolbox: {
-            feature: {
-              saveAsImage: {}
-            }
-          },
           xAxis: {
             type: 'category',
-            boundaryGap: false,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: ['11-4', '11-15', '11-16', '11-18', '11-20']
           },
           yAxis: {
             type: 'value'
@@ -1178,40 +1142,29 @@ p {
             {
               name: 'MRR',
               type: 'line',
-              stack: 'Total',
-              data: [120, 132, 101, 134, 90, 230, 210]
+              data: [0.44, 0.47, 0.46, 0.39, 0.43]
             },
             {
               name: 'Hits@1',
               type: 'line',
-              stack: 'Total',
-              data: [220, 182, 191, 234, 290, 330, 310]
-            },
-            {
-              name: 'Hits@3',
-              type: 'line',
-              stack: 'Total',
-              data: [150, 232, 201, 154, 190, 330, 410]
+              data: [0.23, 0.24, 0.25, 0.24, 0.26]
             },
             {
               name: 'Hits@10',
               type: 'line',
-              stack: 'Total',
-              data: [320, 332, 301, 334, 390, 330, 320]
+              data: [0.5, 0.57, 0.51, 0.52, 0.55]
             }
           ]
         };
-
         option && myChart.setOption(option);
-
       },
       get_overview_of_completion(){
+          this.overviewLoading=true;
           //axios请求
           axios.post('/pythonApi/get_overview_of_completion',{
           })
           .then((response)=>{
             if (response.status == 200) {
-              console.log(response.data)
               this.node_count = response.data['node_count']
               this.edge_count = response.data['edge_count']
               this.node_label_count = response.data['node_label_count']
@@ -1220,6 +1173,7 @@ p {
               this.getRelationBar()
               this.getEntityTypeBar()
               this.getBoxPlot()
+              this.overviewLoading=false;
               }
           })
           .catch(function (error) {
@@ -1236,6 +1190,8 @@ p {
       chooseTail(row){
         this.selectedRow.tail = row.tail;
         this.selectedRow.pred_prob= row.pred_prob;
+        // this.getTableData2();
+        this.tableData2Key += 1;
       },
       //应用链接预测结果
       applyResult(){
@@ -1379,13 +1335,9 @@ p {
       }    
     },
     mounted(){
-      this.get_overview_of_completion()
-    },
-    created(){
       this.load_entSet(); //加载实体集合
       this.load_relSet(); //加载关系集合
       this.load_modSet(); //加载模型集合
     },
-
   }
 </script>

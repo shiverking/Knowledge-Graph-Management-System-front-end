@@ -1,5 +1,8 @@
 <template>
   <div>
+    <el-dialog title="内容" :visible.sync="contentVisible" top="7vh" width="70%">
+      <el-input :rows="20" v-model="content" type="textarea" style="width: 100%" :readonly="read" ></el-input>
+    </el-dialog>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="爬虫信息" name="first">
     <el-card class="box-card">
@@ -41,34 +44,35 @@
           key="version_table"
       >
         <el-table-column
-            prop="id"
-            label="ID"
+            prop="_id"
+            label="id"
         >
         </el-table-column>
         <el-table-column
-            prop="ip"
-            label="IP"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="starttime"
+            prop="start_time"
             label="开始时间"
         >
         </el-table-column>
         <el-table-column
-            prop="endtime"
+            prop="end_time"
             label="结束时间"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="duration"
-            label="运行时长(秒)"
         >
         </el-table-column>
         <el-table-column
             prop="status"
             label="状态"
         >
+          <template slot-scope="scope">
+              <span v-if="scope.row.status== 1 ">
+                 <el-tag type="warning">运行中</el-tag>
+              </span>
+            <span v-if="scope.row.status== 0">
+                 <el-tag >正常</el-tag>
+              </span>
+            <span v-if="scope.row.status== -1">
+                 <el-tag type="danger">异常</el-tag>
+              </span>
+          </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -88,7 +92,7 @@
           :page-sizes=pageSizes
           :page-size=pageSize
           layout="total, sizes, prev, pager, next, jumper"
-          :total=total
+          :total=total1
           style="margin-top: 10px">
       </el-pagination>
     </el-card>
@@ -99,7 +103,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <strong>半结构化数据</strong>
-            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+<!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
           </div>
             <el-table
                 ref="multipleTable"
@@ -111,15 +115,117 @@
                   type="selection"
               >
               </el-table-column>
-
               <el-table-column
-                  v-for="key in keys"
-                  :prop="key"
-                  :label="key"
+                  prop="name"
+                  label="名称"
                   width="100px"
                   :show-overflow-tooltip="true"
               >
-
+              </el-table-column>
+                <el-table-column
+                    prop="max_speed"
+                    label="最大速度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="weight"
+                    label="重量"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="create_time"
+                    label="创建时间"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="length"
+                    label="长度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="width"
+                    label="宽度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="height"
+                    label="高度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="crew"
+                    label="乘员"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="range"
+                    label="飞行/发射范围"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="draught"
+                    label="吃水"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="displacement"
+                    label="排水量"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="service_year"
+                    label="服役年份"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="origin"
+                    label="来源"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="horsepower"
+                    label="马力"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="manufacturer"
+                    label="生产商"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="ceiling"
+                    label="飞行高度"
+                    width="100px"
+                    :show-overflow-tooltip="true"
+                >
               </el-table-column>
 <!--              <el-table-column-->
 <!--                  fixed="right"-->
@@ -143,37 +249,74 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <strong>非结构文本</strong>
-            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+<!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
           </div>
           <el-table
               ref="multipleTable"
               :data="tableData3"
               tooltip-effect="dark"
-              style="width: 50%"
+              style="width: 100%"
               @selection-change="handleSelectionChange"
               >
             <el-table-column
                 type="selection"
             >
             </el-table-column>
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label="全文">
-                    <span style="white-space: normal">{{ props.row.content }}</span>
-                  </el-form-item>
-                </el-form>
+            <el-table-column
+                label="标题"
+                width="400"
+                show-overflow-tooltip>
+              <template slot-scope="scope">{{ scope.row.title}}</template>
+            </el-table-column>
+            <el-table-column
+                label="作者"
+                width="400"
+                show-overflow-tooltip>
+              <template slot-scope="scope">{{ scope.row.author}}</template>
+            </el-table-column>
+            <el-table-column
+                label="内容">
+              <template slot-scope="scope">
+                <el-button type="text" @click = "displayContent(scope.row.content)">查看</el-button></template>
+            </el-table-column>
+            <el-table-column
+                label="创建时间"
+                show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span v-if="scope.row.create_time!=null">{{scope.row.create_time}}</span>
+                <span v-if="scope.row.create_time==null">暂无</span>
               </template>
             </el-table-column>
             <el-table-column
-                v-for="key in keys3"
-                :prop="key"
-                :label="key"
-                width="100px"
-                :show-overflow-tooltip="true"
-            >
-
+                label="发布时间"
+                show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span v-if="scope.row.create_time!=null">{{scope.row.publish_time}}</span>
+                <span v-if="scope.row.create_time==null">暂无</span>
+              </template>
             </el-table-column>
+            <el-table-column
+                label="来源" show-overflow-tooltip>
+              <template slot-scope="scope">{{ scope.row.origin}}</template>
+            </el-table-column>
+<!--            <el-table-column type="expand">-->
+<!--              <template slot-scope="props">-->
+<!--                <el-form label-position="left" inline class="demo-table-expand">-->
+<!--                  <el-form-item label="全文">-->
+<!--                    <span style="white-space: normal">{{ props.row.content }}</span>-->
+<!--                  </el-form-item>-->
+<!--                </el-form>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column-->
+<!--                v-for="key in keys3"-->
+<!--                :prop="key"-->
+<!--                :label="key"-->
+<!--                width="100px"-->
+<!--                :show-overflow-tooltip="true"-->
+<!--            >-->
+
+<!--            </el-table-column>-->
 <!--            <el-table-column-->
 <!--                fixed="right"-->
 <!--                label="操作"-->
@@ -190,6 +333,27 @@
               :current-page="page3" :page-size="size3"
               layout="total,prev, pager, next"
               :total="total3">
+          </el-pagination>
+
+        </el-card>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <strong>非结构图片</strong>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
+          </div>
+          <div class="image-item" v-for="(item, index) in tableData4" :key="index" :style="reactiveImage">
+          <el-image :src="serviceurl+item.path" :preview-src-list="previewImageUrL" class="image" style="float: left ;width:200px;height: 100px">
+<!--            <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"-->
+<!--                 style="margin-top:40%">-->
+<!--            </div>-->
+          </el-image>
+          </div>
+          <el-pagination
+              @current-change="currentChange3"
+              :current-page="page4" :page-size="size4"
+              layout="total,prev, pager, next"
+              :total="total4"
+          style="clear: both">
           </el-pagination>
 
         </el-card>
@@ -231,6 +395,10 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event);
+    },
+    displayContent(content){
+      this.contentVisible = true;
+      this.content = content;
     },
     draw_dataflow(){
       var chartDom = document.getElementById('data_flow');
@@ -297,6 +465,10 @@ export default {
   },
   data() {
     return {
+      total4:0,
+      serviceurl:"http://localhost:12345/picture",
+      tableData4:[],
+      contentVisible:false,
       keys3:null,
       keys:null,
       page:1,
@@ -327,36 +499,57 @@ export default {
     }
   },
   created(){
-    const _this =this
-    const keys = new Set()
-    const keys3 = new Set()
-    try{
-      this.jsonData   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\militory_text.json")
-      this.jsonData3   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\text.json")
-    }
-    catch (error){
-    }
-    console.log(this.jsonData3)
-    for(var i=0; i<_this.jsonData.length; i++){
-      for(var key in _this.jsonData[i]){
-        if (key != "图片" & key != "简介" & key != "content" & key != "variant" & key != "data_origin"){
-          keys.add(key)
-        }
-
-      }
-    }
-    for(var j=0; j<_this.jsonData3.length; j++){
-      for(var key3 in _this.jsonData3[j]){
-        if (key3 != "图片" & key3 != "简介"  & key3 != "variant" & key3 != "data_origin"){
-          keys3.add(key3)
-        }
-
-      }
-    }
-    this.keys=keys
-    this.keys3=keys3
-    this.getTableData()
-    this.getTableData3()
+    // const _this =this
+    // const keys = new Set()
+    // const keys3 = new Set()
+    // try{
+    //   this.jsonData   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\militory_text.json")
+    //   this.jsonData3   = require("E:\\代码\\FKFD\\militory_factory\\militory_factory\\text.json")
+    // }
+    // catch (error){
+    // }
+    // console.log(this.jsonData3)
+    // for(var i=0; i<_this.jsonData.length; i++){
+    //   for(var key in _this.jsonData[i]){
+    //     if (key != "图片" & key != "简介" & key != "content" & key != "variant" & key != "data_origin"){
+    //       keys.add(key)
+    //     }
+    //
+    //   }
+    // }
+    // for(var j=0; j<_this.jsonData3.length; j++){
+    //   for(var key3 in _this.jsonData3[j]){
+    //     if (key3 != "图片" & key3 != "简介"  & key3 != "variant" & key3 != "data_origin"){
+    //       keys3.add(key3)
+    //     }
+    //
+    //   }
+    // }
+    // this.keys=keys
+    // this.keys3=keys3
+    // this.getTableData()
+    // this.getTableData3()
+    const _this = this
+    _this.axios.get('/api/crawl/findrecordbycid/0/10/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData1 = resp.data.data
+      _this.total1 = resp.data.count
+    })
+    _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData = resp.data.data
+      _this.total = resp.data.count
+    })
+    _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData3 = resp.data.data
+      _this.total3 = resp.data.count
+    })
+    _this.axios.get('/api/image/getimage/0/20/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData4 = resp.data.data
+      _this.total4 = resp.data.count
+    })
   }
 
 }
