@@ -1,6 +1,6 @@
 <template>
     <div class="vueJs">
-        <VueJstree :item-events="itemEvents" allow-batch whole-row :draggable="draggable" class="tree" ref="jstree"
+        <VueJstree  :item-events="itemEvents" allow-batch whole-row :draggable="draggable" class="tree" ref="jstree"
             @item-drag-start="itemDragStart" @item-drag-end="itemDragEnd" @item-drop-before="itemDropBefore"
             @item-drop="itemDrop" v-if="treeData.length" @item-click="itemClick" text-field-name="name"
             value-field-name="id" :data="treeData">
@@ -26,7 +26,7 @@ import VueJstree from 'vue-jstree'
 import $ from '../plugins/jquery.min.js';
 export default {
     name: '',
-    props: ['treeData', 'type',"draggable", "isEdit"], /// draggable 是否可以拖拽 /// isEdit 是否可以增加子类
+    props: ['treeData', 'type',"draggable", "isEdit",'refresh',], /// draggable 是否可以拖拽 /// isEdit 是否可以增加子类
     components: {
         VueJstree
     },
@@ -88,6 +88,7 @@ export default {
                         type: 'success',
                         message: "合并成功"
                     });
+                    this.$emit('setRefresh',!this.refresh)
                 } else {
                     this.$message({
                         type: 'warning',
@@ -141,7 +142,7 @@ export default {
                     method: 'POST',
                     url: '/api/coreOntology/addClass',
                     data: {
-                        className: value,
+                        name: value,
                         parentId: this.currentItem.id,
                     }
                 }).then(response => {
@@ -159,10 +160,13 @@ export default {
                             type: 'success',
                             message: "添加成功"
                         });
+                        this.renderTree(this.treeData);
+                        this.$emit('setRefresh',!this.refresh)
+                        this.$forceUpdate()
                     } else {
                         this.$message({
                             type: 'warning',
-                            message: response.data.message
+                            message: response.data.msg
                         });
                     }
                 }).catch(error => {
@@ -193,10 +197,11 @@ export default {
                             type: 'success',
                             message: "添加成功"
                         });
+
                     } else {
                         this.$message({
                             type: 'warning',
-                            message: response.data.message
+                            message: response.data.msg
                         });
                     }
                 }).catch(error => {
@@ -232,7 +237,7 @@ export default {
                             method: 'DELETE',
                             url: '/api/coreOntology/deleteClass',
                             data: {
-                                className: this.currentItem.name,
+                                name: this.currentItem.name,
                             }
                         }).then(response => {
                             console.log(response);
@@ -247,6 +252,8 @@ export default {
                                     type: 'success',
                                     message: '删除成功!'
                                 });
+                                this.$emit('setRefresh',!this.refresh)
+                                this.$forceUpdate()
                             } else {
                                 this.$message({
                                     type: 'warning',
@@ -266,10 +273,7 @@ export default {
                                 belongCandidateId: this.currentItem.belongCandidateId,
                             }
                         }).then(response => {
-                            console.log(response);
                             if (response.status == 200 && response.data.result) {
-                                console.log('请求到的response');
-                                console.log(response);
                                 if (this.currentItem.id !== undefined) {
                                     var index = this.editingNode.parentItem.indexOf(this.currentItem)
                                     this.editingNode.parentItem.splice(index, 1)
@@ -278,6 +282,9 @@ export default {
                                     type: 'success',
                                     message: '删除成功!'
                                 });
+                                this.$emit('setRefresh',!this.refresh)
+                                this.$forceUpdate()
+                                
                             } else {
                                 this.$message({
                                     type: 'warning',
@@ -322,8 +329,6 @@ export default {
         },
         renderTree(tree) {
             for (let node of tree) {
-                console.log(node)
-                console.log(123123)
                 node.opened = false;
                 node.selected = false;
                 node.loading = false;
@@ -343,7 +348,7 @@ export default {
             console.log(item)
             console.log(e)
         }
-    }
+    },
 }
 </script>
 

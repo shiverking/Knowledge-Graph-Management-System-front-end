@@ -18,7 +18,7 @@ module.exports = defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8081', // 需要跨域请求的地址或者IP
+        target: 'http://127.0.0.1:12345', // 需要跨域请求的地址或者IP
         // target: 'https://702yl78416.zicp.fun', // 需要跨域请求的地址或者IP
         changeOrigin: true, //  表示是否跨域
         pathRewrite: {

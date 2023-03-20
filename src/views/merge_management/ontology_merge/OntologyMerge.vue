@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  v-if="isReloadData">
     <el-steps :active="active" finish-status="success" simple>
       <el-step title="选择本体"></el-step>
       <el-step title="类别对齐"></el-step>
@@ -17,7 +17,7 @@
             <span v-if="currentRowName != ''"><el-tag type="success">{{ currentRowName }}</el-tag></span>
           </el-card>
           <!-- 显示要被融合的本体 toKgTableData-->
-          <VueCTree ref="jstree1" :isEdit="false" :treeData="toKgTableData"/>
+          <VueCTree ref="jstree1" :isEdit="false" :treeData="toKgTableData" :refresh="refresh" @setRefresh="setRefresh" />
         </el-col>
         <el-col :span="1">
           <el-image style="width: auto; height: auto;position: relative;top: 10px;" :src='leftArrow'></el-image>
@@ -28,7 +28,8 @@
             <span v-for="(item, i) in multipleSelectionName" :key="i"><el-tag>{{ item }}</el-tag>&nbsp;</span>
           </el-card>
           <!--显示要融合的本体 fromKgTablePageData-->
-          <VueCTree ref="jstree2" :isEdit="false" :draggable="draggable"  :treeData="fromKgTablePageData" />
+          <VueCTree ref="jstree2" :isEdit="false" :draggable="draggable" :treeData="fromKgTablePageData"
+            :refresh="refresh" @setRefresh="setRefresh" />
         </el-col>
       </el-row>
       <!--选择本体对话框-->
@@ -278,7 +279,9 @@ export default {
   },
   data() {
     return {
-      draggable:true,
+      refresh: true,
+      isReloadData: true,
+      draggable: true,
       rightImg: rightImg,
       leftArrow: leftArrow,
       leftArrow2: leftArrow2,
@@ -369,15 +372,19 @@ export default {
       comfirmMergeVisible: false,
       processPercentage: 0,
       successShow: false,
-      candidateOntologyId:1,
+      candidateOntologyId: 1,
 
     };
   },
-  mounted(){
+  mounted() {
     this.getInit()
     this.getInit2()
   },
   methods: {
+    setRefresh(res) {
+      this.getInit()
+      this.getInit2()
+    },
     getInit() {
       axios.request({
         method: 'POST',
@@ -385,7 +392,7 @@ export default {
         params: { candidateOntologyId: this.candidateOntologyId }
       }).then(response => {
         if (response.status === 200) {
-          this.fromKgTablePageData = response.data.data != null ? [response.data.data] :[]
+          this.fromKgTablePageData = response.data.data != null ? [response.data.data] : []
         }
       }).catch(error => {
         console.log(error);
@@ -401,7 +408,11 @@ export default {
           console.log('请求到的response6');
           var list = [response.data.data]
           this.toKgTableData = list;
-          console.log(this.ontology_data);
+          console.log(list);
+          this.isReloadData = false
+          this.$nextTick(() => {
+            this.isReloadData = true
+          })
         } else {
           this.$message({
             type: 'warning',
@@ -914,8 +925,8 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
-    }
-  }
+    },
+  },
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({
   //     page: this.,

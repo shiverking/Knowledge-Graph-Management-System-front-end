@@ -101,7 +101,7 @@
         <template slot-scope="scope">
           <el-image v-if="scope.row.status=='未抽取'" style="width: 25px; height: 25px;overflow: initial"
                     src="/static/icon/discard.png" :fit="fit"></el-image>
-          <el-image v-if="scope.row.status=='已抽取'"style="width: 25px; height: 25px;overflow: initial"
+          <el-image v-if="scope.row.status=='已抽取'" style="width: 25px; height: 25px;overflow: initial"
                     src="/static/icon/success.png" :fit="fit"></el-image>
           {{ scope.row.status}}
         </template>

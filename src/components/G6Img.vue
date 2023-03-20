@@ -46,6 +46,7 @@ export default {
   props: ['candidateOntologyId'],
   data() {
     return {
+      route:'',
       dialogFormVisible: false,
       formLabelWidth: '120px',
       form: {
@@ -156,7 +157,8 @@ export default {
     getInit() {
       axios.request({
         method: 'get',
-        url: '/api/candidateOntology/getGraphNode/1'
+        // url: '/api/candidateOntology/getGraphNode/1',
+        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphNode':'/api/candidateOntology/getGraphNode/1'
       }).then(response => {
         console.log(response);
         if (response.status === 200 && response.data.result) {
@@ -185,7 +187,8 @@ export default {
     getEdge() {
       axios.request({
         method: 'get',
-        url: '/api/candidateOntology/getGraphEdge/1'
+        // url: '/api/candidateOntology/getGraphEdge/1'
+        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphEdge':'/api/candidateOntology/getGraphEdge/1'
       }).then(response => {
         console.log(response);
         if (response.status === 200 && response.data.result) {
@@ -225,7 +228,8 @@ export default {
         if (valid) {
           axios.request({
             method: 'POST',
-            url: '/api/candidateOntology/addRelation',
+            // url: '/api/candidateOntology/addRelation',
+            url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/addRelation':'/api/candidateOntology/addRelation',
             data: {
               headClassName: this.form.headClassName,
               relationName: this.form.relationName,
@@ -362,9 +366,11 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          console.log(this.route);
           axios.request({
             method: 'DELETE',
-            url: '/api/candidateOntology/deleteRelation',
+            // url: '/api/candidateOntology/deleteRelation',
+            url: that.route==='/coredata/mainontology/display'?'/api/coreOntology/deleteRelation':'/api/candidateOntology/deleteRelation',
             data: {
               headClassId: evt.item._cfg.source._cfg.id,
               relationName: rightNodelabel,
@@ -427,12 +433,23 @@ export default {
       return graph;
     },
   },
+  created(){
+    this.route=this.$route.path
+    console.log(this.route==='/coredata/mainontology/display');
+  },
   mounted() {
+    console.log(this.route);
     this.initComponent();
     this.getInit();
+  
     // this.initGraph();
 
-  }
+  },
+  watch: {
+    $route(to, from) {
+      console.log(this.$route.path);
+    }
+  },
 }
 </script>
 <style>
@@ -442,7 +459,7 @@ export default {
 }
 
 .canvas_container {
-  width: 100%;
+  width: 100% !important;
   height: 600px;
   background-color: rgba(251, 242, 250, 0.46);
   margin-right: 10px;
@@ -470,7 +487,8 @@ export default {
 .g6-component-contextmenu ul li:hover {
   background: #eee;
 }
-.select .el-input{
-  width: 100%!important;
+
+.select .el-input {
+  width: 100% !important;
 }
 </style>
