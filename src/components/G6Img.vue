@@ -41,8 +41,7 @@ insertCss(`
   }
 `)
 export default {
-  name: 'OntologyDetail',
-  //在这里接收父组件传输过来的候选本体id
+  name: '',
   props: ['candidateOntologyId'],
   data() {
     return {
@@ -155,15 +154,13 @@ export default {
   },
   methods: {
     getInit() {
+      console.log('候选本体id=' + this.candidateOntologyId);
       axios.request({
         method: 'get',
-        // url: '/api/candidateOntology/getGraphNode/1',
-        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphNode':'/api/candidateOntology/getGraphNode/1'
+        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphNode':'/api/candidateOntology/getGraphNode/' + this.candidateOntologyId
       }).then(response => {
-        console.log(response);
-        if (response.status === 200 && response.data.result) {
-          console.log('请求到的response2');
-          // console.log(response);
+        if (response.status === 200 && response.data.result === true) {
+          console.log('候选本体的id=' + this.candidateOntologyId);
           var list = response.data.data;
           list.forEach((item) => {
             item.label = item.name
@@ -176,7 +173,7 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: response.data.message
+            message: response.data.msg
           });
         }
       }).catch(error => {
@@ -187,12 +184,11 @@ export default {
     getEdge() {
       axios.request({
         method: 'get',
-        // url: '/api/candidateOntology/getGraphEdge/1'
-        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphEdge':'/api/candidateOntology/getGraphEdge/1'
+        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphEdge':'/api/candidateOntology/getGraphEdge/'  + this.candidateOntologyId
       }).then(response => {
         console.log(response);
         if (response.status === 200 && response.data.result) {
-          console.log('请求到的response3');
+          // console.log('请求到的response3');
           // console.log(response);
           var list = response.data.data;
           list.forEach((item) => {
@@ -234,7 +230,7 @@ export default {
               headClassName: this.form.headClassName,
               relationName: this.form.relationName,
               tailClassName: this.form.tailClassName,
-              belongCandidateOntologyId: 1,
+              belongCandidateOntologyId: this.candidateOntologyId,
             }
           }).then(response => {
             console.log(response);
@@ -375,7 +371,7 @@ export default {
               headClassId: evt.item._cfg.source._cfg.id,
               relationName: rightNodelabel,
               tailClassId: evt.item._cfg.target._cfg.id,
-              belongCandidateOntologyId: 1,
+              belongCandidateOntologyId: this.candidateOntologyId,
             }
           }).then(response => {
             console.log(response);

@@ -257,7 +257,7 @@ export default {
                             } else {
                                 this.$message({
                                     type: 'warning',
-                                    message: response.data.message
+                                    message: response.data.msg
                                 });
                             }
                         }).catch(error => {
