@@ -1,6 +1,6 @@
 <template>
-  <div id="main">
-    <VueCTree class="trees"  :isEdit="true" :treeData="leftTreeData" />
+  <div id="main" v-if="isReloadData">
+    <VueCTree class="trees" :candidateOntologyId="candidateOntologyId" :isEdit="true" :treeData="leftTreeData" @setRefresh='setRefresh' />
     <G6Img class="gImg" :candidateOntologyId="candidateOntologyId" />
     <!-- <VueJstree class="tree" v-if="leftTreeDataFlag" text-field-name="name" value-field-name="id" :data="leftTreeData"
       @item-click="itemClick"></VueJstree> -->
@@ -23,6 +23,7 @@ export default {
   },
   data() {
     return {
+      isReloadData: true,
       options: {
         core: {
           check_callback: true
@@ -167,7 +168,7 @@ export default {
           // this.leftTreeData = [JSON.parse(response.data.data)]
           // this.renderTree(this.leftTreeData)
           // console.log(this.leftTreeData)
-          this.leftTreeData = response.data.data != null ? [response.data.data] :[]
+          this.leftTreeData = response.data.data != null ? [response.data.data] : []
           this.renderTree(this.leftTreeData)
           console.log(this.leftTreeData)
         }
@@ -175,8 +176,24 @@ export default {
         console.log(error);
       })
     },
-    setRefresh(){
-      console.log('刷新');
+    setRefresh() {
+      axios.request({
+        method: 'POST',
+        url: '/api/candidateOntology/getTreeClassByCandidateOntologyId',
+        params: { candidateOntologyId: this.candidateOntologyId }
+      }).then(response => {
+        if (response.status === 200) {
+          this.isReloadData = false
+          this.$nextTick(() => {
+            this.isReloadData = true
+          })
+          this.leftTreeData = response.data.data != null ? [response.data.data] : []
+          this.renderTree(this.leftTreeData)
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+
     }
   },
   mounted() {
@@ -192,16 +209,19 @@ export default {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
- 
+
 }
-.trees{
+
+.trees {
   width: 20% !important;
-  height: calc(100vh - 200px );
+  height: calc(100vh - 200px);
   overflow-y: auto;
 }
-.gImg{
-  flex:1;
+
+.gImg {
+  flex: 1;
 }
+
 .tree-container {
   display: inline-block;
   width: 25%;
@@ -209,7 +229,8 @@ export default {
   background-color: rgba(251, 242, 250, 0.46);
   margin-left: 10px;
 }
-.tree{
+
+.tree {
   /* display: inline-block;
   width: 25%;
   height: 600px;
@@ -223,5 +244,4 @@ export default {
   background-color: rgba(251, 242, 250, 0.46);
   margin-right: 10px;
   float: right;
-}
-</style>
+}</style>

@@ -17,6 +17,36 @@
                 </div>
             </template>
         </VueJstree>
+      <el-dialog
+          title="属性信息"
+          :visible.sync="dialogVisible"
+          width="50%"
+          :before-close="handleClose">
+        <el-table
+            :data="attributeData"
+            height="250"
+            border
+            style="width: 100%">
+          <el-table-column
+              prop="attributeName"
+              label="属性名称"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="className"
+              label="所属类别"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="comment"
+              label="备注">
+          </el-table-column>
+        </el-table>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+      </el-dialog>
     </div>
 </template>
 
@@ -26,13 +56,14 @@ import VueJstree from 'vue-jstree'
 import $ from '../plugins/jquery.min.js';
 export default {
     name: '',
-    props: ['treeData', 'type',"draggable", "isEdit",'refresh',], /// draggable 是否可以拖拽 /// isEdit 是否可以增加子类
+    props: ['treeData', 'type',"draggable", "isEdit",'refresh','candidateOntologyId'], /// draggable 是否可以拖拽 /// isEdit 是否可以增加子类
     components: {
         VueJstree
     },
     data() {
         return {
-            // dataList:this.treeData,
+          attributeData: [],
+          dialogVisible: false,
             contextmenu2: [
                 { text: '新增子类', handler: this.handleClick },
                 { text: '删除', handler: this.handleClick }
@@ -62,6 +93,13 @@ export default {
     //     }
     // },
     methods: {
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+      },
         itemDragStart(node) {
             console.log(node)
             this.currentDragItem = node;
@@ -197,7 +235,9 @@ export default {
                             type: 'success',
                             message: "添加成功"
                         });
-
+                        // this.renderTree(this.treeData);
+                        this.$emit('setRefresh',!this.refresh)
+                        this.$forceUpdate()
                     } else {
                         this.$message({
                             type: 'warning',
@@ -322,10 +362,35 @@ export default {
                 console.log(e)
             }
         },
+        //树上节点的点击事件，点击后打开属性列表
         itemClick(node, item, e) {
-            console.log(node)
-            console.log(item)
-            console.log(e)
+          this.attributeData = [];
+          this.dialogVisible = true;
+          if(this.$route.path === '/coredata/mainontology/display'){
+            axios.request({
+              method : 'GET',
+              url : '/api/coreOntology/getAttribute/' + item.id
+            }).then((response) => {
+              if(response.status === 200 && response.data.result){
+                this.attributeData = response.data.data;
+              }
+            }).catch(error => {
+              console.log(error);
+            })
+          }
+          if(this.$route.path === '/candidate/ontology/show'){
+            console.log('候选本体id=' + this.candidateOntologyId);
+            axios.request({
+              method : 'GET',
+              url : '/api/candidateOntology/getAttribute/' + item.id + '/' + this.candidateOntologyId
+            }).then((response) => {
+              if(response.status === 200 && response.data.result){
+                this.attributeData = response.data.data;
+              }
+            }).catch(error => {
+              console.log(error);
+            })
+          }
         },
         renderTree(tree) {
             for (let node of tree) {

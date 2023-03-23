@@ -308,6 +308,7 @@ export default {
           color: '#5B8FF9',
         },
         defaultEdge: {
+          // type: 'arc',
           color: '#500020',
           style: {
             endArrow: true,
@@ -321,6 +322,7 @@ export default {
         nodes: that.nodes,
         edges: that.edges.map(function (edge, i) {
           edge.id = 'edge' + i;
+          edge.curveOffset=i*10
           return Object.assign({}, edge);
         }),
       });
