@@ -364,16 +364,14 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log(this.route);
           axios.request({
             method: 'DELETE',
-            // url: '/api/candidateOntology/deleteRelation',
             url: that.route==='/coredata/mainontology/display'?'/api/coreOntology/deleteRelation':'/api/candidateOntology/deleteRelation',
             data: {
               headClassId: evt.item._cfg.source._cfg.id,
               relationName: rightNodelabel,
               tailClassId: evt.item._cfg.target._cfg.id,
-              belongCandidateOntologyId: this.candidateOntologyId,
+              belongCandidateOntologyId: that.candidateOntologyId,
             }
           }).then(response => {
             console.log(response);
@@ -433,6 +431,7 @@ export default {
   },
   created(){
     this.route=this.$route.path
+    this.candidateOntologyId2 = this.candidateOntologyId;
     console.log(this.route==='/coredata/mainontology/display');
   },
   mounted() {

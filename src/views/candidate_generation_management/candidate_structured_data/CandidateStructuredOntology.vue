@@ -15,7 +15,7 @@
           <el-table-column
               prop="id"
               label="类别id"
-              width="80">
+              width="180">
           </el-table-column>
           <el-table-column
               prop="name"
@@ -25,10 +25,10 @@
           <el-table-column
               prop="parentId"
               label="父类id"
-              width="80">
+              width="180">
           </el-table-column>
           <el-table-column
-              prop="createAt"
+              prop="createdAt"
               label="创建时间"
               width="180">
           </el-table-column>
@@ -47,7 +47,7 @@
           <el-table-column
               prop="id"
               label="关系id"
-              width="80">
+              width="180">
           </el-table-column>
           <el-table-column
               prop="name"
@@ -57,15 +57,15 @@
           <el-table-column
               prop="startId"
               label="头类别id"
-              width="80">
+              width="180">
           </el-table-column>
           <el-table-column
               prop="endId"
               label="尾类别id"
-              width="80">
+              width="180">
           </el-table-column>
           <el-table-column
-              prop="createAt"
+              prop="createdAt"
               label="创建时间"
               width="180">
           </el-table-column>
@@ -84,7 +84,7 @@
           <el-table-column
               prop="id"
               label="属性id"
-              width="80">
+              width="180">
           </el-table-column>
           <el-table-column
               prop="name"
@@ -94,15 +94,15 @@
           <el-table-column
               prop="classId"
               label="所属类别id"
-              width="100">
+              width="180">
           </el-table-column>
           <el-table-column
-              prop="value_type"
+              prop="valueType"
               label="值型"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="createAt"
+              prop="createdAt"
               label="创建时间"
               width="180">
           </el-table-column>
