@@ -93,8 +93,7 @@
           style="margin-top: 10px">
       </el-pagination>
     </el-card>
-    <el-card class="card" style="height:500px; margin-top: 10px" id="data_flow">
-    </el-card>
+<!--        <el-card class="card" style="height:500px; margin-top: 10px" id="data_flow"></el-card>-->
         </el-tab-pane>
       <el-tab-pane label="运行结果" name="second">
         <el-card class="box-card">
@@ -335,7 +334,7 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
     },
-    draw_dataflow(){
+    /*draw_dataflow(){
       var chartDom = document.getElementById('data_flow');
       var myChart = echarts.init(chartDom);
       var option;
@@ -393,11 +392,11 @@ export default {
       };
 
       option && myChart.setOption(option);
-    },
+    },*/
   },
-  mounted() {
+  /*mounted() {
     this.draw_dataflow();
-  },
+  },*/
   data() {
     return {
       keys3:null,
