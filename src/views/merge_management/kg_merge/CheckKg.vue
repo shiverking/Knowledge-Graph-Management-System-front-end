@@ -70,10 +70,20 @@
             <!--融合改动-->
             <el-tab-pane label="融合改动" name="first">
               <el-table border :data="mergeData" style="margin-top:0vh">
-                <el-table-column property="head" label="头实体"></el-table-column>
+                <el-table-column  label="头实体">
+                  <template slot-scope="scope">
+                    {{scope.row.head}}
+                    <el-tag size="small" type="info">{{ scope.row.head_category }}</el-tag>
+                  </template>
+                </el-table-column>
                 <el-table-column property="head_from" label="From"></el-table-column>
                 <el-table-column property="relation" label="关系" ></el-table-column>
-                <el-table-column property="tail" label="尾实体" ></el-table-column>
+                <el-table-column property="tail" label="尾实体" >
+                  <template slot-scope="scope">
+                    {{scope.row.tail}}
+                    <el-tag size="small" type="info">{{ scope.row.tail_category }}</el-tag>
+                  </template>
+                </el-table-column>
                 <el-table-column property="tail_from" label="From"></el-table-column>
                 <el-table-column property="score" label="置信评分"></el-table-column>
                 <el-table-column label="操作">
@@ -406,12 +416,9 @@ export default {
     //同步图数据库
     synchronize(){
       this.synchronizationLoading = true;
-      axios.request({
-        method:"POST",
-        url:'/api/version/synchronize',
-      })
+      axios.post('/pythonApi/coreKG2neo4j',{})
       .then((response) => {
-        if (response.status == 200) {
+        if (response.status == 200&&response.data.data=="true") {
           //向表中加载数据
           this.synchronizationLoading = false;
           //修改button文字

@@ -23,10 +23,20 @@
           <el-table :data="mergeCacheData" height="500" style="margin-top:0vh" border>
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
-            <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
+            <el-table-column  label="头实体" show-overflow-tooltip>
+              <template slot-scope="scope">
+                {{scope.row.head}}
+                <el-tag size="small" type="info">{{ scope.row.head_category }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column property="head_from" label="From" show-overflow-tooltip></el-table-column>
             <el-table-column property="relation" label="关系" show-overflow-tooltip></el-table-column>
-            <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
+            <el-table-column  label="尾实体" show-overflow-tooltip>
+              <template slot-scope="scope">
+                {{scope.row.tail}}
+                <el-tag size="small" type="info">{{ scope.row.tail_category }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column property="tail_from" label="From" show-overflow-tooltip></el-table-column>
             <el-table-column property="score" label="置信评分" show-overflow-tooltip></el-table-column>
             <el-table-column label="处理结果">
