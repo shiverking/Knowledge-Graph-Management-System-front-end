@@ -1,7 +1,7 @@
 <template>
-  <div id="main">
-    <VueCTree class="trees"  :isEdit="true" :treeData="leftTreeData"/>
-    <G6Img class="gImg"/>
+  <div id="main" v-if="isReloadData">
+    <VueCTree class="trees" :candidateOntologyId="candidateOntologyId" :isEdit="true" :treeData="leftTreeData" @setRefresh='setRefresh' />
+    <G6Img class="gImg" :candidateOntologyId="candidateOntologyId" />
     <!-- <VueJstree class="tree" v-if="leftTreeDataFlag" text-field-name="name" value-field-name="id" :data="leftTreeData"
       @item-click="itemClick"></VueJstree> -->
 
@@ -23,6 +23,7 @@ export default {
   },
   data() {
     return {
+      isReloadData: true,
       options: {
         core: {
           check_callback: true
@@ -34,27 +35,6 @@ export default {
       // candidateOntologyId: this.candidateOntologyId,
       newTreeContainerId: '',
       newContainerId: '',
-      // treeData: {
-      //   "children": [{
-      //     "children": [],
-      //     "name": "节点2",
-      //     "id": 2,
-      //     "parentId": 1
-      //   }, {
-      //     "children": [{
-      //       "children": [],
-      //       "name": "节点4",
-      //       "id": 4,
-      //       "parentId": 3
-      //     }],
-      //     "name": "节点3",
-      //     "id": 3,
-      //     "parentId": 1
-      //   }],
-      //   "name": "节点1",
-      //   "id": 1,
-      //   "parentId": 0
-      // },
       treeData: {
         "name": "Thing",
         "children": [
@@ -131,25 +111,6 @@ export default {
         ]
       },
       //图的节点
-      // nodes: [
-      //   { id: 'node0', size: 70, label:'节点一' },
-      //   { id: 'node1', size: 50, label:'节点二' },
-      //   { id: 'node2', size: 50, label:'节点三' },
-      //   { id: 'node3', size: 50, label:'节点四' },
-      //   { id: 'node4', size: 40, isLeaf: true },
-      //   { id: 'node5', size: 40, isLeaf: true },
-      //   { id: 'node6', size: 25, isLeaf: true },
-      //   { id: 'node7', size: 25, isLeaf: true },
-      //   { id: 'node8', size: 25, isLeaf: true },
-      //   { id: 'node9', size: 25, isLeaf: true },
-      //   { id: 'node10', size: 25, isLeaf: true },
-      //   { id: 'node11', size: 25, isLeaf: true },
-      //   { id: 'node12', size: 25, isLeaf: true },
-      //   { id: 'node13', size: 25, isLeaf: true },
-      //   { id: 'node14', size: 25, isLeaf: true },
-      //   { id: 'node15', size: 25, isLeaf: true },
-      //   { id: 'node16', size: 25, isLeaf: true },
-      // ],
       nodes: [
         { id: '0', label: '舰船舰艇', size: '50' },
         { id: '1', label: '导弹武器', size: '50' },
@@ -163,24 +124,6 @@ export default {
         { id: '9', label: '计划', size: '50' },
       ],
       //图的边
-      // edges: [
-      //   { source: 'node0', target: 'node1', label:'关系一' },
-      //   { source: 'node0', target: 'node2', label:'关系二'  },
-      //   { source: 'node0', target: 'node3', label:'关系三'  },
-      //   { source: 'node0', target: 'node4', label:'关系四'  },
-      //   { source: 'node0', target: 'node5', label:'关系五'  },
-      //   { source: 'node1', target: 'node6', label:'关系六'  },
-      //   { source: 'node1', target: 'node7', label:'关系七'  },
-      //   { source: 'node2', target: 'node8', label:'关系八'  },
-      //   { source: 'node2', target: 'node9', label:'关系九'  },
-      //   { source: 'node2', target: 'node10', label:'关系十'  },
-      //   { source: 'node2', target: 'node11', label:'关系十一'  },
-      //   { source: 'node2', target: 'node12', label:'关系十二'  },
-      //   { source: 'node2', target: 'node13', label:'关系十三'  },
-      //   { source: 'node3', target: 'node14', label:'关系十四'  },
-      //   { source: 'node3', target: 'node15', label:'关系十五'  },
-      //   { source: 'node3', target: 'node16', label:'关系十六'  },
-      // ],
       edges: [
         { source: '0', target: '1', label: '携带' },
         { source: '0', target: '2', label: '携带' },
@@ -213,7 +156,6 @@ export default {
       }
     },
     getTreeDataByCandidateOntologyId() {
-      let treeJson = '';
       axios.request({
         method: 'POST',
         url: '/api/candidateOntology/getTreeClassByCandidateOntologyId',
@@ -226,7 +168,7 @@ export default {
           // this.leftTreeData = [JSON.parse(response.data.data)]
           // this.renderTree(this.leftTreeData)
           // console.log(this.leftTreeData)
-          this.leftTreeData = response.data.data != null ? [response.data.data] :[]
+          this.leftTreeData = response.data.data != null ? [response.data.data] : []
           this.renderTree(this.leftTreeData)
           console.log(this.leftTreeData)
         }
@@ -234,10 +176,29 @@ export default {
         console.log(error);
       })
     },
+    setRefresh() {
+      axios.request({
+        method: 'POST',
+        url: '/api/candidateOntology/getTreeClassByCandidateOntologyId',
+        params: { candidateOntologyId: this.candidateOntologyId }
+      }).then(response => {
+        if (response.status === 200) {
+          this.isReloadData = false
+          this.$nextTick(() => {
+            this.isReloadData = true
+          })
+          this.leftTreeData = response.data.data != null ? [response.data.data] : []
+          this.renderTree(this.leftTreeData)
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+
+    }
   },
   mounted() {
     this.getTreeDataByCandidateOntologyId();
-  }
+  },
 }
 </script>
 <style>
@@ -248,14 +209,19 @@ export default {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
+
 }
-.trees{
-  width: 30%;
-  margin-right: 30px;
+
+.trees {
+  width: 20% !important;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
 }
-.gImg{
-  flex:1;
+
+.gImg {
+  flex: 1;
 }
+
 .tree-container {
   display: inline-block;
   width: 25%;
@@ -263,7 +229,8 @@ export default {
   background-color: rgba(251, 242, 250, 0.46);
   margin-left: 10px;
 }
-.tree{
+
+.tree {
   /* display: inline-block;
   width: 25%;
   height: 600px;
@@ -277,5 +244,4 @@ export default {
   background-color: rgba(251, 242, 250, 0.46);
   margin-right: 10px;
   float: right;
-}
-</style>
+}</style>

@@ -227,7 +227,7 @@
         <div>范围为0-1,越接近1表示两个实体越相同,反之亦然，算法计算结果仅供参考(点击以选择要保留的实体，不选择默认同时保留)</div>
         <i class="el-icon-warning-outline" slot="reference"></i>
       </el-popover>
-      <el-button style="margin-top: 12px;" @click="calculate">开始计算</el-button>
+      <el-button style="margin-top: 12px;margin-left: 8px;" @click="calculate">开始计算</el-button>
       <el-tooltip class="item" effect="dark" content="取消所有对齐选择" placement="top-start">
         <el-button type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
       </el-tooltip>
@@ -238,14 +238,16 @@
             tooltip-effect="dark"
             style="width: 100%"
             border
+            :key="tableKey"
             @cell-click="handleCellClick">
           <el-table-column
               label="实体(目标图谱)" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div>{{ scope.row.to }}
-              <el-image
-                style="display:none;top:3px;width: 20px;height:20px"
-                :src="rightImg"
+                <el-image
+                    v-if="scope.row.direction=='left'"
+                    style="top:3px;width: 20px;height:20px"
+                    :src="rightImg"
                 ></el-image>
               </div>
             </template>
@@ -255,9 +257,10 @@
             <template slot-scope="scope">
               <div>{{ scope.row.from}}
                 <el-image
-                    style="display:none;top:3px;width: 20px;height:20px"
+                    v-if="scope.row.direction=='right'"
+                    style="top:3px;width: 20px;height:20px"
                     :src="rightImg"
-                    ></el-image>
+                ></el-image>
               </div>
             </template>
           </el-table-column>
@@ -315,7 +318,7 @@
         <el-descriptions-item label="实体对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
         <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
       </el-descriptions>
-      <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略" style="width: 330px;">
+      <el-select v-model="selectedMergeStrategy" placeholder="请选择融合策略">
         <el-option
             v-for="item in mergeStrategyOptions"
             :key="item.value"
@@ -347,7 +350,7 @@
           <el-button size="mini" type="text" @click="comfirmMergeVisible = false">取消</el-button>
           <el-button type="primary" size="mini" @click="comfirmMergeVisible = false;startMerge()">确定</el-button>
         </div>
-        <el-button type="primary" style="margin-top: 12px;" slot="reference" @click="checkNecessaryInfo">开始融合</el-button>
+        <el-button type="primary" style="margin-top: 12px;margin-left:8px;" slot="reference" @click="checkNecessaryInfo">开始融合</el-button>
       </el-popover>
       <el-progress :text-inside="false" :stroke-width="15" :percentage="processPercentage" style="margin-top: 10px;margin-bottom: 10px"></el-progress>
       <transition name="el-fade-in-linear">
@@ -359,7 +362,7 @@
     </div>
     <div style="text-align: right;">
       <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
-      <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+      <el-button v-if="active<2" style="margin-top: 12px;" @click="next">下一步</el-button>
     </div>
   </div>
 </template>
@@ -456,7 +459,7 @@ export default {
       dialogAllKGVisible:false,
       //目标图谱分页数据
       candidateKgPageSize:10,
-      candidateKgTotal:'',
+      candidateKgTotal:0,
       candidateKgCurrentPage:1,
       //目标图谱数据表
       mergeKgTable:[],
@@ -466,7 +469,7 @@ export default {
       //多选候选图谱表格
       multipleMergeKgTable:[],
       multipleCandidateKgPageSize:10,
-      multipleCandidateKgTotal:'',
+      multipleCandidateKgTotal:0,
       multipleCandidateKgCurrentPage:1,
       multipleSelection: [],
       multipleSelectionName: [],
@@ -505,7 +508,7 @@ export default {
       comfirmMergeVisible:false,
       processPercentage:0,
       successShow:false,
-
+      tableKey:0,
     };
   },
 
@@ -684,7 +687,6 @@ export default {
     //选择候选图谱时的多选框动作
     multipleCandidateKgHandleSelectionChange(val){
       this.multipleSelection = val;
-      console.log(val);
       if(val.length>2){
         this.$message({
           message: '最多选择两个融合图谱',
@@ -867,52 +869,50 @@ export default {
     },
     //处理cell点击事件
     handleCellClick(row, column, cell, event){
-      //无显示
-      if($(cell).find(".el-image").css('display') === 'none'){
-        //隔壁有显示
-        if($(cell).siblings().find(".el-image").css('display') != 'none'){
-          //箭头转向
-          if(column.label=="实体(目标图谱)"){
-            this.mergeTable.forEach(function(element) {
-              if(element['to']==row.to&&element['from']==row.from){
-                  element['direction']="left";
-              }
-            });
-          }
-          else if(column.label=="实体(候选图谱)"){
-            this.mergeTable.forEach(function(element) {
-              if(element['to']==row.to&&element['from']==row.from){
-                element['direction']="right";
-              }
-            });
-          }
-          $(cell).find(".el-image").show()
-          $(cell).siblings().find(".el-image").hide()
+      //无显示隔壁也无显示
+      if(row.direction==null){
+        //新增
+        if(column.label=="实体(核心图谱)"){
+          row['direction']="left"
         }
-        //隔壁无显示
-        else if($(cell).siblings().find(".el-image").css('display') === 'none'){
-          //新增
-          if(column.label=="实体(目标图谱)"){
-            row['direction']="left"
-          }
-          else if(column.label=="实体(候选图谱)"){
-            row['direction']="right"
-          }
-          //新增
-          this.mergeTable.push(row)
-          $(cell).find(".el-image").show()
+        else if(column.label=="实体(候选图谱)"){
+          row['direction']="right"
+        }
+        //新增
+        this.mergeTable.push(row)
+      }
+      //无显示但隔壁有显示
+      else if(row.direction!=null&&((column.label=="实体(候选图谱)"&&row.direction=='left')||(column.label=="实体(核心图谱)"&&row.direction=='right'))){
+        //箭头转向
+        if(column.label=="实体(核心图谱)"){
+          this.mergeTable.forEach(function(element) {
+            if(element['to']==row.to&&element['from']==row.from){
+              element['direction']="left";
+            }
+          });
+        }
+        else if(column.label=="实体(候选图谱)"){
+          this.mergeTable.forEach(function(element) {
+            if(element['to']==row.to&&element['from']==row.from){
+              element['direction']="right";
+            }
+          });
         }
       }
       //有显示
-      else if($(cell).find(".el-image").css('display') != 'none'){
+      else if(row.direction!=null&&((column.label=="实体(候选图谱)"&&row.direction=='right')||(column.label=="实体(核心图谱)"&&row.direction=='left'))){
+        row.direction = null;
         //删除该条记录
         this.mergeTable = this.mergeTable.filter(item=>{
-          if(item['to']!=row.to&&item['from']!=row.from){
-           return item
+          if(item['fromId']!=row.fromId){
+            return item
           }
+          // if(item['to']!=row.to&&item['from']!=row.from){
+          //   return item
+          // }
         })
-        $(cell).find(".el-image").hide()
       }
+      this.tableKey +=1;
     },
     //simKgTable的前端分页
     getSimKgTableData(){
@@ -937,6 +937,12 @@ export default {
       //置空表
       this.mergeTable = [];
       //取消所有箭头显示
+      $('table').find(".el-image").hide();
+      //去掉所有direction
+      this.simTableData.forEach((ele,index)=>{
+        ele.direction = null;
+      })
+      this.getSimKgTableData();
     },
     checkNecessaryInfo(){
       if(this.selectedMergeStrategy==2&&this.newKgName==""){

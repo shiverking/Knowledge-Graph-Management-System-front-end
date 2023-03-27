@@ -25,7 +25,7 @@
             <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
             <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
             <el-table-column property="head_from" label="From" show-overflow-tooltip></el-table-column>
-            <el-table-column property="relation" label="关系"show-overflow-tooltip></el-table-column>
+            <el-table-column property="relation" label="关系" show-overflow-tooltip></el-table-column>
             <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
             <el-table-column property="tail_from" label="From" show-overflow-tooltip></el-table-column>
             <el-table-column property="score" label="置信评分" show-overflow-tooltip></el-table-column>
@@ -62,8 +62,8 @@
             <el-table-column property="pred_prob" label="评分" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                  <span v-if="scope.row.pred_form=='0'">预测尾实体</span>
-                  <span v-if="scope.row.pred_form=='1'">预测头实体</span>
+                  <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+                  <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
               </template>
             </el-table-column>
             <el-table-column label="操作时间">
@@ -123,7 +123,7 @@
       <!--footer-->
       <span slot="footer" class="dialog-footer">
         <el-tooltip class="item" effect="dark" content="批量删除" placement="top-start">
-          <el-button type="danger" icon="el-icon-delete" plain>批量删除</el-button>
+          <el-button type="danger" icon="el-icon-delete" class="operation_button" plain>批量删除</el-button>
         </el-tooltip>
         <el-popover
             placement="top"
@@ -133,7 +133,7 @@
               <el-button size="mini" type="text" @click="deleteVisible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="deleteVisible = false;deleteAll()">确定</el-button>
             </div>
-            <el-button type="danger" slot="reference" plain icon="el-icon-delete">全部删除</el-button>
+            <el-button type="danger" class="operation_button" slot="reference" plain icon="el-icon-delete">全部删除</el-button>
         </el-popover>
         <el-popover
             placement="top"
@@ -143,13 +143,17 @@
               <el-button size="mini" type="text" @click="submitVisible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="submitVisible = false;submit()">确定</el-button>
             </div>
-            <el-button type="success" slot="reference" icon="el-icon-upload2" plain>提交版本</el-button>
+            <el-button type="success" slot="reference" class="operation_button" icon="el-icon-upload2" plain>提交版本</el-button>
         </el-popover>
       </span>
     </el-dialog>
   </div>
 </template>
-
+<style>
+.operation_button{
+  margin: 8px;
+}
+</style>
 <script>
 import moment from 'moment';
 import $ from "../../plugins/jquery.min";

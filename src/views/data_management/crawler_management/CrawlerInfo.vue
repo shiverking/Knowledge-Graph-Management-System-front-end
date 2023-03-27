@@ -1,5 +1,8 @@
 <template>
   <div>
+    <el-dialog title="内容" :visible.sync="contentVisible" top="7vh" width="70%">
+      <el-input :rows="20" v-model="content" type="textarea" style="width: 100%" :readonly="read" ></el-input>
+    </el-dialog>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="爬虫信息" name="first">
     <el-card class="box-card">
@@ -251,31 +254,68 @@
               ref="multipleTable"
               :data="tableData3"
               tooltip-effect="dark"
-              style="width: 50%"
+              style="width: 100%"
               @selection-change="handleSelectionChange"
               >
             <el-table-column
                 type="selection"
             >
             </el-table-column>
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label="全文">
-                    <span style="white-space: normal">{{ props.row.content }}</span>
-                  </el-form-item>
-                </el-form>
+            <el-table-column
+                label="标题"
+                width="400"
+                show-overflow-tooltip>
+              <template slot-scope="scope">{{ scope.row.title}}</template>
+            </el-table-column>
+            <el-table-column
+                label="作者"
+                width="400"
+                show-overflow-tooltip>
+              <template slot-scope="scope">{{ scope.row.author}}</template>
+            </el-table-column>
+            <el-table-column
+                label="内容">
+              <template slot-scope="scope">
+                <el-button type="text" @click = "displayContent(scope.row.content)">查看</el-button></template>
+            </el-table-column>
+            <el-table-column
+                label="创建时间"
+                show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span v-if="scope.row.create_time!=null">{{scope.row.create_time}}</span>
+                <span v-if="scope.row.create_time==null">暂无</span>
               </template>
             </el-table-column>
             <el-table-column
-                v-for="key in keys3"
-                :prop="key"
-                :label="key"
-                width="100px"
-                :show-overflow-tooltip="true"
-            >
-
+                label="发布时间"
+                show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span v-if="scope.row.create_time!=null">{{scope.row.publish_time}}</span>
+                <span v-if="scope.row.create_time==null">暂无</span>
+              </template>
             </el-table-column>
+            <el-table-column
+                label="来源" show-overflow-tooltip>
+              <template slot-scope="scope">{{ scope.row.origin}}</template>
+            </el-table-column>
+<!--            <el-table-column type="expand">-->
+<!--              <template slot-scope="props">-->
+<!--                <el-form label-position="left" inline class="demo-table-expand">-->
+<!--                  <el-form-item label="全文">-->
+<!--                    <span style="white-space: normal">{{ props.row.content }}</span>-->
+<!--                  </el-form-item>-->
+<!--                </el-form>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column-->
+<!--                v-for="key in keys3"-->
+<!--                :prop="key"-->
+<!--                :label="key"-->
+<!--                width="100px"-->
+<!--                :show-overflow-tooltip="true"-->
+<!--            >-->
+
+<!--            </el-table-column>-->
 <!--            <el-table-column-->
 <!--                fixed="right"-->
 <!--                label="操作"-->
@@ -292,6 +332,27 @@
               :current-page="page3" :page-size="size3"
               layout="total,prev, pager, next"
               :total="total3">
+          </el-pagination>
+
+        </el-card>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <strong>非结构图片</strong>
+            <!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
+          </div>
+          <div class="image-item" v-for="(item, index) in tableData4" :key="index" :style="reactiveImage">
+          <el-image :src="serviceurl+item.path" :preview-src-list="previewImageUrL" class="image" style="float: left ;width:200px;height: 100px">
+<!--            <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"-->
+<!--                 style="margin-top:40%">-->
+<!--            </div>-->
+          </el-image>
+          </div>
+          <el-pagination
+              @current-change="currentChange3"
+              :current-page="page4" :page-size="size4"
+              layout="total,prev, pager, next"
+              :total="total4"
+          style="clear: both">
           </el-pagination>
 
         </el-card>
@@ -399,6 +460,10 @@ export default {
   },*/
   data() {
     return {
+      total4:0,
+      serviceurl:"http://localhost:12345/picture",
+      tableData4:[],
+      contentVisible:false,
       keys3:null,
       keys:null,
       page:1,
@@ -474,6 +539,11 @@ export default {
       console.log(resp)
       _this.tableData3 = resp.data.data
       _this.total3 = resp.data.count
+    })
+    _this.axios.get('/api/image/getimage/0/20/'+this.$route.query.cid).then(function(resp){
+      console.log(resp)
+      _this.tableData4 = resp.data.data
+      _this.total4 = resp.data.count
     })
   }
 
