@@ -1,63 +1,41 @@
 <template>
   <div class="vueJs">
     <VueJstree :item-events="itemEvents" allow-batch whole-row :draggable="draggable" class="tree" ref="jstree"
-               @item-drag-start="itemDragStart" @item-drag-end="itemDragEnd" @item-drop-before="itemDropBefore"
-               @item-drop="itemDrop" v-if="treeData.length" @item-click="itemClick" text-field-name="name"
-               value-field-name="id" :data="treeData">
+      @item-drag-start="itemDragStart" @item-drag-end="itemDragEnd" @item-drop-before="itemDropBefore"
+      @item-drop="itemDrop" v-if="treeData.length" @item-click="itemClick" text-field-name="name" value-field-name="id"
+      :data="treeData">
       <template slot-scope="_">
         <div v-if="isEdit" v-contextmenu="contextmenu2" @contextmenu.prevent="customItemClick2(_.vm, _.model, $event)"
-             style="display: inherit; width: 200px" @click.exact="customItemClick(_.vm, _.model, $event)">
+          style="display: inherit; width: 200px" @click.exact="customItemClick(_.vm, _.model, $event)">
           <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
           {{ _.model.name }}
         </div>
-        <div v-else @contextmenu.prevent="customItemClick2(_.vm, _.model, $event)"
-             style="display: inherit; width: 200px" @click.exact="customItemClick(_.vm, _.model, $event)">
+        <div v-else @contextmenu.prevent="customItemClick2(_.vm, _.model, $event)" style="display: inherit; width: 200px"
+          @click.exact="customItemClick(_.vm, _.model, $event)">
           <i :class="_.vm.themeIconClasses" role="presentation" v-if="!_.model.loading"></i>
           {{ _.model.name }}
         </div>
       </template>
     </VueJstree>
-    <el-dialog
-        title="属性信息"
-        :visible.sync="dialogVisible"
-        width="50%"
-        :before-close="handleClose">
-      <el-table
-          :data="attributeData"
-          height="250"
-          border
-          style="width: 100%">
-        <el-table-column
-            prop="attributeName"
-            label="属性名称"
-            width="180">
+    <el-dialog title="属性信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+      <el-table :data="attributeData" height="250" border style="width: 100%">
+        <el-table-column prop="attributeName" label="属性名称" width="180">
         </el-table-column>
-        <el-table-column
-            prop="className"
-            label="所属类别"
-            width="180">
+        <el-table-column prop="className" label="所属类别" width="180">
         </el-table-column>
-        <el-table-column
-            prop="comment"
-            label="备注"
-            width="270">
+        <el-table-column prop="comment" label="备注" width="270">
         </el-table-column>
-        <el-table-column
-          label="删除属性">
+        <el-table-column label="删除属性">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-delete" @click="deleteAttribute(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary" style="float: left" @click="addDialogVisible = true">添 加 属 性</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
-      <el-dialog
-          title="添加属性"
-          :visible.sync="addDialogVisible"
-          width="40%"
-          :before-close="handleClose">
+        <el-button type="primary" style="float: left" @click="addDialogVisible = true">添 加 属 性</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+      <el-dialog title="添加属性" :visible.sync="addDialogVisible" width="40%" :before-close="handleClose">
         <el-form ref="form" :model="attributeForm" label-width="80px">
           <el-form-item label="属性名称">
             <el-input v-model="attributeForm.attributeName"></el-input>
@@ -81,7 +59,7 @@
 import 'jstree';
 import VueJstree from 'vue-jstree'
 import $ from '../plugins/jquery.min.js';
-
+let leftNodeId = null
 export default {
   name: '',
   props: ['treeData', 'type', "draggable", "isEdit", 'refresh', 'candidateOntologyId'], /// draggable 是否可以拖拽 /// isEdit 是否可以增加子类
@@ -100,14 +78,17 @@ export default {
       dialogVisible: false,
       addDialogVisible: false,
       contextmenu2: [
-        {text: '新增子类', handler: this.handleClick},
-        {text: '删除', handler: this.handleClick}
+        { text: '新增子类', handler: this.handleClick },
+        { text: '删除', handler: this.handleClick }
       ],
       leftTreeDataFlag: false,
       currentItem: {},
       editingNode: {},
       itemEvents: {
-        mouseover: function () {
+        mouseover: function (e) {
+          console.log(e.model.id);
+          leftNodeId = e.model.id
+
           console.log('mouseover')
         },
         contextmenu: function () {
@@ -123,19 +104,19 @@ export default {
     this.renderTree(this.treeData);
   },
   methods: {
-    deleteAttribute(attributeId){
+    deleteAttribute(attributeId) {
       if (this.$route.path === '/coredata/mainontology/display') {
         axios.request({
           method: 'DELETE',
           url: '/api/coreOntology/deleteAttribute/' + attributeId,
         }).then((response) => {
-          if(response.status === 200 && response.data.result){
+          if (response.status === 200 && response.data.result) {
             this.itemClick(this.node, this.item, null);
             this.$message({
               type: 'success',
               message: "删除成功"
             });
-          }else {
+          } else {
             this.$message({
               type: 'warning',
               message: response.data.msg
@@ -150,13 +131,13 @@ export default {
           method: 'DELETE',
           url: '/api/candidateOntology/deleteAttribute/' + attributeId,
         }).then((response) => {
-          if(response.status === 200 && response.data.result){
+          if (response.status === 200 && response.data.result) {
             this.itemClick(this.node, this.item, null);
             this.$message({
               type: 'success',
               message: "删除成功"
             });
-          }else {
+          } else {
             this.$message({
               type: 'warning',
               message: response.data.msg
@@ -173,18 +154,18 @@ export default {
           method: 'POST',
           url: '/api/coreOntology/addAttribute',
           data: {
-            classId : this.item.id,
+            classId: this.item.id,
             attributeName: this.attributeForm.attributeName,
             comment: this.attributeForm.comment
           }
         }).then((response) => {
-          if(response.status === 200 && response.data.result){
+          if (response.status === 200 && response.data.result) {
             this.itemClick(this.node, this.item, null);
             this.$message({
               type: 'success',
               message: "添加成功"
             });
-          }else {
+          } else {
             this.$message({
               type: 'warning',
               message: response.data.msg
@@ -200,19 +181,19 @@ export default {
           method: 'POST',
           url: '/api/candidateOntology/addAttribute',
           data: {
-            classId : this.item.id,
+            classId: this.item.id,
             attributeName: this.attributeForm.attributeName,
             comment: this.attributeForm.comment,
             belongCandidateId: this.candidateOntologyId
           }
         }).then((response) => {
-          if(response.status === 200 && response.data.result){
+          if (response.status === 200 && response.data.result) {
             this.itemClick(this.node, this.item, null);
             this.$message({
               type: 'success',
               message: "添加成功"
             });
-          }else {
+          } else {
             this.$message({
               type: 'warning',
               message: response.data.msg
@@ -226,48 +207,58 @@ export default {
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {
-          });
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {
+        });
     },
     itemDragStart(node) {
       console.log(node)
       this.currentDragItem = node;
       console.log(node.model.name + ' drag start !')
     },
+    a() {
+
+    },
     itemDragEnd(node) {
-      console.log(node)
-      console.log(node.model.name + ' drag end !')
-      axios.request({
-        method: 'PUT',
-        url: '/api/coreOntology/mergeOntology',
-        params: {
-          beMergedClassId: node.model.id,
-          candidateOntologyId: 1,
-          coreOntologyClassId: this.currentDragItem.model.id,
-        }
-      }).then(response => {
-        console.log(response);
-        console.log(response.data.msg);
-        if (response.status == 200 && response.data.result) {
-          console.log('请求到的response');
+      console.log(leftNodeId);
+      console.log(node);
+      console.log("开始融合");
+      console.log(node.model.name + " drag end !");
+      console.log("candidateOntologyId=" + this.candidateOntologyId);
+      console.log("beMergedClassId=" + node.model.id);
+      console.log("coreOntologyClassId=" + this.currentDragItem.model.id);
+      setTimeout(() => {
+        axios.request({
+          method: 'PUT',
+          url: '/api/coreOntology/mergeOntology',
+          params: {
+            beMergedClassId: this.currentDragItem.model.id,
+            candidateOntologyId: this.candidateOntologyId,
+            coreOntologyClassId: leftNodeId,
+          }
+        }).then(response => {
           console.log(response);
-          this.$message({
-            type: 'success',
-            message: "合并成功"
-          });
-          this.$emit('setRefresh', !this.refresh)
-        } else {
-          this.$message({
-            type: 'warning',
-            message: response.data.msg
-          });
-        }
-      }).catch(error => {
-        console.log(error);
-      })
+          console.log(response.data.msg);
+          if (response.status === 200 && response.data.result) {
+            console.log('请求到的response');
+            console.log(response);
+            this.$message({
+              type: 'success',
+              message: "合并成功"
+            });
+            this.$emit('setRefresh', !this.refresh)
+          } else {
+            this.$message({
+              type: 'warning',
+              message: response.data.msg
+            });
+          }
+        }).catch(error => {
+          console.log(error);
+        })
+      }, 2000);
     },
     itemDropBefore(node, item, draggedItem, e) {
       console.log(node)
@@ -390,7 +381,7 @@ export default {
           cancelButtonText: '取消',
           // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
           // inputErrorMessage: '邮箱格式不正确'
-        }).then(({value}) => {
+        }).then(({ value }) => {
           this.addClass(value)
         }).catch(() => {
           this.$message({
@@ -496,6 +487,9 @@ export default {
     },
     //树上节点的点击事件，点击后打开属性列表
     itemClick(node, item, e) {
+      if (!this.isEdit) {
+        return
+      }
       this.node = node;
       this.item = item;
       this.attributeData = [];
@@ -546,6 +540,9 @@ export default {
       console.log(node)
       console.log(item)
       console.log(e)
+    },
+    onMuseover(e) {
+      console.log(e);
     }
   },
 }

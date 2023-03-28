@@ -134,6 +134,13 @@
     },
     methods:{
       onSubmit() {
+        if(this.form.name === null || this.form.name === ''){
+          this.$message({
+            type: 'warning',
+            message: "请输入候选本体名称"
+          });
+          return
+        }
         axios.request({
           method: "post",
           url: "/api/candidateOntology/addCandidateOntology",
