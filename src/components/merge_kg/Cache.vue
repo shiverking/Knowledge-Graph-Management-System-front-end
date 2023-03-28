@@ -83,9 +83,9 @@
                   <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
               </template>
             </el-table-column> -->
-            <!-- <el-table-column label="操作时间">
+            <el-table-column label="操作时间">
               <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
-            </el-table-column> -->
+            </el-table-column>
           </el-table>
           <el-pagination
             class="choose_targetKg_pagination"

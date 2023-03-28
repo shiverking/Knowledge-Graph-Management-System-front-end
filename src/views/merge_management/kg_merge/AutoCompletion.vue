@@ -43,7 +43,8 @@
                 <span style="margin-left: 10px">{{ scope.row.tail }}</span>
                 <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
               </template>
-            </el-table-column>         
+            </el-table-column>
+            <el-table-column prop="time" label="时间"></el-table-column>         
             <!-- <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
@@ -146,7 +147,15 @@
                 :value="{ value: item.value, label: item.label}">
               </el-option>
             </el-select>
-            <el-autocomplete
+            <el-select v-model="state1" filterable placeholder="请选择实体" style="margin-left:10px">
+              <el-option
+                v-for="item in ent_set"
+                :key="item.value"
+                :label="item.value"
+                :value="{ value: item.value, label: item.ent_typ}">
+              </el-option>
+            </el-select>
+            <!-- <el-autocomplete
               class="inline-input"
               v-model="state1"
               clearable
@@ -154,8 +163,16 @@
               placeholder="请选择实体"
               style="margin-left:10px"
               @select="handleSelect"
-            ></el-autocomplete>
-            <el-autocomplete
+            ></el-autocomplete> -->
+            <el-select v-model="state2" filterable placeholder="请选择关系" style="margin-left:10px">
+              <el-option
+                v-for="item in rel_sets"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- <el-autocomplete
               class="inline-input"
               v-model="state2"
               clearable
@@ -163,7 +180,7 @@
               placeholder="请选择关系"
               style="margin-left:10px"
               @select="handleSelect2"
-            ></el-autocomplete>
+            ></el-autocomplete> -->
             <el-button 
               plain
               style="margin-left:10px" 
@@ -176,7 +193,12 @@
             label="日期"
             width="180">
           </el-table-column> -->
-          <el-table-column prop="ent" label="实体" width="180"></el-table-column>
+          <el-table-column label="实体">
+            <template slot-scope="scope">
+              {{scope.row.ent}}
+              <el-tag size="small" type="info">{{ scope.row.ent_typ }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column prop="rel" label="关系"></el-table-column>
         </el-table>
         <el-pagination
@@ -195,12 +217,18 @@
           <el-button type="success" @click="applyResult()" style="margin: 0px;margin-left:10px">应用</el-button>
         </el-tooltip>
         <el-table :data="tableData2" border :key="tableData2Key" style="width: 100%; margin-top: 20px">
-          <el-table-column prop="head" label="头实体"></el-table-column>
+          <el-table-column label="头实体">
+            <template slot-scope="scope">
+              {{scope.row.head}}
+              <el-tag size="small" type="info">{{ scope.row.head_typ }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column prop="rel" label="关系"></el-table-column>
           <el-table-column label="已选尾实体">
             <template slot-scope="scope">
               <span v-if="scope.row.tail==null">还未选择</span>
               <span v-if="scope.row.tail!=null">{{scope.row.tail}}</span>
+              <el-tag size="small" type="info" v-if="scope.row.tail!=null">{{ scope.row.tail_typ }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="尾实体预测结果">
@@ -208,12 +236,12 @@
               <el-button type="text" @click="displayTailDetailTable(scope.row)">详情</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="链接状态">
+          <!-- <el-table-column label="链接状态">
             <template slot-scope="scope">
               <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
               <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="time" label="时间"></el-table-column>
         </el-table>
         <el-pagination
@@ -230,7 +258,10 @@
         <el-dialog title="预测概览" :visible.sync="tailDetailVisible">
           <el-table :data="tableData3">
             <el-table-column label="尾实体">
-              <template slot-scope="scope">{{scope.row.tail}}</template>
+              <template slot-scope="scope">
+                {{scope.row.tail}}
+                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+              </template>
             </el-table-column>
             <el-table-column label="预测概率">
               <template slot-scope="scope">{{scope.row.pred_prob}}</template>
@@ -288,7 +319,7 @@
               <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
             </template>
           </el-table-column> -->
-          <!-- <el-table-column prop="time" label="时间"></el-table-column> -->
+          <el-table-column prop="time" label="时间"></el-table-column>
         </el-table>
         <el-pagination
             @size-change="sizeChange6"
@@ -358,7 +389,7 @@
         ent_set: [], //实体集合，存储“可搜索查找1”的内容
         rel_set: [], //关系集合，存储“可搜索查找2”的内容
         select1: {}, //“选择框1”已选内容
-        state1: '', //“可搜索查找1”已选内容
+        state1: {}, //“可搜索查找1”已选内容
         state2: '', //“可搜索查找2”已选内容
         entRel_pair_selected:[], //已选择的、待预测的“实体-关系对”数组
         tmpTable:[], //一个临时数组，用来存储entRel_pair_selected的值
@@ -694,16 +725,16 @@
           var res =[];
           var decodedData = [];
           for(var i = 0; i < data.length; i++){
-            decodedData.push([data[i]['ent'],data[i]['rel']]);
+            decodedData.push([data[i]['ent'],data[i]['ent_typ'],data[i]['rel']]);
             console.log(data[i]['ent'],data[i]['rel'])
           }
           for(var i =0;i<preds.length;i++){
             var origin = decodedData[i];
             var pred_res = [];
             preds[i].forEach(function(element) {
-              pred_res.push({"tail":element[0],"pred_prob":element[2]});
+              pred_res.push({"tail":element[0], "tail_typ":element[3], "pred_prob":element[2]});
             })
-            res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":linked_status,"pred_res":pred_res});
+            res.push({"head":origin[0],"rel":origin[2],"head_typ":origin[1],"time":this.dateFormat(new Date()),"pred_form":linked_status,"pred_res":pred_res});
           }
           this.predTable = res;
           this.getTableData2();
@@ -1092,6 +1123,7 @@
       //选择行
       chooseTail(row){
         this.selectedRow.tail = row.tail;
+        this.selectedRow.tail_typ = row.tail_typ;
         this.selectedRow.pred_prob= row.pred_prob;
         // this.getTableData2();
         this.tableData2Key += 1;
@@ -1234,14 +1266,14 @@
       //确定选择的关系和实体
       comm_entRel_pair(){
         if (this.state1 != '' && this.state2 != ''){
-          var entRel_pair = {'ent': this.state1, 'rel': this.state2 }
+          var entRel_pair = {'ent': this.state1['value'], 'ent_typ': this.state1['label'], 'rel': this.state2 }
           this.entRel_pair_selected.push(entRel_pair)
           this.getTableData()
           // }
         }else{
           this.open_when_input_isIncomplete();
         }
-        this.state1 = '';
+        this.state1 = {};
         this.state2 = '';
       },
       //获取链接补全列表
@@ -1252,6 +1284,9 @@
           if (response.status == 200) {
             //赋值给表格
             this.link_completion_data = response.data.data;
+            for(var i=0; i<this.link_completion_data.length;i++){
+              this.link_completion_data[i]['time'] = this.dateFormat(new Date())
+            }
             this.getTableData5();
             console.log(this.tableData5)
             //设置文本高亮
