@@ -66,16 +66,33 @@
           <el-table :data="completionCacheData" height="500" border>
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
-            <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
+            <el-table-column label="头实体" width="400">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="关系">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column label="尾实体" width="400">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+              </template>
+            </el-table-column>   
+            <!-- <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
             <el-table-column property="rel" label="关系" show-overflow-tooltip></el-table-column>
-            <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
-            <el-table-column property="pred_prob" label="评分" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column> -->
+            <!-- <el-table-column property="pred_prob" label="评分" show-overflow-tooltip></el-table-column> -->
+            <!-- <el-table-column label="操作">
               <template slot-scope="scope">
                   <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
                   <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作时间">
               <template slot-scope="scope">{{timeProcess(scope.row.time)}}</template>
             </el-table-column>
@@ -95,29 +112,71 @@
           <el-table :data="evaluationCacheData"  height="500" >
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="id" label="id" width="70"></el-table-column>
-            <el-table-column property="head" label="头实体" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="head_new" label="新头实体" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="head_typ" label="类型" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="head_typ_new" label="新类型" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="rel" label="关系" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="rel_new" label="新关系" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="tail" label="尾实体" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="tail_new" label="新尾实体" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="tail_typ" label="类型" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column property="tail_typ_new" label="新类型" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column label="错误类型" :show-overflow-tooltip="true">
+            <el-table-column
+              label="头实体（旧）"
+              >
               <template slot-scope="scope">
-                <span v-if="scope.row.error_typ=='0'">实体错误</span>
-                <span v-if="scope.row.error_typ=='1'">链接错误</span>
-                <span v-if="scope.row.error_typ=='2'">属性值错误</span>
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                <el-tag style="margin-left: 10px">{{ scope.row.head_typ }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="修改形式" >
+            <el-table-column
+              label="关系（旧）"
+              >
               <template slot-scope="scope">
-                <span v-if="scope.row.update_form=='0'"><el-tag type="warning">修改</el-tag></span>
-                <span v-if="scope.row.update_form=='1'"><el-tag type="danger">删除</el-tag></span>
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="尾实体（旧）"
+              >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                <el-tag v-if="scope.row.error_typ!=1" style="margin-left: 10px">{{ scope.row.tail_typ }}</el-tag>
+              </template>
+            </el-table-column>    
+            <el-table-column
+              label="头实体（新）"
+              >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head_new }}</span>
+                <el-tag v-if="scope.row.head_typ_new!= '-' && scope.row.error_typ!=1" style="margin-left: 10px">{{ scope.row.head_typ_new }}</el-tag>
               </template>
             </el-table-column>
+            <el-table-column
+              label="关系（新）"
+              >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel_new }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column
+              label="尾实体（新）"
+              >
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail_new }}</span>
+                <el-tag v-if="scope.row.error_typ!=1 && scope.row.head_typ_new!= '-'" style="margin-left: 10px">{{ scope.row.tail_typ_new }}</el-tag>
+              </template>
+            </el-table-column>  
+            <el-table-column
+              label="错误类型"
+              >
+              <template slot-scope="scope">
+                <span v-if="scope.row.error_typ==0">链接错误</span>
+                <span v-if="scope.row.error_typ==1">属性值错误</span>
+              </template>
+            </el-table-column>         
+            <el-table-column
+              label="更新方式"
+              >
+              <template slot-scope="scope">
+                <span v-if="scope.row.update_form==0">删除链接</span>
+                <span v-if="scope.row.update_form==1">修改实体类别</span>
+                <span v-if="scope.row.update_form==2">修改链接</span>
+                <span v-if="scope.row.update_form==3">删除属性值</span>
+                <span v-if="scope.row.update_form==4">修改属性值</span>
+              </template>
+            </el-table-column>    
           </el-table>
           <el-pagination
               class="choose_targetKg_pagination"

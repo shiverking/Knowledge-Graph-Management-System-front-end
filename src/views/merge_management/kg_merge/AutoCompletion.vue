@@ -1,342 +1,395 @@
 <template>
   <div style="margin-top: 20px;">
     <cache></cache>
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-    <el-tab-pane label="基于智能匹配检测" name="first">
-    <el-steps :active="active" finish-status="success" simple>
-    <el-step title="链接预测"></el-step>
-    <el-step title="预测提交"></el-step>
-    </el-steps>
-    <!--模型管理dialog-->
-    <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
-    <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
-      <el-button type="primary" @click="open()">新建训练</el-button>
-      <el-table
-        :data="tableData4"
-        border
-        style="width: 100%; margin-top:10px">
-        <el-table-column
-          prop="create_time"
-          label="创建时间"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="model_name"
-          label="模型名称"
-          width="180">
-        </el-table-column>
-          <el-table-column
-          label="训练状态">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" v-if="scope.row.train_status == true" :loading="scope.row.train_status">训练中</el-button>
-              <el-button type="success" size="mini" v-if="scope.row.train_status != true">已训练</el-button>
-            </template>
-          </el-table-column>
-        <el-table-column
-          prop="address"
-          label="操作">
-          <el-button type="danger" size="mini" @click="fun()">删除</el-button>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          @size-change="sizeChange4"
-          @current-change="currentChange4"
-          :current-page="tableData4_page"
-          :page-size="tableData4_size"
+    <el-tabs v-model="activeName" type="card" style="margin-top:10px;" @tab-click="handleClick">
+      <el-steps :active="active" finish-status="success" simple>
+        <el-step title="链接补全（本体规则检测）"></el-step>
+        <el-step title="链接预测（智能匹配检测）"></el-step>
+        <el-step title="预测提交"></el-step>
+      </el-steps>
+      <div v-if="this.active==0">
+        <el-button type="primary" @click="linked_completion()">开始检测</el-button>
+        <el-popover placement="top" v-model="isJoin">
+          <p>是否应用链接补全的结果？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="isJoin = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="isJoin = false; apply_linkCompletion_res();">确定</el-button>
+          </div>
+          <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
+        </el-popover>
+        <keep-alive>
+          <el-table :data="tableData5" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
+            <!-- <el-table-column
+              label="检测时间"
+              width="180">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
+              </template>
+            </el-table-column> -->
+            <el-table-column label="头实体" width="400">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="关系">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column label="尾实体" width="400">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="time" label="时间"></el-table-column>         
+            <!-- <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  type="primary" plain
+                  size="mini"
+                  :disabled="scope.row.error_status"
+                  @click="dailog_receive_relation_error(scope.row);draw_graph(scope.row);">编辑</el-button>
+                <el-button
+                  type="success" plain
+                  size="mini"
+                  :disabled="whether_can_revoked(scope.row)"
+                  @click="revoke_selection(scope.row)">撤销</el-button>
+              </template>
+            </el-table-column> -->
+          </el-table>
+        </keep-alive>
+        <el-pagination
+          @size-change="sizeChange5"
+          @current-change="currentChange5"
+          :current-page="tableData5_page"
+          :page-size="tableData5_size"
           :page-sizes="pageSizes"
           background
           layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData4_total"
+          :total="tableData5_total"
           style="margin-top: 10px;">
-      </el-pagination>
-      <el-card id="gpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
-      <el-card id="cpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
-      <el-dialog title="新建训练" append-to-body :visible.sync="dialogFormVisible">
-        <el-form ref="form" :model="form" label-width="80px">
-          <b>训练新模型</b>
-          <el-form-item label="选择模型" style="margin-top:15px">
-            <el-select disabled v-model="form.model" placeholder="图谱嵌入模型">
-              <el-option label="ConvE" value="shanghai"></el-option>
-              <el-option label="SE-GNN" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="模型名称">
-            <el-input v-model="form.name" style="width:300px;"></el-input>
-          </el-form-item>
-          <el-form-item label="选择数据">
-            <el-input disabled v-model="form.path" style="width:400px;"></el-input>
-          </el-form-item>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="批次大小" style="width:200px; margin-bottom:0px;">
-                <el-input v-model="form.batch"></el-input>
+        </el-pagination>
+      </div>
+      <div v-if="this.active==1">
+        <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
+        <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
+          <el-button type="primary" @click="open()">新建训练</el-button>
+          <el-table :data="tableData4" border style="width: 100%; margin-top:10px">
+            <el-table-column prop="create_time" label="创建时间" width="180"></el-table-column>
+            <el-table-column prop="model_name" label="模型名称" width="180"></el-table-column>
+            <el-table-column label="训练状态">
+              <template slot-scope="scope">
+                <el-button type="primary" size="mini" v-if="scope.row.train_status == true" :loading="scope.row.train_status">训练中</el-button>
+                <el-button type="success" size="mini" v-if="scope.row.train_status != true">已训练</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button :disabled="scope.row.train_status==1" type="danger" size="mini" @click="remove_lpm(scope.row.model_name)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            @size-change="sizeChange4"
+            @current-change="currentChange4"
+            :current-page="tableData4_page"
+            :page-size="tableData4_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData4_total"
+            style="margin-top: 10px;">
+          </el-pagination>
+          <el-card id="gpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
+          <el-card id="cpu_status" el-card shadow="hover" style="height:360px; width:420px;float: left; margin-top:10px; margin-right: 10px;"></el-card>
+          <el-dialog title="新建训练" append-to-body :visible.sync="dialogFormVisible">
+            <el-form ref="form" :model="form" label-width="80px">
+              <b>训练新模型</b>
+              <el-form-item label="选择模型" style="margin-top:15px">
+                <el-select disabled v-model="form.model" placeholder="图谱嵌入模型">
+                  <el-option label="ConvE" value="shanghai"></el-option>
+                  <el-option label="SE-GNN" value="beijing"></el-option>
+                </el-select>
               </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="迭代次数" style="width:200px; margin-left:30px;">
-                <el-input v-model="form.epoch"></el-input>
+              <el-form-item label="模型名称">
+                <el-input v-model="form.name" style="width:300px;"></el-input>
               </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <el-button type="primary" @click="close();add_model_to_lpm_table();">开始训练</el-button>
-      </el-dialog>
-    </el-dialog>
-    <div v-if="this.active==0">
-      <div style="margin-top:10px">
-        <p><b>选择待预测的实体和关系</b></p>
+              <el-form-item label="选择数据">
+                <el-input disabled v-model="form.path" style="width:400px;"></el-input>
+              </el-form-item>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="批次大小" style="width:200px; margin-bottom:0px;">
+                    <el-input v-model="form.batch"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="迭代次数" style="width:200px; margin-left:30px;">
+                    <el-input v-model="form.epoch"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+            <el-button type="primary" @click="close();add_model_to_lpm_table();">开始训练</el-button>
+          </el-dialog>
+        </el-dialog>
+        <div style="margin-top:10px">
+          <p><b>选择待预测的实体和关系</b></p>
           <el-row class="demo-autocomplete">
-              <el-select v-model="select1" style="margin-top:10px" placeholder="请选择模型">
-                <el-option
-                  v-for="item in mod_set"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-              <el-autocomplete
-                class="inline-input"
-                v-model="state1"
-                clearable
-                :fetch-suggestions="querySearch"
-                placeholder="请选择实体"
-                style="margin-left:10px"
-                @select="handleSelect"
-              ></el-autocomplete>
-              <el-autocomplete
-                class="inline-input"
-                v-model="state2"
-                clearable
-                :fetch-suggestions="querySearch2"
-                placeholder="请选择关系"
-                style="margin-left:10px"
-                @select="handleSelect2"
-              ></el-autocomplete>
-              <el-button 
+            <el-select v-model="select1" style="margin-top:10px;" placeholder="请选择模型">
+              <el-option
+                v-for="item in mod_set"
+                :key="item.value"
+                :label="item.label"
+                :value="{ value: item.value, label: item.label}">
+              </el-option>
+            </el-select>
+            <el-select v-model="state1" filterable placeholder="请选择实体" style="margin-left:10px">
+              <el-option
+                v-for="item in ent_set"
+                :key="item.value"
+                :label="item.value"
+                :value="{ value: item.value, label: item.ent_typ}">
+              </el-option>
+            </el-select>
+            <!-- <el-autocomplete
+              class="inline-input"
+              v-model="state1"
+              clearable
+              :fetch-suggestions="querySearch"
+              placeholder="请选择实体"
+              style="margin-left:10px"
+              @select="handleSelect"
+            ></el-autocomplete> -->
+            <el-select v-model="state2" filterable placeholder="请选择关系" style="margin-left:10px">
+              <el-option
+                v-for="item in rel_sets"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- <el-autocomplete
+              class="inline-input"
+              v-model="state2"
+              clearable
+              :fetch-suggestions="querySearch2"
+              placeholder="请选择关系"
+              style="margin-left:10px"
+              @select="handleSelect2"
+            ></el-autocomplete> -->
+            <el-button 
               plain
               style="margin-left:10px" 
               @click="comm_entRel_pair">确定</el-button>
           </el-row>
-      </div>
-      <el-table
-        :data="tableData1"
-        border
-        style="width: 100%; margin-top: 20px">
-        <!-- <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
-        </el-table-column> -->
-        <el-table-column
-          prop="ent"
-          label="实体"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="rel"
-          label="关系">
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        @size-change="sizeChange"
-        @current-change="currentChange"
-        :current-page="tableData1_page"
-        :page-size="tableData1_size"
-        :page-sizes="pageSizes"
-        background
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData1_total"
-        style="margin-top: 10px;">
-      </el-pagination>
-      <el-button type="primary" @click="link_prediction" style="margin-top: 20px;">开始识别</el-button>
-      <el-tooltip class="item" effect="dark" content="预提交选择好的链接预测结果" placement="top-start">
-        <el-button type="success" @click="applyResult" style="margin: 0px;margin-left:10px">应用</el-button>
-      </el-tooltip>
-      <el-table
-          :data="tableData2"
-          border
-          :key="tableData2Key"
-          style="width: 100%; margin-top: 20px">
-        <el-table-column
-            prop="head"
-            label="头实体"
-            >
-        </el-table-column>
-        <el-table-column
-            prop="rel"
-            label="关系"
-            >
-        </el-table-column>
-        <el-table-column
-            label="已选尾实体">
-          <template slot-scope="scope">
-            <span v-if="scope.row.tail==null">还未选择</span>
-            <span v-if="scope.row.tail!=null">{{scope.row.tail}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="尾实体预测结果">
-        <template slot-scope="scope">
-          <el-button type="text" @click="displayTailDetailTable(scope.row)">详情</el-button>
-        </template>
-        </el-table-column>
-        <el-table-column
-            label="链接状态">
-          <template slot-scope="scope">
-            <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
-            <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            prop="time"
-            label="时间">
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        @size-change="sizeChange2"
-        @current-change="currentChange2"
-        :current-page="tableData2_page"
-        :page-size="tableData2_size"
-        :page-sizes="pageSizes"
-        background
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData2_total"
-        style="margin-top: 10px;">
-      </el-pagination>
-      <el-dialog
-          title="预测概览"
-          :visible.sync="tailDetailVisible">
-        <el-table :data="tableData3">
-          <el-table-column label="尾实体">
+        </div>
+        <el-table :data="tableData1" border style="width: 100%; margin-top: 20px">
+          <!-- <el-table-column
+            prop="date"
+            label="日期"
+            width="180">
+          </el-table-column> -->
+          <el-table-column label="实体">
             <template slot-scope="scope">
-              {{scope.row.tail}}
+              {{scope.row.ent}}
+              <el-tag size="small" type="info">{{ scope.row.ent_typ }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="预测概率">
-            <template slot-scope="scope">
-              {{scope.row.pred_prob}}
-            </template>
-          </el-table-column>
-          <el-table-column label="选择尾实体">
-            <template slot-scope="scope">
-              <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
-            </template>
-          </el-table-column>
+          <el-table-column prop="rel" label="关系"></el-table-column>
         </el-table>
         <el-pagination
-          @size-change="sizeChange3"
-          @current-change="currentChange3"
-          :current-page="tableData3_page"
-          :page-size="tableData3_size"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="tableData1_page"
+          :page-size="tableData1_size"
           :page-sizes="pageSizes"
           background
           layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData3_total"
+          :total="tableData1_total"
           style="margin-top: 10px;">
         </el-pagination>
-        <span slot="footer" class="tailDetail-footer">
+        <el-button type="primary" @click="link_prediction" style="margin-top: 20px;">开始识别</el-button>
+        <el-tooltip class="item" effect="dark" content="预提交选择好的链接预测结果" placement="top-start">
+          <el-button type="success" @click="applyResult()" style="margin: 0px;margin-left:10px">应用</el-button>
+        </el-tooltip>
+        <el-table :data="tableData2" border :key="tableData2Key" style="width: 100%; margin-top: 20px">
+          <el-table-column label="头实体">
+            <template slot-scope="scope">
+              {{scope.row.head}}
+              <el-tag size="small" type="info">{{ scope.row.head_typ }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="rel" label="关系"></el-table-column>
+          <el-table-column label="已选尾实体">
+            <template slot-scope="scope">
+              <span v-if="scope.row.tail==null">还未选择</span>
+              <span v-if="scope.row.tail!=null">{{scope.row.tail}}</span>
+              <el-tag size="small" type="info" v-if="scope.row.tail!=null">{{ scope.row.tail_typ }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="尾实体预测结果">
+            <template slot-scope="scope">
+              <el-button type="text" @click="displayTailDetailTable(scope.row)">详情</el-button>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="链接状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+              <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="time" label="时间"></el-table-column>
+        </el-table>
+        <el-pagination
+          @size-change="sizeChange2"
+          @current-change="currentChange2"
+          :current-page="tableData2_page"
+          :page-size="tableData2_size"
+          :page-sizes="pageSizes"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData2_total"
+          style="margin-top: 10px;">
+        </el-pagination>
+        <el-dialog title="预测概览" :visible.sync="tailDetailVisible">
+          <el-table :data="tableData3">
+            <el-table-column label="尾实体">
+              <template slot-scope="scope">
+                {{scope.row.tail}}
+                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="预测概率">
+              <template slot-scope="scope">{{scope.row.pred_prob}}</template>
+            </el-table-column>
+            <el-table-column label="选择尾实体">
+              <template slot-scope="scope">
+                <el-button type="success" icon="el-icon-check" circle @click="chooseTail(scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            @size-change="sizeChange3"
+            @current-change="currentChange3"
+            :current-page="tableData3_page"
+            :page-size="tableData3_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData3_total"
+            style="margin-top: 10px;">
+          </el-pagination>
+          <span slot="footer" class="tailDetail-footer">
             <el-button @click="tailDetailVisible = false">取 消</el-button>
             <el-button type="primary" @click="tailDetailVisible = false">确 定</el-button>
           </span>
-      </el-dialog>
-    </div>
-    <div v-if="this.active==1">
-      <el-table
-          :data="confirmedDataTable"
+        </el-dialog>
+      </div>
+      <div v-if="this.active==2">
+        <el-table
+          :data="tableData6"
           border
           v-loading = "comfirmedLoading"
           element-loading-text="正在提交中..."
-          style="width: 100%">
-        <el-table-column
-            prop="head"
-            label="头实体"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="rel"
-            label="关系"
-        >
-        </el-table-column>
-        <el-table-column
-            label="尾实体">
-          <template slot-scope="scope">
-            <span>{{scope.row.tail}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="预测类型">
-          <template slot-scope="scope">
-            <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
-            <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            prop="time"
-            label="时间">
-        </el-table-column>
-      </el-table>
+          style="width: 100%; margin-top:10px">
+          <el-table-column label="头实体" width="400">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.head }}</span>
+              <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="关系">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+            </template>
+          </el-table-column>     
+          <el-table-column label="尾实体" width="400">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+              <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+            </template>
+          </el-table-column>   
+          <!-- <el-table-column label="预测类型">
+            <template slot-scope="scope">
+              <span v-if="scope.row.pred_form=='0'">“实体-关系”链接已存在</span>
+              <span v-if="scope.row.pred_form=='1'">“实体-关系”链接不存在</span>
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="time" label="时间"></el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="sizeChange6"
+            @current-change="currentChange6"
+            :current-page="tableData6_page"
+            :page-size="tableData6_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData6_total"
+            style="margin-top: 10px;">
+        </el-pagination>
       </div>
-    <div style="text-align: right;">
-      <el-button style="margin-top: 12px;" v-if="this.active==1" @click="previous" >上一步</el-button>
-      <el-popover
-          placement="left"
-          v-model="nextStepVisible">
-        <p>确定将当前结果保存至缓存表,并进行下一步吗？</p>
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
-        </div>
-        <el-button type="primary" style="margin-top: 12px; margin-left:10px"  v-if="this.active==1" slot="reference" @click="nextStepVisible=true;">提交</el-button>
-      </el-popover>
-      <el-button type="primary" style="margin-top: 12px;" v-if="this.active==0" @click="next">下一步</el-button>
-    </div>
-  </el-tab-pane>
-  <el-tab-pane disabled="handoff" label="基于本体规则检测" name="fourth">
-
-  </el-tab-pane>
-</el-tabs>
+      <div style="text-align: right;">
+        <el-button style="margin-top: 12px;margin-right:10px;" v-if="this.active>0" @click="previous">上一步</el-button>
+        <el-popover
+            placement="left"
+            v-model="nextStepVisible">
+          <p>确定将当前结果保存至缓存表,并进行下一步吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
+          </div>
+          <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==2" slot="reference" @click="nextStepVisible=true;">提交</el-button>
+        </el-popover>
+        <el-button type="primary" style="margin-top: 12px;" v-if="this.active<2" @click="next">下一步</el-button>
+      </div>
+    </el-tabs>
   </div>
 </template>
 <style>
-.ner_card{
-  margin-top: 10px;
-  margin-bottom: 10px;
-  max-height:500px;
-}
-.ner_label{
-  margin: 0px;
-}
-p {
-  word-break: break-all;
-  word-wrap: break-word;
-}
-.ner_result{
-  word-break: normal;
-  display: block;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow: hidden;
-}
+  .ner_card{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-height:500px;
+  }
+  .ner_label{
+    margin: 0px;
+  }
+  p {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+  .ner_result{
+    word-break: normal;
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: hidden;
+  }
 </style>
 <script>
   import Cache from "../../../components/merge_kg/Cache";
   import * as echarts from 'echarts';
   import moment from "moment";
   import $ from '../../../plugins/jquery.min.js';
-  import dataTool from "echarts/extension/dataTool";
   export default {
     components:{
       Cache,
     },
     data() {
       return {
+        isJoin: false,
         tableData2Key: 0,
         activeName: 'first', //基于本体or基于算法选项卡flag
         mod_set: [], //模型集合，存储“选择框1”的内容
         ent_set: [], //实体集合，存储“可搜索查找1”的内容
         rel_set: [], //关系集合，存储“可搜索查找2”的内容
-        select1: '', //“选择框1”已选内容
-        state1: '', //“可搜索查找1”已选内容
+        select1: {}, //“选择框1”已选内容
+        state1: {}, //“可搜索查找1”已选内容
         state2: '', //“可搜索查找2”已选内容
         entRel_pair_selected:[], //已选择的、待预测的“实体-关系对”数组
         tmpTable:[], //一个临时数组，用来存储entRel_pair_selected的值
@@ -366,21 +419,25 @@ p {
         tableData3_page: 1,
         tableData4_page: 1,
         tableData5_page: 1,
+        tableData6_page: 1,
         tableData1_size: 10,
         tableData2_size: 10,
         tableData3_size: 10,
         tableData4_size: 5,
-        tableData5_size: 5,
+        tableData5_size: 20,
+        tableData6_size: 20,
         tableData1_total: 0,
         tableData2_total: 0,
         tableData3_total: 0,
         tableData4_total: 0,
         tableData5_total: 0,
+        tableData6_total: 0,
         tableData1 : [],
         tableData2 : [],
         tableData3 : [],
         tableData4 : [],
         tableData5 : [],
+        tableData6 : [],
         pageSizes:[5,10,20,30,40,50,60],
         dialogTableVisible: false,
         multipleSelection: [],
@@ -421,6 +478,7 @@ p {
         overviewLoading:false,
         //停止加载gpu和cpu 数据
         stop_read_gpu_cpu:false,
+        link_completion_data: [],
       }
     },
     methods: {
@@ -431,12 +489,7 @@ p {
         this.dialogFormVisible = false;
       },
       next() {
-        if(this.active==0){
           this.active++;
-        }
-        else if(this.active==1){
-          // this.active++;
-        }
       },
       previous() {
         this.active--;
@@ -561,6 +614,41 @@ p {
         this.tableData4_page = 1
         this.getTableData4()
       },
+      //tableData4获取表格数据，自行分页
+      getTableData5(){
+        //allData为全部数据
+        this.tableData5 = this.link_completion_data.slice(
+          (this.tableData5_page - 1) * this.tableData5_size,
+          this.tableData5_page * this.tableData5_size
+        );
+        this.tableData5_total = this.link_completion_data.length
+      },
+      currentChange5(val){
+        this.tableData5_page = val
+        this.getTableData5()
+      },
+      sizeChange5(val){
+        this.tableData5_size = val
+        this.tableData5_page = 1
+        this.getTableData5()
+      },
+      getTableData6(){
+        //allData为全部数据
+        this.tableData6 = this.confirmedDataTable.slice(
+          (this.tableData6_page - 1) * this.tableData6_size,
+          this.tableData6_page * this.tableData6_size
+        );
+        this.tableData6_total = this.confirmedDataTable.length
+      },
+      currentChange6(val){
+        this.tableData6_page = val
+        this.getTableData6()
+      },
+      sizeChange6(val){
+        this.tableData6_size = val
+        this.tableData6_page = 1
+        this.getTableData6()
+      },
       // 候选数据集的多项选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -605,9 +693,10 @@ p {
         }
         else{
           this.loading = true;
+          console.log({'ent_and_rel': this.entRel_pair_selected, 'model_name': this.select1.label})
           //axios请求
           axios.post('/pythonApi/link_prediction',{
-            data: this.entRel_pair_selected,
+            data: {'ent_and_rel': this.entRel_pair_selected, 'model_name': this.select1.label}
           })
           .then((response)=>{
             if (response.status == 200) {
@@ -636,16 +725,16 @@ p {
           var res =[];
           var decodedData = [];
           for(var i = 0; i < data.length; i++){
-            decodedData.push([data[i]['ent'],data[i]['rel']]);
+            decodedData.push([data[i]['ent'],data[i]['ent_typ'],data[i]['rel']]);
             console.log(data[i]['ent'],data[i]['rel'])
           }
           for(var i =0;i<preds.length;i++){
             var origin = decodedData[i];
             var pred_res = [];
             preds[i].forEach(function(element) {
-              pred_res.push({"tail":element[0],"pred_prob":element[2]});
+              pred_res.push({"tail":element[0], "tail_typ":element[3], "pred_prob":element[2]});
             })
-            res.push({"head":origin[0],"rel":origin[1],"time":this.dateFormat(new Date()),"pred_form":linked_status,"pred_res":pred_res});
+            res.push({"head":origin[0],"rel":origin[2],"head_typ":origin[1],"time":this.dateFormat(new Date()),"pred_form":linked_status,"pred_res":pred_res});
           }
           this.predTable = res;
           this.getTableData2();
@@ -681,6 +770,7 @@ p {
           })
         }
       },
+      //新模型名称加入到链接预测模型list
       add_model_to_lpm_table(){
         let content = this.form['name'];
         //如果为空，提示
@@ -706,6 +796,7 @@ p {
         })
         }
       },
+      //训练结束
       learning_finish(name){
         //axios请求
          axios.post('/pythonApi/learning_finish',{
@@ -722,7 +813,24 @@ p {
           console.log(error)
         })
       },
-      //轮询请求日志
+      //删除链接预测模型
+      remove_lpm(name){
+        //axios请求
+         axios.post('/pythonApi/remove_lpm',{
+          data: name,
+        })
+        .then((response)=>{
+          if (response.status == 200) {
+            //设置文本高亮
+            this.get_lpm_table();
+            this.load_modSet(); //加载模型集合
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      //获取链接预测模型list
       get_lpm_table(){
          //axios请求
          axios.post('/pythonApi/get_lpm_table',{})
@@ -749,10 +857,6 @@ p {
         //     clearInterval(_time);
         //   }
         // },1000)
-      },
-      //删除模型操作
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
       },
       //获取gpu状态:每2秒请求一次
       get_gpu_status(){
@@ -1009,177 +1113,6 @@ p {
           this.stop_read_gpu_cpu = true;
           done();
       },
-      getRelationBar(){
-        var chartDom = document.getElementById('relation_bar');
-        var myChart = echarts.init(chartDom);
-        var option;
-        option = {
-          title: {
-            text: '关系排行'
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow'
-            }
-          },
-          // grid: {
-          //   left: '3%',
-          //   right: '4%',
-          //   bottom: '3%',
-          //   containLabel: true
-          // },
-          grid:{
-            top:60,
-            x:80,
-            x2:50,
-            y2:30,
-          },
-          xAxis: {
-            type: 'value',
-            boundaryGap: [0, 0.01]
-          },
-          yAxis: {
-            type: 'category',
-            data: this.relation_label_count_list[0]
-          },
-          series: [
-            {
-              name: '关系数量',
-              type: 'bar',
-              color: 'orange',
-              data: this.relation_label_count_list[1]
-            },
-          ]
-        };
-        option && myChart.setOption(option);
-      },
-      getEntityTypeBar(){
-        var chartDom = document.getElementById('entity_type_bar');
-        var myChart = echarts.init(chartDom);
-        var option;
-        // axios.post('/pythonApi/get_overview_of_completion',{
-        //   })
-        //   .then((response)=>{
-        //     if (response.status == 200) {
-        //       console.log(response.data)
-        //       this.node_label_list = response.data['node_label_list']
-        //       }
-        //     console.log('我在这呢')
-        //     console.log(this.node_label_list[0])
-        //   })
-        //   .catch(function (error) {
-        //     console.log(error)
-        //   })
-        option = {
-          title: {
-            text: '实体类型对应的实例排行'
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow'
-            }
-          },
-          // grid: {
-          //   left: '3%',
-          //   right: '4%',
-          //   bottom: '3%',
-          //   containLabel: true
-          // },
-          grid:{
-            top:60,
-            x:80,
-            x2:50,
-            y2:30,
-          },
-          xAxis: {
-            type: 'value',
-            boundaryGap: [0, 0.01]
-          },
-          yAxis: {
-            type: 'category',
-            data: this.node_label_list[0]
-          },
-          series: [
- 
-            {
-              name: '实例数量',
-              type: 'bar',
-              color: 'black',
-              data: this.node_label_list[1]
-            }
-          ]
-        };
-        option && myChart.setOption(option);
-      },
-      getBoxPlot(){
-        var chartDom = document.getElementById('evaluation_lines');
-        var myChart = echarts.init(chartDom);
-        var option;
-        option = {
-          title: {
-            text: '图谱嵌入指标'
-          },
-          legend: {
-            top: "7%",
-            data: ['MRR', 'Hits@1', 'Hits@10']
-          },
-          grid:{
-            top:60,
-            x:45,
-            x2:50,
-            y2:30,
-          },
-          xAxis: {
-            type: 'category',
-            data: ['11-4', '11-15', '11-16', '11-18', '11-20']
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [
-            {
-              name: 'MRR',
-              type: 'line',
-              data: [0.44, 0.47, 0.46, 0.39, 0.43]
-            },
-            {
-              name: 'Hits@1',
-              type: 'line',
-              data: [0.23, 0.24, 0.25, 0.24, 0.26]
-            },
-            {
-              name: 'Hits@10',
-              type: 'line',
-              data: [0.5, 0.57, 0.51, 0.52, 0.55]
-            }
-          ]
-        };
-        option && myChart.setOption(option);
-      },
-      get_overview_of_completion(){
-          this.overviewLoading=true;
-          //axios请求
-          axios.post('/pythonApi/get_overview_of_completion',{
-          })
-          .then((response)=>{
-            if (response.status == 200) {
-              this.node_count = response.data['node_count']
-              this.edge_count = response.data['edge_count']
-              this.node_label_count = response.data['node_label_count']
-              this.relation_label_count_list = response.data['relation_label_count_list']
-              this.node_label_list = response.data['node_label_list']
-              this.getRelationBar()
-              this.getEntityTypeBar()
-              this.getBoxPlot()
-              this.overviewLoading=false;
-              }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-      },
       //点击详情后将数据赋值给临时表，在dialog上显示
       displayTailDetailTable(row){
         this.temporaryTailDataTable = row.pred_res;
@@ -1187,25 +1120,40 @@ p {
         this.tailDetailVisible = true;
         this.selectedRow = row;
       },
+      //选择行
       chooseTail(row){
         this.selectedRow.tail = row.tail;
+        this.selectedRow.tail_typ = row.tail_typ;
         this.selectedRow.pred_prob= row.pred_prob;
         // this.getTableData2();
         this.tableData2Key += 1;
       },
+      //应用链接补全结果
+      apply_linkCompletion_res(){
+        for(var i=0; i<this.link_completion_data.length;i++){
+          this.confirmedDataTable.push(this.link_completion_data[i])
+        }
+        this.getTableData6();
+        this.$message({
+            message: '应用链接补全结果成功!',
+            type: 'success'
+          });
+      },
       //应用链接预测结果
       applyResult(){
-        var newConfirmedDataTable=[];
+        var tmpTable = [];
         this.predTable.forEach(function (element){
-            if(element.tail!=null){
-              //深拷贝
-              var newElement  =$.extend(true,{},element);
-              delete newElement.pred_res;
-              newConfirmedDataTable.push(newElement)
-            }
+          if(element.tail!=null){
+            //深拷贝
+            var newElement  =$.extend(true,{},element);
+            delete newElement.pred_res;
+            tmpTable.push(newElement)
           }
-        )
-        this.confirmedDataTable = newConfirmedDataTable;
+        })
+        for(var i=0; i<tmpTable.length;i++){
+          this.confirmedDataTable.push(tmpTable[i]);
+        }
+        this.getTableData6();
         this.$message({
           message: '应用链接预测结果成功!',
           type: 'success'
@@ -1230,6 +1178,7 @@ p {
                 message: '提交成功!',
                 type: 'success'
               });
+              this.confirmedDataTable = [];
               this.jumpToNext();
             }
           }
@@ -1238,6 +1187,7 @@ p {
           console.log(error)
         })
       },
+      //搜索实体集合
       querySearch(queryString, cb) {
         var ent_set = this.ent_set;
         var results = queryString ? ent_set.filter(this.createFilter(queryString)) : ent_set;
@@ -1249,6 +1199,7 @@ p {
           return (ent_set.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
       },
+      //搜索关系集合
       querySearch2(queryString, cb) {
         var rel_sets = this.rel_sets;
         var results = queryString ? rel_sets.filter(this.createFilter2(queryString)) : rel_sets;
@@ -1260,6 +1211,7 @@ p {
           return (rel_set.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
       },
+      //加载实体集合
       load_entSet() {
         //axios请求
         axios.post('/pythonApi/get_entSet',{})
@@ -1274,6 +1226,7 @@ p {
           console.log(error)
         })
       },
+      //加载关系集合
       load_relSet() {
         //axios请求
         axios.post('/pythonApi/get_relSet',{})
@@ -1288,8 +1241,8 @@ p {
           console.log(error)
         })
       },
+      //加载模型集合
       load_modSet() {
-        //axios请求
         axios.post('/pythonApi/get_modSet',{})
         .then((response)=>{
           if (response.status == 200) {
@@ -1302,36 +1255,46 @@ p {
           console.log(error)
         })
       },
-      handleSelect(item) {
-        console.log(item);
-      },
-      handleSelect2(item) {
-        console.log(item);
-      },  
+      //实体和关系选择不全
       open_when_input_isIncomplete() {
         this.$message({
           showClose: true,
-          message: '警告哦，这是一条警告消息',
+          message: '请选择要预测的实体和关系',
           type: 'warning'
         });
       },
-      open_when_input_isRepeat() {
-        this.$message({
-          showClose: true,
-          message: '这是一条消息提示'
-        });
-      },
+      //确定选择的关系和实体
       comm_entRel_pair(){
         if (this.state1 != '' && this.state2 != ''){
-          var entRel_pair = {'ent': this.state1, 'rel': this.state2 }
+          var entRel_pair = {'ent': this.state1['value'], 'ent_typ': this.state1['label'], 'rel': this.state2 }
           this.entRel_pair_selected.push(entRel_pair)
           this.getTableData()
           // }
         }else{
           this.open_when_input_isIncomplete();
         }
-        this.state1 = '';
+        this.state1 = {};
         this.state2 = '';
+      },
+      //获取链接补全列表
+      linked_completion(){
+        //axios请求
+        axios.post('/pythonApi/linked_completion',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.link_completion_data = response.data.data;
+            for(var i=0; i<this.link_completion_data.length;i++){
+              this.link_completion_data[i]['time'] = this.dateFormat(new Date())
+            }
+            this.getTableData5();
+            console.log(this.tableData5)
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }    
     },
     mounted(){

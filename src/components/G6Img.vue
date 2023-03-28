@@ -41,11 +41,11 @@ insertCss(`
   }
 `)
 export default {
-  name: 'OntologyDetail',
-  //在这里接收父组件传输过来的候选本体id
+  name: '',
   props: ['candidateOntologyId'],
   data() {
     return {
+      route:'',
       dialogFormVisible: false,
       formLabelWidth: '120px',
       form: {
@@ -154,14 +154,13 @@ export default {
   },
   methods: {
     getInit() {
+      console.log('候选本体id=' + this.candidateOntologyId);
       axios.request({
         method: 'get',
-        url: '/api/candidateOntology/getGraphNode/1'
+        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphNode':'/api/candidateOntology/getGraphNode/' + this.candidateOntologyId
       }).then(response => {
-        console.log(response);
-        if (response.status === 200 && response.data.result) {
-          console.log('请求到的response2');
-          // console.log(response);
+        if (response.status === 200 && response.data.result === true) {
+          console.log('候选本体的id=' + this.candidateOntologyId);
           var list = response.data.data;
           list.forEach((item) => {
             item.label = item.name
@@ -174,7 +173,7 @@ export default {
         } else {
           this.$message({
             type: 'warning',
-            message: response.data.message
+            message: response.data.msg
           });
         }
       }).catch(error => {
@@ -185,11 +184,11 @@ export default {
     getEdge() {
       axios.request({
         method: 'get',
-        url: '/api/candidateOntology/getGraphEdge/1'
+        url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/getGraphEdge':'/api/candidateOntology/getGraphEdge/'  + this.candidateOntologyId
       }).then(response => {
         console.log(response);
         if (response.status === 200 && response.data.result) {
-          console.log('请求到的response3');
+          // console.log('请求到的response3');
           // console.log(response);
           var list = response.data.data;
           list.forEach((item) => {
@@ -225,12 +224,13 @@ export default {
         if (valid) {
           axios.request({
             method: 'POST',
-            url: '/api/candidateOntology/addRelation',
+            // url: '/api/candidateOntology/addRelation',
+            url: this.route==='/coredata/mainontology/display'?'/api/coreOntology/addRelation':'/api/candidateOntology/addRelation',
             data: {
               headClassName: this.form.headClassName,
               relationName: this.form.relationName,
               tailClassName: this.form.tailClassName,
-              belongCandidateOntologyId: 1,
+              belongCandidateOntologyId: this.candidateOntologyId,
             }
           }).then(response => {
             console.log(response);
@@ -308,6 +308,7 @@ export default {
           color: '#5B8FF9',
         },
         defaultEdge: {
+          // type: 'arc',
           color: '#500020',
           style: {
             endArrow: true,
@@ -321,6 +322,7 @@ export default {
         nodes: that.nodes,
         edges: that.edges.map(function (edge, i) {
           edge.id = 'edge' + i;
+          edge.curveOffset=i*10
           return Object.assign({}, edge);
         }),
       });
@@ -364,12 +366,12 @@ export default {
         }).then(() => {
           axios.request({
             method: 'DELETE',
-            url: '/api/candidateOntology/deleteRelation',
+            url: that.route==='/coredata/mainontology/display'?'/api/coreOntology/deleteRelation':'/api/candidateOntology/deleteRelation',
             data: {
               headClassId: evt.item._cfg.source._cfg.id,
               relationName: rightNodelabel,
               tailClassId: evt.item._cfg.target._cfg.id,
-              belongCandidateOntologyId: 1,
+              belongCandidateOntologyId: that.candidateOntologyId,
             }
           }).then(response => {
             console.log(response);
@@ -427,12 +429,24 @@ export default {
       return graph;
     },
   },
+  created(){
+    this.route=this.$route.path
+    this.candidateOntologyId2 = this.candidateOntologyId;
+    console.log(this.route==='/coredata/mainontology/display');
+  },
   mounted() {
+    console.log(this.route);
     this.initComponent();
     this.getInit();
+  
     // this.initGraph();
 
-  }
+  },
+  watch: {
+    $route(to, from) {
+      console.log(this.$route.path);
+    }
+  },
 }
 </script>
 <style>
@@ -442,7 +456,7 @@ export default {
 }
 
 .canvas_container {
-  width: 100%;
+  width: 100% !important;
   height: 600px;
   background-color: rgba(251, 242, 250, 0.46);
   margin-right: 10px;
@@ -470,7 +484,8 @@ export default {
 .g6-component-contextmenu ul li:hover {
   background: #eee;
 }
-.select .el-input{
-  width: 100%!important;
+
+.select .el-input {
+  width: 100% !important;
 }
 </style>
