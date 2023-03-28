@@ -1,8 +1,28 @@
 <template>
   <body>
   <el-card class="box-card">
-    <el-button type="primary">同步</el-button>
-    <el-button type="primary">请求</el-button>
+    <el-button type="primary" @click="dialogVisible = true">生成候选本体</el-button>
+    <el-dialog
+        title="创建本体"
+        :visible.sync="dialogVisible"
+        width="50%"
+        :before-close="handleClose">
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="本体名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="创建者">
+          <el-input v-model="form.creatorName"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="form.comment"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false;onSubmit()">确 定</el-button>
+              </span>
+    </el-dialog>
   </el-card>
   <el-card class="data-card">
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -122,6 +142,12 @@ export default {
   name: "CandidateStructuredOntology",
   data() {
     return {
+      dialogVisible: false,
+      form: {
+        name: '',
+        creatorName: '',
+        comment: '',
+      },
       activeName: 'first',
       classTableData: [],
       relationTableData: [],
@@ -129,6 +155,67 @@ export default {
     };
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+    },
+    onSubmit() {
+      if(this.form.name === null || this.form.name === ''){
+        this.$message({
+          type: 'warning',
+          message: "请输入候选本体名称"
+        });
+        return
+      }
+      axios.request({
+        method: "post",
+        url: "/api/candidateOntology/addCandidateOntology",
+        data: {
+          name: this.form.name,
+          creatorName: this.form.creatorName,
+          comment: this.form.comment
+        }
+      }).then((response) => {
+        if((response.status === 200 && response.data.result === true)){
+          this.createOntoClass(this.form.name);
+          this.$message({
+            type: 'success',
+            message: "生成候选本体成功"
+          });
+        } else {
+          this.$message({
+            type: 'warning',
+            message: response.data.msg
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    createOntoClass(candidateOntoName){
+      console.log(candidateOntoName)
+      axios.request({
+        method : 'GET',
+        url : '/api/candidateOntology/structuredDataToOntology/' + '' + candidateOntoName,
+      }).then((response) => {
+        if((response.status === 200 && response.data.result === true)){
+          this.$message({
+            type: 'success',
+            message: "本体转换成功"
+          });
+        } else {
+          this.$message({
+            type: 'warning',
+            message: response.data.msg
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
     getClassTableData(){
       axios.request({
         method : 'GET',
