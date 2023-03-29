@@ -388,8 +388,8 @@
         mod_set: [], //模型集合，存储“选择框1”的内容
         ent_set: [], //实体集合，存储“可搜索查找1”的内容
         rel_set: [], //关系集合，存储“可搜索查找2”的内容
-        select1: {}, //“选择框1”已选内容
-        state1: {}, //“可搜索查找1”已选内容
+        select1: '', //“选择框1”已选内容
+        state1: '', //“可搜索查找1”已选内容
         state2: '', //“可搜索查找2”已选内容
         entRel_pair_selected:[], //已选择的、待预测的“实体-关系对”数组
         tmpTable:[], //一个临时数组，用来存储entRel_pair_selected的值
@@ -1259,13 +1259,13 @@
       open_when_input_isIncomplete() {
         this.$message({
           showClose: true,
-          message: '请选择要预测的实体和关系',
+          message: '请选择模型以及要预测的实体和关系',
           type: 'warning'
         });
       },
       //确定选择的关系和实体
       comm_entRel_pair(){
-        if (this.state1 != '' && this.state2 != ''){
+        if (this.state1 != '' && this.state2 != '' && this.select1 != ''){
           var entRel_pair = {'ent': this.state1['value'], 'ent_typ': this.state1['label'], 'rel': this.state2 }
           this.entRel_pair_selected.push(entRel_pair)
           this.getTableData()
@@ -1273,7 +1273,7 @@
         }else{
           this.open_when_input_isIncomplete();
         }
-        this.state1 = {};
+        this.state1 = '';
         this.state2 = '';
       },
       //获取链接补全列表
