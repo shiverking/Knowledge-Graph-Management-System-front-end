@@ -315,7 +315,7 @@ export default {
           },
         },
         modes: {
-          default: ['drag-canvas'],
+          default: ['drag-canvas', 'zoom-canvas'],//允许拖拽画布，缩放画布
         },
       });
       graph.data({
