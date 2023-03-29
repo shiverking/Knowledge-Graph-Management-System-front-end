@@ -51,12 +51,13 @@
                 <el-table-column
                     label="删除"
                     width="150">
-                  <el-button
-                      slot-scope="scope"
-                      type="primary"
-                      icon="el-icon-delete-solid"
-                      @click.native.prevent="deleteRow(scope.$index, tableData)">
-                  </el-button>
+                  <template slot-scope="scope">
+                    <el-button
+                        type="primary"
+                        icon="el-icon-delete-solid"
+                        @click="openDeleteConfirm(scope.row.id)">
+                    </el-button>
+                  </template>
                 </el-table-column>
               </el-table>
               <div style="margin-top: 20px">
@@ -163,6 +164,9 @@
               message: response.data.msg
             });
           }
+          this.form.name = '';
+          this.form.creatorName = '';
+          this.form.comment = '';
         }).catch(error => {
           console.log(error);
         })
@@ -253,8 +257,40 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
+      openDeleteConfirm(candidateOntoId) {
+        this.$confirm('此操作将永久删除该本体, 是否继续?', '删除本体', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteCandidateOnto(candidateOntoId);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      deleteCandidateOnto(candidateOntoId) {
+        axios.request({
+          method : "delete",
+          url : "/api/candidateOntology/deleteCandidateOnto/" + candidateOntoId
+        }).then((response) => {
+          if(response.status === 200 && response.data.result){
+            this.getCandidateOntology(this.candidateOntologyCurrentPage,this.candidateKgPageSize);
+            this.$message({
+              type: 'success',
+              message: "删除成功"
+            });
+          }else {
+            this.$message({
+              type: 'warning',
+              message: response.data.msg
+            });
+          }
+        }).catch(error => {
+          console.log(error);
+        })
       },
       handleClick(tab, event) {
         console.log(tab, event);
