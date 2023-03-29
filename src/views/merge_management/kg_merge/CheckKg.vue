@@ -157,8 +157,9 @@
                 </el-table-column>
                 <el-table-column label="修改形式" >
                   <template slot-scope="scope">
-                    <span v-if="scope.row.update_form=='0'"><el-tag type="warning">修改</el-tag></span>
-                    <span v-if="scope.row.update_form=='1'"><el-tag type="danger">删除</el-tag></span>
+                    <span v-if="scope.row.update_form=='0'"><el-tag type="danger">删除</el-tag></span>
+                    <span v-if="scope.row.update_form=='1'"><el-tag type="warning">修改实体</el-tag></span>
+                    <span v-if="scope.row.update_form=='2'"><el-tag type="warning">修改链接</el-tag></span>
                   </template>
                 </el-table-column>
               </el-table>
