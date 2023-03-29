@@ -146,9 +146,9 @@
               <router-link to="/candidate/ontology/show" class="routerlink">
                 <el-menu-item index="2-2-1"><i class="el-icon-moon"></i>候选本体展示</el-menu-item>
               </router-link>
-              <router-link to="/candidate/ontology/build" class="routerlink">
-                <el-menu-item index="2-2-2"><i class="el-icon-moon-night"></i>候选本体构建</el-menu-item>
-              </router-link>
+<!--              <router-link to="/candidate/ontology/build" class="routerlink">-->
+<!--                <el-menu-item index="2-2-2"><i class="el-icon-moon-night"></i>候选本体构建</el-menu-item>-->
+<!--              </router-link>-->
             </el-submenu>
             <el-submenu index="2-3">
               <template slot="title"><i class="el-icon-cloudy-and-sunny"></i>结构化候选数据</template>
@@ -189,12 +189,12 @@
               <router-link to="/merge/onotology/merge" class="routerlink">
                 <el-menu-item index="3-2-1"><i class="el-icon-rank"></i>融合</el-menu-item>
               </router-link>
-              <router-link to="/merge/ontology/completion" class="routerlink">
-                <el-menu-item index="3-2-3"><i class="el-icon-pie-chart"></i>本体补全</el-menu-item>
-              </router-link>
-              <router-link to="/merge/ontology/versionControl" class="routerlink">
-                <el-menu-item index="3-2-4"><i class="el-icon-tickets"></i>版本记录</el-menu-item>
-              </router-link>
+<!--              <router-link to="/merge/ontology/completion" class="routerlink">-->
+<!--                <el-menu-item index="3-2-3"><i class="el-icon-pie-chart"></i>本体补全</el-menu-item>-->
+<!--              </router-link>-->
+<!--              <router-link to="/merge/ontology/versionControl" class="routerlink">-->
+<!--                <el-menu-item index="3-2-4"><i class="el-icon-tickets"></i>版本记录</el-menu-item>-->
+<!--              </router-link>-->
             </el-submenu>
           </el-submenu>
           <el-submenu index="4" class="parent_submenu">
