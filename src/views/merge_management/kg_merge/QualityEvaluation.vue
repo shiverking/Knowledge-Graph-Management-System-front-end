@@ -117,7 +117,7 @@
                 </el-radio-group>
               </el-form-item>
               <p><b>修改后的结点名称和结点类别:</b></p>
-              <el-row>
+              <el-row style="margin-top:10px">
                 <el-col :span="8">
                   <el-form-item  label="头实体">
                     <el-input disabled v-model="form_of_relation_error.head" style="width:300px;"></el-input>
