@@ -670,7 +670,6 @@
                 message: '提交成功!',
                 type: 'success'
               });
-              $("#detailButton").click()
           }
         })
         .catch(function (error) {

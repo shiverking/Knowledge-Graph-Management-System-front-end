@@ -14,7 +14,7 @@
                 end-placeholder="结束日期"
                 align="right">
             </el-date-picker>
-            <el-select v-model="value" placeholder="请选择状态">
+            <el-select v-model="value" placeholder="请选择状态" style="margin-left:10px">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -22,7 +22,7 @@
                   :value="item.value">
               </el-option>
             </el-select>
-            <el-button type="primary" style="margin-top: 10px;" @click="load_all()">查询</el-button>
+            <el-button type="primary" style="margin-top: 10px;margin-left: 10px" @click="load_all()" >查询</el-button>
             <el-switch
                 v-model="switchValue"
                 style="float: right;margin-top:20px;"

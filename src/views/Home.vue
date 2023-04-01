@@ -571,7 +571,7 @@ export default {
         { "value": "/候选生成管理/候选图谱/候选图谱构建", "location": "/candidate/kg/build" },
         { "value": "/候选生成管理/候选图谱/候选融合", "location": "/candidate/kg/merge" },
         { "value": "/候选生成管理/候选图谱/实体抽取", "location": "/candidate/kg/ner" },
-        { "value": "/候选生成管理/候选图谱/三元组抽取", "location": "/candidate/kg/triplesExtraction" },
+        { "value": "/候选生成管理/候选图谱/非结构文本抽取", "location": "/candidate/kg/triplesExtraction" },
         { "value": "/候选生成管理/候选本体/候选本体展示", "location": "/candidate/ontology/show" },
         { "value": "/候选生成管理/候选本体/候选本体构建", "location": "/candidate/ontology/build" },
         { "value": "/融合管理/图谱融合/融合", "location": "/merge/kg/merge" },

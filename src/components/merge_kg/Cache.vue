@@ -23,10 +23,20 @@
           <el-table :data="mergeCacheData" height="500" style="margin-top:0vh" border>
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="id" label="id" width="70" show-overflow-tooltip></el-table-column>
-            <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
+            <el-table-column  label="头实体" show-overflow-tooltip>
+              <template slot-scope="scope">
+                {{scope.row.head}}
+                <el-tag size="small" type="info">{{ scope.row.head_category }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column property="head_from" label="From" show-overflow-tooltip></el-table-column>
             <el-table-column property="relation" label="关系" show-overflow-tooltip></el-table-column>
-            <el-table-column property="tail" label="尾实体" show-overflow-tooltip></el-table-column>
+            <el-table-column  label="尾实体" show-overflow-tooltip>
+              <template slot-scope="scope">
+                {{scope.row.tail}}
+                <el-tag size="small" type="info">{{ scope.row.tail_category }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column property="tail_from" label="From" show-overflow-tooltip></el-table-column>
             <el-table-column property="score" label="置信评分" show-overflow-tooltip></el-table-column>
             <el-table-column label="处理结果">
@@ -59,7 +69,7 @@
             <el-table-column label="头实体" width="400">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head }}</span>
-                <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+                <el-tag size="small" type="sucess">{{ scope.row.head_category }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="关系">
@@ -70,7 +80,7 @@
             <el-table-column label="尾实体" width="400">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.tail }}</span>
-                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+                <el-tag size="small" type="info">{{ scope.row.tail_category }}</el-tag>
               </template>
             </el-table-column>   
             <!-- <el-table-column property="head" label="头实体" show-overflow-tooltip></el-table-column>
@@ -84,7 +94,7 @@
               </template>
             </el-table-column> -->
             <el-table-column label="操作时间">
-              <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+              <template slot-scope="scope">{{timeProcess(scope.row.time)}}</template>
             </el-table-column>
           </el-table>
           <el-pagination
@@ -98,27 +108,24 @@
         </el-pagination>
         </el-tab-pane>
         <!--质量评估改动-->
-        <el-tab-pane label="质量评估改动" name="third" border>
-          <el-table :data="evaluationCacheData"  height="500" >
+        <el-tab-pane label="质量评估改动" name="third" >
+          <el-table :data="evaluationCacheData"  height="500" border>
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column property="id" label="id" width="70"></el-table-column>
-            <el-table-column
-              label="头实体（旧）"
-              >
+            <el-table-column label="头实体（旧）" show-overflow-tooltip>
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head }}</span>
                 <el-tag style="margin-left: 10px">{{ scope.row.head_typ }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              label="关系（旧）"
-              >
+            <el-table-column label="关系（旧）" show-overflow-tooltip>
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.rel }}</span>
               </template>
             </el-table-column>     
             <el-table-column
               label="尾实体（旧）"
+              show-overflow-tooltip
               >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.tail }}</span>
@@ -127,6 +134,7 @@
             </el-table-column>    
             <el-table-column
               label="头实体（新）"
+              show-overflow-tooltip
               >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head_new }}</span>
@@ -135,6 +143,7 @@
             </el-table-column>
             <el-table-column
               label="关系（新）"
+              show-overflow-tooltip
               >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.rel_new }}</span>
@@ -142,6 +151,7 @@
             </el-table-column>     
             <el-table-column
               label="尾实体（新）"
+              show-overflow-tooltip
               >
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.tail_new }}</span>
@@ -158,6 +168,7 @@
             </el-table-column>         
             <el-table-column
               label="更新方式"
+              show-overflow-tooltip
               >
               <template slot-scope="scope">
                 <span v-if="scope.row.update_form==0">删除链接</span>
@@ -358,8 +369,7 @@ export default {
         evaluationNumber:this.evaluationCacheTotal,
       })
       .then((response) => {
-        if (response.status == 200) {
-          if(response.data.msg=="success"){
+        if (response.status == 200 && response.data.msg=="success") {
             this.dialogLoading=false
             this.$notify({
               title: '成功',
@@ -368,7 +378,6 @@ export default {
             });
             //跳转到版本记录
             this.$router.push('/merge/kg/versionControl');
-          }
         }
       })
       .catch(function (error) {

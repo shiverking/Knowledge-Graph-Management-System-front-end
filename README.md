@@ -1,4 +1,4 @@
-# fkfd_front2
+# 知识图谱管理系统前端
 
 ## Project setup
 ```
