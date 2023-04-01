@@ -51,18 +51,40 @@
                 <el-table-column
                     label="删除"
                     width="150">
-                  <el-button
-                      slot-scope="scope"
-                      type="primary"
-                      icon="el-icon-delete-solid"
-                      @click.native.prevent="deleteRow(scope.$index, tableData)">
-                  </el-button>
+                  <template slot-scope="scope">
+                    <el-button
+                        type="primary"
+                        icon="el-icon-delete-solid"
+                        @click="openDeleteConfirm(scope.row.id)">
+                    </el-button>
+                  </template>
                 </el-table-column>
               </el-table>
               <div style="margin-top: 20px">
-<!--                <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
-                <el-button @click="toggleSelection()">取消选择</el-button>
+<!--                <el-button @click="toggleSelection()">取消选择</el-button>-->
+                <el-button @click="dialogVisible = true">创建候选本体</el-button>
               </div>
+              <el-dialog
+                  title="创建本体"
+                  :visible.sync="dialogVisible"
+                  width="50%"
+                  :before-close="handleClose">
+                <el-form ref="form" :model="form" label-width="80px">
+                  <el-form-item label="本体名称">
+                    <el-input v-model="form.name"></el-input>
+                  </el-form-item>
+                  <el-form-item label="创建者">
+                    <el-input v-model="form.creatorName"></el-input>
+                  </el-form-item>
+                  <el-form-item label="备注">
+                    <el-input v-model="form.comment"></el-input>
+                  </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false;onSubmit()">确 定</el-button>
+              </span>
+              </el-dialog>
             </el-card>
           </el-tab-pane>
           <el-tab-pane
@@ -102,10 +124,60 @@
         editableTabs: [],
         //存储打开的tab页的candidateOntologyId和tabName的关系
         openedTabsId: new Map,
-        tabIndex: 2
+        tabIndex: 2,
+        dialogVisible: false,
+        form: {
+          name: '',
+          creatorName: '',
+          comment: '',
+        }
       };
     },
     methods:{
+      onSubmit() {
+        if(this.form.name === null || this.form.name === ''){
+          this.$message({
+            type: 'warning',
+            message: "请输入候选本体名称"
+          });
+          return
+        }
+        axios.request({
+          method: "post",
+          url: "/api/candidateOntology/addCandidateOntology",
+          data: {
+            name: this.form.name,
+            creatorName: this.form.creatorName,
+            comment: this.form.comment
+          }
+        }).then((response) => {
+          if((response.status === 200 && response.data.result === true)){
+            // this.$options.methods.getCandidateOntology(this.candidateOntologyCurrentPage,this.candidateKgPageSize);
+            this.getCandidateOntology(this.candidateOntologyCurrentPage,this.candidateKgPageSize);
+            this.$message({
+              type: 'success',
+              message: "添加成功"
+            });
+          } else {
+            this.$message({
+              type: 'warning',
+              message: response.data.msg
+            });
+          }
+          this.form.name = '';
+          this.form.creatorName = '';
+          this.form.comment = '';
+        }).catch(error => {
+          console.log(error);
+        })
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+      },
       getCandidateOntology(page,limit){
         //axios请求
         axios.request({
@@ -185,8 +257,40 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
+      openDeleteConfirm(candidateOntoId) {
+        this.$confirm('此操作将永久删除该本体, 是否继续?', '删除本体', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteCandidateOnto(candidateOntoId);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      deleteCandidateOnto(candidateOntoId) {
+        axios.request({
+          method : "delete",
+          url : "/api/candidateOntology/deleteCandidateOnto/" + candidateOntoId
+        }).then((response) => {
+          if(response.status === 200 && response.data.result){
+            this.getCandidateOntology(this.candidateOntologyCurrentPage,this.candidateKgPageSize);
+            this.$message({
+              type: 'success',
+              message: "删除成功"
+            });
+          }else {
+            this.$message({
+              type: 'warning',
+              message: response.data.msg
+            });
+          }
+        }).catch(error => {
+          console.log(error);
+        })
       },
       handleClick(tab, event) {
         console.log(tab, event);

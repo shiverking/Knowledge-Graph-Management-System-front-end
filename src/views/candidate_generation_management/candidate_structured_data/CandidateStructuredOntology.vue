@@ -1,30 +1,41 @@
 <template>
   <body>
   <el-card class="box-card">
-    <el-button type="primary">同步</el-button>
-    <el-button type="primary">请求</el-button>
+    <el-button type="primary" @click="dialogVisible = true">生成候选本体</el-button>
+    <el-dialog
+        title="创建本体"
+        :visible.sync="dialogVisible"
+        width="50%"
+        :before-close="handleClose">
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="本体名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="创建者">
+          <el-input v-model="form.creatorName"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="form.comment"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false;onSubmit()">确 定</el-button>
+              </span>
+    </el-dialog>
   </el-card>
   <el-card class="data-card">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="本体类" name="first">
         <el-table
             :data="classTableData"
+            height="400"
             border
             style="width: 100%">
           <el-table-column
-              prop="guid"
-              label="GUID"
-              width="180">
-          </el-table-column>
-          <el-table-column
               prop="id"
-              label="原ID"
-              width="60">
-          </el-table-column>
-          <el-table-column
-              prop="classId"
-              label="类别ID"
-              width="140">
+              label="类别id"
+              width="180">
           </el-table-column>
           <el-table-column
               prop="name"
@@ -32,17 +43,17 @@
               width="180">
           </el-table-column>
           <el-table-column
-              prop="pName"
-              label="父类名称"
+              prop="parentId"
+              label="父类id"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="time"
-              label="时间"
+              prop="createdAt"
+              label="创建时间"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="comment"
+              prop="detail"
               label="备注">
           </el-table-column>
         </el-table>
@@ -50,58 +61,50 @@
       <el-tab-pane label="关系" name="second">
         <el-table
             :data="relationTableData"
+            height="400"
             border
             style="width: 100%">
           <el-table-column
-              prop="guid"
-              label="GUID"
-              width="180">
-          </el-table-column>
-          <el-table-column
               prop="id"
-              label="原ID"
-              width="60">
-          </el-table-column>
-          <el-table-column
-              prop="headClass"
-              label="头类别名称"
+              label="关系id"
               width="180">
           </el-table-column>
           <el-table-column
               prop="name"
-              label="关系名"
+              label="关系名称"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="tailClass"
-              label="尾类别名称"
+              prop="startId"
+              label="头类别id"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="time"
-              label="时间"
+              prop="endId"
+              label="尾类别id"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="comment"
+              prop="createdAt"
+              label="创建时间"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="detail"
               label="备注">
           </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="属性" name="third">
         <el-table
-            :data="propertiesTableData"
+            :data="attributeTableData"
+            height="400"
             border
             style="width: 100%">
           <el-table-column
-              prop="guid"
-              label="GUID"
-              width="180">
-          </el-table-column>
-          <el-table-column
               prop="id"
-              label="原ID"
-              width="60">
+              label="属性id"
+              width="180">
           </el-table-column>
           <el-table-column
               prop="name"
@@ -109,17 +112,22 @@
               width="180">
           </el-table-column>
           <el-table-column
-              prop="className"
-              label="所属类别名称"
+              prop="classId"
+              label="所属类别id"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="time"
-              label="时间"
+              prop="valueType"
+              label="值型"
               width="180">
           </el-table-column>
           <el-table-column
-              prop="comment"
+              prop="createdAt"
+              label="创建时间"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="detail"
               label="备注">
           </el-table-column>
         </el-table>
@@ -134,101 +142,124 @@ export default {
   name: "CandidateStructuredOntology",
   data() {
     return {
+      dialogVisible: false,
+      form: {
+        name: '',
+        creatorName: '',
+        comment: '',
+      },
       activeName: 'first',
-      classTableData: [{
-        guid: '6F9619FF-8B86-D011-B42D-00C04FC964FF',
-        id: 'c001',
-        classId: '00',
-        name: 'Thing',
-        pName: 'null',
-        time: '2023-02-13',
-        comment: '根节点'
-      }, {
-        guid: '0BB58752-3780-8FCE-AD57-DA4567EAF736',
-        id: 'C002',
-        classId: '0001',
-        name: '装备',
-        pName: 'Thing',
-        time: '2023-02-15',
-        comment: '这是关于装备的类'
-      }, {
-          guid: '525BD20B-DD11-5206-214B-76AFF05DE33D',
-          id: 'C003',
-        classId: '0002',
-          name: '人员',
-          pName: 'Thing',
-          time: '2023-02-15',
-          comment: '这是关于人员的类'
-        },{
-        guid: '83CE61DE-E4AA-2576-1F6C-FE7AFB467CBC',
-        id: 'C004',
-        classId: '000101',
-        name: '飞机',
-        pName: '装备',
-        time: '2023-02-15',
-        comment: '这个类是装备的子类'
-      },{
-        guid: 'A8DC3295-BD1F-133D-1F12-ADD14D418245',
-        id: 'C005',
-        classId: '00010101',
-        name: '轰炸机',
-        pName: '飞机',
-        time: '2023-02-15',
-        comment: '这是关于轰炸机的类'
-      }],
-      relationTableData: [{
-        guid: 'DF33F221-42BE-6DA3-8E76-A87DB5BC45D2',
-        id: 'r001',
-        headClass: '人员',
-        name: '携带',
-        tailClass: '装备',
-        time: '2023-02-15',
-        comment: '人员会携带装备'
-      },{
-        guid: '7810BB30-05D5-1BEA-2CED-66F1A23DDCA6',
-        id: 'r002',
-        headClass: '人员',
-        name: '乘坐',
-        tailClass: '飞机',
-        time: '2023-02-15',
-        comment: '人员会乘坐飞机'
-      },{
-        guid: '2C4AF7C3-7524-27C5-D2E1-6DD126737819',
-        id: 'r003',
-        headClass: '人员',
-        name: '驾驶',
-        tailClass: '轰炸机',
-        time: '2023-02-15',
-        comment: '空军飞行员驾驶轰炸机进行作战'
-      }],
-      propertiesTableData: [{
-        guid: '38097109-C451-1F47-A83B-C06AE84E5C81',
-        id: 'p001',
-        name: '长度',
-        className: '轰炸机',
-        time: '2023-02-15',
-        comment: '轰炸机有长度'
-      },{
-        guid: '371BE3CA-9952-B3BD-1336-7E64A5C7AC87',
-        id: 'p002',
-        name: '飞行高度',
-        className: '飞机',
-        time: '2023-02-15',
-        comment: '飞机有飞行高度'
-      },{
-        guid: 'FD6705CF-2828-18FA-F008-13899F48D68F',
-        id: 'p003',
-        name: '携带弹药数量',
-        className: '轰炸机',
-        time: '2023-02-15',
-        comment: '轰炸机会携带一定的弹药'
-      }]
+      classTableData: [],
+      relationTableData: [],
+      attributeTableData : []
     };
   },
   methods: {
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+    },
+    onSubmit() {
+      if(this.form.name === null || this.form.name === ''){
+        this.$message({
+          type: 'warning',
+          message: "请输入候选本体名称"
+        });
+        return
+      }
+      axios.request({
+        method: "post",
+        url: "/api/candidateOntology/addCandidateOntology",
+        data: {
+          name: this.form.name,
+          creatorName: this.form.creatorName,
+          comment: this.form.comment
+        }
+      }).then((response) => {
+        if((response.status === 200 && response.data.result === true)){
+          this.createOntoClass(this.form.name);
+          this.$message({
+            type: 'success',
+            message: "生成候选本体成功"
+          });
+        } else {
+          this.$message({
+            type: 'warning',
+            message: response.data.msg
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    createOntoClass(candidateOntoName){
+      console.log(candidateOntoName)
+      axios.request({
+        method : 'GET',
+        url : '/api/candidateOntology/structuredDataToOntology/' + '' + candidateOntoName,
+      }).then((response) => {
+        if((response.status === 200 && response.data.result === true)){
+          this.$message({
+            type: 'success',
+            message: "本体转换成功"
+          });
+        } else {
+          this.$message({
+            type: 'warning',
+            message: response.data.msg
+          });
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    getClassTableData(){
+      axios.request({
+        method : 'GET',
+        url : '/api/bigdata/getClass'
+      }).then((response) => {
+        if(response.status === 200 && response.data.result){
+          this.classTableData = response.data.data;
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    getRelationTableData(){
+      axios.request({
+        method : 'GET',
+        url : '/api/bigdata/getRelation'
+      }).then((response) => {
+        if(response.status === 200 && response.data.result){
+          this.relationTableData = response.data.data;
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    getAttributeTableData(){
+      axios.request({
+        method : 'GET',
+        url : '/api/bigdata/getAttribute'
+      }).then((response) => {
+        if(response.status === 200 && response.data.result){
+          this.attributeTableData = response.data.data;
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     }
+  },
+  mounted() {
+    this.getClassTableData();
+    this.getRelationTableData();
+    this.getAttributeTableData();
   }
 }
 </script>

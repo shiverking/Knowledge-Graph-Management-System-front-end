@@ -101,7 +101,7 @@
         <template slot-scope="scope">
           <el-image v-if="scope.row.status=='未抽取'" style="width: 25px; height: 25px;overflow: initial"
                     :src="discard" ></el-image>
-          <el-image v-if="scope.row.status=='已抽取'"style="width: 25px; height: 25px;overflow: initial"
+          <el-image v-if="scope.row.status=='已抽取'" style="width: 25px; height: 25px;overflow: initial"
                     :src="success" ></el-image>
           {{ scope.row.status}}
         </template>
@@ -411,6 +411,7 @@
         .then((response) => {
           if (response.status == 200) {
             //修改数据
+            console.log(response)
             this.unstructuredTextPageList = response.data.data
             this.unstructuredTextTotal = response.data.count
           }

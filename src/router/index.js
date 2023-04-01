@@ -56,7 +56,7 @@ import CandidateKgBuild from "../views/candidate_generation_management/candidate
 import CandidateKgShow from "../views/candidate_generation_management/candidate_kg/CandidateKgShow";
 import CandidateOntology from "../views/candidate_generation_management/candidate_ontology/CandidateOntology";
 import CandidateOntologyShow from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyShow";
-import CandidateOntologyBuild from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyBuild";
+// import CandidateOntologyBuild from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyBuild";
 import CandidateStructuredData from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredData";
 import CandidateStructuredOntology from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredOntology";
 import CandidateStructuredTriples from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredTriples";
@@ -433,12 +433,12 @@ export default new Router({
               component:CandidateOntologyShow,
               show:true
             },
-            {
-              path:'/candidate/ontology/build',
-              name:'候选本体构建',
-              component:CandidateOntologyBuild,
-              show: true
-            }
+            // {
+            //   path:'/candidate/ontology/build',
+            //   name:'候选本体构建',
+            //   component:CandidateOntologyBuild,
+            //   show: true
+            // }
           ]
         },
         {
