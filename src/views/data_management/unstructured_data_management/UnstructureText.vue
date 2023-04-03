@@ -132,6 +132,7 @@ import { saveAs } from 'file-saver';
 export default {
   data() {
     return {
+      value:2,
       crawlid:2,
       textData:'',
       page:1,
@@ -184,24 +185,17 @@ export default {
   },
   methods: {
     currentChange(currentPage){
-      axios.request({
-        method:"POST",
-        url:'/api/unstructure/getAllTextByPage',
-        params:{page:currentPage,limit:10}
+      const _this=this
+      _this.axios.get('/api/unstructure/getAllTextByPageandcid/'+(currentPage)+'/10/'+_this.crawlid).then(function(resp){
+        console.log(resp)
+        _this.tableData = resp.data.data
+        _this.total = resp.data.count
+        _this.pagesize=resp.data.data.length
+
       })
-          .then((response) => {
-            if (response.status == 200) {
-              //修改数据
-              console.log(response)
-              this.tableData = response.data.data
-              this.total = response.data.count
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
     },
     selectTrigger(id) {
+      console.log(id)
       const _this = this
       _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/' + id).then(function (resp) {
         console.log(resp)
@@ -209,7 +203,7 @@ export default {
         _this.total = resp.data.count
         _this.pagesize = resp.data.data.length
       })
-      _this.crawlid=id
+      this.crawlid=id
     },
     getTableData() {
       this.tableData = this.textData.slice(
@@ -267,22 +261,13 @@ created(){
     console.log(_this.value)
 
   })
-  axios.request({
-    method:"POST",
-    url:'/api/unstructure/getAllTextByPage',
-    params:{page:0,limit:10}
+  _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/2').then(function(resp){
+    console.log(resp)
+    _this.tableData = resp.data.data
+    _this.total = resp.data.count
+    _this.pagesize=resp.data.data.length
+
   })
-      .then((response) => {
-        if (response.status == 200) {
-          //修改数据
-          console.log(response)
-          this.tableData = response.data.data
-          this.total = response.data.count
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
 },
 }
 </script>
