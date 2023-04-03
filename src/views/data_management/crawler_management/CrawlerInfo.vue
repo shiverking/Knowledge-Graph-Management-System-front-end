@@ -96,7 +96,8 @@
           style="margin-top: 10px">
       </el-pagination>
     </el-card>
-<!--        <el-card class="card" style="height:500px; margin-top: 10px" id="data_flow"></el-card>-->
+<!--    <el-card class="card" style="height:500px; margin-top: 10px" id="data_flow">-->
+<!--    </el-card>-->
         </el-tab-pane>
       <el-tab-pane label="运行结果" name="second">
         <el-card class="box-card">
@@ -348,7 +349,7 @@
           </el-image>
           </div>
           <el-pagination
-              @current-change="currentChange3"
+              @current-change="currentChange2"
               :current-page="page4" :page-size="size4"
               layout="total,prev, pager, next"
               :total="total4"
@@ -383,81 +384,99 @@ export default {
       this.total3=this.jsonData3.length
     },
     currentChange(val) {
-      console.log(val)
-      this.page=val
-      this.getTableData()
+      const _this=this
+      _this.axios.get('/api/semistructure/getSemistructuredDataBycid/'+(val)+'/10/'+this.$route.query.cid).then(function(resp){
+        console.log(resp)
+        _this.tableData = resp.data.data
+        _this.total = resp.data.count
+      })
     },
     currentChange3(val) {
-      console.log(val)
-      this.page3=val
-      this.getTableData3()
+      const _this=this
+      _this.axios.get('/api/unstructure/getAllTextByPageandcid/'+(val)+'/10/'+this.$route.query.cid).then(function(resp){
+        console.log(resp)
+        _this.tableData3 = resp.data.data
+        _this.total3 = resp.data.count
+      })
+    },
+    currentChange2(val) {
+      const _this=this
+      _this.axios.get('/api/image/getimage/'+(val)+'/21/'+this.$route.query.cid).then(function(resp){
+        console.log(resp)
+        _this.tableData4 = resp.data.data
+        _this.total4 = resp.data.count
+      })
     },
     handleClick(tab, event) {
       console.log(tab, event);
     },
-    /*draw_dataflow(){
-      var chartDom = document.getElementById('data_flow');
-      var myChart = echarts.init(chartDom);
-      var option;
-
-      option = {
-        title: {
-          text: '请求监控'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['下载成功', '下载异常', '下载总量', '解析异常']
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: '下载成功',
-            type: 'line',
-            stack: 'Total',
-            data: [0, 0, 0, 20, 50, 78, 0]
-          },
-          {
-            name: '下载异常',
-            type: 'line',
-            stack: 'Total',
-            data: [0, 0, 0, 3, 13, 12, 0]
-          },
-          {
-            name: '下载总量',
-            type: 'line',
-            stack: 'Total',
-            data: [0, 0, 0, 23, 63, 90, 0]
-          },
-          {
-            name: '解析异常',
-            type: 'line',
-            stack: 'Total',
-            data: [0, 0, 0, 0, 10, 13, 0]
-          },
-        ]
-      };
-
-      option && myChart.setOption(option);
-    },*/
+    displayContent(content){
+      this.contentVisible = true;
+      this.content = content;
+    },
+  //   draw_dataflow(){
+  //     var chartDom = document.getElementById('data_flow');
+  //     var myChart = echarts.init(chartDom);
+  //     var option;
+  //
+  //     option = {
+  //       title: {
+  //         text: '请求监控'
+  //       },
+  //       tooltip: {
+  //         trigger: 'axis'
+  //       },
+  //       legend: {
+  //         data: ['下载成功', '下载异常', '下载总量', '解析异常']
+  //       },
+  //       grid: {
+  //         left: '3%',
+  //         right: '4%',
+  //         bottom: '3%',
+  //         containLabel: true
+  //       },
+  //       xAxis: {
+  //         type: 'category',
+  //         boundaryGap: false,
+  //         data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  //       },
+  //       yAxis: {
+  //         type: 'value'
+  //       },
+  //       series: [
+  //         {
+  //           name: '下载成功',
+  //           type: 'line',
+  //           stack: 'Total',
+  //           data: [0, 0, 0, 20, 50, 78, 0]
+  //         },
+  //         {
+  //           name: '下载异常',
+  //           type: 'line',
+  //           stack: 'Total',
+  //           data: [0, 0, 0, 3, 13, 12, 0]
+  //         },
+  //         {
+  //           name: '下载总量',
+  //           type: 'line',
+  //           stack: 'Total',
+  //           data: [0, 0, 0, 23, 63, 90, 0]
+  //         },
+  //         {
+  //           name: '解析异常',
+  //           type: 'line',
+  //           stack: 'Total',
+  //           data: [0, 0, 0, 0, 10, 13, 0]
+  //         },
+  //       ]
+  //     };
+  //
+  //     option && myChart.setOption(option);
+  //   },
   },
-  /*mounted() {
-    this.draw_dataflow();
-  },*/
+  // mounted() {
+  //   this.draw_dataflow();
+  // },
   data() {
     return {
       total4:0,
@@ -540,7 +559,7 @@ export default {
       _this.tableData3 = resp.data.data
       _this.total3 = resp.data.count
     })
-    _this.axios.get('/api/image/getimage/0/20/'+this.$route.query.cid).then(function(resp){
+    _this.axios.get('/api/image/getimage/0/21/'+this.$route.query.cid).then(function(resp){
       console.log(resp)
       _this.tableData4 = resp.data.data
       _this.total4 = resp.data.count
