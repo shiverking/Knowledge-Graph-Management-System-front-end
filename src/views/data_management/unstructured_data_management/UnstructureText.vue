@@ -16,7 +16,7 @@
         <el-input  v-model="ruleForm.value" placeholder="请输入名称" style = "width: 300px"></el-input>
       </el-form-item >
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search"  style = "float: left ;margin-right: 50px">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search"  style = "float: left ;margin-right: 50px" @click="search()">搜索</el-button>
 <!--        <el-upload-->
 <!--            class="upload-demo"-->
 <!--            accept = ".jpg,.jpeg,.png"-->
@@ -184,6 +184,16 @@ export default {
     }
   },
   methods: {
+    search(){
+      const _this = this
+      _this.axios.get('/api/unstructure/getAllTextBytitle/'+"/0"+'/10/'+_this.ruleForm.value).then(function(resp) {
+        console.log(resp)
+        _this.tableData = resp.data.data
+        _this.pageSize = resp.data.data.length
+        _this.total = resp.data.count
+      })
+
+    },
     currentChange(currentPage){
       const _this=this
       _this.axios.get('/api/unstructure/getAllTextByPageandcid/'+(currentPage)+'/10/'+_this.crawlid).then(function(resp){
