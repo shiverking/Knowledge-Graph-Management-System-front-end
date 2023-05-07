@@ -154,8 +154,7 @@
           <el-table
               :data="allTriplePageList"
               border
-              style="width: 100%; margin-top:10px"
-          >
+              style="width: 100%; margin-top:10px">
             <el-table-column type="selection">
             </el-table-column>
             <el-table-column
@@ -188,7 +187,6 @@
             </el-table-column>
             <el-table-column label="状态">
               <template slot-scope="scope">
-
                 <el-tag size="medium" type="success">{{ scope.row.status }}</el-tag>
               </template>
             </el-table-column>
@@ -272,10 +270,31 @@
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
                   {{ scope.row.head }}
-                  <el-tag v-if="scope.row.headCategory!=''" size="small" type="info">{{
-                      scope.row.headCategory
-                    }}
-                  </el-tag>
+                  <el-popover
+                      placement="right"
+                      width="400"
+                      :ref="`popover-${scope.row.id}-0`">
+                    <!--用于加载本体选择的树形组件-->
+                    <el-tree
+                        :props="props"
+                        :data = "ontologyTreeData"
+                        node-key="id"
+                        ref="tree"
+                        :check-strictly="true"
+                        :highlight-current="true"
+                        :accordion="true"
+                        @node-click="handleCheckChange"
+                        >
+                    </el-tree>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="cancel(`popover-${scope.row.id}-0`)">取消</el-button>
+                      <el-button type="primary" size="mini" @click="confirmOntology(`popover-${scope.row.id}-0`,scope.row)">确定</el-button>
+                    </div>
+                    <el-button plain v-if="scope.row.headCategory!=''" size="small" type="info" slot="reference" @click="treeVisible=!treeVisible">{{
+                        scope.row.headCategory
+                      }}
+                    </el-button>
+                  </el-popover>
                 </div>
               </template>
             </el-table-column>
@@ -294,10 +313,49 @@
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
                   {{ scope.row.tail }}
-                  <el-tag v-if="scope.row.tailCategory!=''" size="medium" type="info">{{
-                      scope.row.tailCategory
-                    }}
-                  </el-tag>
+                  <el-popover
+                      placement="right"
+                      width="400"
+                      :ref="`popover-${scope.row.id}-1`"
+                      @after-leave="popoveLeaveAction"
+                  >
+                    <!--用于加载本体选择的树形组件-->
+                    <el-tree
+                        :props="props"
+                        :data = "ontologyTreeData"
+                        node-key="id"
+                        ref="tree"
+                        :check-strictly="true"
+                        :highlight-current="true"
+                        :accordion="true"
+                        @node-click="handleCheckChange"
+                    >
+                    </el-tree>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="cancel(`popover-${scope.row.id}-1`)">取消</el-button>
+                      <el-button type="primary" size="mini" @click="confirmOntologyTail(`popover-${scope.row.id}-1`,scope.row)">确定</el-button>
+                    </div>
+                    <el-button plain v-if="scope.row.headCategory!=''" size="small" type="info" slot="reference" @click="treeVisible=!treeVisible">{{
+                        scope.row.tailCategory
+                      }}
+                    </el-button>
+                  </el-popover>
+<!--                  <el-popover-->
+<!--                      placement="right"-->
+<!--                      width="400"-->
+<!--                      trigger="click">-->
+<!--                    &lt;!&ndash;用于加载本体选择的树形组件&ndash;&gt;-->
+<!--                    <el-tree-->
+<!--                        :props="props"-->
+<!--                        :data = "ontologyTreeData"-->
+<!--                        show-checkbox-->
+<!--                        @check-change="handleCheckChange">-->
+<!--                    </el-tree>-->
+<!--                    <el-button plain v-if="scope.row.tailCategory!=''" size="small" type="info" slot="reference">{{-->
+<!--                        scope.row.tailCategory-->
+<!--                      }}-->
+<!--                    </el-button>-->
+<!--                  </el-popover>-->
                 </div>
               </template>
             </el-table-column>
@@ -475,6 +533,10 @@
   margin: 10px;
   width: 70% !important;
 }
+.el-popover{
+  max-height: 500px;
+  overflow-y:auto;
+}
 </style>
 <script>
 import $ from '../../../plugins/jquery.min.js';
@@ -618,7 +680,17 @@ export default {
         rel: "",
         tail: "",
         tail_type: "暂无",
-      }
+      },
+      //树形组件
+      treeVisible:false,
+      props: {
+        label: 'name',
+        children: 'children',
+      },
+      count: 1,
+      ontologyTreeData: [],
+      confirmHeadCategory:'',
+      confirmTailCategory:'',
     }
   },
   methods: {
@@ -1185,6 +1257,96 @@ export default {
       this.getLatestUpdateTime();
       this.getLatestUpdateInfo();
       this.getProgrammeStatus();
+    },
+    //树形组件单选
+    handleCheckChange(data,node,component){
+      this.confirmHeadCategory= data.name;
+      this.confirmTailCategory = data.name;
+    },
+    //关闭popover
+    cancel(e) {
+      this.$refs[e].doClose();
+      this.confirmHeadCategory='';
+      this.confirmTailCategory='';
+    },
+    //修改头实体的类别
+    confirmOntology(e,row){
+      this.$refs[e].doClose();
+      if(this.confirmHeadCategory!=''){
+        row.headCategory = this.confirmHeadCategory;
+        axios.post('/api/candidateKg/updateCategory', {
+          name: row.head,
+          category: this.confirmHeadCategory
+        })
+        .then((response) => {
+          if (response.status == 200&&response.data.msg=='success') {
+            this.$message({
+              message: 'category更新成功',
+              type: 'success'
+            });
+          }
+          //刷新该页面，判断是否正在条件查找
+          if (this.isConditionalSearch == false) {
+            this.get_candidate_triples(this.candidateTripleCurrentPage, this.candidateTriplePageSize);
+          } else {
+            this.get_candidate_triples_conditional(this.candidateTripleCurrentPage, this.candidateTriplePageSize);
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      }
+      this.confirmHeadCategory='';
+    },
+    //修改尾实体的类被
+    confirmOntologyTail(e,row){
+      this.$refs[e].doClose();
+      if(this.confirmTailCategory!=''){
+        row.tailCategory = this.confirmTailCategory;
+        axios.post('/api/candidateKg/updateCategory', {
+          name: row.tail,
+          category: this.confirmTailCategory
+        })
+            .then((response) => {
+              if (response.status == 200&&response.data.msg=='success') {
+                this.$message({
+                  message: 'category更新成功',
+                  type: 'success'
+                });
+              }
+              //刷新该页面，判断是否正在条件查找
+              if (this.isConditionalSearch == false) {
+                this.get_candidate_triples(this.candidateTripleCurrentPage, this.candidateTriplePageSize);
+              } else {
+                this.get_candidate_triples_conditional(this.candidateTripleCurrentPage, this.candidateTriplePageSize);
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+      }
+      this.confirmTailCategory='';
+    },
+    //popover关闭动作
+    popoveLeaveAction(){
+      this.confirmHeadCategory='';
+      this.confirmTailCategory='';
+    },
+    getOntologyTreeData(){
+      //axios请求
+      axios.request({
+        method: "GET",
+        url: '/api/coreOntology/getOntologyData',
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          //获取本体树数据
+          this.ontologyTreeData = response.data.data;
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     }
   },
   mounted() {
@@ -1199,6 +1361,8 @@ export default {
     this.getLatestUpdateTime();
     this.getLatestUpdateInfo();
     this.getProgrammeStatus();
+    //获取本体树数据
+    this.getOntologyTreeData();
   }
 }
 </script>
