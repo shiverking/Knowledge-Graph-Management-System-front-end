@@ -10,10 +10,10 @@
         <template slot="title">{{ typeTitle }}</template>
         <el-menu-item v-for="(item, index) in imageTypes " :key="index" :index="item">{{ item }}</el-menu-item>
       </el-submenu>
-      <el-submenu index="time" >
-        <template slot="title">{{ timeTitle }}</template>
-        <el-menu-item v-for="(item, index) in imageTimes" :key="index" :index="item">{{ item }}</el-menu-item>
-      </el-submenu>
+<!--      <el-submenu index="time" >-->
+<!--        <template slot="title">{{ timeTitle }}</template>-->
+<!--        <el-menu-item v-for="(item, index) in imageTimes" :key="index" :index="item">{{ item }}</el-menu-item>-->
+<!--      </el-submenu>-->
 
       <el-menu-item index="search">
         <el-select style="padding: 0px 20px" v-model="value" multiple filterable remote reserve-keyword
@@ -105,7 +105,7 @@ export default {
       typeimages:[],
       page_size: [10, 15, 20, 25, 30, 40],
       options: ['s', 's'],
-      value: ['飞机'],
+      value: '',
       list: [],
       states: ["风景", "动物"],
       loading: false,
@@ -174,7 +174,7 @@ export default {
       displayCheckedMenu: '',  //隐藏
 
       //  分页模块
-      pageSize: 20,// 每页显示的条数
+      pageSize: 24,// 每页显示的条数
       totalCount: 100, // 总记录数
       currentPage: 1, // 当前页码
 
@@ -200,7 +200,7 @@ export default {
       _this.typeimages = resp.data.data
       _this.images=resp.data.data
       _this.totalCount=resp.data.count
-      _this.pageSize=resp.data.data.length
+      // _this.pageSize=resp.data.data.length
     })
     _this.axios.get('/api/image/getimagetype/'+this.$route.query.cid).then(function(resp){
       console.log(resp)
@@ -398,12 +398,12 @@ export default {
 
       if (mode == "type") {
         const _this = this
-        _this.axios.get('/api/image/getimagebytype/0/24/'+this.$route.query.cid+"/"+value).then(function(resp){
+        _this.axios.get('/api/image/getimagebytype/'+(_this.currentPage)+'/24/'+this.$route.query.cid+"/"+value).then(function(resp){
           console.log(resp)
           _this.typeimages = resp.data.data
           // _this.images=resp.data.data
           _this.totalCount=resp.data.count
-          _this.pageSize=resp.data.data.length
+          // _this.pageSize=resp.data.data.length
         })
         // formData.append("imageType", value);
         // requestApi = '/image/selectAllByType';
@@ -437,7 +437,13 @@ export default {
         }
       }
       else{
-        _this.typeimages=_this.images
+        _this.axios.get('/api/image/getimage/'+(_this.currentPage)+'/24/'+this.$route.query.cid).then(function(resp){
+          console.log(resp)
+          _this.typeimages = resp.data.data
+          // _this.images=resp.data.data
+          _this.totalCount=resp.data.count
+          // _this.pageSize=resp.data.data.length
+        })
       }
       this.axios({
         url: this.$serveUrL + requestApi,
