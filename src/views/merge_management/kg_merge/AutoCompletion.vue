@@ -292,11 +292,21 @@
       </div>
       <div v-if="this.active==2">
           <el-card shadow="never" style="float:left; margin-right:10px; width:30%; height:100%; margin-top:10px">
+            <el-tree
+                :props="props"
+                :data = "ontologyTreeData"
+                node-key="id"
+                ref="tree"
+                :check-strictly="true"
+                :highlight-current="true"
+                :accordion="true"
+                @node-click="handleCheckChange"
+                >
+            </el-tree>
+          </el-card>
+          <el-card shadow="never" style="margin-left:10px;margin-top:10px;width:30%;height:80%;">
             
           </el-card>
-          <!-- <el-card shadow="never" style="margin-left:10px;width:30%;height:80%;">
-            
-          </el-card> -->
       </div>
       <div v-if="this.active==3">
         <el-table
@@ -391,6 +401,11 @@
     },
     data() {
       return {
+        props: {
+            label: 'name',
+            children: 'children',
+          },
+        ontologyTreeData: [],
         isJoin: false,
         tableData2Key: 0,
         activeName: 'first', //基于本体or基于算法选项卡flag
@@ -491,6 +506,27 @@
       }
     },
     methods: {
+      //树形组件单选
+      handleCheckChange(data,node,component){
+        console.log(data.name)
+        console.log(data.id)
+      },
+      getOntologyTreeData(){
+        //axios请求
+        axios.request({
+          method: "GET",
+          url: '/api/coreOntology/getOntologyData',
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            //获取本体树数据
+            this.ontologyTreeData = response.data.data;
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
       open(){
         this.dialogFormVisible = true
       },
@@ -1310,6 +1346,7 @@
       this.load_entSet(); //加载实体集合
       this.load_relSet(); //加载关系集合
       this.load_modSet(); //加载模型集合
+      this.getOntologyTreeData();
     },
   }
 </script>
