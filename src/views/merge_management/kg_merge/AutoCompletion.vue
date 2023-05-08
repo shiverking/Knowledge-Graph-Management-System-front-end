@@ -3,8 +3,9 @@
     <cache></cache>
     <el-tabs v-model="activeName" type="card" style="margin-top:10px;" @tab-click="handleClick">
       <el-steps :active="active" finish-status="success" simple>
-        <el-step title="链接补全（本体规则检测）"></el-step>
-        <el-step title="链接预测（智能匹配检测）"></el-step>
+        <el-step title="链接补全"></el-step>
+        <el-step title="链接预测"></el-step>
+        <el-step title="完整性检测"></el-step>
         <el-step title="预测提交"></el-step>
       </el-steps>
       <div v-if="this.active==0">
@@ -290,6 +291,14 @@
         </el-dialog>
       </div>
       <div v-if="this.active==2">
+          <el-card shadow="never" style="float:left; margin-right:10px; width:30%; height:100%; margin-top:10px">
+            
+          </el-card>
+          <!-- <el-card shadow="never" style="margin-left:10px;width:30%;height:80%;">
+            
+          </el-card> -->
+      </div>
+      <div v-if="this.active==3">
         <el-table
           :data="tableData6"
           border
@@ -343,9 +352,9 @@
             <el-button size="mini" type="text" @click="nextStepVisible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="nextStepVisible = false;submitToCache();">确定</el-button>
           </div>
-          <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==2" slot="reference" @click="nextStepVisible=true;">提交</el-button>
+          <el-button type="primary" style="margin-top: 12px;"  v-if="this.active==3" slot="reference" @click="nextStepVisible=true;">提交</el-button>
         </el-popover>
-        <el-button type="primary" style="margin-top: 12px;" v-if="this.active<2" @click="next">下一步</el-button>
+        <el-button type="primary" style="margin-top: 12px;" v-if="this.active<3" @click="next">下一步</el-button>
       </div>
     </el-tabs>
   </div>
