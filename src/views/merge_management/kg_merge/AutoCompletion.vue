@@ -3,76 +3,112 @@
     <cache></cache>
     <el-tabs v-model="activeName" type="card" style="margin-top:10px;" @tab-click="handleClick">
       <el-steps :active="active" finish-status="success" simple>
-        <el-step title="链接补全"></el-step>
-        <el-step title="链接预测"></el-step>
         <el-step title="完整性检测"></el-step>
+        <el-step title="链接预测"></el-step>
+        <el-step title="链接补全"></el-step>
         <el-step title="预测提交"></el-step>
       </el-steps>
       <div v-if="this.active==0">
-        <el-button type="primary" @click="linked_completion()">开始检测</el-button>
-        <el-popover placement="top" v-model="isJoin">
-          <p>是否应用链接补全的结果？</p>
-          <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="isJoin = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="isJoin = false; apply_linkCompletion_res();">确定</el-button>
-          </div>
-          <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
-        </el-popover>
-        <keep-alive>
-          <el-table :data="tableData5" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
-            <!-- <el-table-column
-              label="检测时间"
-              width="180">
-              <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.time }}</span>
-              </template>
-            </el-table-column> -->
-            <el-table-column label="头实体" width="400">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.head }}</span>
-                <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
-              </template>
+        <el-card shadow="never" style="float:left; margin-right:10px; width:30%; height:100%; margin-top">
+          <el-tree
+              :props="props"
+              :data = "ontologyTreeData"
+              node-key="id"
+              ref="tree"
+              :check-strictly="true"
+              :highlight-current="true"
+              :accordion="true"
+              @node-click="handleCheckChange"
+              >
+          </el-tree>
+        </el-card>
+        <el-card shadow="never" style="margin-right:;margin-top:10px;width:;height:100%;">
+          <el-input-number @change="changeNumber()" v-model="num" :precision="1" :step="0.1" :max="1" :min="0" style="margin-bottom: 10px;"></el-input-number>
+          <span style="margin-left: 10px;">完整性检测阈值</span>
+          <el-table
+            border
+            :data="tableData7"
+            style="width: 100%">
+            <el-table-column
+              prop="label"
+              label="类别"
+              width>
             </el-table-column>
-            <el-table-column label="关系">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
-              </template>
-            </el-table-column>     
-            <el-table-column label="尾实体" width="400">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
-                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
-              </template>
+            <el-table-column
+              prop="ent"
+              label="实体"
+              width>
             </el-table-column>
-            <el-table-column prop="time" label="时间"></el-table-column>         
-            <!-- <el-table-column label="操作">
+            <el-table-column
+              prop="missing_count"
+              label="缺失关系数"
+              width>
+            </el-table-column>
+            <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
-                  type="primary" plain
+                type="info" plain
                   size="mini"
-                  :disabled="scope.row.error_status"
-                  @click="dailog_receive_relation_error(scope.row);draw_graph(scope.row);">编辑</el-button>
-                <el-button
-                  type="success" plain
-                  size="mini"
-                  :disabled="whether_can_revoked(scope.row)"
-                  @click="revoke_selection(scope.row)">撤销</el-button>
+                  @click="dailog_receive_relation_error(scope.row);integrity_details(scope.row);">详情</el-button>
               </template>
-            </el-table-column> -->
+            </el-table-column>
           </el-table>
-        </keep-alive>
-        <el-pagination
-          @size-change="sizeChange5"
-          @current-change="currentChange5"
-          :current-page="tableData5_page"
-          :page-size="tableData5_size"
-          :page-sizes="pageSizes"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData5_total"
-          style="margin-top: 10px;">
-        </el-pagination>
+          <el-pagination
+            @size-change="sizeChange7"
+            @current-change="currentChange7"
+            :current-page="tableData7_page"
+            :page-size="tableData7_size"
+            :page-sizes="pageSizes"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData7_total"
+            style="margin-top: 10px;">
+          </el-pagination>
+          <el-dialog title="完整性检测" :visible.sync="dialogRelationErrorFormVisible" customClass="customWidth" fullscreen>
+            <el-card shadow="never" style="float: left;margin-right:10px;" class="graphWidth">
+              <el-card shadow="never">
+                <h4>类别的完整性子图</h4>
+                <div id="label_integrity" style="height: 300px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
+              </el-card>
+              <el-card shadow="never" style="margin-top: 10px;">
+                <h4>结点的完整性子图</h4>
+                <div id="tuple_integrity" style="height: 300px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
+              </el-card>
+            </el-card>
+            <el-card shadow="never" style="">
+              <h4>缺失元组列表</h4>
+              <el-table
+                :data="missing_tuple"
+                border
+                style="width: 100%;margin-top: 10px;">
+                <el-table-column label="头实体">
+                  <template slot-scope="scope">
+                    <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                    <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column label="关系">
+                  <template slot-scope="scope">
+                    <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="尾实体">
+                  <template slot-scope="scope">
+                    <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                    <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+                  </template>
+                </el-table-column> 
+                <el-table-column label="操作" width="100px">
+                  <el-button type="text" @click="func">链接预测</el-button>
+                </el-table-column> 
+              </el-table>
+            </el-card>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogRelationErrorFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="dialogRelationErrorFormVisible = false;">确 定</el-button>
+            </div>
+          </el-dialog>
+        </el-card>
       </div>
       <div v-if="this.active==1">
         <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
@@ -291,42 +327,56 @@
         </el-dialog>
       </div>
       <div v-if="this.active==2">
-          <el-card shadow="never" style="float:left; margin-right:10px; width:30%; height:100%; margin-top:10px">
-            <el-tree
-                :props="props"
-                :data = "ontologyTreeData"
-                node-key="id"
-                ref="tree"
-                :check-strictly="true"
-                :highlight-current="true"
-                :accordion="true"
-                @node-click="handleCheckChange"
-                >
-            </el-tree>
-          </el-card>
-          <el-card shadow="never" style="margin-left:10px;margin-top:10px;width:30%;height:100%;">
-            <div id="triples_show" style="height: 700px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
-          </el-card>
-          <el-card shadow="never" style="margin-right:;margin-top:10px;width:20%;height:100%;">
-            <el-table
-              :data="table"
-              style="width: 100%">
-              <el-table-column
-                prop="date"
-                label="日期"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="地址">
-              </el-table-column>
-            </el-table>
-          </el-card>
+        <el-button type="primary" @click="linked_completion()">开始检测</el-button>
+        <el-popover placement="top" v-model="isJoin">
+          <p>是否应用链接补全的结果？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="isJoin = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="isJoin = false; apply_linkCompletion_res();">确定</el-button>
+          </div>
+          <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
+        </el-popover>
+        <keep-alive>
+          <el-table :data="tableData5" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
+            <!-- <el-table-column
+              label="检测时间"
+              width="180">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
+              </template>
+            </el-table-column> -->
+            <el-table-column label="头实体" width="400">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="关系">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+              </template>
+            </el-table-column>     
+            <el-table-column label="尾实体" width="400">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="time" label="时间"></el-table-column> 
+          </el-table>
+        </keep-alive>
+        <el-pagination
+          @size-change="sizeChange5"
+          @current-change="currentChange5"
+          :current-page="tableData5_page"
+          :page-size="tableData5_size"
+          :page-sizes="pageSizes"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData5_total"
+          style="margin-top: 10px;">
+        </el-pagination>
       </div>
       <div v-if="this.active==3">
         <el-table
@@ -421,23 +471,13 @@
     },
     data() {
       return {
-        table: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          }],
+        missing_tuple: [],
+        complete_label_graph: [],
+        tuple_integrity_table:[],
+        num: 0.7,
+        currentLabel : '',
+        dialogRelationErrorFormVisible: false, //关系异常修改的dialog
+        missing_situations_table: [],
         props: {
             label: 'name',
             children: 'children',
@@ -481,24 +521,28 @@
         tableData4_page: 1,
         tableData5_page: 1,
         tableData6_page: 1,
+        tableData7_page: 1,
         tableData1_size: 10,
         tableData2_size: 10,
         tableData3_size: 10,
         tableData4_size: 5,
         tableData5_size: 20,
         tableData6_size: 20,
+        tableData7_size: 10,
         tableData1_total: 0,
         tableData2_total: 0,
         tableData3_total: 0,
         tableData4_total: 0,
         tableData5_total: 0,
         tableData6_total: 0,
+        tableData7_total: 0,
         tableData1 : [],
         tableData2 : [],
         tableData3 : [],
         tableData4 : [],
         tableData5 : [],
         tableData6 : [],
+        tableData7 : [],
         pageSizes:[5,10,20,30,40,50,60],
         dialogTableVisible: false,
         multipleSelection: [],
@@ -543,10 +587,14 @@
       }
     },
     methods: {
+      dailog_receive_relation_error(row){
+        this.dialogRelationErrorFormVisible = true;
+        this.selectedRowOfRelError = row;
+      },
       //树形组件单选
       handleCheckChange(data,node,component){
-        console.log(data.name)
-        console.log(data.id)
+        this.currentLabel = data.name;
+        this.integrity_results_and_missing_res(data.name, this.num);
       },
       getOntologyTreeData(){
         //axios请求
@@ -730,6 +778,23 @@
         this.tableData6_size = val
         this.tableData6_page = 1
         this.getTableData6()
+      },
+      getTableData7(){
+        //allData为全部数据
+        this.tableData7 = this.missing_situations_table.slice(
+          (this.tableData7_page - 1) * this.tableData7_size,
+          this.tableData7_page * this.tableData7_size
+        );
+        this.tableData7_total = this.missing_situations_table.length
+      },
+      currentChange7(val){
+        this.tableData7_page = val
+        this.getTableData7()
+      },
+      sizeChange7(val){
+        this.tableData7_size = val
+        this.tableData7_page = 1
+        this.getTableData7()
       },
       // 候选数据集的多项选择
       handleSelectionChange(val) {
@@ -1377,7 +1442,235 @@
         .catch(function (error) {
           console.log(error)
         })
-      }    
+      },
+      //获得完整性子图以及缺失表格
+      integrity_results_and_missing_res(label_name, num){
+        //axios请求
+        axios.post('/pythonApi/return_integrity_results',{
+          data: label_name, rate: num
+        })
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.missing_situations_table = response.data.missing_situations_table;
+            this.complete_label_graph = response.data.complete_label_graph;
+            this.getTableData7();
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      //获得完整性子图以及缺失表格
+      return_tuple_integrity_graph(ent, ent_typ, missing_tuple){
+        //axios请求
+        axios.post('/pythonApi/return_tuple_integrity_graph',{
+          ent: ent, ent_typ: ent_typ, missing_tuple: missing_tuple
+        })
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            this.tuple_integrity_table = response.data.tuple_integrity_graph;
+            this.tuple_integrity_graph(this.tuple_integrity_table);
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      changeNumber(currentValue, oldValue){
+        this.integrity_results_and_missing_res(this.currentLabel, this.num)
+      },
+      label_integrity_graph(arr){
+        var chartDom = document.getElementById('label_integrity');
+        var myChart = echarts.init(chartDom);
+        myChart.hideLoading();
+        var webkitDep = this.genrateData(arr);
+        var option = {
+          legend: {
+            x: 'left',//图例位置
+            //图例的名称
+            //此处的数据必须和关系网类别中name相对应
+            data: webkitDep.categories.map(function (a) {
+              return a.name;
+            })
+          },
+          series: [{
+            type: 'graph',
+            layout: 'force',
+            symbolSize: 20,
+            // animation: false,
+            label: {
+              normal: {
+                show:true,
+                position: 'right'
+              }
+            },
+            //展示边数据
+            edgeLabel: {
+              normal: {
+                show: true,
+                formatter: function (x) {
+                  return x.data.name;
+                }
+              }
+            },
+            edgeSymbol: ["circle", "arrow"], //边两边的类型
+            draggable: true,
+            force: {
+              layoutAnimation:true,
+              // xAxisIndex : 0, //x轴坐标 有多种坐标系轴坐标选项
+              // yAxisIndex : 0, //y轴坐标
+              // gravity:0.03,  //节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
+              // edgeLength: 55,  //边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] 。值越小则长度越长
+              // repulsion: 150  //节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
+              edgeLength: 120,
+              repulsion: 50,
+              gravity: 0.03
+            },
+            data: webkitDep.nodes.map(function (node, idx) {  //node数据
+              node.id = idx;
+              return node;
+            }),
+            categories: webkitDep.categories,  //关系网类别，可以写多组
+            edges: webkitDep.links  //link数据
+          }]
+        };
+        myChart.setOption(option);
+      },
+      tuple_integrity_graph(arr){
+        var chartDom = document.getElementById('tuple_integrity');
+        var myChart = echarts.init(chartDom);
+        myChart.hideLoading();
+        var webkitDep = this.genrateData(arr);
+        var option = {
+          legend: {
+            x: 'left',//图例位置
+            //图例的名称
+            //此处的数据必须和关系网类别中name相对应
+            data: webkitDep.categories.map(function (a) {
+              return a.name;
+            })
+          },
+          series: [{
+            type: 'graph',
+            layout: 'force',
+            symbolSize: 20,
+            // animation: false,
+            label: {
+              normal: {
+                show:true,
+                position: 'right'
+              }
+            },
+            //展示边数据
+            edgeLabel: {
+              normal: {
+                show: true,
+                formatter: function (x) {
+                  return x.data.name;
+                }
+              }
+            },
+            edgeSymbol: ["circle", "arrow"], //边两边的类型
+            draggable: true,
+            force: {
+              layoutAnimation:true,
+              // xAxisIndex : 0, //x轴坐标 有多种坐标系轴坐标选项
+              // yAxisIndex : 0, //y轴坐标
+              // gravity:0.03,  //节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
+              // edgeLength: 55,  //边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] 。值越小则长度越长
+              // repulsion: 150  //节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
+              edgeLength: 120,
+              repulsion: 50,
+              gravity: 0.03
+            },
+            data: webkitDep.nodes.map(function (node, idx) {  //node数据
+              node.id = idx;
+              return node;
+            }),
+            categories: webkitDep.categories,  //关系网类别，可以写多组
+            edges: webkitDep.links  //link数据
+          }]
+        };
+        myChart.setOption(option);
+      },
+      genrateData(arr){
+        var data = {};
+        var map=new Map;
+        data['categories'] = [];
+        var nodes = [];
+        var links= [];
+        var counter = 0;
+        var dic = {};
+        var cate_counter = 0;
+        for(var i=0;i<arr.length;i++){
+          if(!(arr[i].head_typ in dic)){
+            dic[arr[i].head_typ] = cate_counter
+            var new_cate = {};
+            new_cate.name = arr[i].head_typ;
+            cate_counter+=1;
+            data['categories'].push(new_cate);
+          }
+          if(!(arr[i].tail_typ in dic)){
+            dic[arr[i].tail_typ] = cate_counter
+            var new_cate = {};
+            new_cate.name = arr[i].tail_typ;
+            cate_counter+=1;
+            data['categories'].push(new_cate);
+          }
+        }
+        for(var i=0;i<arr.length;i++){
+            //已有该实体
+            if(!map.has(arr[i].head)){
+              map.set(arr[i].head,counter);
+              var new_node1 = {};
+              new_node1.name = arr[i].head;
+              new_node1.category = dic[arr[i].head_typ];
+              new_node1.id = counter;
+              counter+=1;
+              nodes.push(new_node1);
+            }
+            //已有该实体,不需增加新的节点
+            if(!map.has(arr[i].tail)) {
+              map.set(arr[i].tail, counter);
+              var new_node2 = {};
+              new_node2.name = arr[i].tail;
+              new_node2.category = dic[arr[i].tail_typ];
+              new_node2.id = counter;
+              counter += 1;
+              nodes.push(new_node2);
+            }
+        }
+        var curve = 0;
+        for(var i=0;i<arr.length;i++){
+            var link = {};
+            link.source = map.get(arr[i].head);
+            link.lineStyle= {
+              curveness: curve // 设置连接处的弧度
+            },
+            link.name = arr[i].rel;
+            link.target = map.get(arr[i].tail);
+            links.push(link)
+            
+        }
+        data['nodes'] = nodes;
+        data['links'] = links;
+        console.log(data)
+        return data;
+      },
+      draw_graph(){
+        setTimeout(()=>{
+          this.label_integrity_graph(this.complete_label_graph);
+        },100)
+      },
+      integrity_details(row){
+        this.return_tuple_integrity_graph(row.ent, row.label, row.missing_tuple);
+        this.draw_graph();
+        this.missing_tuple = row.missing_tuple;
+      }
     },
     mounted(){
       this.load_entSet(); //加载实体集合
