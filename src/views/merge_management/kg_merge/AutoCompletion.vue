@@ -68,11 +68,11 @@
             <el-card shadow="never" style="float: left;margin-right:10px;" class="graphWidth">
               <el-card shadow="never">
                 <h4>类别的完整性子图</h4>
-                <div id="label_integrity" style="height: 300px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
+                <div id="label_integrity" style="height: 350px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
               </el-card>
               <el-card shadow="never" style="margin-top: 10px;">
                 <h4>结点的完整性子图</h4>
-                <div id="tuple_integrity" style="height: 300px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
+                <div id="tuple_integrity" style="height: 350px; width: 750px" ><el-empty description="暂无预览"></el-empty></div>
               </el-card>
             </el-card>
             <el-card shadow="never" style="">
@@ -99,7 +99,9 @@
                   </template>
                 </el-table-column> 
                 <el-table-column label="操作" width="100px">
-                  <el-button type="text" @click="func">链接预测</el-button>
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="link_prediction_from_integrity(scope.row)">链接预测</el-button>
+                  </template>
                 </el-table-column> 
               </el-table>
             </el-card>
@@ -1544,7 +1546,7 @@
         var chartDom = document.getElementById('tuple_integrity');
         var myChart = echarts.init(chartDom);
         myChart.hideLoading();
-        var webkitDep = this.genrateData(arr);
+        var webkitDep = this.genrateDataToTuple(arr);
         var option = {
           legend: {
             x: 'left',//图例位置
@@ -1644,21 +1646,97 @@
               nodes.push(new_node2);
             }
         }
-        var curve = 0;
+        var counts = new Map();
         for(var i=0;i<arr.length;i++){
-            var link = {};
-            link.source = map.get(arr[i].head);
-            link.lineStyle= {
-              curveness: curve // 设置连接处的弧度
+          var link = {};
+          link.source = map.get(arr[i].head);
+          link.name = arr[i].rel;
+          link.target = map.get(arr[i].tail);
+          let combinedValue = arr[i].head_typ.toString() + ',' + arr[i].tail_typ.toString();
+          if (counts.has(combinedValue)) {
+            // 如果出现过，则计数加1
+            counts.set(combinedValue, counts.get(combinedValue) + 0.2);
+          } else {
+            // 如果没出现过，则设置计数为1
+            counts.set(combinedValue, 0);
+          }
+          link.lineStyle= {
+              curveness: counts.get(combinedValue) // 设置连接处的弧度
             },
-            link.name = arr[i].rel;
-            link.target = map.get(arr[i].tail);
-            links.push(link)
-            
+          links.push(link)
         }
         data['nodes'] = nodes;
         data['links'] = links;
-        console.log(data)
+        return data;
+      },
+      genrateDataToTuple(arr){
+        var data = {};
+        var map=new Map;
+        data['categories'] = [];
+        var nodes = [];
+        var links= [];
+        var counter = 0;
+        var dic = {};
+        var cate_counter = 0;
+        for(var i=0;i<arr.length;i++){
+          if(!(arr[i].head_typ in dic)){
+            dic[arr[i].head_typ] = cate_counter
+            var new_cate = {};
+            new_cate.name = arr[i].head_typ;
+            cate_counter+=1;
+            data['categories'].push(new_cate);
+          }
+          if(!(arr[i].tail_typ in dic)){
+            dic[arr[i].tail_typ] = cate_counter
+            var new_cate = {};
+            new_cate.name = arr[i].tail_typ;
+            cate_counter+=1;
+            data['categories'].push(new_cate);
+          }
+        }
+        for(var i=0;i<arr.length;i++){
+            //已有该实体
+            if(!map.has(arr[i].head)){
+              map.set(arr[i].head,counter);
+              var new_node1 = {};
+              new_node1.name = arr[i].head;
+              new_node1.category = dic[arr[i].head_typ];
+              new_node1.id = counter;
+              counter+=1;
+              nodes.push(new_node1);
+            }
+            //已有该实体,不需增加新的节点
+            if(!map.has(arr[i].tail)) {
+              map.set(arr[i].tail, counter);
+              var new_node2 = {};
+              new_node2.name = arr[i].tail;
+              new_node2.category = dic[arr[i].tail_typ];
+              new_node2.id = counter;
+              counter += 1;
+              nodes.push(new_node2);
+            }
+        }
+        var counts = new Map();
+        for(var i=0;i<arr.length;i++){
+          var link = {};
+          link.source = map.get(arr[i].head);
+          link.name = arr[i].rel;
+          link.target = map.get(arr[i].tail);
+          let combinedValue = arr[i].head.toString() + ',' + arr[i].tail.toString();
+          if (counts.has(combinedValue)) {
+            // 如果出现过，则计数加1
+            counts.set(combinedValue, counts.get(combinedValue) + 0.2);
+          } else {
+            // 如果没出现过，则设置计数为1
+            counts.set(combinedValue, 0);
+          }
+          link.lineStyle= {
+              curveness: counts.get(combinedValue) // 设置连接处的弧度
+            },
+          links.push(link)
+        }
+        data['nodes'] = nodes;
+        data['links'] = links;
         return data;
       },
       draw_graph(){
@@ -1670,6 +1748,22 @@
         this.return_tuple_integrity_graph(row.ent, row.label, row.missing_tuple);
         this.draw_graph();
         this.missing_tuple = row.missing_tuple;
+      },
+      link_prediction_from_integrity(row){
+        console.log('yunxing')
+        var ent_and_rel = {}
+        if (row.head == 'unknown'){
+          ent_and_rel['ent'] =  row.tail;
+          ent_and_rel['ent_typ'] =  row.tail_typ;
+        }
+        else{
+          ent_and_rel['ent'] =  row.head;
+          ent_and_rel['ent_typ'] =  row.head_typ;
+        }
+        ent_and_rel['rel'] =  row.rel;
+        this.entRel_pair_selected.push(ent_and_rel);
+        this.getTableData();
+        this.active=1;
       }
     },
     mounted(){
