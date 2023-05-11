@@ -80,6 +80,7 @@ import TopicKg from "../views/coredata_warehouse/core_kg/TopicKg";
 import SituationKg from "../views/coredata_warehouse/core_kg/SituationKg";
 import CoreOntology from "../views/coredata_warehouse/core_ontology/CoreOntology";
 import CoreOntologyShow from "../views/coredata_warehouse/core_ontology/CoreOntologyShow";
+import ThemeOntology from "@/views/coredata_warehouse/core_ontology/ThemeOntology";
 // 第五部分,用户应用管理组件
 import Interface from "../views/user_application_management/interface/Interface";
 import Display from "../views/user_application_management/interface/Display";
@@ -574,6 +575,12 @@ export default new Router({
               name:'核心本体展示',
               component:CoreOntologyShow,
               show:true
+            },
+            {
+              path: '/coredata/mainontology/theme',
+              name: '作战场景本体展示',
+              component: ThemeOntology,
+              show: true
             }
           ]
         }
