@@ -138,7 +138,7 @@ export default {
           },
         },
         defaultNode: {
-          size: [10, 10],
+          size: [20, 20],
           style: {
             lineWidth: 1,
             fill: '#DEE9FF',
