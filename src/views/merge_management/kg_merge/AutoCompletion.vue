@@ -78,7 +78,7 @@
             <el-card shadow="never" style="">
               <h4>缺失元组列表</h4>
               <el-table
-                :data="missing_tuple"
+                :data="tableData8"
                 border
                 style="width: 100%;margin-top: 10px;">
                 <el-table-column label="头实体">
@@ -104,6 +104,17 @@
                   </template>
                 </el-table-column> 
               </el-table>
+              <el-pagination
+                @size-change="sizeChange8"
+                @current-change="currentChange8"
+                :current-page="tableData8_page"
+                :page-size="tableData8_size"
+                :page-sizes="pageSizes"
+                background
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="tableData8_total"
+                style="margin-top: 10px;">
+              </el-pagination>
             </el-card>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogRelationErrorFormVisible = false">取 消</el-button>
@@ -524,6 +535,7 @@
         tableData5_page: 1,
         tableData6_page: 1,
         tableData7_page: 1,
+        tableData8_page: 1,
         tableData1_size: 10,
         tableData2_size: 10,
         tableData3_size: 10,
@@ -531,6 +543,7 @@
         tableData5_size: 20,
         tableData6_size: 20,
         tableData7_size: 10,
+        tableData8_size: 10,
         tableData1_total: 0,
         tableData2_total: 0,
         tableData3_total: 0,
@@ -538,6 +551,7 @@
         tableData5_total: 0,
         tableData6_total: 0,
         tableData7_total: 0,
+        tableData8_total: 0,
         tableData1 : [],
         tableData2 : [],
         tableData3 : [],
@@ -545,6 +559,7 @@
         tableData5 : [],
         tableData6 : [],
         tableData7 : [],
+        tableData8 : [],
         pageSizes:[5,10,20,30,40,50,60],
         dialogTableVisible: false,
         multipleSelection: [],
@@ -591,7 +606,6 @@
     methods: {
       dailog_receive_relation_error(row){
         this.dialogRelationErrorFormVisible = true;
-        this.selectedRowOfRelError = row;
       },
       //树形组件单选
       handleCheckChange(data,node,component){
@@ -797,6 +811,23 @@
         this.tableData7_size = val
         this.tableData7_page = 1
         this.getTableData7()
+      },
+      getTableData8(){
+        //allData为全部数据
+        this.tableData8 = this.missing_tuple.slice(
+          (this.tableData8_page - 1) * this.tableData8_size,
+          this.tableData8_page * this.tableData8_size
+        );
+        this.tableData8_total = this.missing_tuple.length
+      },
+      currentChange8(val){
+        this.tableData8_page = val
+        this.getTableData8()
+      },
+      sizeChange8(val){
+        this.tableData8_size = val
+        this.tableData8_page = 1
+        this.getTableData8()
       },
       // 候选数据集的多项选择
       handleSelectionChange(val) {
@@ -1748,6 +1779,7 @@
         this.return_tuple_integrity_graph(row.ent, row.label, row.missing_tuple);
         this.draw_graph();
         this.missing_tuple = row.missing_tuple;
+        this.getTableData8()
       },
       link_prediction_from_integrity(row){
         console.log('yunxing')
@@ -1764,6 +1796,7 @@
         this.entRel_pair_selected.push(ent_and_rel);
         this.getTableData();
         this.active=1;
+        this.dialogRelationErrorFormVisible = false;
       }
     },
     mounted(){
