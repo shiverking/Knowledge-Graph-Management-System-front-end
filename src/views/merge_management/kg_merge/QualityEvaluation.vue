@@ -254,7 +254,7 @@
                   <el-radio :label="2">修改链接</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <p><b>修改后的结点名称和结点类别:</b></p>
+              <p style="margin-bottom: 10px;"><b>修改后的结点名称和结点类别:</b></p>
               <el-row>
                 <el-col :span="8">
                   <el-form-item  label="头实体">
@@ -283,6 +283,35 @@
                 <el-input :disabled="form_of_relation_error.rel_radio == 0 || form_of_relation_error.rel_radio == 1" v-model="form_of_relation_error.rel" style="width:300px;"></el-input>
               </el-form-item>
             </el-form>
+
+
+            <p style="margin-bottom: 10px;"><b>潜在的正确元组:</b></p>
+            <el-table :data="single_relation_error_from_tmp" border style="width: 100%">
+              <el-table-column label="头实体">
+                <template slot-scope="scope">
+                  <span style="margin-left: 10px">{{ scope.row.head }}</span>
+                  <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column label="关系" width="100px">
+                <template slot-scope="scope">
+                  <span style="margin-left: 10px">{{ scope.row.rel }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="尾实体">
+                <template slot-scope="scope">
+                  <span style="margin-left: 10px">{{ scope.row.tail }}</span>
+                  <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
+                </template>
+              </el-table-column> 
+              <el-table-column label="操作" width="100px">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="link_prediction_from_integrity(scope.row)">应用</el-button>
+                  </template>
+              </el-table-column> 
+            </el-table>
+
+
           </el-card>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogRelationErrorFormVisible = false">取 消</el-button>
