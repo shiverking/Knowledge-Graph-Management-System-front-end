@@ -56,6 +56,7 @@ import CandidateKgBuild from "../views/candidate_generation_management/candidate
 import CandidateKgShow from "../views/candidate_generation_management/candidate_kg/CandidateKgShow";
 import CandidateOntology from "../views/candidate_generation_management/candidate_ontology/CandidateOntology";
 import CandidateOntologyShow from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyShow";
+
 // import CandidateOntologyBuild from "../views/candidate_generation_management/candidate_ontology/CandidateOntologyBuild";
 import CandidateStructuredData from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredData";
 import CandidateStructuredOntology from "../views/candidate_generation_management/candidate_structured_data/CandidateStructuredOntology";
@@ -63,6 +64,7 @@ import CandidateStructuredTriples from "../views/candidate_generation_management
 import NamedEntityRecognition from "../views/candidate_generation_management/candidate_kg/NamedEntityRecognition"
 import TriplesExtraction from "../views/candidate_generation_management/candidate_kg/TriplesExtraction"
 import CandidateMerge from "../views/candidate_generation_management/candidate_kg/CandidateMerge";
+import SemiStructuredDataToTriples from "../views/candidate_generation_management/candidate_kg/SemiStructuredDataToTriples"
 // 第三部分,融合管理部分组件
 import KgMergeHome from "../views/merge_management/kg_merge/KgMergeHome";
 import KgMerge from "../views/merge_management/kg_merge/KgMerge"
@@ -418,6 +420,12 @@ export default new Router({
               path:'/candidate/kg/triplesExtraction',
               name:'非结构文本抽取',
               component:TriplesExtraction,
+              show: true
+            },
+            {
+              path:'/candidate/kg/SemiStructuredDataToTriples',
+              name:'半结构化数据抽取',
+              component:SemiStructuredDataToTriples,
               show: true
             }
           ]
