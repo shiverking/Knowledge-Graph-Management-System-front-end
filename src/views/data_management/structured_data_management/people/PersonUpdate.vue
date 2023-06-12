@@ -40,16 +40,14 @@
 <!--        </el-option>-->
 <!--      </el-select>-->
 <!--    </el-form-item>-->
-    <div class="addFormBox">
+    <div  style="float: left">
       <h2>教育信息 </h2>
       <!-- 循环data中定义的数组 -->
-      <el-form label-width="80px" ref="formeducation">
+      <el-form label-width="80px" ref="formeducation"  >
         <div v-for="(item,index) in form.education" :key="index">
           <div class="formOuterBox">
             <div class="formCotantBox">
-
               <!-- 表单内容 -->
-
               <el-form-item label="id" class="form-style" v-show="false">
                 <el-input v-model="item.id" class="special-style" value=1></el-input>
               </el-form-item>
@@ -84,7 +82,6 @@
                 </el-form-item>
               </el-col>
 
-
             </div>
             <!-- 操作按钮 -->
             <!--          <div>-->
@@ -96,7 +93,7 @@
       </el-form>
     </div>
 
-    <div class="addFormBox">
+    <div style="float: left">
       <h2>履历信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formresume">
@@ -105,7 +102,6 @@
             <div class="formCotantBox">
 
               <!-- 表单内容 -->
-
 
               <el-form-item label="id" class="form-style" v-show="false">
                 <el-input v-model="item.id" class="special-style"></el-input>
@@ -151,7 +147,7 @@
         </div>
       </el-form>
     </div>
-    <div>
+    <div style="float: left">
       <el-button type="primary" @click="submitForm1('ruleForm');submitForm2('ruleForm')" >修改</el-button>
     </div>
 
@@ -243,7 +239,6 @@ export default {
       // }
     },
     addForm2(rule) {
-
       this.form.resume.push({
         id:"",
         start_time: "",
@@ -300,7 +295,7 @@ export default {
                 _this.$alert('《' + _this.form.person.name_cn + '》修改成功！', '消息', {
                   confirmButtonText: '确定',
                   callback: action => {
-                    _this.$router.push('/data/people/person')
+                    _this.$router.push('/data/structure/people/person')
                   }
                 })
           })
