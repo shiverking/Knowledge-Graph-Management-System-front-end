@@ -158,9 +158,6 @@
               <router-link to="/candidate/structured/ontology" class="routerlink">
                 <el-menu-item index="2-3-1"><i class="el-icon-moon"></i>本体数据</el-menu-item>
               </router-link>
-              <router-link to="/candidate/structured/triples" class="routerlink">
-                <el-menu-item index="2-3-2"><i class="el-icon-moon-night"></i>三元组数据</el-menu-item>
-              </router-link>
             </el-submenu>
           </el-submenu>
           <el-submenu index="3" class="parent_submenu">
