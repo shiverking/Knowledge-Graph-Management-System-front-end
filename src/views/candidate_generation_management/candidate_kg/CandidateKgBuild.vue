@@ -1,7 +1,6 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-button type="primary" style="margin-top:10px;margin-bottom: 10px;" @click="synchronizationDisplay=true">同步
-    </el-button>
+
     <el-dialog
         title="更新设置"
         :visible.sync="synchronizationDisplay"
@@ -243,6 +242,7 @@
             <span>数据来源:</span>
             <el-radio v-model="source" label="编目系统">编目系统</el-radio>
             <el-radio v-model="source" label="文本抽取">文本抽取</el-radio>
+            <el-radio v-model="source" label="爬虫">爬虫</el-radio>
             <el-radio v-model="source" label="">默认</el-radio>
           </div>
           <el-tooltip class="item" effect="dark" content="重置搜索条件" placement="top">
@@ -252,6 +252,8 @@
           <el-tooltip class="item" effect="dark" content="选取符合当前条件的所有三元组" placement="top">
             <el-button type="success" style="margin-top: 10px;">全选</el-button>
           </el-tooltip>
+          <el-button type="primary" style="margin-top:10px;margin-bottom: 10px;" @click="synchronizationDisplay=true">同步
+          </el-button>
         </div>
         <keep-alive>
           <el-table
