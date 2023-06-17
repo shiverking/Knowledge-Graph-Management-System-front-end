@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName" >
-    <el-tab-pane label="飞机数据" name="first">
+<!--    <el-tab-pane label="飞机数据" name="first">-->
   <div>
     <div>
       <br>
@@ -29,9 +29,12 @@
     <el-table
         :data="tableData"
         border
-        style="width: 90%">
+        style="width: 80%">
       <el-table-column
-   >
+          fixed
+          prop="id"
+          label="飞机编号"
+          width="50">
       </el-table-column>
       <el-table-column
           prop="aircraft_name"
@@ -110,7 +113,6 @@
           label="类型"
           width="50">
       </el-table-column>
-
       <el-table-column
           fixed="right"
           label="操作"
@@ -131,175 +133,175 @@
     </el-pagination>
   </div>
     </el-tab-pane>
-    <el-tab-pane label="数据导入" name="second">
-      <div>
-        <div>
-          <br>
-          <el-row :gutter="20">
-            <el-col :span="6"><div class="grid-content bg-purple">
+<!--    <el-tab-pane label="数据导入" name="second">-->
+<!--      <div>-->
+<!--        <div>-->
+<!--          <br>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6"><div class="grid-content bg-purple">-->
 
-                  <el-upload
-                      class="upload-demo"
-                      ref="upload"
-                      action
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
-                      :on-change="handle"
-                      :file-list="fileList"
-                      :show-file-list="false"
-                      accept=".xls,.xlsx"
-                      :auto-upload="false">
-                    <el-button slot="trigger"  type="primary" >导入文件</el-button>
+<!--                  <el-upload-->
+<!--                      class="upload-demo"-->
+<!--                      ref="upload"-->
+<!--                      action-->
+<!--                      :on-preview="handlePreview"-->
+<!--                      :on-remove="handleRemove"-->
+<!--                      :on-change="handle"-->
+<!--                      :file-list="fileList"-->
+<!--                      :show-file-list="false"-->
+<!--                      accept=".xls,.xlsx"-->
+<!--                      :auto-upload="false">-->
+<!--                    <el-button slot="trigger"  type="primary" >导入文件</el-button>-->
 
-                    <!--        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>-->
-                    <!--                  <div slot="tip" class="el-upload__tip">只能上传excel文件，且不超过500kb</div>-->
-                  </el-upload>
-            </div></el-col>
-            <el-col :span="6" ><div class="grid-content bg-purple">
-              <el-button  slot="trigger" type="primary" @click="dialogFormVisible = true" >数据清洗</el-button>
-              <el-button slot="trigger"  type="primary" @click="submit" :disabled="disabled">导出文件</el-button>
-              <el-button slot="trigger"  type="primary" @click="submit" :disabled="disabled">转换为候选三元组</el-button>
-<!--              <el-button  slot="trigger" type="primary" @click="dialogFormVisible1 = true" >导入数据库</el-button>-->
-            </div></el-col>
-          </el-row>
-<!--          <el-dialog title="文件导入" :visible.sync="fileimportVisible">-->
+<!--                    &lt;!&ndash;        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                  <div slot="tip" class="el-upload__tip">只能上传excel文件，且不超过500kb</div>&ndash;&gt;-->
+<!--                  </el-upload>-->
+<!--            </div></el-col>-->
+<!--            <el-col :span="6" ><div class="grid-content bg-purple">-->
+<!--              <el-button  slot="trigger" type="primary" @click="dialogFormVisible = true" >数据清洗</el-button>-->
+<!--              <el-button slot="trigger"  type="primary" @click="submit" :disabled="disabled">导出文件</el-button>-->
+<!--              <el-button slot="trigger"  type="primary" @click="submit" :disabled="disabled">转换为候选三元组</el-button>-->
+<!--&lt;!&ndash;              <el-button  slot="trigger" type="primary" @click="dialogFormVisible1 = true" >导入数据库</el-button>&ndash;&gt;-->
+<!--            </div></el-col>-->
+<!--          </el-row>-->
+<!--&lt;!&ndash;          <el-dialog title="文件导入" :visible.sync="fileimportVisible">&ndash;&gt;-->
 
-<!--            <el-scrollbar style="height: 40ch">-->
-<!--              <div class="content-box">-->
+<!--&lt;!&ndash;            <el-scrollbar style="height: 40ch">&ndash;&gt;-->
+<!--&lt;!&ndash;              <div class="content-box">&ndash;&gt;-->
 
+<!--&lt;!&ndash;            <el-form :model="form">&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="文件导入：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-upload&ndash;&gt;-->
+<!--&lt;!&ndash;                    class="upload-demo"&ndash;&gt;-->
+<!--&lt;!&ndash;                    ref="upload"&ndash;&gt;-->
+<!--&lt;!&ndash;                    action&ndash;&gt;-->
+<!--&lt;!&ndash;                    :on-preview="handlePreview"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :on-remove="handleRemove"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :on-change="handle"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :file-list="fileList"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :show-file-list="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                    accept=".xls,.xlsx"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :auto-upload="false">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <el-button slot="trigger"  type="primary" >选取文件</el-button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                  &lt;!&ndash;        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                  <div slot="tip" class="el-upload__tip">只能上传excel文件，且不超过500kb</div>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                </el-upload>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div slot="tip" class="el-upload__tip">将飞机字段与文件中某列对应</div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="飞机名称：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="图片：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="简介：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="首飞时间：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="研发公司：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="引擎数量：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="裁员：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="长度：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="翼展：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="高度：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="引擎：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="最快速度：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="空重：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-form-item label="类型：" :label-width="formLabelWidth">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-select v-model="form.excvalue" ></el-select>&ndash;&gt;-->
+<!--&lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            </el-form>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div slot="footer" class="dialog-footer">&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-button @click="fileimportVisible = false">取 消</el-button>&ndash;&gt;-->
+<!--&lt;!&ndash;              <el-button type="primary" @click="dataclean" >确 定</el-button>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </el-scrollbar>&ndash;&gt;-->
+<!--&lt;!&ndash;          </el-dialog>&ndash;&gt;-->
+
+
+<!--          <el-dialog title="数据清洗" :visible.sync="dialogFormVisible">-->
 <!--            <el-form :model="form">-->
-<!--              <el-form-item label="文件导入：" :label-width="formLabelWidth">-->
-<!--                <el-upload-->
-<!--                    class="upload-demo"-->
-<!--                    ref="upload"-->
-<!--                    action-->
-<!--                    :on-preview="handlePreview"-->
-<!--                    :on-remove="handleRemove"-->
-<!--                    :on-change="handle"-->
-<!--                    :file-list="fileList"-->
-<!--                    :show-file-list="false"-->
-<!--                    accept=".xls,.xlsx"-->
-<!--                    :auto-upload="false">-->
-<!--                  <el-button slot="trigger"  type="primary" >选取文件</el-button>-->
-
-<!--                  &lt;!&ndash;        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <div slot="tip" class="el-upload__tip">只能上传excel文件，且不超过500kb</div>&ndash;&gt;-->
-<!--                </el-upload>-->
-<!--                <div slot="tip" class="el-upload__tip">将飞机字段与文件中某列对应</div>-->
+<!--              <el-form-item label="空值处理：" :label-width="formLabelWidth">-->
+<!--                <el-select v-model="form.nullvalue" >-->
+<!--                  <el-option label="不做处理" value="shanghai"></el-option>-->
+<!--                  <el-option label="删除该行" value="beijing"></el-option>-->
+<!--                  <el-option label="填入最大值" value="beijing"></el-option>-->
+<!--                  <el-option label="填入最小值" value="beijing"></el-option>-->
+<!--                  <el-option label="填入均值" value="beijing"></el-option>-->
+<!--                </el-select>-->
 <!--              </el-form-item>-->
-<!--              <el-form-item label="飞机名称：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
+<!--              <el-form-item label="异常值处理：" :label-width="formLabelWidth">-->
+<!--                <el-select v-model="form.excvalue" >-->
+<!--                  <el-option label="置空" value="shanghai"></el-option>-->
+<!--                  <el-option label="删除该行" value="shanghai"></el-option>-->
+<!--                  <el-option label="填入最大值" value="beijing"></el-option>-->
+<!--                  <el-option label="填入最小值" value="beijing"></el-option>-->
+<!--                  <el-option label="填入均值" value="beijing"></el-option>-->
+<!--                </el-select>-->
 <!--              </el-form-item>-->
-<!--              <el-form-item label="图片：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="简介：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="首飞时间：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="研发公司：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="引擎数量：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="裁员：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="长度：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="翼展：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="高度：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="引擎：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="最快速度：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="空重：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="类型：" :label-width="formLabelWidth">-->
-<!--                <el-select v-model="form.excvalue" ></el-select>-->
-<!--              </el-form-item>-->
-
 <!--            </el-form>-->
 <!--            <div slot="footer" class="dialog-footer">-->
-<!--              <el-button @click="fileimportVisible = false">取 消</el-button>-->
+<!--              <el-button @click="dialogFormVisible = false">取 消</el-button>-->
 <!--              <el-button type="primary" @click="dataclean" >确 定</el-button>-->
 <!--            </div>-->
-
-
-<!--              </div>-->
-<!--            </el-scrollbar>-->
 <!--          </el-dialog>-->
+<!--        </div>-->
+<!--        <el-table-->
+<!--            v-show="show"-->
+<!--            :data="tableData1.slice((currentPage1-1)*2,currentPage1*2)" stripe style="width: 100%">-->
+<!--            border-->
+<!--            style="width: 90%"-->
+<!--          @selection-change ="selectionChange">-->
+<!--          <el-table-column-->
+<!--              type="selection"-->
+<!--              label="编号"-->
+<!--              align="center">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              v-for ="(value,key,index) in tableData1[0]"-->
+<!--              :key="index"-->
+<!--              :prop="key"-->
+<!--              :label="key"-->
+<!--          >-->
+<!--          </el-table-column>-->
 
+<!--        </el-table>-->
+<!--        <el-pagination-->
+<!--            background-->
+<!--            layout="prev, pager, next"-->
+<!--            :page-size="2"-->
+<!--            :total="tableData1.length"-->
+<!--            :current-page.sync="currentPage1"-->
+<!--        >-->
+<!--        </el-pagination>-->
 
-          <el-dialog title="数据清洗" :visible.sync="dialogFormVisible">
-            <el-form :model="form">
-              <el-form-item label="空值处理：" :label-width="formLabelWidth">
-                <el-select v-model="form.nullvalue" >
-                  <el-option label="不做处理" value="shanghai"></el-option>
-                  <el-option label="删除该行" value="beijing"></el-option>
-                  <el-option label="填入最大值" value="beijing"></el-option>
-                  <el-option label="填入最小值" value="beijing"></el-option>
-                  <el-option label="填入均值" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="异常值处理：" :label-width="formLabelWidth">
-                <el-select v-model="form.excvalue" >
-                  <el-option label="置空" value="shanghai"></el-option>
-                  <el-option label="删除该行" value="shanghai"></el-option>
-                  <el-option label="填入最大值" value="beijing"></el-option>
-                  <el-option label="填入最小值" value="beijing"></el-option>
-                  <el-option label="填入均值" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dataclean" >确 定</el-button>
-            </div>
-          </el-dialog>
-        </div>
-        <el-table
-            v-show="show"
-            :data="tableData1.slice((currentPage1-1)*2,currentPage1*2)" stripe style="width: 100%">
-            border
-            style="width: 90%"
-          @selection-change ="selectionChange">
-          <el-table-column
-              type="selection"
-              label="编号"
-              align="center">
-          </el-table-column>
-          <el-table-column
-              v-for ="(value,key,index) in tableData1[0]"
-              :key="index"
-              :prop="key"
-              :label="key"
-          >
-          </el-table-column>
-
-        </el-table>
-        <el-pagination
-            background
-            layout="prev, pager, next"
-            :page-size="2"
-            :total="tableData1.length"
-            :current-page.sync="currentPage1"
-        >
-        </el-pagination>
-
-      </div>
-    </el-tab-pane>
+<!--      </div>-->
+<!--    </el-tab-pane>-->
   </el-tabs>
 </template>
 <style>

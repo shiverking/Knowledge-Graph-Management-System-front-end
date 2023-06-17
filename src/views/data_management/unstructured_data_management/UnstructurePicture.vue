@@ -38,14 +38,14 @@
 <!--          </svg-icon>-->
           <i class="el-icon-s-operation" style="color: white"></i>
         </a>
-        <a title="更改类别" @click="openAlbum()">
-<!--          <svg-icon icon-file-name="add" />-->
-          <i class="el-icon-s-marketing" style="color: white"></i>
-        </a>
-        <a title="下载图片" @click="downloadImage()">
-<!--          <svg-icon icon-file-name="download" />-->
-          <i class="el-icon-download" style="color: white"></i>
-        </a>
+<!--        <a title="更改类别" @click="openAlbum()">-->
+<!--&lt;!&ndash;          <svg-icon icon-file-name="add" />&ndash;&gt;-->
+<!--          <i class="el-icon-s-marketing" style="color: white"></i>-->
+<!--        </a>-->
+<!--        <a title="下载图片" @click="downloadImage()">-->
+<!--&lt;!&ndash;          <svg-icon icon-file-name="download" />&ndash;&gt;-->
+<!--          <i class="el-icon-download" style="color: white"></i>-->
+<!--        </a>-->
         <a title="删除图片" @click="deleteImage()">
 <!--          <svg-icon icon-file-name="delete" />-->
           <i class="el-icon-delete" style="color: white"></i>
