@@ -43,8 +43,7 @@
       <!--数据流-->
       <el-card class="box-card card" style="height:400px;" id="data_flow">
       </el-card>
-      <div id = "limit_preview" style="height:600px;width: auto;">
-      </div>
+      <component :is="preview"></component>
     </div>
     <div class="area-right">
       <!--更新记录-->
@@ -68,12 +67,18 @@
     </div>
   </div>
 </template>
+
 <script>
+import axios from "axios";
 import * as echarts from 'echarts';
-import graph from "../../../data/mainkg_example.json";
+import Preview from "../../../components/core_kg/Preview";
+// import graph from "../../../data/mainkg_example.json";
 import moment from "moment";
 export default {
   name: "core_kg_display",
+  components:{
+    Preview,
+  },
   data(){
     return{
        nodeNum:"",
@@ -87,29 +92,31 @@ export default {
         versionCurrentPage:1,
         versionPageSize:7,
         versionTotal:0,
-      //主图谱-更新记录
-      activities: [{
-        content: '版本更新V1.0.7',
-        timestamp: '2022-07-23'
-      }, {
-        content: '版本更新V1.0.6',
-        timestamp: '2022-07-01'
-      }, {
-        content: '版本更新V1.0.5',
-        timestamp: '2022-06-14'
-      }, {
-        content: '版本更新V1.0.4',
-        timestamp: '2022-05-30'
-      }, {
-        content: '版本更新V1.0.3',
-        timestamp: '2022-05-07'
-      }, {
-        content: '版本更新V1.0.2',
-        timestamp: '2022-04-18'
-      }, {
-        content: '版本更新V1.0.1',
-        timestamp: '2022-03-11'
-      }],
+        //主图谱-更新记录
+        activities: [{
+          content: '版本更新V1.0.7',
+          timestamp: '2022-07-23'
+        }, {
+          content: '版本更新V1.0.6',
+          timestamp: '2022-07-01'
+        }, {
+          content: '版本更新V1.0.5',
+          timestamp: '2022-06-14'
+        }, {
+          content: '版本更新V1.0.4',
+          timestamp: '2022-05-30'
+        }, {
+          content: '版本更新V1.0.3',
+          timestamp: '2022-05-07'
+        }, {
+          content: '版本更新V1.0.2',
+          timestamp: '2022-04-18'
+        }, {
+          content: '版本更新V1.0.1',
+          timestamp: '2022-03-11'
+        }],
+        viz: {}, //定义一个viz对象
+        preview:Preview,
     }
   },
   methods:{
@@ -170,65 +177,65 @@ export default {
       option && myChart.setOption(option);
     },
     //绘制图谱样例
-    draw_kg_example(){
-      let chartDom_KGPreview = document.getElementById('limit_preview');
-      let myChart_KGPreivew = echarts.init(chartDom_KGPreview);
-      let option;
-
-      myChart_KGPreivew.showLoading();
-      var graph  = require('../../../data/mainkg_example.json')
-      myChart_KGPreivew.hideLoading();
-      graph.nodes.forEach(function (node) {
-        node.label = {
-          show: node.symbolSize > 30
-        };
-      });
-      option = {
-        title: {
-          text: '主图谱预览',
-          subtext: '部分节点',
-          top: 'top',
-          left: 'left'
-        },
-        tooltip: {},
-        legend: [
-          {
-            // selectedMode: 'single',
-            data: graph.categories.map(function (a) {
-              return a.name;
-            })
-          }
-        ],
-        animationDuration: 1500,
-        animationEasingUpdate: 'quinticInOut',
-        series: [
-          {
-            name: 'Les Miserables',
-            type: 'graph',
-            layout: 'none',
-            data: graph.nodes,
-            links: graph.links,
-            categories: graph.categories,
-            roam: true,
-            label: {
-              position: 'right',
-              formatter: '{b}'
-            },
-            lineStyle: {
-              color: 'source',
-              curveness: 0.3
-            },
-            emphasis: {
-              focus: 'adjacency',
-              lineStyle: {
-                width: 10
-              }
-            }
-          }
-        ]
-      };
-      myChart_KGPreivew.setOption(option);
-    },
+    // draw_kg_example(){
+    //   let chartDom_KGPreview = document.getElementById('limit_preview');
+    //   let myChart_KGPreivew = echarts.init(chartDom_KGPreview);
+    //   let option;
+    //
+    //   myChart_KGPreivew.showLoading();
+    //   var graph  = require('../../../data/mainkg_example.json')
+    //   myChart_KGPreivew.hideLoading();
+    //   graph.nodes.forEach(function (node) {
+    //     node.label = {
+    //       show: node.symbolSize > 30
+    //     };
+    //   });
+    //   option = {
+    //     title: {
+    //       text: '主图谱预览',
+    //       subtext: '部分节点',
+    //       top: 'top',
+    //       left: 'left'
+    //     },
+    //     tooltip: {},
+    //     legend: [
+    //       {
+    //         // selectedMode: 'single',
+    //         data: graph.categories.map(function (a) {
+    //           return a.name;
+    //         })
+    //       }
+    //     ],
+    //     animationDuration: 1500,
+    //     animationEasingUpdate: 'quinticInOut',
+    //     series: [
+    //       {
+    //         name: 'Les Miserables',
+    //         type: 'graph',
+    //         layout: 'none',
+    //         data: graph.nodes,
+    //         links: graph.links,
+    //         categories: graph.categories,
+    //         roam: true,
+    //         label: {
+    //           position: 'right',
+    //           formatter: '{b}'
+    //         },
+    //         lineStyle: {
+    //           color: 'source',
+    //           curveness: 0.3
+    //         },
+    //         emphasis: {
+    //           focus: 'adjacency',
+    //           lineStyle: {
+    //             width: 10
+    //           }
+    //         }
+    //       }
+    //     ]
+    //   };
+    //   myChart_KGPreivew.setOption(option);
+    // },
     getBrefInformation(){
       //axios请求
       axios.post('/api/coredata/briefInformation',{})
@@ -294,7 +301,8 @@ export default {
   },
   mounted() {
     this.draw_dataflow();
-    this.draw_kg_example();
+    // this.draw();
+    // this.draw_kg_example();
     //获取简要信息
     this.getBrefInformation();
     //时间降序获取版本列表
@@ -302,7 +310,39 @@ export default {
   }
 }
 </script>
-
+<!--<script src="src/plugins/neovis.js"></script>-->
+<!--<script src="src/plugins/jquery.min.js"></script>-->
+<!--<script type="text/javascript">-->
+<!--var viz;-->
+<!--$().ready(function draw() {-->
+<!--  console.log("开始执行draw")-->
+<!--  var config = {-->
+<!--    containerId: "viz",-->
+<!--    neo4j: {-->
+<!--      serverUrl: "bolt://localhost:7687",-->
+<!--      serverUser: "neo4j",-->
+<!--      serverPassword: "123456"-->
+<!--    },-->
+<!--    labels: {-->
+<!--      all:{-->
+<!--        caption: "name", //节点显示的内容-->
+<!--        size:"pagerank",-->
+<!--        community:"community"-->
+<!--      }-->
+<!--    },-->
+<!--    relationships: {-->
+<!--      all: {-->
+<!--        caption:true,-->
+<!--        thickness: 'weight',-->
+<!--      },-->
+<!--    },-->
+<!--    initialCypher: "match (n)-[r]->(m) return n,r,m"-->
+<!--  };-->
+<!--  viz = new NeoVis.default(config);-->
+<!--  viz.render();-->
+<!--  console.log(viz);-->
+<!--})-->
+<!--</script>-->
 <style scoped>
 .area-left{
   width:70%;
