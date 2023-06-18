@@ -163,7 +163,7 @@
           <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
         </el-popover>
         <keep-alive>
-          <el-table :data="tableData1" border :row-class-name="tableRowClassName" style="width: 100%; margin-top:10px">
+          <el-table :v-loading="loading" :data="tableData1" border :row-class-name="tableRowClassName" style="width: 100%; margin-top:10px">
             <el-table-column label="头实体" width="320">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head }}</span>
@@ -285,7 +285,7 @@
             </el-form>
 
 
-            <p style="margin-bottom: 10px;"><b>潜在的正确元组:</b></p>
+            <!-- <p style="margin-bottom: 10px;"><b>潜在的正确元组:</b></p>
             <el-table :data="single_relation_error_from_tmp" border style="width: 100%">
               <el-table-column label="头实体">
                 <template slot-scope="scope">
@@ -309,7 +309,7 @@
                     <el-button type="text" @click="link_prediction_from_integrity(scope.row)">应用</el-button>
                   </template>
               </el-table-column> 
-            </el-table>
+            </el-table> -->
 
 
           </el-card>
@@ -569,6 +569,7 @@
     data() {
       return {
         handoff:false,
+        loading: true,
         isJoin: false, //是否应用链接异常修改的flag
         activeName: 'first', //基于本体or基于算法选项卡flag
         abnormal_from_kgist:[], //kgist（算法）检测到的异常list
