@@ -13,20 +13,20 @@
                   tooltip-effect="dark"
                   style="width: 100%"
                   @selection-change="handleSelectionChange">
-                <el-table-column
-                    type="selection"
-                    width="55">
-                </el-table-column>
+<!--                <el-table-column-->
+<!--                    type="selection"-->
+<!--                    width="55">-->
+<!--                </el-table-column>-->
                 <el-table-column
                     prop="name"
                     label="候选本体名称"
                     width="200">
                 </el-table-column>
-                <el-table-column
-                    prop="createTime"
-                    label="创建时间"
-                    width="200">
-                </el-table-column>
+<!--                <el-table-column-->
+<!--                    prop="createTime"-->
+<!--                    label="创建时间"-->
+<!--                    width="200">-->
+<!--                </el-table-column>-->
                 <el-table-column
                     prop="creatorName"
                     label="创建者"
