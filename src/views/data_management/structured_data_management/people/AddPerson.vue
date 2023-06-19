@@ -231,7 +231,7 @@ export default {
                 _this.$alert('《' + _this.form.person.name_cn + '》添加成功！', '消息', {
                   confirmButtonText: '确定',
                   callback: action => {
-                    _this.$router.push('/data/people/person')
+                    _this.$router.push('/data/structure/people/person')
                   }
                 })
           })

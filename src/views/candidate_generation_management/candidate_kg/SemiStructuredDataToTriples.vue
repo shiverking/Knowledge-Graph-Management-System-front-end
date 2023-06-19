@@ -19,7 +19,7 @@
         <el-button size="mini" type="text" @click="confirmExportVisible = false">取消</el-button>
         <el-button type="success" size="mini" @click="confirmExportVisible = false;confirmExport()">确定</el-button>
       </div>
-<!--      <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;" slot="reference">结果导出</el-button>-->
+      <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;" slot="reference">结果导出</el-button>
     </el-popover>
 <!--    <el-button  plain type="danger"  style="margin:5px;" @click="isStop=true">停止抽取</el-button>-->
     <el-progress v-show="progressBarVisible" :percentage="progressBarValue" :format="format"></el-progress>
@@ -90,6 +90,20 @@
           width="100px"
           :show-overflow-tooltip="true"
       >
+      </el-table-column>
+      <el-table-column
+          label="状态"
+          width="100px"
+          :filters="[{ text: '已抽取', value: '已抽取' }, { text: '未抽取', value: '未抽取' }]"
+          :filter-method="filterStatus"
+          show-overflow-tooltip>
+        <template slot-scope="scope">
+          <el-image v-if="scope.row.status=='未抽取'" style="width: 25px; height: 25px;overflow: initial"
+                    :src="discard" ></el-image>
+          <el-image v-if="scope.row.status=='已抽取'" style="width: 25px; height: 25px;overflow: initial"
+                    :src="success" ></el-image>
+          {{ scope.row.status}}
+        </template>
       </el-table-column>
       <el-table-column
           prop="max_speed"
@@ -280,11 +294,13 @@ export default {
       tranlate_options: [{
         value: 'N',
         label: '抽取'
-      },
-        {
-          value: 'Y',
-          label: '抽取+翻译'
-        }],
+      }
+      // },
+      //   {
+      //     value: 'Y',
+      //     label: '抽取+翻译'
+      //   }
+      ],
       tranlate_value:'',
       progressBarVisible:false,
       //前端分页
@@ -343,12 +359,10 @@ export default {
       var sum = this.multipleSelection.length;
       var counter = 0
       for (let i = 0; i < sum-1; i++) {
-        setTimeout(() => {
           counter++
           this.progressBarValue = Math.floor((counter/sum)*100);
-        }, 1000 )
-      }
-      this.progressBarValue = Math.floor((counter/sum)*100);
+        }
+      // this.progressBarValue = Math.floor((counter/sum)*100);
       const _this =this
       // const translate = 'N';
       const data = {
@@ -356,14 +370,14 @@ export default {
         "translate": _this.tranlate_value
       };
       _this.axios.post('/api/semistructure/converttotriples',data).then(function(resp){
-        _this.progressBarValue = Math.floor(100);
+        _this.progressBarValue = 100;
         console.log(resp)
         _this.extract_table = resp.data
         _this.getExtractTablePageList()
         _this.extractTabletotal=resp.data.length
         // _this.extractTablepagesize=resp.data.data.length
         _this.$message({
-          message: '恭喜你，这是一条成功消息',
+          message: '抽取成功',
           type: 'success'
         });
       })
@@ -568,10 +582,10 @@ export default {
       }
       //传给后端
       this.tableLoading = true;
-      axios.post('/api/candidate/saveExtraction', {
+      axios.post('/api/candidate/savesemidataExtraction', {
         // data: this.extract_data,
         data:this.extract_table,
-        ids :this.extract_ids,
+        // ids :this.extract_ids,
       })
           .then((response) => {
             if (response.status == 200) {
@@ -583,7 +597,7 @@ export default {
               //清空选项
               this.$refs.multipleTable.clearSelection();
               //重新加载数据
-              this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+              // this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
             }
           })
           .catch(function (error) {

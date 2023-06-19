@@ -2,31 +2,8 @@
   <div id="main" class="canvas_main">
     <div id="container" class="canvas_container" ></div>
     <div class="kg_form">
-      <div class="div_in-lineblock_left">
-        <el-input placeholder="请输入三元组" v-model="search">
-          <i slot="prefix" class="el-input__icon el-icon-search"></i>
-        </el-input>
-      </div>
+
       <div class="div_in-lineblock_right">
-        <el-tooltip class="item" effect="dark" content="重新载入图谱" placement="top-start">
-          <el-button type="primary" icon="el-icon-refresh-left" circle class="operation_button"></el-button>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="保存图谱" placement="top-start">
-          <el-popover
-              placement="top"
-              width="190"
-              v-model="confirmVisible">
-            <p>是否保存当前更改？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="confirmVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="confirmVisible = false">确定</el-button>
-            </div>
-          <el-button type="success" icon="el-icon-check" circle class="operation_button" slot="reference"></el-button>
-          </el-popover>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="批量处理" placement="top-start">
-          <el-button type="warning" icon="el-icon-edit-outline" circle class="operation_button" @click="batchProcessing = true"></el-button>
-        </el-tooltip>
         <el-tooltip class="item" effect="dark" content="删除该图谱" placement="top-start">
           <el-popover
               placement="top"
@@ -85,6 +62,7 @@
       </el-dialog>
       <el-table
           :data="triplesPageList"
+          max-height="800"
       >
         <el-table-column
             label="源实体"
@@ -105,13 +83,6 @@
             prop="name">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.tail }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="操作"
-            prop="name">
-          <template slot-scope="scope">
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -137,14 +108,14 @@
   width: 60%;
 }
 .canvas_main {
-  height: 700px;
+  height: calc(80vh) !important;
   width: auto;
 }
 
 .canvas_container {
   display: inline-block;
   width: 69%;
-  height:600px;
+  height:calc(80vh) !important;
   background-color: rgba(251, 242, 250, 0.46);
   margin-right: 10px;
 }
@@ -159,7 +130,8 @@
 }
 </style>
 <script>
-import * as G6 from '../../plugins/g6.min.js';
+import G6 from '@antv/g6'
+// import * as G6 from '../../plugins/g6.min.js';
 import $ from '../../plugins/jquery.min.js';
 import insertCss from 'insert-css';
 
@@ -222,6 +194,89 @@ export default {
     },
     //生成节点和边
     generateNodesAndEdges(id){
+      const Colors = { 作战中队: '#25a2ea', 海军将领: '#e5a419', 州: '#1ace23', 地区: '#1ace23'
+        ,国家:'#dd4811',制造厂:'#9018e0',航母打击群:'#e018d3',舰载机连队:'#e018d3',驱逐舰:'#ecf934'
+        ,驱逐舰中队:"#ecf934",巡洋舰:'#ecf934',航空母舰:"#f9d34a"};
+      const typeConfigs = {
+        '作战中队': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#25a2ea'
+          }
+        },
+        '海军将领': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#e5a419'
+          }
+        },
+        '州': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#1ace23'
+          }
+        },
+        '地区': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#1ace23'
+          }
+        },
+        '制造厂': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#9018e0'
+          }
+        },
+        '航母打击群': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#e018d3'
+          }
+        },
+        '舰载机连队': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#e018d3'
+          }
+        },
+        '驱逐舰': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#ecf934'
+          }
+        },
+        '驱逐舰中队': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#ecf934'
+          }
+        },
+        '巡洋舰': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#ecf934'
+          }
+        },
+        '航空母舰': {
+          type: 'circle',
+          size: 20,
+          style: {
+            fill: '#f9d34a'
+          }
+        },
+      }
+
       //axios请求
       axios.request({
         method:"POST",
@@ -236,16 +291,18 @@ export default {
           var nodeCounter = 0;
           for(var i=0;i<list.length;i++){
               var head = list[i].head;
+              var headCategory = list[i].headCategory;
               var tail = list[i].tail;
+              var tailCategory = list[i].tailCategory;
               var relation = list[i].relation;
               if(!map.has(head)){
                 map.set(head,"node"+nodeCounter)
-                this.nodes.push({id:"node"+nodeCounter ,label:head,size:30})
+                this.nodes.push({id:"node"+nodeCounter,label:head,size:30,category:headCategory})
                 nodeCounter++;
               }
               if(!map.has(tail)){
                 map.set(tail,"node"+nodeCounter)
-                this.nodes.push({id:"node"+nodeCounter ,label:tail,size:30})
+                this.nodes.push({id:"node"+nodeCounter ,label:tail,size:30,category:tailCategory})
                 nodeCounter++;
               }
               let from = map.get(head)
@@ -292,11 +349,84 @@ export default {
               return outDiv;
             },
           });
-          // const minimap = new G6.Minimap({
-          //   size: [200, 200],
-          //   className: 'minimap',
-          //   type: 'delegate',
-          // });
+          const legendData = {
+            nodes: [{
+              id: '作战中队',
+              label: '作战中队',
+              ...typeConfigs['作战中队']
+            }, {
+              id: '海军将领',
+              label: '海军将领',
+              ...typeConfigs['海军将领']
+            }, {
+              id: '州',
+              label: '州',
+              ...typeConfigs['州']
+            }, {
+              id: '国家',
+              label: '国家',
+              ...typeConfigs['国家']
+            }, {
+              id: '地区',
+              label: '地区',
+              ...typeConfigs['地区']
+            }, {
+              id: '制造厂',
+              label: '制造厂',
+              ...typeConfigs['制造厂']
+            }, {
+              id: '航母打击群',
+              label: '航母打击群',
+              ...typeConfigs['航母打击群']
+            }, {
+              id: '舰载机联队',
+              label: '舰载机联队',
+              ...typeConfigs['舰载机联队']
+            }, {
+              id: '驱逐舰',
+              label: '驱逐舰',
+              ...typeConfigs['驱逐舰']
+            }, {
+              id: '驱逐舰中队',
+              label: '驱逐舰中队',
+              ...typeConfigs['驱逐舰中队']
+            }, {
+              id: '巡洋舰',
+              label: '巡洋舰',
+              ...typeConfigs['巡洋舰']
+            }, {
+              id: '航空母舰',
+              label: '航空母舰',
+              ...typeConfigs['航空母舰']
+            }]
+          }
+          const legend = new G6.Legend({
+            data: legendData,
+            align: 'center',
+            layout: 'horizontal', // vertical
+            position: 'top-left',
+            vertiSep: 12,
+            horiSep: 24,
+            offsetY: -24,
+            padding: [4, 16, 8, 16],
+            containerStyle: {
+              fill: '#ccc',
+              lineWidth: 1
+            },
+            title: 'Legend',
+            titleConfig: {
+              position: 'center',
+              offsetX: 0,
+              offsetY: 12,
+            },
+            filter: {
+              enable: true,
+              multiple: true,
+              trigger: 'click',
+              graphActiveState: 'activeByLegend',
+              graphInactiveState: 'inactiveByLegend',
+            }
+          });
           const graph = new G6.Graph({
             container: 'container',
             width,
@@ -353,7 +483,7 @@ export default {
               default: ['drag-canvas','zoom-canvas', 'drag-node','activate-relations'],
             },
             //配置插件
-            plugins: [tooltip], // 将 minimap 实例配置到图上
+            plugins: [tooltip,legend],//配置小工具
           });
           const nodes = this.nodes;
           //移入节点高亮
@@ -398,6 +528,13 @@ export default {
           });
           graph.on('node:mouseleave', clearAllStats);
           graph.on('canvas:click', clearAllStats);
+          nodes.forEach((node) =>{
+            node.color =Colors[node.category];
+            node.style = {
+              fill: Colors[node.category],
+              lineWidth: 0,
+            };
+          }),
           graph.data({
             nodes,
             edges: this.edges.map(function (edge, i) {

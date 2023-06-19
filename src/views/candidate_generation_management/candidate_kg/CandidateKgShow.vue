@@ -4,28 +4,9 @@
       <el-tab-pane label="候选图谱列表"  name="overview">
         <el-card class="box-card" shadow="never">
           <div class="block">
-            <!--时间选择器-->
-            <el-date-picker
-                v-model="value1"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right">
-            </el-date-picker>
-            <el-select v-model="value" placeholder="请选择状态" style="margin-left:10px">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-            <el-button type="primary" style="margin-top: 10px;margin-left: 10px" @click="load_all()" >查询</el-button>
             <el-switch
                 v-model="switchValue"
-                style="float: right;margin-top:20px;"
+                style="float: left;margin-top:10px;margin-bottom:20px;"
                 active-text="原始图谱"
                 inactive-text="融合图谱"
                 @change="onSwitchChange">
@@ -243,12 +224,23 @@ export default {
     candidateKgHandleSizeChange(val) {
       //修改当前分页大小
       this.candidateKgPageSize= val;
-      //重新请求数据
-      this.get_candidate_kgs(this.candidateKgCurrentPage,val)
+      if(this.switchValue==false) {
+        //重新请求数据
+        this.get_candidate_kgs(this.candidateKgCurrentPage, val)
+      }
+      else{
+        this.get_old_candidate_kgs(val,this.candidateKgPageSize)
+      }
     },
     //翻页动作
     candidateKgHandleCurrentChange(val) {
-      this.get_candidate_kgs(val,this.candidateKgPageSize)
+      //没有切换到原始图谱
+      if(this.switchValue==false){
+        this.get_candidate_kgs(val,this.candidateKgPageSize)
+      }
+      else{
+        this.get_old_candidate_kgs(val,this.candidateKgPageSize)
+      }
     },
     //向后端请求候选图谱数据
     get_candidate_kgs(num, limit) {
