@@ -173,12 +173,12 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="批次大小" style="width:200px; margin-bottom:0px;">
-                    <el-input v-model="form.batch"></el-input>
+                    <el-input disabled v-model="form.batch"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="迭代次数" style="width:200px; margin-left:30px;">
-                    <el-input v-model="form.epoch"></el-input>
+                    <el-input disabled v-model="form.epoch"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -349,6 +349,15 @@
           </div>
           <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
         </el-popover>
+        <el-button style="margin-left: 10px;" @click="dialogTableVisible = true">查看规则</el-button>
+        <el-dialog title="已设置规则" :visible.sync="dialogTableVisible">
+          <el-table :data="gridData" border>
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column property="rule" label="规则描述"></el-table-column>
+          </el-table>
+          <el-pagination background layout="prev, pager, next" style="margin-top: 10px;" :total="2">
+          </el-pagination>
+        </el-dialog>
         <keep-alive>
           <el-table :data="tableData5" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
             <!-- <el-table-column
@@ -484,6 +493,11 @@
     },
     data() {
       return {
+        gridData: [{
+          rule: '遍历核心图谱，为“属于某国家的地区”和“对应国家”之间添加“隶属”链接。',
+        },{
+          rule: '遍历核心图谱，为“只有地区信息的人”和“地区的对应国家”之间添加“国籍”链接。',
+        }],
         missing_tuple: [],
         complete_label_graph: [],
         tuple_integrity_table:[],
@@ -566,11 +580,11 @@
         selectedDatasets:[],
         resultAfterTrainNewModel: '',
         form: {
-          name: 'ConvE_2022_11_16',
+          name: 'ConvE',
           model: 'ConvE',
           path:'核心图谱全部三元组',
           batch:'128',
-          epoch: '600'
+          epoch: '50'
         },
         formLabelWidth: '120px', //表单样式
         node_count: 0,
@@ -937,12 +951,22 @@
           .then((response)=>{
             if (response.status == 200) {
               this.learning_finish(this.form['name'])
-              const h = this.$createElement;
-              this.$notify({
-                title: '训练完毕',
-                message: h('i', { style: 'color: teal'}, '训练成功，模型已保存！'),
-                offset: 100
-              });
+              var isNull = response.data.data;
+              if(isNull){
+                const h = this.$createElement;
+                this.$notify({
+                  title: '训练完毕',
+                  message: h('i', { style: 'color: teal'}, '训练成功，模型已保存！'),
+                  offset: 100
+                });
+              }else{
+                const h = this.$createElement;
+                this.$notify({
+                  title: '训练失败',
+                  message: h('i', { style: 'color: teal'}, '图谱为空，没有模型生成！'),
+                  offset: 100
+                });
+              }
               }
           })
           .catch(function (error) {
