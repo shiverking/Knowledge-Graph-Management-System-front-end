@@ -9,8 +9,7 @@
       </el-option>
     </el-select>
     <el-button type="primary" @click="triples_extraction" style="margin:5px;" plain>开始抽取</el-button>
-    <el-button type="info" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">结果查看</el-button>
-    <el-button  plain type="danger"  style="margin:5px;" @click="isStop=true">停止抽取</el-button>
+    <el-button type="success" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">结果查看</el-button>
     <el-tooltip class="item" effect="dark" content="将数据替换成演示数据" placement="top-start">
       <el-button ref='modeButton' @click="changeMode()">演示模式</el-button>
     </el-tooltip>
@@ -306,7 +305,7 @@
           const index = this.multipleSelection.indexOf(ele);
           var id = ele._id;
           //axios请求
-          await axios.post('/pythonApi/triple_extraction', {
+          await axios.post('/pythonApi/triple_extraction_demo', {
             // data: this.extract_data,
             data: id,
           })
