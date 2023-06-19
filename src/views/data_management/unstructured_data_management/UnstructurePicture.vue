@@ -15,15 +15,15 @@
 <!--        <el-menu-item v-for="(item, index) in imageTimes" :key="index" :index="item">{{ item }}</el-menu-item>-->
 <!--      </el-submenu>-->
 
-      <el-menu-item index="search">
-        <el-select style="padding: 0px 20px" v-model="value" multiple filterable remote reserve-keyword
-                   :placeholder="placeholder" :remote-method="remoteMethod" :loading="loading">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-menu-item>
+<!--      <el-menu-item index="search">-->
+<!--        <el-select style="padding: 0px 20px" v-model="value" multiple filterable remote reserve-keyword-->
+<!--                   :placeholder="placeholder" :remote-method="remoteMethod" :loading="loading">-->
+<!--          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--      </el-menu-item>-->
 
-      <el-menu-item >搜 索</el-menu-item>
+<!--      <el-menu-item >搜 索</el-menu-item>-->
     </el-menu>
 
     <!-- 选中菜单 -->
@@ -71,11 +71,11 @@
     <!-- 图片及复选框 -->
     <div id="image-content">
       <div class="image-item" v-for="(item, index) in typeimages" :key="index" :style="reactiveImage">
-        <el-checkbox-group v-model="checkedImgIndex" @change="handleCheckedImgChange" class="check-box"
-                           :style="displayCheckedMenu">
-          <el-checkbox :label="index">
-          </el-checkbox>
-        </el-checkbox-group>
+<!--        <el-checkbox-group v-model="checkedImgIndex" @change="handleCheckedImgChange" class="check-box"-->
+<!--                           :style="displayCheckedMenu">-->
+<!--          <el-checkbox :label="index">-->
+<!--          </el-checkbox>-->
+<!--        </el-checkbox-group>-->
 
         <el-image :src="serviceurl+item.path" :preview-src-list="previewImageUrL" class="image">
           <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"
@@ -89,7 +89,7 @@
     <div id="pagination">
       <div id="pagination-son">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                       :page-sizes="page_size" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+                       :page-sizes="page_size" :page-size="pageSize"
                        :total="totalCount">
         </el-pagination>
       </div>
@@ -111,7 +111,7 @@ export default {
       loading: false,
       token: '',  //token凭证
       serveUrL: this.$serveUrL,
-      serviceurl:"http://localhost:12345/picture/",
+      serviceurl:"http://localhost:12345/images/",
       // 顶部菜单
       activeIndex: 'all',
       timeTitle: '新 增 图 片',
