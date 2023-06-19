@@ -359,11 +359,9 @@ export default {
       var sum = this.multipleSelection.length;
       var counter = 0
       for (let i = 0; i < sum-1; i++) {
-        setTimeout(() => {
           counter++
           this.progressBarValue = Math.floor((counter/sum)*100);
-        }, 1000 )
-      }
+        }
       // this.progressBarValue = Math.floor((counter/sum)*100);
       const _this =this
       // const translate = 'N';
@@ -372,7 +370,7 @@ export default {
         "translate": _this.tranlate_value
       };
       _this.axios.post('/api/semistructure/converttotriples',data).then(function(resp){
-        _this.progressBarValue = Math.floor(100);
+        _this.progressBarValue = 100;
         console.log(resp)
         _this.extract_table = resp.data
         _this.getExtractTablePageList()
