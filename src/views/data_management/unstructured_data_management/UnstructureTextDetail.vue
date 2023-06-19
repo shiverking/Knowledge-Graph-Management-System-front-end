@@ -175,6 +175,7 @@ export default {
   created(){
     const _this=this
     this.index=this.$route.query.id
+    console.log(this.index)
     _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/2').then(function(resp){
       console.log(resp)
       _this.input1 = resp.data.data

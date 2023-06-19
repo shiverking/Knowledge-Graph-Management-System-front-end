@@ -118,12 +118,12 @@ export default {
     },
     add() {
       this.$router.push({
-        path: '/data/people/AddPerson',
+        path: '/data/structure/people/AddPerson',
       })
     },
     edit(row) {
       this.$router.push({
-        path: '/data/people/PersonUpdate',
+        path: '/data/structure/people/PersonUpdate',
         query:{
           id:row.id,
           id1:row.plan_id
@@ -133,7 +133,7 @@ export default {
     detail(row) {
       this.$router.push({
 
-        path: '/data/people/PersonDetail',
+        path: '/data/structure/people/PersonDetail',
         query:{
           id:row.id,
           id1:row.plan_id,

@@ -128,17 +128,20 @@
             </template>
             <el-submenu index="2-1">
               <template slot="title"><i class="el-icon-cloudy"></i>候选图谱</template>
+              <router-link to="/candidate/kg/SemiStructuredDataToTriples" class="routerlink">
+                <el-menu-item index="2-1-1"><i class="el-icon-wind-power"></i>半结构数据抽取</el-menu-item>
+              </router-link>
               <router-link to="/candidate/kg/triplesExtraction" class="routerlink">
-                <el-menu-item index="2-1-1"><i class="el-icon-grape"></i>非结构文本抽取</el-menu-item>
+                <el-menu-item index="2-1-2"><i class="el-icon-grape"></i>非结构文本抽取</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/build" class="routerlink">
-                <el-menu-item index="2-1-2"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
+                <el-menu-item index="2-1-3"><i class="el-icon-sunrise-1"></i>候选图谱构建</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/merge" class="routerlink">
-                <el-menu-item index="2-1-3"><i class="el-icon-document-add"></i>候选图谱融合</el-menu-item>
+                <el-menu-item index="2-1-4"><i class="el-icon-document-add"></i>候选图谱融合</el-menu-item>
               </router-link>
               <router-link to="/candidate/kg/show" class="routerlink">
-                <el-menu-item index="2-1-4"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
+                <el-menu-item index="2-1-5"><i class="el-icon-sunrise"></i>候选图谱展示</el-menu-item>
               </router-link>
             </el-submenu>
             <el-submenu index="2-2">
@@ -574,6 +577,7 @@ export default {
         { "value": "/候选生成管理/候选图谱/候选图谱构建", "location": "/candidate/kg/build" },
         { "value": "/候选生成管理/候选图谱/候选融合", "location": "/candidate/kg/merge" },
         { "value": "/候选生成管理/候选图谱/实体抽取", "location": "/candidate/kg/ner" },
+        { "value": "/候选生成管理/候选图谱/半结构化数据抽取", "location": "/candidate/kg/SemiStructuredDataToTriples" },
         { "value": "/候选生成管理/候选图谱/非结构文本抽取", "location": "/candidate/kg/triplesExtraction" },
         { "value": "/候选生成管理/候选本体/候选本体展示", "location": "/candidate/ontology/show" },
         { "value": "/候选生成管理/候选本体/候选本体构建", "location": "/candidate/ontology/build" },

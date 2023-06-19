@@ -110,12 +110,12 @@ export default {
     },
     add() {
       this.$router.push({
-        path: '/data/plan/AddPlan',
+        path: '/data/structure/plan/AddPlan',
       })
     },
     edit(row) {
       this.$router.push({
-        path: '/data/plan/PlanUpdate',
+        path: '/data/structure/plan/PlanUpdate',
         query:{
           id:row.id
         }
@@ -123,7 +123,7 @@ export default {
     },
     detail(row) {
       this.$router.push({
-        path: '/data/plan/PlanDetail',
+        path: '/data/structure/plan/PlanDetail',
         query:{
           id:row.id
         }
