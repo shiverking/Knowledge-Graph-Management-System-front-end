@@ -1,14 +1,7 @@
 <template>
   <div class="block" style="margin: 10px;">
         <!--版本查询-->
-        <div  v-show="showDetail">
-        <div class="search_kg_input">
-            <el-input placeholder="过滤器" v-model="input3" class="input-with-select">
-              <el-select v-model="select" slot="prepend" placeholder="请选择"></el-select>
-              <el-button slot="append" icon="el-icon-search"></el-button>
-            </el-input>
-        </div>
-        <el-button class="search_button" type="primary">查询</el-button>
+        <div v-show="showDetail">
         <el-button id= "syn" class="search_button" type="success" :loading="synchronizationLoading">同步图数据库中</el-button>
         <!--概况-->
         <el-table
@@ -456,7 +449,8 @@ export default {
 }
 .search_button{
   display: inline-block;
-  margin-left: 8px !important;
+  margin-left: 0px !important;
+  margin-bottom: 5px !important;
 }
 .pagination{
   margin-top: 10px;

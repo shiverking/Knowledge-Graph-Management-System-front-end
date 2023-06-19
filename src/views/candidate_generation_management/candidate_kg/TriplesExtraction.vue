@@ -9,25 +9,71 @@
       </el-option>
     </el-select>
     <el-button type="primary" @click="triples_extraction" style="margin:5px;" plain>开始抽取</el-button>
-    <el-button type="info" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">预览</el-button>
-    <el-popover
-        placement="top"
-        v-model="confirmExportVisible">
-      <p>要将抽取结果导出至候选三元组库吗？</p>
-      <div style="text-align: right; margin: 5px;">
-        <el-button size="mini" type="text" @click="confirmExportVisible = false">取消</el-button>
-        <el-button type="success" size="mini" @click="confirmExportVisible = false;confirmExport()">确定</el-button>
-      </div>
-    <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;" slot="reference">结果导出</el-button>
-    </el-popover>
+    <el-button type="info" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">结果查看</el-button>
     <el-button  plain type="danger"  style="margin:5px;" @click="isStop=true">停止抽取</el-button>
+    <el-tooltip class="item" effect="dark" content="将数据替换成演示数据" placement="top-start">
+      <el-button ref='modeButton' @click="changeMode()">演示模式</el-button>
+    </el-tooltip>
     <el-progress v-show="progressBarVisible" :percentage="progressBarValue" :format="format"></el-progress>
     <el-dialog
         title="抽取结果"
         :visible.sync="dialogVisible"
         width="70%">
       <el-card shadow="always"  class="triples_card_top_half">
+        <h4 class="triples_label">目标文本</h4>
+        <el-table
+            :data="extractTablePageList"
+            style="width: 100%">
+          <el-table-column
+              prop="head"
+              label="文本内容"
+          >
+          </el-table-column>
+        </el-table>
+        <el-pagination
+            small
+            layout="prev, pager, next"
+            @current-change="extractTableCurrentChange"
+            :current-page.sync="extractTableCurrrentPage"
+            :page-size="extractTablePageSize"
+            :total="extract_table.length">
+        </el-pagination>
+      </el-card>
+      <el-card shadow="always"  class="triples_card_top_half">
         <h4 class="triples_label">抽取结果</h4>
+        <el-popover
+            placement="top"
+            v-model="confirmExportVisible">
+          <p>要将抽取结果导出至候选三元组库吗？</p>
+          <div style="text-align: right; margin: 5px;">
+            <el-button size="mini" type="text" @click="confirmExportVisible = false">取消</el-button>
+            <el-button type="success" size="mini" @click="confirmExportVisible = false;confirmExport()">确定</el-button>
+          </div>
+          <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;margin-left:0px;" slot="reference">结果导出</el-button>
+        </el-popover>
+        <el-button @click="innerVisible=!innerVisible">添加</el-button>
+        <el-dialog
+            width="50%"
+            title="添加三元组"
+            :visible.sync="innerVisible"
+            append-to-body>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入头实体"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入头实体类型"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入关系"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入尾实体"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入尾实体类型"></el-input>
+          </el-row>
+          <el-button>确定</el-button>
+        </el-dialog>
         <el-table
             :data="extractTablePageList"
             style="width: 100%">
@@ -156,6 +202,10 @@
   word-wrap: break-word;
   overflow: hidden;
 }
+.input_modify {
+  margin: 10px;
+  width: 70% !important;
+}
 </style>
 <script>
   import * as echarts from 'echarts';
@@ -205,9 +255,22 @@
         tableLoading:false,
         //是否停止抽取
         isStop:false,
+        //是否进行演示
+        ifPerform:false,
+        innerVisible:false
       };
     },
     methods: {
+      // 更换数据模式
+      changeMode(){
+       this.ifPerform = !this.ifPerform;
+       if(this.ifPerform==true){
+         this.$refs.modeButton.$el.innerText = "演示中";
+       }else{
+         this.$refs.modeButton.$el.innerText = "演示模式";
+       }
+        this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+      },
       // 三元组抽取
       async triples_extraction(){
         if(this.multipleSelection.length==0){
@@ -402,23 +465,46 @@
       },
       //向后端请求存储的非结构文本数据
       get_unstructured_text(num, limit) {
-        //axios请求
-        axios.request({
-          method:"POST",
-          url:'/api/unstructure/getAllTextByPage',
-          params:{page:num,limit:limit}
-        })
-        .then((response) => {
-          if (response.status == 200) {
-            //修改数据
-            console.log(response)
-            this.unstructuredTextPageList = response.data.data
-            this.unstructuredTextTotal = response.data.count
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+        //是演示
+        if(this.ifPerform==true){
+          //axios请求
+          axios.request({
+            method:"POST",
+            url:'/api/unstructure/getAllTextByPage',
+            params:{page:num,limit:limit}
+          })
+              .then((response) => {
+                if (response.status == 200) {
+                  //修改数据
+                  console.log(response)
+                  this.unstructuredTextPageList = response.data.data
+                  this.unstructuredTextTotal = response.data.count
+                }
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+        }
+        //不是演示
+        else{
+          //axios请求
+          axios.request({
+            method:"POST",
+            url:'/api/unstructure/getAllTrueTextByPage',
+            params:{page:num,limit:limit}
+          })
+              .then((response) => {
+                if (response.status == 200) {
+                  //修改数据
+                  console.log(response)
+                  this.unstructuredTextPageList = response.data.data
+                  this.unstructuredTextTotal = response.data.count
+                }
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+        }
       },
       //显示内容详情
       displayContent(content){

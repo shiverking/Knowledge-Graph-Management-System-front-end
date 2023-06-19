@@ -2,31 +2,8 @@
   <div id="main" class="canvas_main">
     <div id="container" class="canvas_container" ></div>
     <div class="kg_form">
-      <div class="div_in-lineblock_left">
-        <el-input placeholder="请输入三元组" v-model="search">
-          <i slot="prefix" class="el-input__icon el-icon-search"></i>
-        </el-input>
-      </div>
+
       <div class="div_in-lineblock_right">
-        <el-tooltip class="item" effect="dark" content="重新载入图谱" placement="top-start">
-          <el-button type="primary" icon="el-icon-refresh-left" circle class="operation_button"></el-button>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="保存图谱" placement="top-start">
-          <el-popover
-              placement="top"
-              width="190"
-              v-model="confirmVisible">
-            <p>是否保存当前更改？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="confirmVisible = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="confirmVisible = false">确定</el-button>
-            </div>
-          <el-button type="success" icon="el-icon-check" circle class="operation_button" slot="reference"></el-button>
-          </el-popover>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="批量处理" placement="top-start">
-          <el-button type="warning" icon="el-icon-edit-outline" circle class="operation_button" @click="batchProcessing = true"></el-button>
-        </el-tooltip>
         <el-tooltip class="item" effect="dark" content="删除该图谱" placement="top-start">
           <el-popover
               placement="top"
@@ -106,13 +83,6 @@
             prop="name">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.tail }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            label="操作"
-            prop="name">
-          <template slot-scope="scope">
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -6,9 +6,9 @@
       <el-step title="图谱融合" ></el-step>
     </el-steps>
     <div v-if="this.active==0">
-      <el-button  @click="dialogAllKGVisible = true;loadCandidateData(candidateKgCurrentPage,candidateKgPageSize)" class="operation_button" type="primary">选择图谱</el-button>
-      <el-button  class="operation_button" type="danger" @click="allClear">全部清空</el-button>
-      <el-button  class="operation_button" type="primary" @click="importData">开始导入</el-button>
+      <el-button  plain @click="dialogAllKGVisible = true;loadCandidateData(candidateKgCurrentPage,candidateKgPageSize)" class="operation_button" type="primary">选择图谱</el-button>
+      <el-button  plain class="operation_button" type="danger" @click="allClear">全部清空</el-button>
+      <el-button  plain class="operation_button" type="primary" @click="importData">开始导入</el-button>
       <el-row :gutter="12">
         <el-col :span="11">
           <el-card class="box-card" shadow="never" style="display:block;margin-bottom:10px;">
@@ -165,8 +165,8 @@
               :selectable="selectable"
               width="55">
           </el-table-column>
-<!--          <el-table-column type="selection"  width="55px" :reserve-selection="true">-->
-<!--          </el-table-column>-->
+          <!--          <el-table-column type="selection"  width="55px" :reserve-selection="true">-->
+          <!--          </el-table-column>-->
           <el-table-column label="名称" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.name }}</span>
@@ -203,9 +203,9 @@
           </el-pagination>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="handleSelectKgClose">取消</el-button>
-          <el-button type="primary" v-if="this.select_kg_active==1" @click="previousStep">上一步</el-button>
-          <el-button id="nextStep" type="primary" @click="select_kg_next()">下一步</el-button>
+          <el-button plain type="danger" @click="handleSelectKgClose">取消</el-button>
+          <el-button plain type="primary" v-if="this.select_kg_active==1" @click="previousStep">上一步</el-button>
+          <el-button plain id="nextStep" type="primary" @click="select_kg_next()">下一步</el-button>
         </div>
     </el-dialog>
     </div>
@@ -229,7 +229,7 @@
       </el-popover>
       <el-button style="margin-top: 12px;margin-left: 8px;" @click="calculate">开始计算</el-button>
       <el-tooltip class="item" effect="dark" content="取消所有对齐选择" placement="top-start">
-        <el-button type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
+        <el-button plain type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
       </el-tooltip>
       <el-button style="margin-top: 12px;" @click="mergeConfirmTableVisible = true">筛选确认</el-button>
       <el-card shadow="never" v-loading="simLoading" element-loading-text="正在计算相似度,请稍后...">
@@ -330,7 +330,7 @@
           v-if="selectedMergeStrategy==2"
           placeholder="请输入新图谱名称"
           v-model="newKgName"
-          style="width: 20%"
+          style="width: 20%;margin-left: 10px;margin-right: 10px"
           clearable>
       </el-input>
       <el-input
@@ -361,7 +361,7 @@
       </transition>
     </div>
     <div style="text-align: right;">
-      <el-button style="margin-top: 12px;" v-if="this.active>=1" @click="previous">上一步</el-button>
+      <el-button ref="previousBtn" style="margin-top: 12px;" v-if="this.active>=1&&this.active<2" @click="previous">上一步</el-button>
       <el-button v-if="active<2" style="margin-top: 12px;" @click="next">下一步</el-button>
     </div>
   </div>
@@ -430,15 +430,6 @@ export default {
       }, {
         value: '余弦相似度',
         label: '余弦相似度'
-      }, {
-        value: 'Difflib',
-        label: 'Difflib'
-      }, {
-        value: 'Fuzzywuzzy',
-        label: 'Fuzzywuzzy'
-      }, {
-        value: '加权混合',
-        label: '加权混合'
       }],
       algorithm:"",
       threshold:0.5,
@@ -1005,6 +996,10 @@ export default {
           console.log(error)
         })
       }
+  },
+  created() {
+    this.selectedMergeStrategy = this.mergeStrategyOptions[0].value;
+    this.algorithm = this.options[0].value;
   }
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({
