@@ -480,7 +480,7 @@ export default {
   data() {
     return {
       total4:0,
-      serviceurl:"http://localhost:12345/picture",
+      serviceurl:"http://localhost:12345/images",
       tableData4:[],
       contentVisible:false,
       keys3:null,

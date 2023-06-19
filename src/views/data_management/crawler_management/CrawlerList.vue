@@ -2,7 +2,7 @@
   <div class="block" style="margin: 10px;">
     <el-card class="card">
       <el-input
-          placeholder="请输入内容"
+          placeholder="请输入爬虫名称"
           v-model="input"
           clearable
           style="width: 180px">
@@ -18,7 +18,7 @@
         </el-option>
       </el-select>
 
-      <el-button type="primary" size="medium" style="float:right" @click="dialogFormVisible = true">添加新爬虫</el-button>
+<!--      <el-button type="primary" size="medium" style="float:right" @click="dialogFormVisible = true">添加新爬虫</el-button>-->
       <el-dialog title="爬虫信息" :visible.sync="dialogFormVisible" center = true>
         <el-form :model="form">
           <el-form-item label="爬虫名称" :label-width="formLabelWidth">
@@ -147,11 +147,11 @@
                 size="mini" @click="crawldetail(scope.row)">
               <i class="el-icon-zoom-in" style="font-size: 18px"></i>
             </el-button>
-            <el-button
-                size="mini"
-                type="danger">
-              <i class="el-icon-circle-close" style="font-size: 18px"></i>
-            </el-button>
+<!--            <el-button-->
+<!--                size="mini"-->
+<!--                type="danger">-->
+<!--              <i class="el-icon-circle-close" style="font-size: 18px"></i>-->
+<!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>

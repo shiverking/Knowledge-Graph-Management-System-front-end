@@ -9,10 +9,10 @@
            {{ 1 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/structure/plan/plan" style= "color:black;text-decoration:none">总计划数</router-link></div></div></div>
          </div>
            <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow"><!----><div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag--large el-tag--light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >
-             {{ 58 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/structure/arm/ArmAnalysis" style= "color:black;text-decoration:none">武器装备数量</router-link></div></div></div>
+             {{ 31 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/structure/arm/ArmAnalysis" style= "color:black;text-decoration:none">武器装备数量</router-link></div></div></div>
            </div>
            <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow"><!----><div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag--large el-tag--light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >
-             {{ 28 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/structure/people/PersonAnalysis" style= "color:black;text-decoration:none">人员数量</router-link></div></div></div>
+             {{ 14 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/structure/people/PersonAnalysis" style= "color:black;text-decoration:none">人员数量</router-link></div></div></div>
            </div>
 
          </div>
@@ -83,7 +83,7 @@
           },
           dataset: {
             source: [
-              ['日期', '10月3日', '10月4日', '10月5日', '10月6日', '10月7日', '10月8日','10月9日'],
+              ['日期', '6月3日', '6月4日', '6月5日', '6月6日', '6月7日', '6月8日','6月9日'],
               ['武器装备', 56, 58, 62, 64, 68, 72,75],
               ['人员', 24, 28, 29, 29, 31, 38,42],
               ['计划', 2,3, 5, 4, 3, 6,4],
