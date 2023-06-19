@@ -164,7 +164,7 @@
                           width="200">
                       <template slot-scope="scope">
                           <el-button @click="edit1(scope.row)" type="text" size="big" >详情</el-button>
-                          <el-button @click="editmsg(scope.row)" type="text" size="big">配置</el-button>
+<!--                          <el-button @click="editmsg(scope.row)" type="text" size="big">配置</el-button>-->
                       </template>
                   </el-table-column>
     </el-table>

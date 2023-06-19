@@ -34,7 +34,7 @@
         </el-option>
       </el-select>
     </el-form>
-    <el-button type="success" icon="el-icon-download" style="float: right;margin-right: 50px">文件导出</el-button>
+<!--    <el-button type="success" icon="el-icon-download" style="float: right;margin-right: 50px">文件导出</el-button>-->
 <!--    <el-button  type="primary" style="float: right ;margin-right: 50px">转换为候选三元组</el-button>-->
     <el-table
         ref="multipleTable"
@@ -148,27 +148,27 @@
       <el-table-column
           prop="manufacturer"
           label="生产商"
-          width="100px"
+          width="50px"
           :show-overflow-tooltip="true"
       >
       </el-table-column>
       <el-table-column
           prop="ceiling"
           label="飞行高度"
-          width="100px"
+          width="50px"
           :show-overflow-tooltip="true"
       >
       </el-table-column>
-      <el-table-column
-          fixed="right"
-          label="操作"
-          width="200px"
-      >
-        <template slot-scope="scope">
-          <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>
-          <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          fixed="right"-->
+<!--          label="操作"-->
+<!--          width="200px"-->
+<!--      >-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>-->
+<!--          <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
     <el-pagination
         @current-change="currentChange"

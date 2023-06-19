@@ -64,9 +64,9 @@
                 <i class="el-icon-s-grid"></i>
                 结构化数据管理
               </template>
-              <router-link to="/data/structure/analysis" class="routerlink">
-                <el-menu-item index="1-3-1">数据分析</el-menu-item>
-              </router-link>
+<!--              <router-link to="/data/structure/analysis" class="routerlink">-->
+<!--                <el-menu-item index="1-3-1">数据分析</el-menu-item>-->
+<!--              </router-link>-->
               <el-submenu index="1-3-2">
                 <template slot="title">武器数据</template>
                 <router-link to="/data/structure/arm/ArmAnalysis" class="routerlink">

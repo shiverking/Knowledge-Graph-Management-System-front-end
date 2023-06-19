@@ -93,8 +93,8 @@
         <template slot-scope="scope">
           <el-button @click="textdetail(scope.row,scope.$index)" type="text" size="big" >详情</el-button>
 <!--          <el-button @click="textdetail()" type="text" size="big" >编辑</el-button>-->
-          <el-button @click="downloadTxt(scope.row)" type="text" size="big" >下载</el-button>
-          <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>
+<!--          <el-button @click="downloadTxt(scope.row)" type="text" size="big" >下载</el-button>-->
+<!--          <el-button @click="deleteBook(scope.row)" type="text" size="big">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>

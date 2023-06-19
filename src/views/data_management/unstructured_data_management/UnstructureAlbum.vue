@@ -27,20 +27,20 @@
 
     <el-row class="album">
       <!--添加相册(个体)  -->
-      <el-col class="album-el-col" :span="3" :offset="1">
-        <a @click="buildAblum()">
-          <el-card :body-style="{ padding: '10px', }" shadow="hover">
-            <div style="text-align:center;height:10em;">
-              <!--                <svg-icon icon-file-name="addAlbum" style="font-size:3em;margin-top: 1em;" />-->
-              <i class="el-icon-plus" style="font-size:3em;margin-top: 1em;"></i>
-            </div>
-            <div class="album-el-txt">
-              <div style="text-align:center;font-size:21px;height:42px;"><a>新建相册</a>
-              </div>
-            </div>
-          </el-card>
-        </a>
-      </el-col>
+<!--      <el-col class="album-el-col" :span="3" :offset="1">-->
+<!--        <a @click="buildAblum()">-->
+<!--          <el-card :body-style="{ padding: '10px', }" shadow="hover">-->
+<!--            <div style="text-align:center;height:10em;">-->
+<!--              &lt;!&ndash;                <svg-icon icon-file-name="addAlbum" style="font-size:3em;margin-top: 1em;" />&ndash;&gt;-->
+<!--              <i class="el-icon-plus" style="font-size:3em;margin-top: 1em;"></i>-->
+<!--            </div>-->
+<!--            <div class="album-el-txt">-->
+<!--              <div style="text-align:center;font-size:21px;height:42px;"><a>新建相册</a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </el-card>-->
+<!--        </a>-->
+<!--      </el-col>-->
 
       <!-- 相册内容(循环) -->
       <el-col class="album-el-col" v-for="(item, index) in albumData" :key="index" :span="3" :offset="1">
