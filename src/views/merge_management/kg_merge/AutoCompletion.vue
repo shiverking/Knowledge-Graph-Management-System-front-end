@@ -349,6 +349,15 @@
           </div>
           <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
         </el-popover>
+        <el-button style="margin-left: 10px;" @click="dialogTableVisible = true">查看规则</el-button>
+        <el-dialog title="已设置规则" :visible.sync="dialogTableVisible">
+          <el-table :data="gridData" border>
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column property="rule" label="规则描述"></el-table-column>
+          </el-table>
+          <el-pagination background layout="prev, pager, next" style="margin-top: 10px;" :total="2">
+          </el-pagination>
+        </el-dialog>
         <keep-alive>
           <el-table :data="tableData5" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
             <!-- <el-table-column
@@ -359,24 +368,24 @@
                 <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column> -->
-            <el-table-column label="头实体" width="400">
+            <el-table-column label="头实体" width="400" sortable prop="head">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head }}</span>
                 <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="关系">
+            <el-table-column label="关系" sortable prop="rel">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.rel }}</span>
               </template>
             </el-table-column>     
-            <el-table-column label="尾实体" width="400">
+            <el-table-column label="尾实体" width="400" sortable prop="tail">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.tail }}</span>
                 <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="time" label="时间"></el-table-column> 
+            <el-table-column prop="time" label="时间" sortable></el-table-column> 
           </el-table>
         </keep-alive>
         <el-pagination
@@ -484,6 +493,11 @@
     },
     data() {
       return {
+        gridData: [{
+          rule: '遍历核心图谱，为“属于某国家的地区”和“对应国家”之间添加“隶属”链接。',
+        },{
+          rule: '遍历核心图谱，为“只有地区信息的人”和“地区的对应国家”之间添加“国籍”链接。',
+        }],
         missing_tuple: [],
         complete_label_graph: [],
         tuple_integrity_table:[],
