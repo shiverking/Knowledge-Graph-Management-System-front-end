@@ -219,6 +219,11 @@
               <router-link to="/coredata/mainontology/display" class="routerlink">
                 <el-menu-item index="4-2-1"><i class="el-icon-view"></i>本体展示</el-menu-item>
               </router-link>
+
+<!--              <router-link to="/coredata/mainontology/theme" class="routerlink">-->
+<!--                <el-menu-item index="4-2-2"><i class="el-icon-view"></i>作战场景</el-menu-item>-->
+<!--              </router-link>-->
+
             </el-submenu>
           </el-submenu>
           <el-submenu index="5" class="parent_submenu">
