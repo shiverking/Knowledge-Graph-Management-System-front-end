@@ -19,26 +19,13 @@
         title="抽取结果"
         :visible.sync="dialogVisible"
         width="70%">
-      <el-card shadow="always"  class="triples_card_top_half">
-        <h4 class="triples_label">目标文本</h4>
-        <el-table
-            :data="extractTablePageList"
-            style="width: 100%">
-          <el-table-column
-              prop="head"
-              label="文本内容"
-          >
-          </el-table-column>
-        </el-table>
-        <el-pagination
-            small
-            layout="prev, pager, next"
-            @current-change="extractTableCurrentChange"
-            :current-page.sync="extractTableCurrrentPage"
-            :page-size="extractTablePageSize"
-            :total="extract_table.length">
-        </el-pagination>
-      </el-card>
+      <el-carousel indicator-position="outside" v-if="multipleSelectionContent.length>0">
+        <el-carousel-item v-for="item in multipleSelectionContent" :key="item">
+          <el-card style="height: inherit">
+            <el-input :rows="12" v-model="item.content" type="textarea" style="width: 100%" :readonly="true" >123</el-input>
+          </el-card>
+        </el-carousel-item>
+      </el-carousel>
       <el-card shadow="always"  class="triples_card_top_half">
         <h4 class="triples_label">抽取结果</h4>
         <el-popover
@@ -91,6 +78,27 @@
               prop="tail"
               label="尾实体"
           >
+          </el-table-column>
+          <el-table-column
+              label="操作">
+            <template slot-scope="scope">
+              <el-button
+                  size="mini"
+                  type="warning"
+                  plain
+                  style="margin-right: 10px;"
+                  @click="handleCandidateTripleEdit(scope.$index, scope.row)">编辑
+              </el-button>
+              <el-popconfirm
+                  confirm-button-text='好的'
+                  cancel-button-text='不用了'
+                  icon="el-icon-info"
+                  icon-color="red"
+                  title="确定删除该三元组吗？"
+                  @confirm="handleDeleteCandidateTriple(scope.$index, scope.row)">
+                <el-button size="mini" type="danger" slot="reference" plain>删除</el-button>
+              </el-popconfirm>
+            </template>
           </el-table-column>
         </el-table>
         <el-pagination
@@ -237,6 +245,7 @@
         content:"",
         //多选框
         multipleSelection: [],
+        multipleSelectionContent:[],
         //进度条数值
         progressBarValue:0,
         algoritm_options: [{
@@ -247,7 +256,7 @@
         progressBarVisible:false,
         //前端分页
         extractTableCurrrentPage:1,
-        extractTablePageSize:10,
+        extractTablePageSize:5,
         extractTablePageList:[],
         //确认导出
         confirmExportVisible:false,
@@ -270,6 +279,9 @@
          this.$refs.modeButton.$el.innerText = "演示模式";
        }
         this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+       //切换模式时清空文本
+       this.multipleSelectionContent=[];
+       this.$refs.multipleTable.clearSelection();
       },
       // 三元组抽取
       async triples_extraction(){
@@ -496,7 +508,6 @@
               .then((response) => {
                 if (response.status == 200) {
                   //修改数据
-                  console.log(response)
                   this.unstructuredTextPageList = response.data.data
                   this.unstructuredTextTotal = response.data.count
                 }
@@ -514,6 +525,11 @@
       //处理多选结果
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        //清空
+        this.multipleSelectionContent = [];
+        this.multipleSelection.forEach((item,i)=>{
+          this.multipleSelectionContent.push({"content":item.content});
+        })
       },
       //获取每一页的key
       getRowKeys(row) {
@@ -570,6 +586,8 @@
             this.$refs.multipleTable.clearSelection();
             //重新加载数据
             this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+            //清空选择文本
+            this.multipleSelectionContent = [];
           }
         })
         .catch(function (error) {
@@ -588,6 +606,9 @@
     },
     mounted() {
       this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+    },
+    created() {
+      this.algoritm_value = this.algoritm_options[0].value;
     }
   }
 </script>

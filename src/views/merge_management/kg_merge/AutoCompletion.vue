@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 20px;">
     <cache></cache>
-    <el-tabs v-model="activeName" type="card" style="margin-top:10px;" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="card" style="margin-top:10px;" >
       <el-steps :active="active" finish-status="success" simple>
         <el-step title="完整性检测"></el-step>
         <el-step title="链接预测"></el-step>
