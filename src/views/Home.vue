@@ -20,9 +20,6 @@
               <router-link to="/system_management/personal" class="routerlink">
                 <el-dropdown-item>个人中心</el-dropdown-item>
               </router-link>
-              <router-link to="/system_management/setting" class="routerlink">
-                <el-dropdown-item>设置</el-dropdown-item>
-              </router-link>
               <el-dropdown-item divided @click.native="handleLogout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </div>
@@ -158,9 +155,6 @@
               <router-link to="/candidate/structured/ontology" class="routerlink">
                 <el-menu-item index="2-3-1"><i class="el-icon-moon"></i>本体数据</el-menu-item>
               </router-link>
-              <router-link to="/candidate/structured/triples" class="routerlink">
-                <el-menu-item index="2-3-2"><i class="el-icon-moon-night"></i>三元组数据</el-menu-item>
-              </router-link>
             </el-submenu>
           </el-submenu>
           <el-submenu index="3" class="parent_submenu">
@@ -213,9 +207,6 @@
               <router-link to="/coredata/mainkg/display" class="routerlink">
                 <el-menu-item index="4-1-1"><i class="el-icon-view"></i>图谱展示</el-menu-item>
               </router-link>
-              <router-link to="/coredata/mainkg/topic" class="routerlink">
-                <el-menu-item index="4-1-2"><i class="el-icon-brush"></i>主题图谱</el-menu-item>
-              </router-link>
               <router-link to="/coredata/mainkg/situation" class="routerlink">
                 <el-menu-item index="4-1-3"><i class="el-icon-map-location"></i>态势认知图谱</el-menu-item>
               </router-link>
@@ -227,9 +218,6 @@
               </template>
               <router-link to="/coredata/mainontology/display" class="routerlink">
                 <el-menu-item index="4-2-1"><i class="el-icon-view"></i>本体展示</el-menu-item>
-              </router-link>
-              <router-link to="/coredata/mainontology/theme" class="routerlink">
-                <el-menu-item index="4-2-2"><i class="el-icon-view"></i>作战场景</el-menu-item>
               </router-link>
             </el-submenu>
           </el-submenu>
@@ -301,21 +289,6 @@
               <i class="el-icon-house"></i>
               <span slot="title">系统管理</span>
             </template>
-            <router-link to="/system_management/authority" class="routerlink">
-              <el-menu-item index="6-1">
-                <i class="el-icon-lock"></i>权限管理
-              </el-menu-item>
-            </router-link>
-            <router-link to="/system_management/role" class="routerlink">
-              <el-menu-item index="6-2">
-                <i class="el-icon-s-custom"></i>角色管理
-              </el-menu-item>
-            </router-link>
-            <router-link to="/system_management/setting" class="routerlink">
-              <el-menu-item index="6-3">
-                <i class="el-icon-setting"></i>设置
-              </el-menu-item>
-            </router-link>
             <router-link to="/system_management/personal" class="routerlink">
               <el-menu-item index="6-4">
                 <i class="el-icon-user"></i>个人中心
@@ -589,12 +562,8 @@ export default {
         { "value": "/融合管理/本体融合/本体补全", "location": "/merge/ontology/completion" },
         { "value": "/融合管理/本体融合/版本记录", "location": "/merge/ontology/versionControl" },
         { "value": "/核心数仓管理/核心图谱/核心图谱展示", "location": "/coredata/mainkg/display" },
-        { "value": "/核心数仓管理/核心图谱/主题图谱", "location": "/coredata/mainkg/topic" },
         { "value": "/核心数仓管理/核心图谱/态势认知图谱", "location": "/coredata/mainkg/situation" },
         { "value": "/核心数仓管理/核心本体/核心本体展示", "location": "/coredata/mainontology/display" },
-        { "value": "/系统管理/权限管理", "location": "/system_management/authority" },
-        { "value": "/系统管理/角色管理", "location": "/system_management/role" },
-        { "value": "/系统管理/设置", "location": "/system_management/setting" },
         { "value": "/系统管理/个人中心", "location": "/system_management/personal" },
         { "value": "/场景应用管理/接口管理/元数据", "location": "/applicationmanagement/interface/meta" },
         { "value": "/场景应用管理/接口管理/认知推理", "location": "/applicationmanagement/interface/cognize" },

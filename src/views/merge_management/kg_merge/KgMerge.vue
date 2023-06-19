@@ -148,7 +148,7 @@
       </el-popover>
       <el-button style="margin-top: 12px; margin-left: 8px;" @click="calculate">开始计算</el-button>
       <el-tooltip class="item" effect="dark" content="取消所有对齐选择" placement="top-start">
-        <el-button type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
+        <el-button plain type="danger" style="margin-top: 20px;margin-bottom: 10px;" @click="clearAllAlignSelection()">全部取消</el-button>
       </el-tooltip>
       <el-button style="margin-top: 12px;" @click="mergeConfirmTableVisible = true;getMergeConfirmTableData()">筛选确认</el-button>
       <el-card shadow="never" v-loading="simLoading" element-loading-text="正在计算相似度,请稍后...">
@@ -310,12 +310,7 @@
     <div v-if="this.active==3">
       <el-descriptions title="融合信息确认" border>
         <el-descriptions-item label="目标图谱名称">核心图谱</el-descriptions-item>
-        <el-descriptions-item label="目标图谱三元组数">{{ toKgTotal }}</el-descriptions-item>
         <el-descriptions-item label="待融合图谱个数">{{ this.multipleSelectionName.length }}</el-descriptions-item>
-        <el-descriptions-item label="三元组变化"></el-descriptions-item>
-        <el-descriptions-item label="实体变化"></el-descriptions-item>
-        <el-descriptions-item label="关系变化"></el-descriptions-item>
-        <el-descriptions-item label="候选占比"></el-descriptions-item>
         <el-descriptions-item label="对齐数量"><a>{{ this.mergeTable.length }}</a></el-descriptions-item>
         <el-descriptions-item label="操作时间">{{ dateFormat(new Date()) }}</el-descriptions-item>
         <el-descriptions-item label="操作人员">admin</el-descriptions-item>
@@ -694,12 +689,10 @@ export default {
           })
           .then((response) => {
             if (response.status == 200&&response.data.msg=="success") {
-              if(response.data.msg=="success"){
                 this.tripleCount+=response.data.data.tripleCount;
                 this.entityCount+=response.data.data.entityCount;
                 this.relationTypeCount+=response.data.data.relationTypeCount;
                 this.relationCount+=response.data.data.relationCount;
-              }
             }
           })
           .catch(function (error) {
@@ -1053,6 +1046,10 @@ export default {
       this.getMergeConfirmTableData()
     },
 
+  },
+  created() {
+    this.selectedMergeStrategy = this.mergeStrategyOptions[0].value
+    this.algorithm = this.options[0].value
   }
   // displayKgItems(){
   //   axios.post('/api/kg/getAllTriples', this.$qs.stringify({
@@ -1071,6 +1068,5 @@ export default {
   //     }
   // }
 // },
-
 }
 </script>
