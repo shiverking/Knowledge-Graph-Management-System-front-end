@@ -1,24 +1,20 @@
 <template>
   <div>
-
-    <br/>
-    <el-dialog title="任务配置" :visible.sync="dialogVisible" width="60%">
-
-        <el-form style="width: 80%" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="id" prop="id " v-show="false">
+    <el-dialog title="任务配置" :visible.sync="dialogVisible" width="40%">
+        <el-form style="width: 50% ;height:500px" :model="ruleForm" :rules="rules" ref="ruleForm"  >
+          <el-form-item label="id" prop="id" v-show="false">
             <el-input v-model="ruleForm.id"></el-input>
           </el-form-item>
-          <div class="addFormBox">
+          <div  style="float: left">
             <!-- 循环data中定义的数组 -->
-            <h2>指挥官</h2>
-            <el-form label-width="80px" ref="formperson">
+            <h2 >指挥官</h2>
+            <el-form label-width="80px" ref="formperson" >
               <div v-for="(item,index) in form.person_new" :key="index">
-                <div class="formOuterBox">
-                  <div class="formCotantBox">
-
+                <div >
+                  <div >
                     <!-- 表单内容 -->
                     <el-col :span="12">
-                      <el-form-item  class="form-style">
+                      <el-form-item  >
                         <el-select v-model="item.id"  placeholder="请选择">
                           <el-option
                             v-for="item1 in options1"
@@ -30,34 +26,26 @@
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                      <el-form-item class="form-style">
+                      <el-form-item >
                         <el-button @click="addForm()" type="success">+</el-button>
                         <el-button v-if="index!=0" @click="removeIdx(item, index)" type="danger">-</el-button>
                       </el-form-item>
                     </el-col>
-
-
                   </div>
-                  <!-- 操作按钮 -->
-                  <!--          <div>-->
-                  <!--            <el-button @click="addForm" type="success">+</el-button>-->
-                  <!--            <el-button v-if="index!=0" @click="removeIdx(item, index)" type="danger">-</el-button>-->
-                  <!--          </div>-->
                 </div>
               </div>
             </el-form>
           </div>
-          <div class="addFormBox">
+          <div  style="float: left">
           <h2>舰船舰艇</h2>
             <!-- 循环data中定义的数组 -->
             <el-form label-width="80px" ref="formpvessel">
               <div v-for="(item,index) in form.vessel_new" :key="index">
-                <div class="formOuterBox">
-                  <div class="formCotantBox">
-
+                <div >
+                  <div >
                     <!-- 表单内容 -->
                     <el-col :span="12">
-                      <el-form-item  class="form-style">
+                      <el-form-item  >
                         <el-select v-model="item.id"  placeholder="请选择">
                           <el-option
                             v-for="item1 in options2"
@@ -68,43 +56,21 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
-
                     <el-col :span="12">
-                      <el-form-item class="form-style">
+                      <el-form-item >
                         <el-button @click="addForm2()" type="success">+</el-button>
                         <el-button v-if="index!=0" @click="removeIdx2(item, index)" type="danger">-</el-button>
                       </el-form-item>
                     </el-col>
-
-
                   </div>
-                  <!-- 操作按钮 -->
-                  <!--          <div>-->
-                  <!--            <el-button @click="addForm" type="success">+</el-button>-->
-                  <!--            <el-button v-if="index!=0" @click="removeIdx(item, index)" type="danger">-</el-button>-->
-                  <!--          </div>-->
                 </div>
               </div>
             </el-form>
           </div>
-          <div>
+          <div style="float: left">
             <el-button type="primary" @click="submitForm1()" >提交</el-button>
           </div>
-
-          <!--    <el-form-item>-->
-          <!--      <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>-->
-          <!--      <el-button @click="resetForm('ruleForm')">重置</el-button>-->
-          <!--    </el-form-item>-->
-
         </el-form>
-<!--      <div>-->
-<!--      <span slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="dialogVisible = false">取 消</el-button>-->
-<!--          <el-button type="primary" @click="submitForm1('ruleForm');dialogVisible = false"-->
-<!--          >确 定</el-button-->
-<!--          >-->
-<!--        </span>-->
-<!--      </div>-->
     </el-dialog>
 
     <div>指挥官信息</div>
@@ -198,7 +164,7 @@
                           width="200">
                       <template slot-scope="scope">
                           <el-button @click="edit1(scope.row)" type="text" size="big" >详情</el-button>
-                          <el-button @click="editmsg(scope.row)" type="text" size="big">配置</el-button>
+<!--                          <el-button @click="editmsg(scope.row)" type="text" size="big">配置</el-button>-->
                       </template>
                   </el-table-column>
     </el-table>
@@ -231,7 +197,8 @@ export default {
       const _this =this
       this.form.person_new.push({
         id:"",
-        task_id:_this.ruleForm.id
+        task_id:_this.ruleForm.id,
+        plan_id:_this.$route.query.id
       });
 
     },
@@ -258,10 +225,10 @@ export default {
       // }
     },
     addForm2() {
-
+      const _this =this
       this.form.vessel_new.push({
         id:"",
-        task_id:_this.ruleForm.id
+        task_id:_this.ruleForm.id,
       });
 
     },
@@ -321,7 +288,7 @@ export default {
       const _this =this
       _this.$router.push({
 
-        path: '/data/plan/TaskDetail',
+        path: '/data/structure/plan/TaskDetail',
         query:{
           id:row.id,
           id2:this.$route.query.id
@@ -331,14 +298,20 @@ export default {
 
     submitForm1() {
       // for(var i =0;i<this.person_old.length;i++){
+      const _this =this
       _this.axios.post('/api/task/update',this.form).then(function(resp){
+        _this.$alert( '任务配置成功！', '消息', {
+          confirmButtonText: '确定',
+          callback: action => {
+            _this.dialogVisible =false;
+          }
+        })
         })
       // }
       // for(var m =0;m<this.vessel_old.length;m++){
       //   axios.get('/api/vessel/deletetask/'+this.vessel_old[m].id).then(function(resp){
       //   })
       // }
-      this.dialogVisible =false;
     },
     // submitForm2() {
     //   const _this =this

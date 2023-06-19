@@ -6,11 +6,11 @@
           <div class="ele-admin-content-view">
             <div data-v-7b70ec21="" class="el-row" style="margin-left: -7.5px;margin-right: -7.5px;">
               <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow"><!----><div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag--large el-tag--light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >
-                {{ 32}}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/plan/plan" style= "color:black;text-decoration:none">人员</router-link></div></div></div>
+                {{ 14}}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/structure/people/person" style= "color:black;text-decoration:none">人员</router-link></div></div></div>
               </div>
-              <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow"><!----><div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag--large el-tag--light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >
-                {{ 15 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/arm/ArmAnalysis" style= "color:black;text-decoration:none">执行计划人员</router-link></div></div></div>
-              </div>
+<!--              <div data-v-7b70ec21="" class="el-col el-col-24 el-col-sm-16 el-col-md-8" style="padding-left: 7.5px; padding-right: 7.5px; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"><div data-v-7b70ec21="" class="el-card monitor-count-card is-never-shadow">&lt;!&ndash;&ndash;&gt;<div class="el-card__body"><span data-v-7b70ec21="" class="ele-tag-round el-tag el-tag&#45;&#45;large el-tag&#45;&#45;light"><i data-v-7b70ec21="" class="el-icon-s-custom"></i></span><div data-v-7b70ec21="" class="monitor-count-card-num" style="font-size:20px;text-align: center; " >-->
+<!--                {{ 15 }}</div><div data-v-7b70ec21="" class="monitor-count-card-text ele-text-secondary" style="font-size:30px;text-align: center; " ><router-link to="/data/arm/ArmAnalysis" style= "color:black;text-decoration:none">执行计划人员</router-link></div></div></div>-->
+<!--              </div>-->
 
 
             </div>
@@ -21,14 +21,14 @@
 
     <br/>
     <el-row>
-      <el-col :span="8"><div class="grid-content bg-purple">
-        <div id="rankChart" :style="{width:'400px',height:'400px'}"></div>
+<!--      <el-col :span="8"><div class="grid-content bg-purple">-->
+<!--        <div id="rankChart" :style="{width:'400px',height:'400px'}"></div>-->
+<!--      </div></el-col>-->
+      <el-col :span="12"><div class="grid-content bg-purple">
+        <div id="postChart" :style="{height:'400px'}"></div>
       </div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple">
-        <div id="postChart" :style="{width:'400px',height:'400px'}"></div>
-      </div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple">
-        <div id="edubackChart" :style="{width:'400px',height:'400px'}"></div>
+      <el-col :span="12"><div class="grid-content bg-purple-light">
+        <div id="edubackChart" :style="{height:'400px'}"></div>
       </div></el-col>
     </el-row>
   </div>
@@ -59,48 +59,48 @@ export default {
       // axios.get('/api/artillery/count').then(function (resp){
 
       let edubackChart = _this.$echarts.init(document.getElementById('edubackChart'))
-      let rankChart = _this.$echarts.init(document.getElementById('rankChart'))
+      // let rankChart = _this.$echarts.init(document.getElementById('rankChart'))
       let postChart = _this.$echarts.init(document.getElementById('postChart'))
-      var rankoption = {
-        title:{
-          text: '军衔',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: [
-          {
-            type: 'category',
-            data: ['准将', '上尉','军士长' ,'中校', '上校', ],
-            axisTick: {
-              alignWithLabel: true
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value'
-          }
-        ],
-        series: [
-          {
-            name: '人数',
-            type: 'bar',
-            barWidth: '60%',
-            data: [10, 21, 23,45,42 ]
-          }
-        ]
-      };
+      // var rankoption = {
+      //   title:{
+      //     text: '军衔',
+      //     left: 'center'
+      //   },
+      //   tooltip: {
+      //     trigger: 'axis',
+      //     axisPointer: {
+      //       type: 'shadow'
+      //     }
+      //   },
+      //   grid: {
+      //     left: '3%',
+      //     right: '4%',
+      //     bottom: '3%',
+      //     containLabel: true
+      //   },
+      //   xAxis: [
+      //     {
+      //       type: 'category',
+      //       data: ['准将', '上尉','军士长' ,'中校', '上校', ],
+      //       axisTick: {
+      //         alignWithLabel: true
+      //       }
+      //     }
+      //   ],
+      //   yAxis: [
+      //     {
+      //       type: 'value'
+      //     }
+      //   ],
+      //   series: [
+      //     {
+      //       name: '人数',
+      //       type: 'bar',
+      //       barWidth: '60%',
+      //       data: [10, 21, 23,45,42 ]
+      //     }
+      //   ]
+      // };
       var postoption = {
         title:{
           text: '职务',
@@ -137,7 +137,7 @@ export default {
             name: '人数',
             type: 'bar',
             barWidth: '60%',
-            data: [10, 21, 23]
+            data: [4, 1, 0]
           }
         ]
       };
@@ -177,11 +177,11 @@ export default {
             name: '人数',
             type: 'bar',
             barWidth: '60%',
-            data: [32,21]
+            data: [6,2]
           }
         ]
       };
-      rankChart.setOption(rankoption);
+      // rankChart.setOption(rankoption);
       postChart.setOption(postoption);
       edubackChart.setOption(edubackoption);
     }

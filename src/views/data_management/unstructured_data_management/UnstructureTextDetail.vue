@@ -12,12 +12,12 @@
 <!--    </el-form>-->
     <div >
 
-      <el-row >
-        <el-col :span="24"><div class="grid-content bg-purple-dark">
-          <el-button type="primary" @click="read=false">编辑</el-button>
-          <el-button type="primary" @click="read=true">保存</el-button>
-        </div></el-col>
-      </el-row>
+<!--      <el-row >-->
+<!--        <el-col :span="24"><div class="grid-content bg-purple-dark">-->
+<!--          <el-button type="primary" @click="read=false">编辑</el-button>-->
+<!--          <el-button type="primary" @click="read=true">保存</el-button>-->
+<!--        </div></el-col>-->
+<!--      </el-row>-->
       <br>
 <!--      <div >-->
 <!--      <el-row >-->
@@ -36,12 +36,13 @@
 <!--    </el-button-group>-->
 <!--    </center>-->
 
-  <el-carousel indicator-position="none" :autoplay="false" height="800px" :initial-index=index>
-    <el-carousel-item v-for="(item,index) in input1" :key="item">
-      <el-input :rows="30" v-model="item.content" type="textarea" style="width: 100%" :readonly="read" ></el-input>
-<!--      <span>{{item}}</span>-->
-    </el-carousel-item>
-  </el-carousel>
+    <el-input   type="textarea"  autosize :value="content" :readonly="true" ></el-input>
+<!--  <el-carousel indicator-position="none" :autoplay="false" height="800px" :initial-index=index>-->
+<!--    <el-carousel-item v-for="(item,index) in input1" :key="item">-->
+<!--      <el-input :rows="30" v-model="item.content" type="textarea" style="width: 100%" :readonly="read" ></el-input>-->
+<!--&lt;!&ndash;      <span>{{item}}</span>&ndash;&gt;-->
+<!--    </el-carousel-item>-->
+<!--  </el-carousel>-->
   </div>
 </template>
 
@@ -50,6 +51,7 @@ export default {
   data() {
 
     return {
+      content:"",
       index:10,
       read:true,
       input1:["The Aero L-39 series of advanced jet trainer and light strike aircraft followed along the same lines as its predecessor - the L-29 \"Delphin\" detailed elsewhere on this site - in terms of development. Designed just three years after the successful L-29 became the frontline advanced trainer for the Soviet Union and associated Bloc countries, the L-39 emerged in prototype form and recorded its first flight on November 4th, 1968 prior to introduction with the Czechoslovakian Air Force in 1972. From then on, the aircraft was equally accepted and successful in the training of a new generation of pilots for the Soviet Empire and its satellite states and supporters. Total production exceeding 3,000 aircraft from 1971 to 1999. It became the first turbofan-powered trainer to enter serial production." +
@@ -175,15 +177,20 @@ export default {
   created(){
     const _this=this
     this.index=this.$route.query.id
-    _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/2').then(function(resp){
-      console.log(resp)
-      _this.input1 = resp.data.data
-    })
+    this.content = this.$route.query.content
+    // console.log(this.index)
+    // _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/2').then(function(resp){
+    //   console.log(resp)
+    //   _this.input1 = resp.data.data
+    // })
   }
 }
 </script>
 
 <style scoped>
+.my-input {
+  height: 500px;
+}
 .borderNone /deep/ .el-input__inner {
   border: none;
   font-size: 10px;

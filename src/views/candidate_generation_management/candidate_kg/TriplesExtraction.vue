@@ -9,25 +9,57 @@
       </el-option>
     </el-select>
     <el-button type="primary" @click="triples_extraction" style="margin:5px;" plain>开始抽取</el-button>
-    <el-button type="info" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">预览</el-button>
-    <el-popover
-        placement="top"
-        v-model="confirmExportVisible">
-      <p>要将抽取结果导出至候选三元组库吗？</p>
-      <div style="text-align: right; margin: 5px;">
-        <el-button size="mini" type="text" @click="confirmExportVisible = false">取消</el-button>
-        <el-button type="success" size="mini" @click="confirmExportVisible = false;confirmExport()">确定</el-button>
-      </div>
-    <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;" slot="reference">结果导出</el-button>
-    </el-popover>
-    <el-button  plain type="danger"  style="margin:5px;" @click="isStop=true">停止抽取</el-button>
+    <el-button type="success" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">结果查看</el-button>
+    <el-tooltip class="item" effect="dark" content="将数据替换成演示数据" placement="top-start">
+      <el-button ref='modeButton' @click="changeMode()">演示模式</el-button>
+    </el-tooltip>
     <el-progress v-show="progressBarVisible" :percentage="progressBarValue" :format="format"></el-progress>
     <el-dialog
         title="抽取结果"
         :visible.sync="dialogVisible"
         width="70%">
+      <el-carousel indicator-position="outside" v-if="multipleSelectionContent.length>0">
+        <el-carousel-item v-for="item in multipleSelectionContent" :key="item">
+          <el-card style="height: inherit">
+            <el-input :rows="12" v-model="item.content" type="textarea" style="width: 100%" :readonly="true" >123</el-input>
+          </el-card>
+        </el-carousel-item>
+      </el-carousel>
       <el-card shadow="always"  class="triples_card_top_half">
         <h4 class="triples_label">抽取结果</h4>
+        <el-popover
+            placement="top"
+            v-model="confirmExportVisible">
+          <p>要将抽取结果导出至候选三元组库吗？</p>
+          <div style="text-align: right; margin: 5px;">
+            <el-button size="mini" type="text" @click="confirmExportVisible = false">取消</el-button>
+            <el-button type="success" size="mini" @click="confirmExportVisible = false;confirmExport()">确定</el-button>
+          </div>
+          <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;margin-left:0px;" slot="reference">结果导出</el-button>
+        </el-popover>
+        <el-button @click="innerVisible=!innerVisible">添加</el-button>
+        <el-dialog
+            width="50%"
+            title="添加三元组"
+            :visible.sync="innerVisible"
+            append-to-body>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入头实体"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入头实体类型"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入关系"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入尾实体"></el-input>
+          </el-row>
+          <el-row>
+            <el-input class="input_modify" placeholder="*请输入尾实体类型"></el-input>
+          </el-row>
+          <el-button>确定</el-button>
+        </el-dialog>
         <el-table
             :data="extractTablePageList"
             style="width: 100%">
@@ -45,6 +77,27 @@
               prop="tail"
               label="尾实体"
           >
+          </el-table-column>
+          <el-table-column
+              label="操作">
+            <template slot-scope="scope">
+              <el-button
+                  size="mini"
+                  type="warning"
+                  plain
+                  style="margin-right: 10px;"
+                  @click="handleCandidateTripleEdit(scope.$index, scope.row)">编辑
+              </el-button>
+              <el-popconfirm
+                  confirm-button-text='好的'
+                  cancel-button-text='不用了'
+                  icon="el-icon-info"
+                  icon-color="red"
+                  title="确定删除该三元组吗？"
+                  @confirm="handleDeleteCandidateTriple(scope.$index, scope.row)">
+                <el-button size="mini" type="danger" slot="reference" plain>删除</el-button>
+              </el-popconfirm>
+            </template>
           </el-table-column>
         </el-table>
         <el-pagination
@@ -156,6 +209,10 @@
   word-wrap: break-word;
   overflow: hidden;
 }
+.input_modify {
+  margin: 10px;
+  width: 70% !important;
+}
 </style>
 <script>
   import * as echarts from 'echarts';
@@ -187,6 +244,7 @@
         content:"",
         //多选框
         multipleSelection: [],
+        multipleSelectionContent:[],
         //进度条数值
         progressBarValue:0,
         algoritm_options: [{
@@ -197,7 +255,7 @@
         progressBarVisible:false,
         //前端分页
         extractTableCurrrentPage:1,
-        extractTablePageSize:10,
+        extractTablePageSize:5,
         extractTablePageList:[],
         //确认导出
         confirmExportVisible:false,
@@ -205,9 +263,25 @@
         tableLoading:false,
         //是否停止抽取
         isStop:false,
+        //是否进行演示
+        ifPerform:false,
+        innerVisible:false
       };
     },
     methods: {
+      // 更换数据模式
+      changeMode(){
+       this.ifPerform = !this.ifPerform;
+       if(this.ifPerform==true){
+         this.$refs.modeButton.$el.innerText = "演示中";
+       }else{
+         this.$refs.modeButton.$el.innerText = "演示模式";
+       }
+        this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+       //切换模式时清空文本
+       this.multipleSelectionContent=[];
+       this.$refs.multipleTable.clearSelection();
+      },
       // 三元组抽取
       async triples_extraction(){
         if(this.multipleSelection.length==0){
@@ -231,7 +305,7 @@
           const index = this.multipleSelection.indexOf(ele);
           var id = ele._id;
           //axios请求
-          await axios.post('/pythonApi/triple_extraction', {
+          await axios.post('/pythonApi/triple_extraction_demo', {
             // data: this.extract_data,
             data: id,
           })
@@ -402,23 +476,45 @@
       },
       //向后端请求存储的非结构文本数据
       get_unstructured_text(num, limit) {
-        //axios请求
-        axios.request({
-          method:"POST",
-          url:'/api/unstructure/getAllTextByPage',
-          params:{page:num,limit:limit}
-        })
-        .then((response) => {
-          if (response.status == 200) {
-            //修改数据
-            console.log(response)
-            this.unstructuredTextPageList = response.data.data
-            this.unstructuredTextTotal = response.data.count
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+        //是演示
+        if(this.ifPerform==true){
+          //axios请求
+          axios.request({
+            method:"POST",
+            url:'/api/unstructure/getAllTextByPage',
+            params:{page:num,limit:limit}
+          })
+              .then((response) => {
+                if (response.status == 200) {
+                  //修改数据
+                  console.log(response)
+                  this.unstructuredTextPageList = response.data.data
+                  this.unstructuredTextTotal = response.data.count
+                }
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+        }
+        //不是演示
+        else{
+          //axios请求
+          axios.request({
+            method:"POST",
+            url:'/api/unstructure/getAllTrueTextByPage',
+            params:{page:num,limit:limit}
+          })
+              .then((response) => {
+                if (response.status == 200) {
+                  //修改数据
+                  this.unstructuredTextPageList = response.data.data
+                  this.unstructuredTextTotal = response.data.count
+                }
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+        }
       },
       //显示内容详情
       displayContent(content){
@@ -428,6 +524,11 @@
       //处理多选结果
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        //清空
+        this.multipleSelectionContent = [];
+        this.multipleSelection.forEach((item,i)=>{
+          this.multipleSelectionContent.push({"content":item.content});
+        })
       },
       //获取每一页的key
       getRowKeys(row) {
@@ -484,6 +585,8 @@
             this.$refs.multipleTable.clearSelection();
             //重新加载数据
             this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+            //清空选择文本
+            this.multipleSelectionContent = [];
           }
         })
         .catch(function (error) {
@@ -502,6 +605,9 @@
     },
     mounted() {
       this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+    },
+    created() {
+      this.algoritm_value = this.algoritm_options[0].value;
     }
   }
 </script>

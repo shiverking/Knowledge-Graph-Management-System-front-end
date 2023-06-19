@@ -196,7 +196,6 @@ export default {
       this.total=this.jsonData.length
     },
     currentChange(val) {
-      console.log(val)
       this.page=val
       this.getTableData()
     },
@@ -210,7 +209,6 @@ export default {
     enter(index){
       this.seen = true;
       this.current = index;
-      console.log(this.current)
     },
     leave(){
       this.seen = false;
@@ -219,7 +217,6 @@ export default {
   },
   created(){
     const index=this.$route.query.id
-    console.log(index)
     const _this =this
     const keys = new Set()
     this.jsonData   = this.indexs[index-1]

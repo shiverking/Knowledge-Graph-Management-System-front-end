@@ -1,7 +1,6 @@
 <template>
   <div style="margin-top: 20px;">
-    <el-button type="primary" style="margin-top:10px;margin-bottom: 10px;" @click="synchronizationDisplay=true">同步
-    </el-button>
+
     <el-dialog
         title="更新设置"
         :visible.sync="synchronizationDisplay"
@@ -92,15 +91,6 @@
                 :show-overflow-tooltip="true"
             >
             </el-table-column>
-            <el-table-column
-                label="操作"
-            >
-              <template slot-scope="scope">
-                <el-button
-                    type="danger" icon="el-icon-delete" circle
-                    @click="handleDelete(scope.$index, scope.row)"></el-button>
-              </template>
-            </el-table-column>
           </el-table>
           <el-pagination
               @size-change="entityHandleSizeChange"
@@ -129,15 +119,6 @@
                 :show-overflow-tooltip="true"
             >
             </el-table-column>
-            <el-table-column
-                label="操作"
-            >
-              <template slot-scope="scope">
-                <el-button
-                    type="danger" icon="el-icon-delete" circle
-                    @click="handleDelete(scope.$index, scope.row)"></el-button>
-              </template>
-            </el-table-column>
           </el-table>
           <el-pagination
               @size-change="relationHandleSizeChange"
@@ -155,12 +136,9 @@
               :data="allTriplePageList"
               border
               style="width: 100%; margin-top:10px">
-            <el-table-column type="selection">
-            </el-table-column>
             <el-table-column
                 label="头实体"
-                :show-overflow-tooltip="true"
-            >
+                :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
                   {{ scope.row.head }}
@@ -195,25 +173,6 @@
                 <span style="margin-left: 10px">{{ dateFormat(scope.row.time) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="所属候选图谱">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.candidateId }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-                label="操作">
-              <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">编辑
-                </el-button>
-                <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除
-                </el-button>
-              </template>
-            </el-table-column>
           </el-table>
           <el-pagination
               @size-change="allTripleHandleSizeChange"
@@ -243,15 +202,18 @@
             <span>数据来源:</span>
             <el-radio v-model="source" label="编目系统">编目系统</el-radio>
             <el-radio v-model="source" label="文本抽取">文本抽取</el-radio>
+            <el-radio v-model="source" label="爬虫">爬虫</el-radio>
             <el-radio v-model="source" label="">默认</el-radio>
           </div>
           <el-tooltip class="item" effect="dark" content="重置搜索条件" placement="top">
             <el-button icon="el-icon-refresh-left" circle @click="reset()"></el-button>
           </el-tooltip>
           <el-button type="primary" style="margin-top: 10px;" @click="filter()">筛选</el-button>
-          <el-tooltip class="item" effect="dark" content="选取符合当前条件的所有三元组" placement="top">
-            <el-button type="success" style="margin-top: 10px;">全选</el-button>
-          </el-tooltip>
+<!--          <el-tooltip class="item" effect="dark" content="选取符合当前条件的所有三元组" placement="top">-->
+<!--            <el-button type="success" style="margin-top: 10px;">全选</el-button>-->
+<!--          </el-tooltip>-->
+          <el-button type="primary" style="margin-top:10px;margin-bottom: 10px;" @click="synchronizationDisplay=true">同步
+          </el-button>
         </div>
         <keep-alive>
           <el-table
@@ -266,6 +228,8 @@
             </el-table-column>
             <el-table-column
                 label="头实体"
+                sortable
+                prop="head"
                 :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
@@ -300,6 +264,8 @@
             </el-table-column>
             <el-table-column
                 label="关系"
+                sortable
+                prop="rel"
                 :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
@@ -309,6 +275,8 @@
             </el-table-column>
             <el-table-column
                 label="尾实体"
+                sortable
+                prop="tail"
                 :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <div slot="reference" class="name-wrapper">
@@ -364,12 +332,12 @@
                 <el-tag size="medium" type="danger">{{ scope.row.status }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="到达时间">
+            <el-table-column sortable prop="arrive_time" label="到达时间">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ dateFormat(scope.row.time) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="来源">
+            <el-table-column label="来源" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <span>{{ scope.row.source }}</span>
               </template>
@@ -378,21 +346,42 @@
                 label="操作">
               <template slot-scope="scope">
                 <el-button
-                    size="warning" icon="el-icon-edit" circle
-                    @click="handleCandidateTripleEdit(scope.$index, scope.row)"></el-button>
+                    size="mini"
+                    type="warning"
+                    plain
+                    style="margin-right: 10px;"
+                    @click="handleCandidateTripleEdit(scope.$index, scope.row)">编辑
+                </el-button>
                 <el-popconfirm
-                    confirm-button-text='好的'
-                    cancel-button-text='不用了'
-                    icon="el-icon-info"
-                    icon-color="red"
-                    title="确定删除该三元组吗？"
-                    @confirm="handleDeleteCandidateTriple(scope.$index, scope.row)"
-                >
-                  <el-button
-                      type="danger" icon="el-icon-delete" circle slot="reference"></el-button>
-                </el-popconfirm>
+                  confirm-button-text='好的'
+                  cancel-button-text='不用了'
+                  icon="el-icon-info"
+                  icon-color="red"
+                  title="确定删除该三元组吗？"
+                  @confirm="handleDeleteCandidateTriple(scope.$index, scope.row)">
+                  <el-button size="mini" type="danger" slot="reference" plain>删除</el-button>
+              </el-popconfirm>
               </template>
             </el-table-column>
+<!--            <el-table-column-->
+<!--                label="操作">-->
+<!--              <template slot-scope="scope">-->
+<!--                <el-button-->
+<!--                    size="warning" icon="el-icon-edit" circle-->
+<!--                    @click="handleCandidateTripleEdit(scope.$index, scope.row)"></el-button>-->
+<!--                <el-popconfirm-->
+<!--                    confirm-button-text='好的'-->
+<!--                    cancel-button-text='不用了'-->
+<!--                    icon="el-icon-info"-->
+<!--                    icon-color="red"-->
+<!--                    title="确定删除该三元组吗？"-->
+<!--                    @confirm="handleDeleteCandidateTriple(scope.$index, scope.row)"-->
+<!--                >-->
+<!--                  <el-button-->
+<!--                      type="danger" icon="el-icon-delete" circle slot="reference"></el-button>-->
+<!--                </el-popconfirm>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
           </el-table>
         </keep-alive>
         <el-pagination
@@ -439,12 +428,11 @@
             width="30%">
           <div>
             <el-input placeholder="请输入候选图谱名称" v-model="kgName" required="true"></el-input>
-            <el-input placeholder="为该候选图谱添加备注(可选)" style="display: grid;margin-top: 10px;"
-                      v-model="kgComment"></el-input>
+            <el-input placeholder="为该候选图谱添加备注(可选)" style="display: grid;margin-top: 10px;" v-model="kgComment"></el-input>
           </div>
           <span slot="footer" class="dialog-footer">
           <el-button @click="kgDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="kgDialogVisible = false;generateNewKG()">确 定</el-button>
+          <el-button type="primary" @click="generateNewKG()">确 定</el-button>
         </span>
         </el-dialog>
         <el-popover
@@ -465,6 +453,8 @@
         >
           <el-table-column
               label="头实体"
+              sortable
+              prop="sel_head"
               :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
@@ -475,6 +465,8 @@
           </el-table-column>
           <el-table-column
               label="关系"
+              sortable
+              prop="sel_rel"
               :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
@@ -484,25 +476,14 @@
           </el-table-column>
           <el-table-column
               label="尾实体"
+              sortable
+              prop="sel_tail"
               :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 {{ scope.row.tail }}
                 <el-tag size="medium" type="info">{{ scope.row.tailCategory }}</el-tag>
               </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-              label="操作">
-            <template slot-scope="scope">
-              <el-button
-                  size="warning" icon="el-icon-edit" circle
-                  @click="handleEdit(scope.$index, scope.row)"></el-button>
-              <el-tooltip class="item" effect="dark" content="撤销该三元组" placement="top-start">
-                <el-button
-                    type="danger" icon="el-icon-refresh-left" circle
-                    @click="handleDelete(scope.$index, scope.row)"></el-button>
-              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -842,7 +823,16 @@ export default {
     },
     // 多选值的变化
     handleSelectionChange(val) {
-      // console.log(val);
+      var  row = val[val.length-1];
+      if(row.headCategory==null||row.tailCategory==null){
+        this.$message({
+          message: '选中的三元组属性实体必须有类型',
+          type: 'warning'
+        });
+        //取消选中
+        this.$refs.candiateMultipleTable.toggleRowSelection(row);
+        return;
+      }
       //清空数组
       this.selectedTripleList.splice(0, this.selectedTripleList.length);
       val.forEach((item, index) => {
@@ -888,6 +878,13 @@ export default {
     },
     //生成新的候选图谱
     generateNewKG() {
+      if(this.kgName==""){
+        this.$message({
+          message: '请输入候选图谱名称',
+          type: 'warning'
+        });
+        return;
+      }
       //axios请求
       axios.post('/api/candidateKg/new', {
         name: this.kgName,
@@ -908,6 +905,8 @@ export default {
                 this.selectedTriplePageList = []
                 this.selectedTripleList = []
                 this.candidateTriplePageList = []
+                //使对话框不可见
+                this.kgDialogVisible = false;
                 //恢复到第二页并重新请求当页数据
                 // this.allTriplePageList=[]
                 // this.get_triples(this.allTripleCurrentPage,this.allTriplePageSize)
