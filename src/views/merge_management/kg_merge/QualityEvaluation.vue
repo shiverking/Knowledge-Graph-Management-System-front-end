@@ -17,6 +17,15 @@
           </div>
           <el-button type="success" slot="reference" style="margin-top: 10px; margin-left: 10px;">应用</el-button>
         </el-popover>
+        <el-button style="margin-left: 10px;" @click="dialogTableVisible = true">查看规则</el-button>
+        <el-dialog title="已设置规则" :visible.sync="dialogTableVisible">
+          <el-table :data="gridData" border>
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column property="rule" label="规则描述"></el-table-column>
+          </el-table>
+          <el-pagination background layout="prev, pager, next" style="margin-top: 10px;" :total="1">
+          </el-pagination>
+        </el-dialog>
         <keep-alive>
           <el-table :data="tableData2" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
             <!-- <el-table-column
@@ -568,6 +577,10 @@
     },
     data() {
       return {
+        gridData: [{
+          rule: '检测所有不存在于核心本体中的类别所构成的元组',
+        }],
+        dialogTableVisible: false,
         handoff:false,
         loading: true,
         isJoin: false, //是否应用链接异常修改的flag
