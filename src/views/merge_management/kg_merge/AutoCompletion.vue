@@ -173,12 +173,12 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="批次大小" style="width:200px; margin-bottom:0px;">
-                    <el-input v-model="form.batch"></el-input>
+                    <el-input disabled v-model="form.batch"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="迭代次数" style="width:200px; margin-left:30px;">
-                    <el-input v-model="form.epoch"></el-input>
+                    <el-input disabled v-model="form.epoch"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -368,24 +368,24 @@
                 <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column> -->
-            <el-table-column label="头实体" width="400" sortable prop="head">
+            <el-table-column label="头实体" width="400">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.head }}</span>
                 <el-tag size="small" type="sucess">{{ scope.row.head_typ }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="关系" sortable prop="rel">
+            <el-table-column label="关系">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.rel }}</span>
               </template>
             </el-table-column>     
-            <el-table-column label="尾实体" width="400" sortable prop="tail">
+            <el-table-column label="尾实体" width="400">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.tail }}</span>
                 <el-tag size="small" type="info">{{ scope.row.tail_typ }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="time" label="时间" sortable></el-table-column> 
+            <el-table-column prop="time" label="时间"></el-table-column> 
           </el-table>
         </keep-alive>
         <el-pagination
@@ -580,11 +580,11 @@
         selectedDatasets:[],
         resultAfterTrainNewModel: '',
         form: {
-          name: 'ConvE_2022_11_16',
+          name: 'ConvE',
           model: 'ConvE',
           path:'核心图谱全部三元组',
           batch:'128',
-          epoch: '600'
+          epoch: '50'
         },
         formLabelWidth: '120px', //表单样式
         node_count: 0,
@@ -951,12 +951,22 @@
           .then((response)=>{
             if (response.status == 200) {
               this.learning_finish(this.form['name'])
-              const h = this.$createElement;
-              this.$notify({
-                title: '训练完毕',
-                message: h('i', { style: 'color: teal'}, '训练成功，模型已保存！'),
-                offset: 100
-              });
+              var isNull = response.data.data;
+              if(isNull){
+                const h = this.$createElement;
+                this.$notify({
+                  title: '训练完毕',
+                  message: h('i', { style: 'color: teal'}, '训练成功，模型已保存！'),
+                  offset: 100
+                });
+              }else{
+                const h = this.$createElement;
+                this.$notify({
+                  title: '训练失败',
+                  message: h('i', { style: 'color: teal'}, '图谱为空，没有模型生成！'),
+                  offset: 100
+                });
+              }
               }
           })
           .catch(function (error) {
