@@ -44,40 +44,71 @@
             :visible.sync="innerVisible"
             append-to-body>
           <el-row>
-            <el-input class="input_modify" placeholder="*请输入头实体"></el-input>
+            <el-input v-model="newTripleInfo.head" class="input_modify" placeholder="*请输入头实体"></el-input>
           </el-row>
           <el-row>
-            <el-input class="input_modify" placeholder="*请输入头实体类型"></el-input>
+            <el-input v-model="newTripleInfo.head_type" class="input_modify" placeholder="*请输入头实体类型"></el-input>
           </el-row>
           <el-row>
-            <el-input class="input_modify" placeholder="*请输入关系"></el-input>
+            <el-input v-model="newTripleInfo.rel" class="input_modify" placeholder="*请输入关系"></el-input>
           </el-row>
           <el-row>
-            <el-input class="input_modify" placeholder="*请输入尾实体"></el-input>
+            <el-input v-model="newTripleInfo.tail" class="input_modify" placeholder="*请输入尾实体"></el-input>
           </el-row>
           <el-row>
-            <el-input class="input_modify" placeholder="*请输入尾实体类型"></el-input>
+            <el-input v-model="newTripleInfo.tail_type" class="input_modify" placeholder="*请输入尾实体类型"></el-input>
           </el-row>
-          <el-button>确定</el-button>
+          <el-button @click="confirmInsert()">确定</el-button>
         </el-dialog>
         <el-table
             :data="extractTablePageList"
             style="width: 100%">
           <el-table-column
-              prop="head"
-              label="头实体"
-          >
+              label="头实体">
+          <template slot-scope="scope">
+            {{ scope.row.head }}
+            <el-tag size="medium" type="warning">{{ scope.row.head_typ }}</el-tag>
+          </template>>
           </el-table-column>
           <el-table-column
-              prop="rel"
-              label="关系"
-          >
+              label="关系">
+            <template slot-scope="scope">
+              {{ scope.row.rel}}
+            </template>>
           </el-table-column>
           <el-table-column
-              prop="tail"
-              label="尾实体"
-          >
+              label="尾实体">
+            <template slot-scope="scope">
+              {{ scope.row.tail}}
+              <el-tag size="medium" type="warning">{{ scope.row.tail_typ }}</el-tag>
+            </template>>
           </el-table-column>
+          <el-dialog title="修改三元组信息" :visible.sync="dialogModification" append-to-body>
+            <el-row>
+              <span>头实体:</span>
+              <el-input v-model="tripleInfo.head" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>头实体类型:</span>
+              <el-input v-model="tripleInfo.head_type" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>关系:</span>
+              <el-input v-model="tripleInfo.rel" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>尾实体:</span>
+              <el-input v-model="tripleInfo.tail" class="input_modify"></el-input>
+            </el-row>
+            <el-row>
+              <span>尾实体类型:</span>
+              <el-input v-model="tripleInfo.tail_type" class="input_modify"></el-input>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogModification = false">取 消</el-button>
+              <el-button type="primary" @click="dialogModification = false;confirmUpdate()">确 定</el-button>
+            </div>
+          </el-dialog>
           <el-table-column
               label="操作">
             <template slot-scope="scope">
@@ -265,10 +296,143 @@
         isStop:false,
         //是否进行演示
         ifPerform:false,
-        innerVisible:false
+        innerVisible:false,
+        tripleInfo: {
+          id: "",
+          head: "",
+          head_type: "暂无",
+          rel: "",
+          tail: "",
+          tail_type: "暂无",
+        },
+        tmpTripleInfo:{
+          head: "",
+          head_type: "",
+          rel: "",
+          tail: "",
+          tail_type: "",
+        },
+        newTripleInfo: {
+          head: "",
+          head_type: "",
+          rel: "",
+          tail: "",
+          tail_type: "",
+        },
+        dialogModification:false,
       };
     },
     methods: {
+      confirmInsert(){
+        if(this.newTripleInfo.head==""){
+          this.$message({
+            message: '请输入头实体',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.newTripleInfo.tail==""){
+          this.$message({
+            message: '请输入尾实体',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.newTripleInfo.head_type==""){
+          this.$message({
+            message: '请输入头实体类别',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.newTripleInfo.tail_type ==""){
+          this.$message({
+            message: '请输入尾实体类别',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.newTripleInfo.rel==""){
+          this.$message({
+            message: '请输入关系',
+            type: 'warning'
+          });
+          return;
+        }
+        //关闭对话框
+        this.innerVisible = false;
+        this.extract_table.push({
+          head:this.newTripleInfo.head,
+          head_typ:this.newTripleInfo.head_type,
+          rel:this.newTripleInfo.rel,
+          tail:this.newTripleInfo.tail,
+          tail_typ:this.newTripleInfo.tail_type,
+        })
+        //重新绘制图片
+        this.show_triples(this.extract_table);
+        //重新分页
+        this.getExtractTablePageList();
+        this.newTripleInfo.head="";
+        this.newTripleInfo.head_type="";
+        this.newTripleInfo.rel="";
+        this.newTripleInfo.tail="";
+        this.newTripleInfo.tail_type="";
+
+      },
+      handleDeleteCandidateTriple(index, row) {
+        this.extractTablePageList = this.extractTablePageList.filter((item,index)=>{
+          return item!=row;
+        })
+        this.extract_table = this.extract_table.filter((item,index)=>{
+          return item!=row;
+        })
+        //重新绘制图片
+        this.show_triples(this.extract_table);
+      },
+      confirmUpdate() {
+        this.dialogModification = false;
+        for(var i=0;i<this.extract_table.length;i++){
+          var item = this.extract_table[i];
+          console.log(item);
+          if(item.head == this.tmpTripleInfo.head&&item.rel==this.tmpTripleInfo.rel&&item.tail==this.tmpTripleInfo.tail&&item.head_typ==this.tmpTripleInfo.head_type&&item.tail_typ==this.tmpTripleInfo.tail_type){
+            console.log(item)
+            item.head = this.tripleInfo.head ;
+            item.head_typ = this.tripleInfo.head_type;
+            item.tail_typ = this.tripleInfo.tail_type;
+            item.rel = this.tripleInfo.rel;
+            item.tail = this.tripleInfo.tail;
+            //恢复
+            this.tmpTripleInfo.head = "";
+            this.tmpTripleInfo.head_type ="";
+            this.tmpTripleInfo.rel = "";
+            this.tmpTripleInfo.tail = "";
+            this.tmpTripleInfo.tail_type = "";
+            break;
+          }
+        }
+        this.getExtractTablePageList();
+      },
+      //修改三元组信息
+      handleCandidateTripleEdit(index, row) {
+        this.dialogModification = true;
+        //暂存一个
+        this.tmpTripleInfo.head = row.head;
+        this.tmpTripleInfo.head_type = row.head_typ;
+        this.tmpTripleInfo.rel = row.rel;
+        this.tmpTripleInfo.tail = row.tail;
+        this.tmpTripleInfo.tail_type = row.tail_typ;
+
+        this.tripleInfo.head = row.head;
+        if (row.head_typ != null) {
+          this.tripleInfo.head_type = row.head_typ;
+        }
+        if (row.tail_typ != null) {
+          this.tripleInfo.tail_type = row.tail_typ;
+        }
+        this.tripleInfo.rel = row.rel;
+        this.tripleInfo.tail = row.tail;
+        this.tripleInfo.id = row.id;
+      },
       // 更换数据模式
       changeMode(){
        this.ifPerform = !this.ifPerform;
@@ -281,6 +445,9 @@
        //切换模式时清空文本
        this.multipleSelectionContent=[];
        this.$refs.multipleTable.clearSelection();
+       //清空table
+       this.extract_table = [];
+       this.extractTablePageList = [];
       },
       // 三元组抽取
       async triples_extraction(){
@@ -487,7 +654,6 @@
               .then((response) => {
                 if (response.status == 200) {
                   //修改数据
-                  console.log(response)
                   this.unstructuredTextPageList = response.data.data
                   this.unstructuredTextTotal = response.data.count
                 }
@@ -560,7 +726,7 @@
       },
       //确定导出至三元组库
       confirmExport(){
-        if(this.extract_ids.length==0){
+        if(this.extract_table.length==0){
           this.$message({
             message: '当前没有抽取结果',
             type: 'warning'
