@@ -40,7 +40,6 @@ export default {
   name: "Column",
   mounted() {
     this.drawLine();
-    this.task();
   },
   data() {
     return {

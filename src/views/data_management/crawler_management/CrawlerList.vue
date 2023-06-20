@@ -19,7 +19,7 @@
       </el-select>
 
 <!--      <el-button type="primary" size="medium" style="float:right" @click="dialogFormVisible = true">添加新爬虫</el-button>-->
-      <el-dialog title="爬虫信息" :visible.sync="dialogFormVisible" center = true>
+      <el-dialog title="爬虫信息" :visible.sync="dialogFormVisible" :center = true>
         <el-form :model="form">
           <el-form-item label="爬虫名称" :label-width="formLabelWidth">
             <el-input v-model="form.name" autocomplete="off" style="width: 400px"></el-input>
@@ -179,7 +179,7 @@ export default {
       tableData: [],
       currentPage: 1,
       pageSize:10,
-      total: '',
+      total: 10,
 
       value: '',
       input: '',
@@ -232,30 +232,24 @@ export default {
     uploadFile(file) {
       let FormDatas = new FormData();
       FormDatas.append("file", file.file);
-      console.log(file)
-      console.log(FormDatas)
       const _this = this
       _this.axios.post(
            '/api/crawl/file',
           FormDatas,
           {headers: _this.headers})
           .then(resp => {
-            console.log(resp)
             _this.$message({
               message: '恭喜你，添加成功！',
               type: 'success'})
           })
           .catch(err => {
-            console.log(err)
             _this.$message.error('抱歉，添加失败！');
       })
     },
     submitUpload() {
-      console.log('submit')
       this.$refs.upload.submit();
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
     },
     addCrawler() {
       const _this = this
@@ -313,7 +307,6 @@ export default {
       const _this =this
       row.status=0
       _this.axios.get('/api/crawl/stop/'+row.cid).then(function(resp){
-        console.log(resp)
       })
     },
     crawldetail(row){
@@ -326,13 +319,11 @@ export default {
     },
     handleCurrentChange(val){
       this.currentPage = val
-      console.log(this.currentPage)
       this.crawl_list()
     },
     // fromKgTable的前端Size页改变动作
     handleSizeChange(val){
       this.pageSize = val
-      console.log(this.pageSize)
       this.crawl_list()
     },
     crawl_list(){

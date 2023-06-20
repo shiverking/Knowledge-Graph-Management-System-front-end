@@ -6,7 +6,7 @@
     <el-table
       :data="tableData1"
       border
-      style="width: 100%">
+      style="width: 651px">
 
       <el-table-column
         fixed
@@ -29,14 +29,14 @@
         label="性别"
         width="200">
       </el-table-column>
-      <el-table-column
-        prop="picture"
-        label="图片"
-        width="200">
-        <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="picture"-->
+<!--        label="图片"-->
+<!--        width="200">-->
+<!--        <template slot-scope="scope">-->
+<!--          <img :src="scope.row.picture" width="80" height="80"  />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="address"
         label="地址"
@@ -58,7 +58,7 @@
     <el-table
       :data="tableData"
       border
-      style="width: 100%">
+      style="width: 75.5%">
       <el-table-column
         fixed
         prop="id"
@@ -70,14 +70,14 @@
         label="舰船名称"
         width="100">
       </el-table-column>
-      <el-table-column
-        prop="picture"
-        label="图片"
-        width="100">
-        <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="picture"-->
+<!--        label="图片"-->
+<!--        width="100">-->
+<!--        <template slot-scope="scope">-->
+<!--          <img :src="scope.row.picture" width="80" height="80"  />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="description"
         label="简介"
@@ -209,7 +209,6 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/vessel/findByTaskid/' + this.$route.query.id).then(function (resp) {
-      console.log(resp)
       _this.tableData = resp.data
     });
     _this.axios.get('/api/person/findByTaskid/' + this.$route.query.id).then(function (resp) {

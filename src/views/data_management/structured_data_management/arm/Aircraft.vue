@@ -41,18 +41,18 @@
           label="飞机名称"
           width="100">
       </el-table-column>
-      <el-table-column
-          prop="picture"
-          label="图片"
-          width="100">
-        <template slot-scope="scope">
-          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>
-            </div>
-          </el-image>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          prop="picture"-->
+<!--          label="图片"-->
+<!--          width="100">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-image :src="scope.row.picture" style="width: 80px;height: 80px" >-->
+<!--            <div slot="error" class="image-slot">-->
+<!--              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>-->
+<!--            </div>-->
+<!--          </el-image>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
           prop="description"
           label="简介"
@@ -330,8 +330,8 @@ export default {
       activeName: 'first',
       currentPage:'1',
       currentPage1:'1',
-      pageSize:'1',
-      total:'11',
+      pageSize:1,
+      total:11,
       tableData: [],
       ruleForm: {
         key: '',
@@ -356,7 +356,6 @@ export default {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
           axios.get('/api/aircraft/search',{params:_this.ruleForm}).then(function(resp){
-            console.log(resp)
             _this.tableData =resp.data.list
             _this.pageSize = resp.data.pageSize
             _this.total = resp.data.total
@@ -396,7 +395,6 @@ export default {
       const _this = this
       if(_this.ruleForm.value ==''){
         _this.axios.get('/api/aircraft/findAll/'+(currentPage)+'/2').then(function(resp){
-          console.log(resp)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
           _this.total = resp.data.total
@@ -404,7 +402,6 @@ export default {
       else{
         _this.ruleForm.page = currentPage
         _this.axios.get('/api/aircraft/search',{params:_this.ruleForm}).then(function(resp){
-          console.log(_this.ruleForm)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
           _this.total = resp.data.total
@@ -437,7 +434,6 @@ export default {
       let workboot = XLSX.read(data,{type:"binary"});
       let worksheet = workboot.Sheets[workboot.SheetNames[0]];
       data = XLSX.utils.sheet_to_json(worksheet);
-      console.log(data)
       this.tableData1=data
       this.show1=true
       this.show=true
@@ -456,7 +452,6 @@ export default {
       const _this =this
       this.dialogFormVisible = false
       _this.axios.post('/api/aircraft/clean',_this.tableData).then(function(resp){
-        console.log(resp)
         _this.tableData = resp.data
       })
     }
@@ -467,7 +462,6 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/aircraft/findAll/0/2').then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize
       _this.total = resp.data.total

@@ -40,8 +40,7 @@
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
+        style="width: 100%">
 
       <el-table-column
           type="selection"
@@ -308,7 +307,7 @@ export default {
     search(){
       const _this = this
       _this.axios.get('/api/semistructure/getSemistructuredDataByname/'+"/0"+'/10/'+_this.ruleForm.value).then(function(resp) {
-        console.log(resp)
+
         _this.tableData = resp.data.data
         _this.pageSize = resp.data.data.length
         _this.total = resp.data.count
@@ -318,7 +317,6 @@ export default {
     currentChange(currentPage){
       const _this = this
         _this.axios.get('/api/semistructure/getSemistructuredDataBycid/'+(currentPage)+'/10/'+_this.crawlid).then(function(resp) {
-          console.log(resp)
           _this.tableData = resp.data.data
           _this.pageSize = resp.data.data.length
           _this.total = resp.data.count
@@ -327,7 +325,6 @@ export default {
     selectTrigger(id) {
       const _this = this
       _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/' + id).then(function (resp) {
-        console.log(resp)
         _this.tableData = resp.data.data
         _this.total = resp.data.count
         _this.pagesize = resp.data.data.length
@@ -369,14 +366,11 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/crawl/findAllnopage').then(function(resp){
-      console.log(resp)
       _this.options = resp.data
       _this.value= resp.data[0].cid
-      console.log(_this.value)
 
     })
     _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/1').then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.data
       _this.total=resp.data.count
       _this.pagesize=resp.data.data.length

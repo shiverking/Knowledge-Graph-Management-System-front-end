@@ -87,7 +87,6 @@ export default {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
           _this.axios.get('/api/plan/search',{params:_this.ruleForm}).then(function(resp){
-            console.log(_this.ruleForm)
             _this.tableData = resp.data.list
             _this.pageSize = resp.data.pageSize
             _this.total = resp.data.total
@@ -132,7 +131,6 @@ export default {
     page(currentPage){
       const _this = this
       _this.axios.get('/api/plan/findAll/'+(currentPage)+'/9').then(function(resp){
-        console.log(resp)
         _this.tableData = resp.data.list
         _this.pageSize = resp.data.pageSize
         _this.total = resp.data.total
@@ -143,8 +141,8 @@ export default {
   data() {
     return {
       currentPage:'1',
-      pageSize:'1',
-      total:'11',
+      pageSize:1,
+      total:11,
       tableData: [],
       ruleForm: {
         key: '',
@@ -166,7 +164,6 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/plan/findAll/0/9').then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize
       _this.total = resp.data.total
