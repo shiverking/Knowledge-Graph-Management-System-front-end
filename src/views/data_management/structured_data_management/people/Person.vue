@@ -49,14 +49,14 @@
           label="性别"
           width="200">
       </el-table-column>
-      <el-table-column
-          prop="picture"
-          label="图片"
-          width="200">
-        <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          prop="picture"-->
+<!--          label="图片"-->
+<!--          width="200">-->
+<!--        <template slot-scope="scope">-->
+<!--          <img :src="scope.row.picture" width="80" height="80"  />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
           prop="address"
           label="地址"
@@ -95,7 +95,6 @@ export default {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
           _this.axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
-            console.log(_this.ruleForm)
             _this.tableData = resp.data.list
             _this.pageSize = resp.data.pageSize
             _this.total = resp.data.total
@@ -153,7 +152,6 @@ export default {
       else{
         _this.ruleForm.page = _this.currentPage
         _this.axios.get('/api/person/search',{params:_this.ruleForm}).then(function(resp){
-          console.log(_this.ruleForm)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
           _this.total = resp.data.total
@@ -165,8 +163,8 @@ export default {
   data() {
     return {
       currentPage:'1',
-      pageSize:'1',
-      total:'11',
+      pageSize:1,
+      total:11,
       tableData: [],
       ruleForm: {
         key: '',
@@ -188,7 +186,6 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/person/findAll/0/7').then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize
       _this.total = resp.data.total

@@ -29,7 +29,7 @@
     <!-- 选中菜单 -->
     <div id="check_menu" :style="displayCheckedMenu">
       <div class="check_menu_item"> <a @click="handleCheckAllChange(false)">
-        <svg-icon icon-file-name="chacha" />
+<!--        <svg-icon icon-file-name="chacha" />-->
       </a></div>
       <div class="check_menu_item check_menu_txt">已选择{{ checkedCount }}张图片</div>
       <div class="check_menu_feature">
@@ -196,14 +196,12 @@ export default {
   mounted() {
     const _this = this
     _this.axios.get('/api/image/getimage/0/24/'+this.$route.query.cid).then(function(resp){
-      console.log(resp)
       _this.typeimages = resp.data.data
       _this.images=resp.data.data
       _this.totalCount=resp.data.count
       // _this.pageSize=resp.data.data.length
     })
     _this.axios.get('/api/image/getimagetype/'+this.$route.query.cid).then(function(resp){
-      console.log(resp)
       _this.imageTypes = resp.data
     })
     //
@@ -360,7 +358,6 @@ export default {
       })
     },
     handleSelect(value, path) {
-      console.log(path)
       this.arrPath = path;
       // value
       switch (path[0]) {
@@ -399,7 +396,6 @@ export default {
       if (mode == "type") {
         const _this = this
         _this.axios.get('/api/image/getimagebytype/'+(_this.currentPage)+'/24/'+this.$route.query.cid+"/"+value).then(function(resp){
-          console.log(resp)
           _this.typeimages = resp.data.data
           // _this.images=resp.data.data
           _this.totalCount=resp.data.count
@@ -438,7 +434,6 @@ export default {
       }
       else{
         _this.axios.get('/api/image/getimage/'+(_this.currentPage)+'/24/'+this.$route.query.cid).then(function(resp){
-          console.log(resp)
           _this.typeimages = resp.data.data
           // _this.images=resp.data.data
           _this.totalCount=resp.data.count

@@ -9,9 +9,9 @@
             <el-input v-model="ruleForm.aircraft_name"></el-input>
         </el-form-item>
 
-        <el-form-item label="图片" prop="picture">
-            <el-input v-model="ruleForm.picture"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="图片" prop="picture">-->
+<!--            <el-input v-model="ruleForm.picture"></el-input>-->
+<!--        </el-form-item>-->
 
       <el-form-item label="简介" prop="description">
         <el-input v-model="ruleForm.description"></el-input>
@@ -111,7 +111,6 @@
         created() {
             const _this = this
           _this.axios.get('/api/aircraft/findById/'+this.$route.query.id).then(function(resp){
-              console.log(resp)
                 _this.ruleForm = resp.data
             })
         }

@@ -97,14 +97,12 @@ export default {
   },
   mounted() {
     setTimeout(() =>{
-      console.log(this.normal)
       this.draw_datapie(this.normal, this.running, this.abnormal);
     }, 1000)
   },
   created() {
     const _this = this
     _this.axios.get('/api/crawl/statistic').then(function(resp){
-      console.log(resp)
       _this.normal = resp.data['正常']
       _this.abnormal = resp.data['异常']
       _this.running = resp.data['运行中']

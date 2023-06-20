@@ -15,9 +15,9 @@
     <el-form-item label="性别" prop="gender">
       <el-input v-model="form.person.gender"></el-input>
     </el-form-item>
-    <el-form-item label="图片" prop="picture">
-      <el-input v-model="form.person.picture"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="图片" prop="picture">-->
+<!--      <el-input v-model="form.person.picture"></el-input>-->
+<!--    </el-form-item>-->
 
     <el-form-item label="地址" prop="address" >
       <el-input v-model="form.person.address"></el-input>
@@ -335,11 +335,9 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/person/findById/'+this.$route.query.id).then(function(resp){
-      console.log(resp)
       _this.form.person = resp.data
     })
     _this.axios.get('/api/person/searchedu/'+this.$route.query.id).then(function(resp){
-      console.log(resp.data)
       _this.form.education = resp.data
     })
     _this.axios.get('/api/person/searchresu/'+this.$route.query.id).then(function(resp){

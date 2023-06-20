@@ -6,9 +6,9 @@
       <el-input v-model="ruleForm.name"></el-input>
     </el-form-item>
 
-    <el-form-item label="图片" prop="picture">
-      <el-input v-model="ruleForm.picture"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="图片" prop="picture">-->
+<!--      <el-input v-model="ruleForm.picture"></el-input>-->
+<!--    </el-form-item>-->
 
     <el-form-item label="简介" prop="description">
       <el-input v-model="ruleForm.description"></el-input>

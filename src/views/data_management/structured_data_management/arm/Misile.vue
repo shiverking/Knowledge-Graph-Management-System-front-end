@@ -39,18 +39,18 @@
           label="导弹名称"
           width="100">
       </el-table-column>
-      <el-table-column
-          prop="picture"
-          label="图片"
-          width="100">
-        <template slot-scope="scope">
-          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>
-            </div>
-          </el-image>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          prop="picture"-->
+<!--          label="图片"-->
+<!--          width="100">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-image :src="scope.row.picture" style="width: 80px;height: 80px">-->
+<!--            <div slot="error" class="image-slot">-->
+<!--              <i class="el-icon-picture-outline"  style="margin: 0 20px; font-size: 30px; "></i>-->
+<!--            </div>-->
+<!--          </el-image>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
           prop="description"
           label="简介"
@@ -125,8 +125,8 @@ export default {
   data() {
     return {
       currentPage:1,
-      pageSize:'1',
-      total:'11',
+      pageSize:1,
+      total:11,
       tableData: [],
       ruleForm: {
         key: '',
@@ -151,7 +151,6 @@ export default {
         if (valid) {
           _this.ruleForm.page = _this.currentPage
           _this.axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
-            console.log(resp)
             _this.tableData = resp.data.list
             _this.pageSize = resp.data.pageSize
             _this.total = resp.data.total
@@ -190,7 +189,6 @@ export default {
       const _this = this
       if(_this.ruleForm.value =='') {
         _this.axios.get('/api/misile/findAll/' + (currentPage ) + '/2').then(function (resp) {
-          console.log(resp)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
           _this.total = resp.data.total
@@ -199,7 +197,6 @@ export default {
       else{
         _this.ruleForm.page= currentPage
         _this.axios.get('/api/misile/search',{params:_this.ruleForm}).then(function(resp){
-          console.log(_this.ruleForm)
           _this.tableData = resp.data.list
           _this.pageSize = resp.data.pageSize
           _this.total = resp.data.total
@@ -214,7 +211,6 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/misile/findAll/0/2').then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.list
       _this.pageSize = resp.data.pageSize
       _this.total = resp.data.total

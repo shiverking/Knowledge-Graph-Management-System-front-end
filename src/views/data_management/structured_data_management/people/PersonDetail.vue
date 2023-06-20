@@ -227,7 +227,6 @@ export default {
       _this.tableData1 = resp.data
     })
     _this.axios.get('/api/person/searchedu/' + this.$route.query.id).then(function (resp) {
-      console.log(resp)
       _this.tableData = resp.data
     });
     _this.axios.get('/api/plan/findById/' + this.$route.query.id1).then(function (resp) {
