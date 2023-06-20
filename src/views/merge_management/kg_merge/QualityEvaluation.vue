@@ -716,6 +716,7 @@
                 message: '提交成功!',
                 type: 'success'
               });
+              this.$router.push('/merge/kg/completion');
           }
         })
         .catch(function (error) {

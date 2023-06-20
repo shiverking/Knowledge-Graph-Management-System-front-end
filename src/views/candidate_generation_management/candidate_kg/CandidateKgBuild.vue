@@ -200,10 +200,9 @@
           </el-date-picker>
           <div style="display: inline-block;margin: 10px;">
             <span>数据来源:</span>
+            <el-radio v-model="source" label="">所有来源</el-radio>
             <el-radio v-model="source" label="编目系统">编目系统</el-radio>
             <el-radio v-model="source" label="文本抽取">文本抽取</el-radio>
-            <el-radio v-model="source" label="爬虫">爬虫</el-radio>
-            <el-radio v-model="source" label="">默认</el-radio>
           </div>
           <el-tooltip class="item" effect="dark" content="重置搜索条件" placement="top">
             <el-button icon="el-icon-refresh-left" circle @click="reset()"></el-button>
@@ -728,6 +727,7 @@ export default {
     },
     //翻页动作
     candidateTripleHandleCurrentChange(val) {
+      this.candidateTripleCurrentPage = val;
       if (this.isConditionalSearch == false) {
         this.get_candidate_triples(val, this.candidateTriplePageSize)
       } else {
@@ -823,8 +823,9 @@ export default {
     },
     // 多选值的变化
     handleSelectionChange(val) {
-      var  row = val[val.length-1];
-      if(row.headCategory==null||row.tailCategory==null){
+      var row = val[val.length-1];
+      console.log(row);
+      if(row.headCategory == null||row.headCategory == ""||row.tailCategory == ""||row.tailCategory ==null){
         this.$message({
           message: '选中的三元组属性实体必须有类型',
           type: 'warning'

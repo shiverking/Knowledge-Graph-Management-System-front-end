@@ -72,7 +72,7 @@
           :name="item.name"
           :closable="item.close">
         <keep-alive>
-            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId" @delete="deleteCapture"></component>
+            <component :is="item.content" :containerId="item.name" :candidateID="item.candidateId" @delete="deleteCapture"></component>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -195,7 +195,6 @@ export default {
       //秒 getSeconds()：(0 ~ 59)
       var second = date.getSeconds();
       var time = year + '-' + this.addZero(month) + '-' + this.addZero(day) + '-' + this.addZero(hour) + ':' + this.addZero(minute) + ':' + this.addZero(second);
-      console.log(time)
       return time;
     },
     //小于10的拼接上0字符串
@@ -282,7 +281,7 @@ export default {
     },
     //时间格式化
     dateFormat(data) {
-      return moment(new Date(data).getTime()).format('YYYY-MM-DD');;
+      return moment(new Date(data).getTime()).format('YYYY-MM-DD');
 
     },
     //switch开关改变动作

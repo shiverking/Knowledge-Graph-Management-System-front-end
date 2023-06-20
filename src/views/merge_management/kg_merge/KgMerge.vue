@@ -67,7 +67,7 @@
           width="70%"
           destroy-on-close>
         <!--展示预览-->
-        <component :is="confirmPreview" :previewData="JSON.stringify(previewData)"></component>
+        <component :is="confirmPreview" :previewDATA="JSON.stringify(previewData)"></component>
       </el-dialog>
 
       <!--选择图谱对话框-->
@@ -882,7 +882,6 @@ export default {
         this.multipleSelection.forEach((ele,index)=>{
           selectedIds.push(ele.id);
         })
-      console.log(selectedIds);
       //如果进行了置信度检测,则发送请求1
       if(this.ifApplyConfidence==true){
         //axios请求

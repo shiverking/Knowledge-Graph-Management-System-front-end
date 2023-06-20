@@ -859,6 +859,53 @@ export default {
       }
     },
     //处理cell点击事件
+    // handleCellClick(row, column, cell, event){
+    //   //无显示隔壁也无显示
+    //   if(row.direction==null){
+    //     //新增
+    //     if(column.label=="实体(核心图谱)"){
+    //       row['direction']="left"
+    //     }
+    //     else if(column.label=="实体(候选图谱)"){
+    //       row['direction']="right"
+    //     }
+    //     //新增
+    //     this.mergeTable.push(row)
+    //   }
+    //   //无显示但隔壁有显示
+    //   else if(row.direction!=null&&((column.label=="实体(候选图谱)"&&row.direction=='left')||(column.label=="实体(核心图谱)"&&row.direction=='right'))){
+    //     //箭头转向
+    //     if(column.label=="实体(核心图谱)"){
+    //       this.mergeTable.forEach(function(element) {
+    //         if(element['to']==row.to&&element['from']==row.from){
+    //           element['direction']="left";
+    //         }
+    //       });
+    //     }
+    //     else if(column.label=="实体(候选图谱)"){
+    //       this.mergeTable.forEach(function(element) {
+    //         if(element['to']==row.to&&element['from']==row.from){
+    //           element['direction']="right";
+    //         }
+    //       });
+    //     }
+    //   }
+    //   //有显示
+    //   else if(row.direction!=null&&((column.label=="实体(候选图谱)"&&row.direction=='right')||(column.label=="实体(核心图谱)"&&row.direction=='left'))){
+    //     row.direction = null;
+    //     //删除该条记录
+    //     this.mergeTable = this.mergeTable.filter(item=>{
+    //       if(item['fromId']!=row.fromId){
+    //         return item
+    //       }
+    //       // if(item['to']!=row.to&&item['from']!=row.from){
+    //       //   return item
+    //       // }
+    //     })
+    //   }
+    //   this.tableKey +=1;
+    // },
+    //处理cell点击事件
     handleCellClick(row, column, cell, event){
       //无显示隔壁也无显示
       if(row.direction==null){
