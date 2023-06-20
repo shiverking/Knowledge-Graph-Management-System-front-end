@@ -107,7 +107,7 @@
             </el-row>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogModification = false">取 消</el-button>
-              <el-button type="primary" @click="dialogModification = false;confirmUpdate()">确 定</el-button>
+              <el-button type="primary" @click="confirmUpdate()">确 定</el-button>
             </div>
           </el-dialog>
           <el-table-column
@@ -391,6 +391,42 @@
         this.show_triples(this.extract_table);
       },
       confirmUpdate() {
+        if(this.tripleInfo.head==""){
+          this.$message({
+            message: '请输入头实体',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.tripleInfo.tail==""){
+          this.$message({
+            message: '请输入尾实体',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.tripleInfo.head_type==""){
+          this.$message({
+            message: '请输入头实体类别',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.tripleInfo.tail_type ==""){
+          this.$message({
+            message: '请输入尾实体类别',
+            type: 'warning'
+          });
+          return;
+        }
+        if(this.tripleInfo.rel==""){
+          this.$message({
+            message: '请输入关系',
+            type: 'warning'
+          });
+          return;
+        }
+        this.dialogModification = false;
         this.dialogModification = false;
         for(var i=0;i<this.extract_table.length;i++){
           var item = this.extract_table[i];
@@ -755,6 +791,13 @@
             this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
             //清空选择文本
             this.multipleSelectionContent = [];
+            //关闭选择框
+            this.dialogVisible = false;
+            //清空数组
+            this.extract_table = [];
+            this.extractTablePageList = [];
+            //清空画图
+            this.show_triples(this.extract_table);
           }
         })
         .catch(function (error) {

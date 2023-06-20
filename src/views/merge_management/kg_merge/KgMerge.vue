@@ -882,7 +882,6 @@ export default {
         this.multipleSelection.forEach((ele,index)=>{
           selectedIds.push(ele.id);
         })
-      console.log(selectedIds);
       //如果进行了置信度检测,则发送请求1
       if(this.ifApplyConfidence==true){
         //axios请求

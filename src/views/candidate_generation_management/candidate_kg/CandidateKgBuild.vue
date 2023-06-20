@@ -727,6 +727,7 @@ export default {
     },
     //翻页动作
     candidateTripleHandleCurrentChange(val) {
+      this.candidateTripleCurrentPage = val;
       if (this.isConditionalSearch == false) {
         this.get_candidate_triples(val, this.candidateTriplePageSize)
       } else {
@@ -822,8 +823,9 @@ export default {
     },
     // 多选值的变化
     handleSelectionChange(val) {
-      var  row = val[val.length-1];
-      if(row.headCategory==null||row.tailCategory==null){
+      var row = val[val.length-1];
+      console.log(row);
+      if(row.headCategory == null||row.headCategory == ""||row.tailCategory == ""||row.tailCategory ==null){
         this.$message({
           message: '选中的三元组属性实体必须有类型',
           type: 'warning'

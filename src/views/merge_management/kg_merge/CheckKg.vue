@@ -88,7 +88,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="操作时间">
-                  <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+                  <template slot-scope="scope">{{ getNowTime(scope.row.time)}}</template>
                 </el-table-column>
               </el-table>
               <el-pagination
@@ -115,7 +115,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="操作时间">
-                  <template slot-scope="scope">{{ dateFormat(scope.row.time)}}</template>
+                  <template slot-scope="scope">{{ getNowTime(scope.row.time)}}</template>
                 </el-table-column>
               </el-table>
               <el-pagination
@@ -424,8 +424,30 @@ export default {
       .catch(function (error) {
         console.log(error)
       })
-    }
+    },
+    getNowTime() {
+      var date = new Date();
+      //年 getFullYear()：四位数字返回年份
+      var year = date.getFullYear(); //getFullYear()代替getYear()
+      //月 getMonth()：0 ~ 11
+      var month = date.getMonth() + 1;
+      //日 getDate()：(1 ~ 31)
+      var day = date.getDate();
+      //时 getHours()：(0 ~ 23)
+      var hour = date.getHours();
+      //分 getMinutes()： (0 ~ 59)
+      var minute = date.getMinutes();
+      //秒 getSeconds()：(0 ~ 59)
+      var second = date.getSeconds();
+      var time = year + '-' + this.addZero(month) + '-' + this.addZero(day) + '-' + this.addZero(hour) + ':' + this.addZero(minute) + ':' + this.addZero(second);
+      return time;
+    },
+    //小于10的拼接上0字符串
+    addZero(s) {
+      return s < 10 ? ('0' + s) : s;
+    },
   },
+
   mounted() {
     //获取版本列表
     this.get_version(this.versionCurrentPage,this.versionPageSize);
