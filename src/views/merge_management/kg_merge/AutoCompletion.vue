@@ -125,6 +125,7 @@
       </div>
       <div v-if="this.active==1">
         <el-button @click="modelVisible=true;stop_read_gpu_cpu=false;startToGetGpuAndCpu();get_lpm_table();" style="margin-top:10px">模型管理</el-button>
+        <el-button type="primary" plain @click="link_prediction_demo()">预测演示</el-button>
         <el-dialog title="模型管理" :visible.sync="modelVisible" fullscreen="true" :before-close="closeModelView">
           <el-button type="primary" @click="open()">新建训练</el-button>
           <el-table :data="tableData4" border style="width: 100%; margin-top:10px">
@@ -250,6 +251,11 @@
             </template>
           </el-table-column>
           <el-table-column prop="rel" label="关系"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="info" plain size="mini" @click="remove_ent_and_rel(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination
           @size-change="sizeChange"
@@ -884,6 +890,11 @@
             type: 'warning',
             message: '请选择待预测三元组！'
           });
+        }else if(this.select1 == ""){
+          this.$message({
+            type: 'warning',
+            message: '请选择链接预测模型！'
+          });
         }
         else{
           this.loading = true;
@@ -950,9 +961,9 @@
           })
           .then((response)=>{
             if (response.status == 200) {
-              this.learning_finish(this.form['name'])
               var isNull = response.data.data;
               if(isNull){
+                this.learning_finish(this.form['name'])
                 const h = this.$createElement;
                 this.$notify({
                   title: '训练完毕',
@@ -967,7 +978,7 @@
                   offset: 100
                 });
               }
-              }
+            }
           })
           .catch(function (error) {
             console.log(error)
@@ -1033,6 +1044,16 @@
         .catch(function (error) {
           console.log(error)
         })
+      },
+
+      remove_ent_and_rel(row){
+        for(var i = 0; i < this.entRel_pair_selected.length; i ++){
+          if(this.entRel_pair_selected[i].ent == row.ent && this.entRel_pair_selected[i].rel == row.rel){ 
+            this.entRel_pair_selected.splice(i,1)
+            break;
+          }
+        } 
+        this.getTableData();
       },
       //获取链接预测模型list
       get_lpm_table(){
@@ -1452,6 +1473,24 @@
           if (response.status == 200) {
             //赋值给表格
             this.mod_set = response.data.data;
+            //设置文本高亮
+            }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      //加载链接预测demo
+      link_prediction_demo() {
+        axios.post('/pythonApi/link_prediction_demo',{})
+        .then((response)=>{
+          if (response.status == 200) {
+            //赋值给表格
+            var demo_list = response.data.data;
+            for(var i = 0; i < demo_list.length; i ++){
+              this.entRel_pair_selected.push(demo_list[i])
+            } 
+            this.getTableData();
             //设置文本高亮
             }
         })
