@@ -363,6 +363,9 @@
           </el-table>
           <el-pagination background layout="prev, pager, next" style="margin-top: 10px;" :total="2">
           </el-pagination>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+          </span>
         </el-dialog>
         <keep-alive>
           <el-table :data="tableData5" :row-class-name="tableRowClassName" border style="width: 100%; margin-top: 10px;">
