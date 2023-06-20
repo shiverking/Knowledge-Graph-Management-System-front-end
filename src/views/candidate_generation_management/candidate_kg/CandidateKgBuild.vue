@@ -200,10 +200,9 @@
           </el-date-picker>
           <div style="display: inline-block;margin: 10px;">
             <span>数据来源:</span>
+            <el-radio v-model="source" label="">所有来源</el-radio>
             <el-radio v-model="source" label="编目系统">编目系统</el-radio>
             <el-radio v-model="source" label="文本抽取">文本抽取</el-radio>
-            <el-radio v-model="source" label="爬虫">爬虫</el-radio>
-            <el-radio v-model="source" label="">默认</el-radio>
           </div>
           <el-tooltip class="item" effect="dark" content="重置搜索条件" placement="top">
             <el-button icon="el-icon-refresh-left" circle @click="reset()"></el-button>
