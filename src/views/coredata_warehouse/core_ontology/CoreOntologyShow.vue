@@ -1,7 +1,34 @@
 <template>
   <div id="main" class="main" v-if="isReloadData">
-    <VueCTree class="trees" :isEdit="true" v-if="ontology_data.length" :treeData="ontology_data" type="1"
-      :refresh="refresh" @setRefresh="setRefresh" />
+      <div class="trees">
+        <!-- 文件上传 -->
+        <!--
+          limit: 代表一次可上传的文件数量
+          file-list： 代表自己定义的属性
+          on-error： 代表导入文件失败的时候提示的方法
+          on-success：代表导入文件成功提示的方法
+          before-upload：代表在上传前检查文件的格式、数据大小、信息等，判定文件是否能够上传
+          show-file-list：代表是否显示文件列表，false不显示
+          http-request：本次用来进行上传给后端的方法
+         -->
+        <el-upload
+            style="display: inline-block;margin-bottom: 30px"
+            action="string"
+            :limit="1"
+            :file-list="fileList"
+            :on-error="loadFileError"
+            :on-success="loadFileSuccess"
+            :before-upload="beforeUpload"
+            accept=".xlsx,.xls"
+            :show-file-list="false"
+            :http-request="uploadFile"
+        >
+          <el-button type="success">导入</el-button>
+        </el-upload>
+        <VueCTree :isEdit="true" v-if="ontology_data.length" :treeData="ontology_data" type="1"
+                  :refresh="refresh" @setRefresh="setRefresh" />
+      </div>
+
     <G6Img class="gImg" />
     <!-- <div id="show_ontology_like_graph" class="show_ontology" >
       <span class="desc">本体结构展示</span>
@@ -143,6 +170,7 @@ import * as d3 from '../../../plugins/d3.v5.min.js'
 import * as echarts from 'echarts';
 import * as jquery from '../../../plugins/jquery.min.js'
 import Panzoom from '@panzoom/panzoom';
+import * as http from "http";
 export default {
   name: 'OntologyShow',
   components: {
@@ -151,6 +179,7 @@ export default {
   },
   data() {
     return {
+      fileList: [], // 导入的文件
       isReloadData: true,
       dataset: {
         name: "Thing",
@@ -244,6 +273,55 @@ export default {
     }
   },
   methods: {
+    //上传文件
+    uploadFile(param){
+      const File = param.file;
+      let formDataInfo = new FormData();
+      formDataInfo.append("file", File);
+      this.loadConferenceFile(formDataInfo).then((res) => {
+        this.$message({
+          message: res.data.data,
+          type: "success",
+        });
+      });
+    },
+    loadConferenceFile(formDataInfo){
+      return axios.post("/coreOntology/uploadExcel",formDataInfo)
+    },
+    // 导入前检查文件
+    beforeUpload(file) {
+      const extension = file.name.split(".")[1] === "xls";
+      const extension2 = file.name.split(".")[1] === "xlsx";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!extension && !extension2) {
+        this.$message({
+          message: "上传模板只能是 xls、xlsx格式!",
+          type: "error",
+        });
+      }
+      if (!isLt2M) {
+        console.log("上传模板大小不能超过 2MB!");
+        this.$message({
+          message: "上传模板大小不能超过 2MB!",
+          type: "error",
+        });
+      }
+      return extension || extension2 || isLt2M;
+    },
+    //导入文件成功提示的方法
+    loadFileSuccess() {
+      this.$message({
+        message: "文件上传成功!",
+        type: "success",
+      });
+    },
+    // 导入失败，其中$message为elementui的消息提醒组件
+    loadFileError() {
+      this.$message({
+        message: "文件上传失败!",
+        type: "error",
+      });
+    },
     setRefresh(res) {
       console.log(res, 'res');
       this.getInit()
