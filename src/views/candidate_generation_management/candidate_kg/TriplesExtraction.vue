@@ -18,10 +18,11 @@
         title="抽取结果"
         :visible.sync="dialogVisible"
         width="70%">
-      <el-carousel indicator-position="outside" v-if="multipleSelectionContent.length>0">
-        <el-carousel-item v-for="item in multipleSelectionContent" :key="item">
+      <el-carousel :autoplay="false" indicator-position="outside" v-if="multipleSelectionContent.length>0">
+        <el-carousel-item  v-for="item in multipleSelectionContent" :key="item.content">
+          <el-button type="text" @click="innerVisible=!innerVisible;currentContent=item.content;">添加三元组</el-button>
           <el-card style="height: inherit">
-            <el-input :rows="12" v-model="item.content" type="textarea" style="width: 100%" :readonly="true" >123</el-input>
+            <el-input :rows="15" v-model="item.content" type="textarea" style="width: 100%" :readonly="true" ></el-input>
           </el-card>
         </el-carousel-item>
       </el-carousel>
@@ -37,12 +38,12 @@
           </div>
           <el-button  plain type="success" icon="el-icon-upload2" style="margin:10px;margin-left:0px;" slot="reference">结果导出</el-button>
         </el-popover>
-        <el-button @click="innerVisible=!innerVisible">添加</el-button>
         <el-dialog
             width="50%"
             title="添加三元组"
             :visible.sync="innerVisible"
             append-to-body>
+          <el-input :rows="15" v-model="currentContent" type="textarea" style="width: 100%" :readonly="true" >123</el-input>
           <el-row>
             <el-input v-model="newTripleInfo.head" class="input_modify" placeholder="*请输入头实体"></el-input>
           </el-row>
@@ -320,6 +321,7 @@
           tail_type: "",
         },
         dialogModification:false,
+        currentContent:"",
       };
     },
     methods: {
@@ -377,7 +379,6 @@
         this.newTripleInfo.rel="";
         this.newTripleInfo.tail="";
         this.newTripleInfo.tail_type="";
-
       },
       handleDeleteCandidateTriple(index, row) {
         this.extractTablePageList = this.extractTablePageList.filter((item,index)=>{
@@ -393,9 +394,7 @@
         this.dialogModification = false;
         for(var i=0;i<this.extract_table.length;i++){
           var item = this.extract_table[i];
-          console.log(item);
           if(item.head == this.tmpTripleInfo.head&&item.rel==this.tmpTripleInfo.rel&&item.tail==this.tmpTripleInfo.tail&&item.head_typ==this.tmpTripleInfo.head_type&&item.tail_typ==this.tmpTripleInfo.tail_type){
-            console.log(item)
             item.head = this.tripleInfo.head ;
             item.head_typ = this.tripleInfo.head_type;
             item.tail_typ = this.tripleInfo.tail_type;
@@ -407,10 +406,14 @@
             this.tmpTripleInfo.rel = "";
             this.tmpTripleInfo.tail = "";
             this.tmpTripleInfo.tail_type = "";
+            //重新获取分页
+            this.getExtractTablePageList();
+            //重新绘制
+            this.show_triples(this.extract_table);
             break;
           }
         }
-        this.getExtractTablePageList();
+
       },
       //修改三元组信息
       handleCandidateTripleEdit(index, row) {
@@ -713,7 +716,6 @@
             (this.extractTableCurrrentPage - 1) * this.extractTablePageSize,
             this.extractTableCurrrentPage * this.extractTablePageSize
         );
-        this.extractTablePageList_total = this.triplesBeforeInsert.length
       },
       //前端页面改变动作
       extractTableCurrentChange(val){
