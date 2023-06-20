@@ -273,7 +273,7 @@
             label="检测得分">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.score}}</span>
-            <span style="margin-left: 10px" v-if="scope.row.score==null">暂无</span>
+            <span style="margin-left: 10px" v-if="scope.row.score==null">manual_judgment_required</span>
           </template>
         </el-table-column>
         <el-table-column
