@@ -82,7 +82,9 @@
 
       <el-table-column
           type="selection"
-      >
+          :reserve-selection="true"
+          :selectable="selectable"
+          >
       </el-table-column>
       <el-table-column
           prop="name"
@@ -354,6 +356,7 @@ export default {
         });
         return;
       }
+      this.extract_ids = [];
       this.progressBarVisible = true;
       this.progressBarValue = 0;
       var sum = this.multipleSelection.length;
@@ -370,6 +373,7 @@ export default {
         "translate": _this.tranlate_value
       };
       _this.axios.post('/api/semistructure/converttotriples',data).then(function(resp){
+        _this.multipleSelection.forEach(item => _this.extract_ids.push(item._id))
         _this.progressBarValue = 100;
         console.log(resp)
         _this.extract_table = resp.data
@@ -585,7 +589,7 @@ export default {
       axios.post('/api/candidate/savesemidataExtraction', {
         // data: this.extract_data,
         data:this.extract_table,
-        // ids :this.extract_ids,
+        ids :this.extract_ids,
       })
           .then((response) => {
             if (response.status == 200) {
@@ -596,8 +600,8 @@ export default {
               });
               //清空选项
               this.$refs.multipleTable.clearSelection();
-              //重新加载数据
-              // this.get_unstructured_text(this.unstructuredTextCurrentPage,this.unstructuredTextPageSize);
+              // 重新加载数据
+              window.location.reload()
             }
           })
           .catch(function (error) {
