@@ -152,12 +152,10 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/crawl/findAllnopage').then(function(resp){
-      console.log(resp)
       _this.albumData = resp.data
 
     })
     _this.axios.get('/api/image/statistic').then(function(resp){
-      console.log(resp)
       _this.statistic = resp.data
 
     })
@@ -168,7 +166,6 @@ export default {
     openAblum(id) {
       // let name = this.albumData[id].albumName;
       // this.currentAlbumId = this.albumData[id].albumId;
-      console.log(id)
       this.$message({
         type: 'success',
         message: '打开成功 '
@@ -182,7 +179,6 @@ export default {
         url:  "/api/album/findAllAlbum",
         method: "Get",
       }).then(function (resp) {
-        console.log(resp)
         _this.albumData = resp.data;
       })
     },
@@ -229,7 +225,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(1)
         this.handleCheckIndexToId();
         var _this = this;
         const formData = new FormData();
@@ -295,7 +290,6 @@ export default {
     },
     // 部分被选中,当勾选时，上方显示操作菜单
     handleCheckedImgChange(value) {
-      console.log(value.length)
       this.checkedCount = value.length;
       this.SwitchDisplay(this.checkedCount);
       this.checkAll = this.checkedCount === this.albumData.length;

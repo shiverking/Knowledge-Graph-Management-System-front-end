@@ -14,9 +14,9 @@
     <el-form-item label="性别" prop="gender">
       <el-input v-model="form.person.gender"></el-input>
     </el-form-item>
-    <el-form-item label="图片" prop="picture">
-      <el-input v-model="form.person.picture"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="图片" prop="picture">-->
+<!--      <el-input v-model="form.person.picture"></el-input>-->
+<!--    </el-form-item>-->
 
     <el-form-item label="地址" prop="address">
       <el-input v-model="form.person.address"></el-input>
@@ -39,7 +39,7 @@
 <!--        </el-option>-->
 <!--      </el-select>-->
 <!--    </el-form-item>-->
-    <div class="addFormBox">
+    <div class="addFormBox" style="float: left">
       <h2>教育信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formeducation">
@@ -89,7 +89,7 @@
       </el-form>
     </div>
 
-    <div class="addFormBox">
+    <div class="addFormBox" style="float: left">
       <h2>履历信息 </h2>
       <!-- 循环data中定义的数组 -->
       <el-form label-width="80px" ref="formresume">
@@ -138,7 +138,7 @@
         </div>
       </el-form>
     </div>
-    <div>
+    <div style="float: left">
       <el-button type="primary" @click="submitForm1('ruleForm')" >提交</el-button>
     </div>
 
@@ -227,7 +227,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           _this.axios.post('/api/person/save',this.form).then(function(resp){
-              console.log(_this.form)
                 _this.$alert('《' + _this.form.person.name_cn + '》添加成功！', '消息', {
                   confirmButtonText: '确定',
                   callback: action => {
@@ -270,12 +269,12 @@ export default {
       this.$refs[formName].resetFields();
     }
   },
-  created() {
-    const _this = this
-    _this.axios.get('/api/plan/findAll').then(function(resp){
-      _this.options1 = resp.data
-    })
-  }
+  // created() {
+  //   const _this = this
+  //   _this.axios.get('/api/plan/findAll').then(function(resp){
+  //     _this.options1 = resp.data
+  //   })
+  // }
 }
 </script>
 

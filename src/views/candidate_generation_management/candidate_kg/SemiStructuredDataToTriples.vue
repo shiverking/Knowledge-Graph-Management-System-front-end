@@ -8,7 +8,6 @@
           :value="item.value">
       </el-option>
     </el-select>
-    <progressbar></progressbar>
     <el-button type="primary" @click="triples_extraction" style="margin:5px;" plain>开始抽取</el-button>
     <el-button type="info" plain icon="el-icon-zoom-in" style="margin:5px;" @click="viewResult()">预览</el-button>
     <el-popover
@@ -32,6 +31,7 @@
         <el-table
             :data="extractTablePageList"
             style="width: 100%"
+            :row-key="getRowKeys"
             >
           <el-table-column
               prop="head"
@@ -75,6 +75,7 @@
     </el-dialog>
     <el-table
         ref="multipleTable"
+        :row-key="getRowKeys"
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
@@ -266,6 +267,7 @@ import success from "@/assets/icon/success.png"
 export default {
   data() {
     return {
+      page:1,
       isShowProgressbar: true,
       isProcessing: true,
       progress: 0,
@@ -334,7 +336,6 @@ export default {
     currentChange(currentPage){
       const _this = this
       _this.axios.get('/api/semistructure/getSemistructuredDataBycid/'+(currentPage)+'/10/0').then(function(resp) {
-        console.log(resp)
         _this.tableData = resp.data.data
         _this.pageSize = resp.data.data.length
         _this.total = resp.data.count
@@ -375,7 +376,6 @@ export default {
       _this.axios.post('/api/semistructure/converttotriples',data).then(function(resp){
         _this.multipleSelection.forEach(item => _this.extract_ids.push(item._id))
         _this.progressBarValue = 100;
-        console.log(resp)
         _this.extract_table = resp.data
         _this.getExtractTablePageList()
         _this.extractTabletotal=resp.data.length
@@ -385,125 +385,6 @@ export default {
           type: 'success'
         });
       })
-    },
-    //三元组展示
-    show_triples(arr){
-      var chartDom = document.getElementById('triples_show');
-      var myChart = echarts.init(chartDom);
-      myChart.hideLoading();
-      var webkitDep = this.genrateData(arr);
-      var option = {
-        legend: {
-          x: 'left',//图例位置
-          //图例的名称
-          //此处的数据必须和关系网类别中name相对应
-          data: webkitDep.categories.map(function (a) {
-            return a.name;
-          })
-        },
-        series: [{
-          type: 'graph',
-          layout: 'force',
-          symbolSize: 20,
-          roam: true,
-          // animation: false,
-          label: {
-            normal: {
-              show:true,
-              position: 'right'
-            }
-          },
-          //展示边数据
-          edgeLabel: {
-            normal: {
-              show: true,
-              formatter: function (x) {
-                return x.data.name;
-              }
-            }
-          },
-          edgeSymbol: ["circle", "arrow"],
-          draggable: true,
-          force: {
-            layoutAnimation:true,
-            // xAxisIndex : 0, //x轴坐标 有多种坐标系轴坐标选项
-            // yAxisIndex : 0, //y轴坐标
-            gravity:0.03,  //节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
-            edgeLength: 55,  //边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] 。值越小则长度越长
-            repulsion: 150  //节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
-          },
-          data: webkitDep.nodes.map(function (node, idx) {  //node数据
-            node.id = idx;
-            return node;
-          }),
-          categories: webkitDep.categories,  //关系网类别，可以写多组
-          edges: webkitDep.links  //link数据
-        }]
-      };
-      myChart.setOption(option);
-    },
-    //生成三元组展示图所需数据
-    genrateData(arr){
-      var data = {};
-      var map=new Map;
-      data['categories'] = [];
-      var nodes = [];
-      var links= [];
-      var counter = 0;
-      var dic = {};
-      var cate_counter = 0;
-      for(var i=0;i<arr.length;i++){
-        if(!(arr[i].head_typ in dic)){
-          dic[arr[i].head_typ] = cate_counter
-          var new_cate = {};
-          new_cate.name = arr[i].head_typ;
-          cate_counter+=1;
-          data['categories'].push(new_cate);
-        }
-        if(!(arr[i].tail_typ in dic)){
-          dic[arr[i].tail_typ] = cate_counter
-          var new_cate = {};
-          new_cate.name = arr[i].tail_typ;
-          cate_counter+=1;
-          data['categories'].push(new_cate);
-        }
-      }
-      for(var i=0;i<arr.length;i++){
-        //已有该实体
-        if(!map.has(arr[i].head)){
-          map.set(arr[i].head,counter);
-          var new_node1 = {};
-          new_node1.name = arr[i].head;
-          new_node1.category = dic[arr[i].head_typ];
-          new_node1.id = counter;
-          counter+=1;
-          nodes.push(new_node1);
-        }
-        //已有该实体,不需增加新的节点
-        if(!map.has(arr[i].tail)) {
-          map.set(arr[i].tail, counter);
-          var new_node2 = {};
-          new_node2.name = arr[i].tail;
-          new_node2.category = dic[arr[i].tail_typ];
-          new_node2.id = counter;
-          counter += 1;
-          nodes.push(new_node2);
-        }
-      }
-      for(var i=0;i<arr.length;i++){
-        var link = {};
-        link.source = map.get(arr[i].head);
-        link.name = arr[i].rel;
-        link.target = map.get(arr[i].tail);
-        links.push(link)
-      }
-      data['nodes'] = nodes;
-      data['links'] = links;
-      return data;
-    },
-    //编辑进度条的显示内容
-    format(percentage) {
-      return percentage === 100 ? '抽取完成' : `${percentage}%`;
     },
     //处理候选三元组分页事件
     unstructuredTextHandleSizeChange(val) {
@@ -517,38 +398,9 @@ export default {
       this.unstructuredTextCurrentPage = val;
       this.get_unstructured_text(val,this.unstructuredTextPageSize)
     },
-    //向后端请求存储的非结构文本数据
-    get_unstructured_text(num, limit) {
-      //axios请求
-      axios.request({
-        method:"POST",
-        url:'/api/unstructure/getAllTextByPage',
-        params:{page:num,limit:limit}
-      })
-          .then((response) => {
-            if (response.status == 200) {
-              //修改数据
-              console.log(response)
-              this.unstructuredTextPageList = response.data.data
-              this.unstructuredTextTotal = response.data.count
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-    },
-    //显示内容详情
-    displayContent(content){
-      this.contentVisible = true;
-      this.content = content;
-    },
     //处理多选结果
     handleSelectionChange(val) {
       this.multipleSelection = val;
-    },
-    //获取每一页的key
-    getRowKeys(row) {
-      return row._id
     },
     //查看预览结果
     viewResult(){
@@ -563,7 +415,6 @@ export default {
           (this.extractTableCurrrentPage - 1) * this.extractTablepagesize,
           this.extractTableCurrrentPage * this.extractTablepagesize
       );
-      console.log(this.extractTablePageList)
       // this.extractTablePageList_total = this.triplesBeforeInsert.length
     },
     //前端页面改变动作
@@ -574,6 +425,10 @@ export default {
     //筛选不同状态
     filterStatus(value, row) {
       return row.status === value;
+    },
+    //编辑进度条的显示内容
+    format(percentage) {
+      return percentage === 100 ? '抽取完成' : `${percentage}%`;
     },
     //确定导出至三元组库
     confirmExport(){
@@ -605,8 +460,10 @@ export default {
             }
           })
           .catch(function (error) {
-            console.log(error)
           })
+    },
+    getRowKeys(row) {
+      return row._id
     },
     //条件禁用多选框
     selectable(row, index) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog title="任务配置" :visible.sync="dialogVisible" width="40%">
-        <el-form style="width: 50% ;height:500px" :model="ruleForm" :rules="rules" ref="ruleForm"  >
+        <el-form style="width: 50% ;height:500px" :model="ruleForm"  ref="ruleForm"  >
           <el-form-item label="id" prop="id" v-show="false">
             <el-input v-model="ruleForm.id"></el-input>
           </el-form-item>
@@ -77,7 +77,7 @@
     <el-table
       :data="tableData1"
       border
-      style="width: 100%">
+      style="width: 651px">
 
       <el-table-column
         fixed
@@ -100,14 +100,14 @@
         label="性别"
         width="200">
       </el-table-column>
-      <el-table-column
-        prop="picture"
-        label="图片"
-        width="200">
-        <template slot-scope="scope">
-          <img :src="scope.row.picture" width="80" height="80"  />
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="picture"-->
+<!--        label="图片"-->
+<!--        width="200">-->
+<!--        <template slot-scope="scope">-->
+<!--          <img :src="scope.row.picture" width="80" height="80"  />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="address"
         label="地址"
@@ -275,11 +275,9 @@ export default {
       const _this =this
       _this.axios.get('/api/person/findByTaskid/'+row.id).then(function(resp){
         _this.form.person_new = resp.data
-        console.log(resp.data)
       })
       _this.axios.get('/api/vessel/findByTaskid/'+row.id).then(function(resp){
         _this.form.vessel_new = resp.data
-        console.log(resp.data)
       })
       this.ruleForm.id=row.id;
       this.dialogVisible = true;
@@ -354,11 +352,9 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/task/findByPlanid/' + this.$route.query.id).then(function (resp) {
-      // console.log(resp)
       _this.tableData = resp.data
     })
     _this.axios.get('/api/person/findByPlanid/' + this.$route.query.id).then(function (resp) {
-      console.log(resp)
       _this.tableData1 = resp.data
     });
     _this.axios.get('/api/person/findAll/').then(function(resp){

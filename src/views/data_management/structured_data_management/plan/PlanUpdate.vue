@@ -233,7 +233,6 @@ export default {
   created() {
     const _this = this
     _this.axios.get('/api/plan/findById/'+this.$route.query.id).then(function(resp){
-      console.log(resp)
       _this.ruleForm=resp.data;
     })
     _this.axios.get('/api/person/findByPlanid/'+this.$route.query.id).then(function(resp){

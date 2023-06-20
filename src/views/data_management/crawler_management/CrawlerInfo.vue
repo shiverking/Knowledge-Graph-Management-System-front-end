@@ -1,8 +1,5 @@
 <template>
   <div>
-    <el-dialog title="内容" :visible.sync="contentVisible" top="7vh" width="70%">
-      <el-input :rows="20" v-model="content" type="textarea" style="width: 100%" :readonly="read" ></el-input>
-    </el-dialog>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="爬虫信息" name="first">
     <el-card class="box-card">
@@ -85,16 +82,16 @@
         </el-table-column>
       </el-table>
       <!--分页-->
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          :page-sizes=pageSizes
-          :page-size=pageSize
-          layout="total, sizes, prev, pager, next, jumper"
-          :total=total1
-          style="margin-top: 10px">
-      </el-pagination>
+<!--      <el-pagination-->
+<!--          @size-change="handleSizeChange"-->
+<!--          @current-change="handleCurrentChange"-->
+<!--          :current-page="currentPage4"-->
+<!--          :page-sizes=pageSizes-->
+<!--          :page-size=pageSize-->
+<!--          layout="total, sizes, prev, pager, next, jumper"-->
+<!--          :total=total1-->
+<!--          style="margin-top: 10px">-->
+<!--      </el-pagination>-->
     </el-card>
 <!--    <el-card class="card" style="height:500px; margin-top: 10px" id="data_flow">-->
 <!--    </el-card>-->
@@ -109,8 +106,7 @@
                 ref="multipleTable"
                 :data="tableData"
                 tooltip-effect="dark"
-                style="width: 100%"
-                @selection-change="handleSelectionChange">
+                style="width: 100%">
               <el-table-column
                   type="selection"
               >
@@ -256,7 +252,6 @@
               :data="tableData3"
               tooltip-effect="dark"
               style="width: 100%"
-              @selection-change="handleSelectionChange"
               >
             <el-table-column
                 type="selection"
@@ -341,8 +336,8 @@
             <strong>非结构图片</strong>
             <!--            <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>-->
           </div>
-          <div class="image-item" v-for="(item, index) in tableData4" :key="index" :style="reactiveImage">
-          <el-image :src="serviceurl+item.path" :preview-src-list="previewImageUrL" class="image" style="float: left ;width:200px;height: 100px">
+          <div class="image-item" v-for="(item, index) in tableData4" :key="index" >
+          <el-image :src="serviceurl+item.path"  class="image" style="float: left ;width:200px;height: 100px">
 <!--            <div slot="placeholder" class="image-slot" element-loading-text="图片加载中..." v-loading="true"-->
 <!--                 style="margin-top:40%">-->
 <!--            </div>-->
@@ -386,7 +381,6 @@ export default {
     currentChange(val) {
       const _this=this
       _this.axios.get('/api/semistructure/getSemistructuredDataBycid/'+(val)+'/10/'+this.$route.query.cid).then(function(resp){
-        console.log(resp)
         _this.tableData = resp.data.data
         _this.total = resp.data.count
       })
@@ -394,7 +388,6 @@ export default {
     currentChange3(val) {
       const _this=this
       _this.axios.get('/api/unstructure/getAllTextByPageandcid/'+(val)+'/10/'+this.$route.query.cid).then(function(resp){
-        console.log(resp)
         _this.tableData3 = resp.data.data
         _this.total3 = resp.data.count
       })
@@ -402,13 +395,11 @@ export default {
     currentChange2(val) {
       const _this=this
       _this.axios.get('/api/image/getimage/'+(val)+'/21/'+this.$route.query.cid).then(function(resp){
-        console.log(resp)
         _this.tableData4 = resp.data.data
         _this.total4 = resp.data.count
       })
     },
     handleClick(tab, event) {
-      console.log(tab, event);
     },
     displayContent(content){
       this.contentVisible = true;
@@ -491,6 +482,8 @@ export default {
       page3:1,
       size3:10,
       total3:10,
+      page4:1,
+      size4:21,
       jsonData3:[],
       activeName: 'first',
       sizeForm: {
@@ -545,22 +538,18 @@ export default {
     // this.getTableData3()
     const _this = this
     _this.axios.get('/api/crawl/findrecordbycid/0/10/'+this.$route.query.cid).then(function(resp){
-      console.log(resp)
       _this.tableData1 = resp.data.data
       _this.total1 = resp.data.count
     })
     _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/'+this.$route.query.cid).then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.data
       _this.total = resp.data.count
     })
     _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/'+this.$route.query.cid).then(function(resp){
-      console.log(resp)
       _this.tableData3 = resp.data.data
       _this.total3 = resp.data.count
     })
     _this.axios.get('/api/image/getimage/0/21/'+this.$route.query.cid).then(function(resp){
-      console.log(resp)
       _this.tableData4 = resp.data.data
       _this.total4 = resp.data.count
     })

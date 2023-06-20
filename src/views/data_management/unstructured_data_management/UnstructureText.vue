@@ -40,8 +40,7 @@
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
+        style="width: 100%">
       <el-table-column
           type="selection"
       >
@@ -132,6 +131,7 @@ import { saveAs } from 'file-saver';
 export default {
   data() {
     return {
+      options:[],
       value:2,
       crawlid:2,
       textData:'',
@@ -140,7 +140,7 @@ export default {
       total:5000,
       currentIndex:0,
       listdata:['全部','飞机','导弹','火炮','爆炸物','舰船','人员'],
-      ruleForm:[],
+      ruleForm: {},
       read:true,
       input1:'濟陽級飛彈巡防艦設計以遠洋反潛能力著稱，服役以來主要負擔台灣東北部至東部海域偵巡任務，駐地於海軍蘇澳軍港，隸屬海軍一六八艦隊。該型艦以反制潛艦設計為導向艦艇，配備武三系統、標準飛彈、五吋砲及近迫武器系統，可有效執行偵巡及防衛作戰任務。',
       dialogPreviewJSON: false,
@@ -187,7 +187,6 @@ export default {
     search(){
       const _this = this
       _this.axios.get('/api/unstructure/getAllTextBytitle/'+"/0"+'/10/'+_this.ruleForm.value).then(function(resp) {
-        console.log(resp)
         _this.tableData = resp.data.data
         _this.pageSize = resp.data.data.length
         _this.total = resp.data.count
@@ -198,7 +197,6 @@ export default {
       this.page=currentPage
       const _this=this
       _this.axios.get('/api/unstructure/getAllTextByPageandcid/'+(currentPage)+'/10/'+_this.crawlid).then(function(resp){
-        console.log(resp)
         _this.tableData = resp.data.data
         _this.total = resp.data.count
         _this.pagesize=resp.data.data.length
@@ -206,10 +204,8 @@ export default {
       })
     },
     selectTrigger(id) {
-      console.log(id)
       const _this = this
       _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/' + id).then(function (resp) {
-        console.log(resp)
         _this.tableData = resp.data.data
         _this.total = resp.data.count
         _this.pagesize = resp.data.data.length
@@ -266,14 +262,11 @@ created(){
   // this.getTableData()
   const _this = this
   _this.axios.get('/api/crawl/findAllnopage').then(function(resp){
-    console.log(resp)
     _this.options = resp.data
     _this.value= resp.data[1].cid
-    console.log(_this.value)
 
   })
   _this.axios.get('/api/unstructure/getAllTextByPageandcid/0/10/2').then(function(resp){
-    console.log(resp)
     _this.tableData = resp.data.data
     _this.total = resp.data.count
     _this.pagesize=resp.data.data.length
