@@ -212,7 +212,6 @@ export default {
       })
       .then((response) => {
         if (response.status == 200) {
-          console.log(response.data);
           //修改数据
           this.versionTablePageData = response.data.data
         }

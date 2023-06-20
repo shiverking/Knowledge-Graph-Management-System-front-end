@@ -72,7 +72,7 @@
           :name="item.name"
           :closable="item.close">
         <keep-alive>
-            <component :is="item.content" :containerId="item.name" :candidateId="item.candidateId" @delete="deleteCapture"></component>
+            <component :is="item.content" :containerId="item.name" :candidateID="item.candidateId" @delete="deleteCapture"></component>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>

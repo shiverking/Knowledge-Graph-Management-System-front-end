@@ -14,10 +14,10 @@
   import insertCss from 'insert-css';
   export default {
     name: "KgPreview",
-    props: {'previewData':Array},
+    props: {previewDATA:String},
     data() {
       return {
-        previewData:this.previewData,
+        previewData:this.previewDATA,
         nodes: [],
         edges: [],
       }

@@ -623,7 +623,6 @@ export default {
     this.updateProgress()
     const _this = this
     _this.axios.get('/api/semistructure/getSemistructuredDataBycid/0/10/0').then(function(resp){
-      console.log(resp)
       _this.tableData = resp.data.data
       _this.total=resp.data.count
       _this.pagesize=resp.data.data.length

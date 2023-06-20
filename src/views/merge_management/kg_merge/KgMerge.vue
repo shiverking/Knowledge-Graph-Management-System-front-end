@@ -67,7 +67,7 @@
           width="70%"
           destroy-on-close>
         <!--展示预览-->
-        <component :is="confirmPreview" :previewData="JSON.stringify(previewData)"></component>
+        <component :is="confirmPreview" :previewDATA="JSON.stringify(previewData)"></component>
       </el-dialog>
 
       <!--选择图谱对话框-->

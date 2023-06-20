@@ -18,48 +18,6 @@
           </el-popover>
         </el-tooltip>
       </div>
-      <!--批量处理dialog-->
-      <el-dialog title="详细数据" :visible.sync="batchProcessing" width="70%">
-        <el-button type="primary" plain>查找</el-button>
-        <el-button type="success" plain>编辑</el-button>
-        <el-button type="danger" plain>批量删除</el-button>
-        <el-table
-            ref="multipleTable"
-            :data="tableData"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @selection-change="handleSelectionChange">
-          <el-table-column
-              type="selection"
-              width="55">
-          </el-table-column>
-          <el-table-column
-              label="日期"
-              width="120">
-            <template slot-scope="scope">{{ scope.row.date }}</template>
-          </el-table-column>
-          <el-table-column
-              prop="name"
-              label="姓名"
-              width="120">
-          </el-table-column>
-          <el-table-column
-              prop="address"
-              label="地址"
-              show-overflow-tooltip>
-          </el-table-column>
-        </el-table>
-        <!--分页-->
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
-        </el-pagination>
-      </el-dialog>
       <el-table
           :data="triplesPageList"
           max-height="800"
@@ -137,11 +95,11 @@ import insertCss from 'insert-css';
 
 export default {
   name: "Detail",
-  props: ['containerId','candidateId'],
+  props: ['containerId','candidateID'],
   data() {
     return {
       id: this.containerId,
-      candidateId:this.candidateId,
+      candidateId:this.candidateID,
       nodes:[],
       edges:[],
       //搜索
