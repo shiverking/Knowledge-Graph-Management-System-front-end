@@ -664,6 +664,14 @@
           .then((response)=>{
             if (response.status == 200) {
               this.relation_error = response.data.data;
+              if(this.relation_error.length == 0){
+              const h = this.$createElement;
+                this.$notify({
+                  title: '检测完成',
+                  message: h('i', { style: 'color: teal'}, '没有基于当前规则的链接异常！！'),
+                  offset: 100
+                });
+            }
               this.getTableData2();
               }
           })
@@ -692,6 +700,14 @@
             if (response.status == 200) {
               //赋值给表格
               this.abnormal_from_kgist = response.data.data;
+              if(this.abnormal_from_kgist.length == 0){
+              const h = this.$createElement;
+                this.$notify({
+                  title: '检测完成',
+                  message: h('i', { style: 'color: teal'}, '核心图谱为空！'),
+                  offset: 100
+                });
+            }
               this.getTableData();
                //设置文本高亮
               }
