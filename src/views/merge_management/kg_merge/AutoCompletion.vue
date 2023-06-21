@@ -1490,6 +1490,7 @@
           if (response.status == 200) {
             //赋值给表格
             var demo_list = response.data.data;
+            this.entRel_pair_selected.splice(0, this.entRel_pair_selected.length);
             for(var i = 0; i < demo_list.length; i ++){
               this.entRel_pair_selected.push(demo_list[i])
             } 
@@ -1530,11 +1531,19 @@
           if (response.status == 200) {
             //赋值给表格
             this.link_completion_data = response.data.data;
+
+            if(this.link_completion_data.length == 0){
+              const h = this.$createElement;
+                this.$notify({
+                  title: '补全链接提取失败',
+                  message: h('i', { style: 'color: teal'}, '没有基于当前规则的链接生成！'),
+                  offset: 100
+                });
+            }
             for(var i=0; i<this.link_completion_data.length;i++){
               this.link_completion_data[i]['time'] = this.dateFormat(new Date())
             }
             this.getTableData5();
-            console.log(this.tableData5)
             //设置文本高亮
             }
         })
